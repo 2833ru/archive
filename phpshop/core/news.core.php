@@ -27,6 +27,7 @@ class PHPShopNews extends PHPShopCore {
         // Список экшенов
         $this->action = array('get' => 'timestamp', "nav" => array("index", "ID"));
         parent::__construct();
+        
         // Имя Бд
         $this->objBase = $GLOBALS['SysValue']['base']['news'];
 
@@ -70,7 +71,7 @@ class PHPShopNews extends PHPShopCore {
         $this->setPaginator();
 
         // Мета
-        $this->title = __("Новости")." - " . $this->PHPShopSystem->getValue("name");
+        $this->title = __("Новости") . " - " . $this->PHPShopSystem->getValue("name");
         $this->description = __('Новости') . '  ' . $this->PHPShopSystem->getValue("name");
         $this->keywords = __('Новости') . ', ' . $this->PHPShopSystem->getValue("name");
 
@@ -79,6 +80,9 @@ class PHPShopNews extends PHPShopCore {
             $this->description.= ' Часть ' . $page;
             $this->title.=' - Страница ' . $page;
         }
+
+        // Навигация хлебные крошки
+        $this->navigation(false, __("Новости"));
 
         // Перехват модуля
         $this->setHook(__CLASS__, __FUNCTION__, $this->dataArray, 'END');
@@ -178,6 +182,9 @@ class PHPShopNews extends PHPShopCore {
         // Генератор keywords
         include('./phpshop/lib/autokeyword/class.autokeyword.php');
         $this->keywords = callAutokeyword($row['kratko']);
+        
+        // Навигация хлебные крошки
+        $this->navigation(false, $row['zag'],array('name'=>__('Новости'),'url'=>'/news/'));
 
         // Перехват модуля
         $this->setHook(__CLASS__, __FUNCTION__, $row, 'END');

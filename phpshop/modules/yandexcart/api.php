@@ -97,16 +97,9 @@ switch ($_SERVER["PATH_INFO"]) {
 
         // Доставка
         $result["cart"]["deliveryOptions"] = array();
-        $PHPShopDeliveryArray = new PHPShopDeliveryArray(array('enabled' => "='1'", 'is_folder' => "!='1'", 'yandex_enabled' => "='2'"), array('yandex_day_min', 'yandex_day', 'yandex_type', 'yandex_payment', 'yandex_outlet', 'yandex_check'));
+        $PHPShopDeliveryArray = new PHPShopDeliveryArray(array('enabled' => "='1'", 'is_folder' => "!='1'", 'yandex_enabled' => "='2'"), array('yandex_day_min', 'yandex_day', 'yandex_type', 'yandex_payment', 'yandex_outlet', 'yandex_check','yandex_order_before'));
         $deliveryPrice = $PHPShopDeliveryArray->getArray();
 
-        // Обход ошибки чеклиста. Выбор всех доставок.
-        /*
-          if (!is_array($deliveryPrice)) {
-          $PHPShopDeliveryArray = new PHPShopDeliveryArray(array('enabled' => "='1'", 'is_folder' => "!='1'"), array('yandex_day', 'yandex_type', 'yandex_payment', 'yandex_outlet', 'yandex_check'));
-          $deliveryPrice = $PHPShopDeliveryArray->getArray();
-          } */
-        
         
         // Корзина для подсчета бесплатной доставки
         $items = $data['cart']['items'];
@@ -152,6 +145,12 @@ switch ($_SERVER["PATH_INFO"]) {
                     // Доставка кол-во дней
                     if (empty($delivery['yandex_day']))
                         $delivery['yandex_day'] = 2;
+                    
+                    // Учет order-before
+                    if(date('H')>$delivery['yandex_order_before']){
+                        $delivery['yandex_day_min']++;
+                        $delivery['yandex_day']++;
+                    }
 
                     $fromDate = strtotime("+" . intval($delivery['yandex_day_min']) . " day");
                     $toDate = strtotime("+" . intval($delivery['yandex_day']) . " day");

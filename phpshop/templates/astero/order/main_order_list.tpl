@@ -23,7 +23,7 @@
 <!-- Top button Order Page End -->
 
 <!-- Shopping Cart Table Starts -->
-<div class="table-responsive shopping-cart-table">
+<div class="table-responsive shopping-cart-table img_fix">
     @orderContentCart@
 </div>
 <!-- Shopping Cart Table Ends -->

@@ -1,5 +1,6 @@
-<h4 style="font-size: 15px;color: #000000">Ошибка оплаты</h4>
-
+<div class="page-header">
+    <h2>Ошибка оплаты</h2>
+</div>
 <div>
 <b>Возможные причины:</b>
 <ol> 

@@ -22,7 +22,7 @@
             <strong>Итого:</strong>
             </td>
             <td class="text-left">
-                @cart_sum@ @currency@
+                 <span id="WeightSumma" class="hidden">@cart_weight@</span>@cart_sum@ @currency@
             </td>
         </tr>
     </tfoot>

@@ -233,7 +233,7 @@
                                         <h3>Каталог статей</h3>
                                     </div>
                                     <ul class="unstyled">
-                                        <li><a class="invarseColor" href="/page/CID_4.html">Учебные материалы</a></li><li><a class="invarseColor" href="/page/CID_3.html">Наши бренды</a></li>
+                                      @pageCatal@
                                     </ul>
                                 </div>
                                 <div class="span3">

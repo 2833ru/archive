@@ -24,7 +24,7 @@ function actionStart() {
     $PHPShopOrm->debug = false;
     $PHPShopOrm->sql = 'SELECT a.*, b.name, b.pic_small, c.login FROM ' . $GLOBALS['SysValue']['base']['comment'] . ' AS a 
         JOIN ' . $GLOBALS['SysValue']['base']['products'] . ' AS b ON a.parent_id = b.id 
-        JOIN ' . $GLOBALS['SysValue']['base']['shopusers'] . ' AS c ON a.user_id = c.id order by c.id desc limit 1000';
+        JOIN ' . $GLOBALS['SysValue']['base']['shopusers'] . ' AS c ON a.user_id = c.id order by a.id desc limit 1000';
 
     $data = $PHPShopOrm->select();
     if (is_array($data))

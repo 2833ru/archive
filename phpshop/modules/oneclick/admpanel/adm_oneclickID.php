@@ -51,7 +51,7 @@ function actionStart() {
 
 
     // Вывод формы закладки
-    $PHPShopGUI->setTab(array("Основное", $Tab1));
+    $PHPShopGUI->setTab(array("Основное", $Tab1,true));
 
     $ContentFooter =
             $PHPShopGUI->setInput("hidden", "rowID", $data['id'], "right", 70, "", "but") .

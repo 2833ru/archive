@@ -25,6 +25,9 @@ class PHPShopSearch extends PHPShopShopCore {
         // Список экшенов
         $this->action = array("post" => "words", "get" => "words", "nav" => "index");
         parent::__construct();
+        
+        $this->title = __('Поиск'). " - " . $this->PHPShopSystem->getValue("name");
+
     }
 
     /**
@@ -42,6 +45,7 @@ class PHPShopSearch extends PHPShopShopCore {
 
         if (isset($_REQUEST['ajax']))
             exit();
+        
 
         // Подключаем шаблон
         $this->parseTemplate($this->getValue('templates.search_page_list'));
@@ -256,7 +260,7 @@ class PHPShopSearch extends PHPShopShopCore {
     /**
      * Генерация пагинатора
      */
-    function setPaginator($count= null, $sql = null) {
+    function setPaginator($count = null, $sql = null) {
 
         // проверяем наличие шаблонов пагинации в папке шаблона
         // если отсутствуют, то используем шаблоны из lib
@@ -281,7 +285,7 @@ class PHPShopSearch extends PHPShopShopCore {
 
         if (is_array($this->search_order)) {
             $SQL = " where (" . $this->search_order['string'] . " " . $this->search_order['sort'] . "
-                 " . $this->search_order['prewords'] . " " . $this->search_order['sortV'].") and enabled='1' and parent_enabled='0' ";
+                 " . $this->search_order['prewords'] . " " . $this->search_order['sortV'] . ") and enabled='1' and parent_enabled='0' ";
         }
         else
             $SQL = null;
@@ -331,7 +335,7 @@ class PHPShopSearch extends PHPShopShopCore {
                         $navigat.= parseTemplateReturn($template_location . "paginator/paginator_one_link.tpl", $template_location_bool);
                     } else {
                         if ($i > ($this->page - $this->nav_len) and $i < ($this->page + $this->nav_len)) {
-                             $this->set("paginLink", "?words=" . $this->search_order['words'] . "&pole=" . $this->search_order['pole'] . "&set=" . $this->search_order['set'] . "&p=" . $i . "&cat=" . $this->search_order['cat']);
+                            $this->set("paginLink", "?words=" . $this->search_order['words'] . "&pole=" . $this->search_order['pole'] . "&set=" . $this->search_order['set'] . "&p=" . $i . "&cat=" . $this->search_order['cat']);
                             $navigat.= parseTemplateReturn($template_location . "paginator/paginator_one_link.tpl", $template_location_bool);
                         } else if ($i - ($this->page + $this->nav_len) < 3 and (($this->page - $this->nav_len) - $i) < 3) {
                             $navigat.= parseTemplateReturn($template_location . "paginator/paginator_one_more.tpl", $template_location_bool);

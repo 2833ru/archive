@@ -34,13 +34,13 @@ $ouid = $row['uid'];
 $order = unserialize($row['orders']);
 $status = unserialize($row['status']);
 $nds = $LoadItems['System']['nds'];
-$dis = null;
+$dis = $this_nds_summa=$sum=$num=null;
 foreach ($order['Cart']['cart'] as $val) {
     $this_price = ($PHPShopOrder->returnSumma(number_format($val['price'], "2", ".", ""), $order['Person']['discount']));
     $this_nds = number_format($this_price * $nds / (100 + $nds), "2", ".", "");
     $this_price_bez_nds = ($this_price - $this_nds) * $val['num'];
     $this_price_c_nds = number_format($this_price * $val['num'], "2", ".", "");
-    @$this_nds_summa+=$this_nds * $val['num'];
+    $this_nds_summa+=$this_nds * $val['num'];
 
     $dis.="
   <tr>
@@ -75,8 +75,8 @@ foreach ($order['Cart']['cart'] as $val) {
     $weight+=$cweight;
 
 
-    @$sum+=$val['price'] * $val['num'];
-    @$num+=$val['num'];
+    $sum+=$val['price'] * $val['num'];
+    $num+=$val['num'];
     $n++;
 }
 //Обнуляем вес товаров, если хотя бы один товар был без веса
@@ -86,6 +86,7 @@ if ($zeroweight) {
 
 
 $PHPShopDelivery = new PHPShopDelivery($order['Person']['dostavka_metod']);
+$PHPShopDelivery->checkMod($order['Cart']['dostavka']);
 $deliveryPrice = $PHPShopDelivery->getPrice($sum, $weight);
 
 $summa_nds_dos = number_format($deliveryPrice * $nds / (100 + $nds), "2", ".", "");
@@ -110,9 +111,9 @@ $dis.="
 
 if ($LoadItems['System']['nds_enabled']) {
     $nds = $LoadItems['System']['nds'];
-    @$nds = number_format($sum * ($nds / (100 + $nds)), "2", ".", "");
+    $nds = number_format($sum * ($nds / (100 + $nds)), "2", ".", "");
 }
-@$sum = number_format($sum, "2", ".", "");
+$sum = number_format($sum, "2", ".", "");
 
 $name_person = $order['Person']['name_person'];
 
@@ -159,7 +160,7 @@ $chek_num = substr(abs(crc32(uniqid(rand(), true))), 0, 5);
 $LoadBanc = unserialize($LoadItems['System']['bank']);
 ?>
 <head>
-    <title>Счет - Фактура №<?= @$ouid ?></title>
+    <title>Счет - Фактура №<?php echo @$ouid ?></title>
     <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=windows-1251">
     <META HTTP-EQUIV="PRAGMA" CONTENT="NO-CACHE">
     <link href="style.css" type=text/css rel=stylesheet>
@@ -174,7 +175,7 @@ $LoadBanc = unserialize($LoadItems['System']['bank']);
     <table align="center" width="90%" border="0" cellspacing="0" cellpadding="0">
         <tr>
             <td valign="top" align="right">
-                <?
+                <?php
                 $GetIsoValutaOrder = $PHPShopOrder->default_valuta_code;
                 if (preg_match("/руб/", $GetIsoValutaOrder)) {
                     echo '
@@ -190,19 +191,19 @@ $LoadBanc = unserialize($LoadItems['System']['bank']);
             </td>
         </tr>
         <tr>
-            <td valign="top" id="d2">СЧЕТ-ФАКТУРА №<?= @$ouid ?> от <?= $datas ?> г.<br>
+            <td valign="top" id="d2">СЧЕТ-ФАКТУРА №<?php echo @$ouid ?> от <?php echo $datas ?> г.<br>
                 Исправление № --  от --</td>
         </tr>
         <tr>
-            <td valign="top" >Продавец: <?= $LoadItems['System']['company'] ?><br />					
-                Адрес: <?= $LoadBanc['org_adres'] ?>, <?= $LoadItems['System']['tel'] ?> <br />							
-                Идентификационный номер продавца (ИНН) <?= $LoadBanc['org_inn'] ?>\<?= $LoadBanc['org_kpp'] ?> <br />							
+            <td valign="top" >Продавец: <?php echo $LoadItems['System']['company'] ?><br />					
+                Адрес: <?php echo $LoadBanc['org_adres'] ?>, <?php echo $LoadItems['System']['tel'] ?> <br />							
+                Идентификационный номер продавца (ИНН) <?php echo $LoadBanc['org_inn'] ?>\<?php echo $LoadBanc['org_kpp'] ?> <br />							
                 Грузоотправитель и его адрес: Он же	<br />						
-                Грузополучатель и его адрес:  <?= @$adr_info ?>	<br />						
+                Грузополучатель и его адрес:  <?php echo @$adr_info ?>	<br />						
                 К платежно-расчетному документу       <br />							
-                Покупатель: <?= $org_name ?>	<br />						
-                Адрес: <?= @$adr_info ?> <br />							
-                Идентификационный номер покупателя (ИНН) <?= @$order['Person']['org_inn'] . $row['org_inn'] ?>/ КПП <?= @$order['Person']['org_kpp'] . $row['org_kpp'] ?> <br />							
+                Покупатель: <?php echo $org_name ?>	<br />						
+                Адрес:<?php echo @$adr_info ?> <br />							
+                Идентификационный номер покупателя (ИНН) <?php echo @$order['Person']['org_inn'] . $row['org_inn'] ?>/ КПП <?php echo @$order['Person']['org_kpp'] . $row['org_kpp'] ?> <br />							
             </td>
         </tr>
         <tr>
@@ -256,13 +257,13 @@ $LoadBanc = unserialize($LoadItems['System']['bank']);
                         <td align="center">10a</td>
                         <td align="center">11</td>
                     </tr>
-                    <?= $dis; ?>
+                    <?php echo $dis; ?>
 
                     <tr>
                         <td colspan="8"><b>Всего к оплате</b></td>
 
-                        <td align="right"><? echo $this_nds_summa + $summa_nds_dos; ?></td>
-                        <td align="right"><? echo $row['sum']; ?></td>
+                        <td align="right"><?php echo $this_nds_summa + $summa_nds_dos; ?></td>
+                        <td align="right"><?php echo $row['sum']; ?></td>
                         <td colspan="3">&nbsp;</td>
 
                     </tr>
@@ -292,7 +293,7 @@ $LoadBanc = unserialize($LoadItems['System']['bank']);
                                     <td>____________________</td>
                                 </tr>
                                 <tr>
-                                    <td>или иное уполномоченое лицо</td>                                
+                                    <td>или иное уполномоченное лицо</td>                                
                                     <td id="center">(подпись)</td>
                                     <td></td>
                                     <td id="center">(ф.и.о.)</td>
@@ -308,7 +309,7 @@ $LoadBanc = unserialize($LoadItems['System']['bank']);
                                     <td>____________________</td>
                                 </tr>
                                 <tr>
-                                    <td>или иное уполномоченое лицо</td>                                
+                                    <td>или иное уполномоченное лицо</td>                                
                                     <td id="center">(подпись)</td>
                                     <td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
                                     <td id="center" >(ф.и.о.)</td>

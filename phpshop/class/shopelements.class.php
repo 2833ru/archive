@@ -70,6 +70,9 @@ class PHPShopProductElements extends PHPShopElements {
         $this->dengi = $this->PHPShopSystem->getParam('dengi');
         $this->currency = $this->currency();
 
+        // Настройки
+        $this->format = intval($this->PHPShopSystem->getSerilizeParam("admoption.price_znak"));
+
         // HTML опции верстки
         $this->setHtmlOption(__CLASS__);
     }
@@ -92,9 +95,9 @@ class PHPShopProductElements extends PHPShopElements {
             $currency = $this->dengi;
 
         $row = $this->select(array('*'), array('id' => '=' . intval($currency)), false, array('limit' => 1), __FUNCTION__, array('base' => $this->getValue('base.currency'), 'cache' => 'true'));
-        
-        if($name == 'code' and ($row['iso'] == 'RUR' or $row['iso']=="RUB"))
-        return 'p';
+
+        if ($name == 'code' and ($row['iso'] == 'RUR' or $row['iso'] == "RUB"))
+            return 'p';
 
         return $row[$name];
     }
@@ -218,7 +221,7 @@ class PHPShopProductElements extends PHPShopElements {
             $this->set('productSklad', $this->lang('product_on_sklad') . " " . $row['items'] . " " . $this->lang('product_on_sklad_i'));
         else
             $this->set('productSklad', '');
-        
+
         // Форматирование
         $price = number_format($this->price($row), $this->format, '.', ' ');
 
@@ -233,13 +236,13 @@ class PHPShopProductElements extends PHPShopElements {
 
             // Если нет новой цены
             if (empty($row['price_n'])) {
-                $this->set('productPrice',  $price);
+                $this->set('productPrice', $price);
                 $this->set('productPriceRub', '');
             }
 
             // Если есть новая цена
             else {
-                $productPrice =  $price;
+                $productPrice = $price;
                 $productPriceNew = $this->price($row, true);
                 $this->set('productPrice', $productPrice);
                 $this->set('productPriceRub', PHPShopText::strike($productPriceNew . " " . $this->currency));
@@ -248,7 +251,7 @@ class PHPShopProductElements extends PHPShopElements {
 
         // Товар под заказ
         else {
-            $this->set('productPrice',  $price);
+            $this->set('productPrice', $price);
             $this->set('productPriceRub', $this->lang('sklad_mesage'));
             $this->set('ComStartNotice', '');
             $this->set('ComEndNotice', '');

@@ -13,7 +13,11 @@ function template_CID_Product($obj, $data, $rout) {
             case 2:
                 $obj->set('gridSetBactive', 'active');
                 break;
-            default: $obj->set('gridSetBactive', 'active');
+            default:
+                if ($obj->cell == 1)
+                    $obj->set('gridSetAactive', 'active');
+                else
+                    $obj->set('gridSetBactive', 'active');
         }
 
 
@@ -46,11 +50,17 @@ function template_CID_Product($obj, $data, $rout) {
 function template_parent($obj, $dataArray, $rout) {
 
     if ($rout == 'END') {
-        
+
         if (count($obj->select_value > 0)) {
             $obj->set('parentList', '');
-            
-            foreach ($obj->select_value as $value) {
+
+            foreach ($obj->select_value as $k => $value) {
+
+                if ($k == 0)
+                    $obj->set('checked', 'checked');
+                else
+                    $obj->set('checked', null);
+
                 $obj->set('parentName', $value[0]);
                 $obj->set('parentId', $value[1]);
                 $obj->set('parentCheckedId', $value[1]);
@@ -58,9 +68,9 @@ function template_parent($obj, $dataArray, $rout) {
                 $disp = ParseTemplateReturn("product/product_odnotip_product_parent_one.tpl");
                 $obj->set('parentList', $disp, true);
             }
-            
-            if(empty($dataArray['sklad']))
-            $obj->set('productParentList', ParseTemplateReturn("product/product_odnotip_product_parent.tpl"));
+
+            if (empty($dataArray['sklad']))
+                $obj->set('productParentList', ParseTemplateReturn("product/product_odnotip_product_parent.tpl"));
         }
     }
 }
@@ -72,9 +82,9 @@ function template_UID($obj, $dataArray, $rout) {
             $obj->set('ComStartCart', '<!--');
             $obj->set('ComEndCart', '-->');
             //$obj->set('ComEnd','-->');
-            
-            if(empty($dataArray['sklad']))
-            $obj->set('optionsDisp', ParseTemplateReturn("product/product_option_product.tpl"));
+
+            if (empty($dataArray['sklad']))
+                $obj->set('optionsDisp', ParseTemplateReturn("product/product_option_product.tpl"));
         }
 
         //$obj->set('brandUidDescription',str_replace('href','href="#" data-url',$GLOBALS['SysValue']['other']['brandUidDescription']));
@@ -126,6 +136,10 @@ function template_image_gallery($obj, $array) {
     $data = $PHPShopOrm->select(array('*'), array('parent' => '=' . $array['id']), array('order' => 'num'), array('limit' => 100));
     $i = 0;
     $s = 1;
+
+    // Нет данных в галерее
+    if (!is_array($data) and !empty($array['pic_big']))
+        $data[] = array('name' => $array['pic_big']);
 
     if (is_array($data)) {
 

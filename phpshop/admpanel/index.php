@@ -12,7 +12,7 @@ PHPShopObj::loadClass("orm");
 PHPShopObj::loadClass("admgui");
 PHPShopObj::loadClass("update");
 
-$PHPShopBase = new PHPShopBase($_classPath . "inc/config.ini", true, true);
+$PHPShopBase = new PHPShopBase($_classPath . "inc/config.ini", true, false);
 $PHPShopSystem = new PHPShopSystem();
 
 $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['users']);
@@ -60,7 +60,7 @@ function actionLogout() {
 
 // Экшен генерация хеша на смену пароля
 function actionHash() {
-    global $PHPShopOrm, $notification,$PHPShopSystem;
+    global $PHPShopOrm, $notification, $PHPShopSystem;
 
     if (PHPShopSecurity::true_param($_POST['actionHash']) and PHPShopSecurity::true_login($_POST['log']) and strpos($_SERVER["HTTP_REFERER"], $_SERVER['SERVER_NAME'])) {
 
@@ -84,10 +84,10 @@ function actionHash() {
 
 // Экшен геренация пароля
 function actionUpdate() {
-    global $PHPShopOrm, $notification,$PHPShopSystem;
+    global $PHPShopOrm, $notification, $PHPShopSystem;
 
 
-    $hash = mysqli_real_escape_string($PHPShopOrm->link_db,stripslashes($_GET['newPassGen']));
+    $hash = mysqli_real_escape_string($PHPShopOrm->link_db, stripslashes($_GET['newPassGen']));
 
     if (PHPShopSecurity::true_param($_GET['newPassGen'])) {
 
@@ -153,24 +153,41 @@ function actionEnter() {
     PHPShopParser::set('error', 'has-error');
 }
 
+// Поиск лицензии
+function getLicense($file) {
+    $fstat = explode(".", $file);
+    if ($fstat[1] == "lic")
+        return $file;
+}
+
 function actionStart() {
     global $PHPShopSystem, $PHPShopBase, $notification;
 
+    $License = @parse_ini_file("../../license/" . PHPShopFile::searchFile('../../license/', 'getLicense', true), 1);
+
+    // Ознакомительный режим
+    if (is_array($License) and $License['License']['Expires'] != 'Never' and $License['License']['Expires'] < time()) {
+        PHPShopParser::set('title', 'Окончание работы PHPShop');
+        PHPShopParser::set('server', getenv('SERVER_NAME'));
+        PHPShopParser::set('serverLocked', getenv('SERVER_NAME'));
+        exit(PHPShopParser::file($_SERVER['DOCUMENT_ROOT'] . '/phpshop/lib/templates/error/license.tpl'));
+        exit("Ошибка проверки лицензии для SERVER_NAME=" . $_SERVER["SERVER_NAME"] . ", HardwareLocked=" . getenv('SERVER_NAME'));
+    }
 
     if (!empty($_SESSION['logPHPSHOP']) and empty($_SESSION['return']))
         header('Location: ./admin.php');
-    
-    // Демо-режим
-   if( $PHPShopBase->getParam('template_theme.demo') == 'true'){
-       PHPShopParser::set('user', 'demo');
-       PHPShopParser::set('password', 'demouser');
-   }
 
-    PHPShopParser::set('title', 'PHPShop - '.__('Авторизация'));
+    // Демо-режим
+    if ($PHPShopBase->getParam('template_theme.demo') == 'true') {
+        PHPShopParser::set('user', 'demo');
+        PHPShopParser::set('password', 'demouser');
+    }
+
+    PHPShopParser::set('title', 'PHPShop - ' . __('Авторизация'));
     PHPShopParser::set('version', $PHPShopBase->getParam('upload.version'));
     $theme = PHPShopSecurity::TotalClean($PHPShopSystem->getSerilizeParam('admoption.theme'));
-    if(!file_exists('./css/bootstrap-theme-'.$theme.'.css'))
-            $theme='default';
+    if (!file_exists('./css/bootstrap-theme-' . $theme . '.css'))
+        $theme = 'default';
     PHPShopParser::set('theme', $theme);
     PHPShopParser::set('notification', $notification);
     PHPShopParser::file('tpl/signin.tpl');

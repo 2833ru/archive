@@ -16,7 +16,7 @@
         <link rel="icon" href="/favicon.ico"> 
 
         <!-- Bootstrap -->
-        <link id="bootstrap_theme" href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@css/@bootstrap_theme@.css" rel="stylesheet">
+        <link id="bootstrap_theme" data-name="@php echo $_SESSION['skin']; php@" href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@css/@bootstrap_theme@.css" rel="stylesheet">
 
         <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
         <!--[if lt IE 9]>
@@ -24,7 +24,7 @@
           <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
         <![endif]-->
     </head>
-    <body id="body">
+    <body id="body" data-dir="@ShopDir@" data-path="@php echo $GLOBALS['PHPShopNav']->objNav['path']; php@" data-id="@php echo $GLOBALS['PHPShopNav']->objNav['id']; php@">
         
         <!-- Template -->
         <link href="@pageCss@" type="text/css" rel="stylesheet">
@@ -66,7 +66,7 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-md-4"><h4>Тел: @telNum@</h4></div>
+                        <div class="col-md-7"><h4>Тел: @telNumMobile@</h4></div>
                         <div class="col-md-5"><form action="/search/" role="search" method="post">
                                 <div class="input-group">
                                     <input name="words" maxlength="50" id="search" class="form-control" placeholder="Искать.." required="" type="search" data-trigger="manual" data-container="body" data-toggle="popover" data-placement="bottom" data-html="true"  data-content="">
@@ -76,7 +76,7 @@
                                 </div>
                             </form>
                         </div>
-                        <div class="col-md-3">@valutaDisp@</div>
+                        <!--<div class="col-md-3">@valutaDisp@</div>-->
                     </div>    
                 </div>
             </div>
@@ -176,7 +176,7 @@
                         <a href="/forma/" class="list-group-item" title="Форма связи">Форма связи</a>
                     </div>
 
-                    <div>@skinSelect@</div>
+  
                     @leftMenu@
                     <div class="news-list">
                         @miniNews@
@@ -288,6 +288,8 @@
             </div>
         </div>
         <!--/ Модальное окно авторизации-->
+        
+        @editor@
 
         <!-- Fixed mobile bar -->
         <div class="bar-padding-fix visible-xs"> </div>

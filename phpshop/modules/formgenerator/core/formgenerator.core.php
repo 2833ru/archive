@@ -65,7 +65,7 @@ class PHPShopFormgenerator extends PHPShopCore {
                 if (strstr($k, 'formgenerator')) {
 
                     // Проверка обязательных полей
-                    if (strstr($k, '*') and empty($v)){
+                    if (strstr($k, '*') and empty($v)) {
                         $error = true;
                     }
 
@@ -95,8 +95,9 @@ E-mail: ' . $mail . '
 ';
 
                 // Сообщение пользователю
-                if (!empty($data['user_mail_copy']) and PHPShopSecurity::true_email($mail))
-                    $PHPShopMail = new PHPShopMail($mail, $this->PHPShopSystem->getValue("adminmail2"), $zag, $content);
+                if (!empty($data['user_mail_copy']) and PHPShopSecurity::true_email($mail)) {
+                    new PHPShopMail($mail, $this->PHPShopSystem->getEmail(), $zag, $content, false, false, array('replyto' => $this->PHPShopSystem->getEmail()));
+                }
 
 
                 // Если пустая почта отправителя
@@ -108,10 +109,13 @@ E-mail: ' . $mail . '
                     include_once($GLOBALS['SysValue']['class']['formgeneratormail']);
 
                 // Сообщение администратору
+                if (empty($data['mail']))
+                    $data['mail'] = $this->PHPShopSystem->getEmail();
                 if (!empty($_FILES['forma_file']['tmp_name']))
-                    $PHPShopMailFile = new PHPShopMailFile($data['mail'], $mail, $zag, $content, $_FILES['forma_file']['name'], $_FILES['forma_file']['tmp_name']);
-                else
-                    $PHPShopMail = new PHPShopMail($data['mail'], $mail, $zag, $content);
+                    new PHPShopMailFile($data['mail'], $mail, $zag, $content, $_FILES['forma_file']['name'], $_FILES['forma_file']['tmp_name']);
+                else {
+                    new PHPShopMail($data['mail'], $this->PHPShopSystem->getEmail(), $zag, $content, false, false, array('replyto' => $mail));
+                }
 
                 // Мета
                 $this->title = "Сообщение отправлено - " . $this->PHPShopSystem->getValue("name");

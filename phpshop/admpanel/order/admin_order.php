@@ -19,14 +19,17 @@ function actionStart() {
             $order_status_value[] = array($status_val['name'], $status_val['id'], $_GET['where']['statusi']);
         }
 
+    /*
     if (empty($_GET['where']['statusi']))
         $_GET['where']['statusi'] = 'none';
+    */
 
     $order_status_value[] = array(__('Все заказы'), 'none', $_GET['where']['statusi']);
 
     // Поиск
     $where = null;
     $limit = 300;
+    
     if (is_array($_GET['where'])) {
         foreach ($_GET['where'] as $k => $v) {
             if ($v != '' and $v != 'none')

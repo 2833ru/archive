@@ -36,10 +36,10 @@ CREATE TABLE `phpshop_photo` (
 
 CREATE TABLE IF NOT EXISTS `phpshop_1c_docs` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `uid` int(11) NOT NULL DEFAULT '0',
-  `cid` varchar(64) NOT NULL DEFAULT '',
-  `datas` int(11) NOT NULL DEFAULT '0',
-  `datas_f` int(11) NOT NULL DEFAULT '0',
+  `uid` int(11) DEFAULT '0',
+  `cid` varchar(64) DEFAULT '',
+  `datas` int(11) DEFAULT '0',
+  `datas_f` int(11) DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `cid` (`cid`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
@@ -52,10 +52,10 @@ CREATE TABLE IF NOT EXISTS `phpshop_1c_docs` (
 
 CREATE TABLE IF NOT EXISTS `phpshop_1c_jurnal` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `datas` varchar(64) NOT NULL DEFAULT '0',
-  `p_name` varchar(64) NOT NULL DEFAULT '',
-  `f_name` varchar(64) NOT NULL DEFAULT '',
-  `time` float NOT NULL DEFAULT '0',
+  `datas` varchar(64) DEFAULT '0',
+  `p_name` varchar(64) DEFAULT '',
+  `f_name` varchar(64) DEFAULT '',
+  `time` float  DEFAULT '0',
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
 
@@ -67,14 +67,14 @@ CREATE TABLE IF NOT EXISTS `phpshop_1c_jurnal` (
 
 CREATE TABLE IF NOT EXISTS `phpshop_baners` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(64) NOT NULL DEFAULT '',
-  `content` text NOT NULL,
-  `count_all` int(11) NOT NULL DEFAULT '0',
-  `count_today` int(11) NOT NULL DEFAULT '0',
-  `flag` enum('0','1') NOT NULL DEFAULT '0',
-  `datas` varchar(32) NOT NULL DEFAULT '',
-  `limit_all` int(11) NOT NULL DEFAULT '0',
-  `dir` varchar(255) NOT NULL DEFAULT '',
+  `name` varchar(64) DEFAULT '',
+  `content` text,
+  `count_all` int(11) DEFAULT '0',
+  `count_today` int(11) DEFAULT '0',
+  `flag` enum('0','1') DEFAULT '0',
+  `datas` varchar(32) DEFAULT '',
+  `limit_all` int(11) DEFAULT '0',
+  `dir` varchar(255) DEFAULT '',
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
 
@@ -95,34 +95,34 @@ INSERT INTO `phpshop_baners` (`id`, `name`, `content`, `count_all`, `count_today
 CREATE TABLE IF NOT EXISTS `phpshop_categories` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(64) NOT NULL DEFAULT '',
-  `num` int(11) NOT NULL DEFAULT '0',
+  `num` int(11) DEFAULT '0',
   `parent_to` int(11) NOT NULL DEFAULT '0',
-  `yml` enum('0','1') NOT NULL DEFAULT '1',
-  `num_row` enum('1','2','3','4') NOT NULL DEFAULT '2',
-  `num_cow` tinyint(11) NOT NULL DEFAULT '0',
-  `sort` blob NOT NULL,
-  `content` text NOT NULL,
-  `vid` enum('0','1') NOT NULL DEFAULT '0',
-  `name_rambler` varchar(255) NOT NULL DEFAULT '',
-  `servers` varchar(255) NOT NULL DEFAULT '',
-  `title` varchar(255) NOT NULL DEFAULT '',
-  `title_enabled` enum('0','1','2') NOT NULL DEFAULT '0',
-  `title_shablon` varchar(255) NOT NULL DEFAULT '',
-  `descrip` varchar(255) NOT NULL DEFAULT '',
-  `descrip_enabled` enum('0','1','2') NOT NULL DEFAULT '0',
-  `descrip_shablon` varchar(255) NOT NULL DEFAULT '',
-  `keywords` varchar(255) NOT NULL DEFAULT '',
-  `keywords_enabled` enum('0','1','2') NOT NULL DEFAULT '0',
-  `keywords_shablon` varchar(255) NOT NULL DEFAULT '',
-  `skin` varchar(64) NOT NULL DEFAULT '',
-  `skin_enabled` enum('0','1') NOT NULL DEFAULT '0',
-  `order_by` enum('1','2','3') NOT NULL DEFAULT '3',
-  `order_to` enum('1','2') NOT NULL DEFAULT '1',
-  `secure_groups` varchar(255) NOT NULL,
-  `icon` varchar(255) NOT NULL,
-  `icon_description` varchar(255) NOT NULL,
-  `count` int(11) NOT NULL,
-  `cat_seo_name` varchar(255) NOT NULL,
+  `yml` enum('0','1') DEFAULT '1',
+  `num_row` enum('1','2','3','4')  DEFAULT '2',
+  `num_cow` tinyint(11) DEFAULT '0',
+  `sort` blob,
+  `content` text,
+  `vid` enum('0','1') DEFAULT '0',
+  `name_rambler` varchar(255) DEFAULT '',
+  `servers` varchar(255) DEFAULT '',
+  `title` varchar(255) DEFAULT '',
+  `title_enabled` enum('0','1','2')DEFAULT '0',
+  `title_shablon` varchar(255) DEFAULT '',
+  `descrip` varchar(255) DEFAULT '',
+  `descrip_enabled` enum('0','1','2') DEFAULT '0',
+  `descrip_shablon` varchar(255) DEFAULT '',
+  `keywords` varchar(255) DEFAULT '',
+  `keywords_enabled` enum('0','1','2') DEFAULT '0',
+  `keywords_shablon` varchar(255) DEFAULT '',
+  `skin` varchar(64) DEFAULT '',
+  `skin_enabled` enum('0','1') DEFAULT '0',
+  `order_by` enum('1','2','3')  DEFAULT '3',
+  `order_to` enum('1','2') DEFAULT '1',
+  `secure_groups` varchar(255) DEFAULT '',
+  `icon` varchar(255) DEFAULT '',
+  `icon_description` varchar(255) DEFAULT '',
+  `count` int(11) DEFAULT '0',
+  `cat_seo_name` varchar(255) DEFAULT '',
   PRIMARY KEY (`id`),
   KEY `parent_to` (`parent_to`),
   KEY `servers` (`servers`)
@@ -159,11 +159,11 @@ CREATE TABLE IF NOT EXISTS `phpshop_comment` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `datas` varchar(32) DEFAULT NULL,
   `name` varchar(32) DEFAULT NULL,
-  `parent_id` int(11) NOT NULL DEFAULT '0',
+  `parent_id` int(11) DEFAULT '0',
   `content` text,
-  `user_id` int(11) NOT NULL DEFAULT '0',
-  `enabled` enum('0','1') NOT NULL DEFAULT '0',
-  `rate` smallint(1) NOT NULL DEFAULT '0',
+  `user_id` int(11) DEFAULT '0',
+  `enabled` enum('0','1') DEFAULT '0',
+  `rate` smallint(1) DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `id` (`id`),
   KEY `parent_id` (`parent_id`)
@@ -237,19 +237,19 @@ INSERT INTO `phpshop_comment` (`id`, `datas`, `name`, `parent_id`, `content`, `u
 
 CREATE TABLE IF NOT EXISTS `phpshop_delivery` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `city` varchar(255) NOT NULL DEFAULT '',
-  `price` float NOT NULL DEFAULT '0',
-  `enabled` enum('0','1') NOT NULL DEFAULT '1',
-  `flag` enum('0','1') NOT NULL DEFAULT '0',
-  `price_null` float NOT NULL DEFAULT '0',
+  `city` varchar(255) DEFAULT '',
+  `price` float DEFAULT '0',
+  `enabled` enum('0','1') DEFAULT '1',
+  `flag` enum('0','1') DEFAULT '0',
+  `price_null` float DEFAULT '0',
   `price_null_enabled` enum('0','1') DEFAULT '0',
-  `PID` int(11) NOT NULL DEFAULT '0',
-  `taxa` int(11) NOT NULL DEFAULT '0',
-  `is_folder` enum('0','1') NOT NULL DEFAULT '0',
-  `city_select` enum('0','1','2') NOT NULL DEFAULT '0',
-  `data_fields` blob NOT NULL,
-  `num` smallint(3) NOT NULL DEFAULT '0',
-  `icon` varchar(255) NOT NULL,
+  `PID` int(11) DEFAULT '0',
+  `taxa` int(11) DEFAULT '0',
+  `is_folder` enum('0','1') DEFAULT '0',
+  `city_select` enum('0','1','2') DEFAULT '0',
+  `data_fields` blob,
+  `num` smallint(3) DEFAULT '0',
+  `icon` varchar(255) DEFAULT '',
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
 
@@ -275,9 +275,9 @@ INSERT INTO `phpshop_delivery` (`id`, `city`, `price`, `enabled`, `flag`, `price
 
 CREATE TABLE IF NOT EXISTS `phpshop_discount` (
   `id` tinyint(11) unsigned NOT NULL AUTO_INCREMENT,
-  `sum` int(255) NOT NULL DEFAULT '0',
-  `discount` varchar(64) NOT NULL DEFAULT '',
-  `enabled` enum('0','1') NOT NULL DEFAULT '0',
+  `sum` int(255) DEFAULT '0',
+  `discount` float(2) DEFAULT '0',
+  `enabled` enum('0','1') DEFAULT '0',
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
 
@@ -289,10 +289,10 @@ CREATE TABLE IF NOT EXISTS `phpshop_discount` (
 
 CREATE TABLE IF NOT EXISTS `phpshop_foto` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `parent` int(11) NOT NULL DEFAULT '0',
-  `name` varchar(64) NOT NULL DEFAULT '',
-  `num` tinyint(11) NOT NULL DEFAULT '0',
-  `info` varchar(255) NOT NULL DEFAULT '',
+  `parent` int(11) DEFAULT '0',
+  `name` varchar(64) DEFAULT '',
+  `num` tinyint(11) DEFAULT '0',
+  `info` varchar(255) DEFAULT '',
   PRIMARY KEY (`id`),
   KEY `parent` (`parent`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
@@ -735,7 +735,7 @@ CREATE TABLE IF NOT EXISTS `phpshop_gbook` (
   `tema` text,
   `otsiv` text,
   `otvet` text,
-  `flag` enum('0','1') NOT NULL DEFAULT '0',
+  `flag` enum('0','1') DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `id` (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
@@ -772,11 +772,11 @@ CREATE TABLE IF NOT EXISTS `phpshop_jurnal` (
 CREATE TABLE IF NOT EXISTS `phpshop_links` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(64) NOT NULL DEFAULT '',
-  `image` text NOT NULL,
-  `opis` text NOT NULL,
-  `link` text NOT NULL,
+  `image` text,
+  `opis` text,
+  `link` text,
   `num` int(11) DEFAULT NULL,
-  `enabled` enum('0','1') NOT NULL DEFAULT '0',
+  `enabled` enum('0','1') DEFAULT '0',
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
 
@@ -798,8 +798,8 @@ INSERT INTO `phpshop_links` (`id`, `name`, `image`, `opis`, `link`, `num`, `enab
 
 CREATE TABLE IF NOT EXISTS `phpshop_black_list` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `ip` varchar(32) NOT NULL DEFAULT '',
-  `datas` varchar(32) NOT NULL DEFAULT '',
+  `ip` varchar(32) DEFAULT '',
+  `datas` varchar(32) DEFAULT '',
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
 
@@ -809,12 +809,12 @@ CREATE TABLE IF NOT EXISTS `phpshop_black_list` (
 
 CREATE TABLE IF NOT EXISTS `phpshop_menu` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(64) NOT NULL DEFAULT '',
-  `content` text NOT NULL,
-  `flag` enum('0','1') NOT NULL DEFAULT '1',
-  `num` int(11) NOT NULL DEFAULT '0',
-  `dir` varchar(64) NOT NULL,
-  `element` enum('0','1') NOT NULL DEFAULT '0',
+  `name` varchar(64) DEFAULT '',
+  `content` text,
+  `flag` enum('0','1') DEFAULT '1',
+  `num` int(11) DEFAULT '0',
+  `dir` varchar(64),
+  `element` enum('0','1') DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `flag` (`flag`),
   KEY `element` (`element`)
@@ -838,13 +838,13 @@ INSERT INTO `phpshop_menu` (`id`, `name`, `content`, `flag`, `num`, `dir`, `elem
 
 CREATE TABLE IF NOT EXISTS `phpshop_messages` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,
-  `PID` int(11) NOT NULL DEFAULT '0',
-  `UID` int(11) NOT NULL DEFAULT '0',
-  `AID` int(11) NOT NULL DEFAULT '0',
-  `DateTime` datetime NOT NULL DEFAULT '1970-01-01 00:00:00',
-  `Subject` text NOT NULL,
-  `Message` text NOT NULL,
-  `enabled` enum('0','1') NOT NULL DEFAULT '0',
+  `PID` int(11) DEFAULT '0',
+  `UID` int(11) DEFAULT '0',
+  `AID` int(11) DEFAULT '0',
+  `DateTime` datetime DEFAULT '1970-01-01 00:00:00',
+  `Subject` text,
+  `Message` text,
+  `enabled` enum('0','1') DEFAULT '0',
   PRIMARY KEY (`ID`),
   KEY `enabled` (`enabled`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
@@ -856,9 +856,9 @@ CREATE TABLE IF NOT EXISTS `phpshop_messages` (
 --
 
 CREATE TABLE IF NOT EXISTS `phpshop_modules` (
-  `path` varchar(255) NOT NULL DEFAULT '',
-  `name` varchar(255) NOT NULL DEFAULT '',
-  `date` int(11) NOT NULL DEFAULT '0',
+  `path` varchar(255) DEFAULT '',
+  `name` varchar(255) DEFAULT '',
+  `date` int(11) DEFAULT '0',
   PRIMARY KEY (`path`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
 
@@ -883,10 +883,10 @@ INSERT INTO `phpshop_modules` (`path`, `name`, `date`) VALUES
 
 CREATE TABLE IF NOT EXISTS `phpshop_modules_button_forms` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(64) NOT NULL DEFAULT '',
-  `content` text NOT NULL,
-  `enabled` enum('0','1') NOT NULL DEFAULT '1',
-  `num` tinyint(11) NOT NULL,
+  `name` varchar(64)DEFAULT '',
+  `content` text,
+  `enabled` enum('0','1') DEFAULT '1',
+  `num` tinyint(11),
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
 
@@ -905,8 +905,8 @@ INSERT INTO `phpshop_modules_button_forms` (`id`, `name`, `content`, `enabled`, 
 
 CREATE TABLE IF NOT EXISTS `phpshop_modules_button_system` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `enabled` enum('0','1','2','3') NOT NULL DEFAULT '1',
-  `serial` varchar(64) NOT NULL DEFAULT '',
+  `enabled` enum('0','1','2','3') DEFAULT '1',
+  `serial` varchar(64) DEFAULT '',
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
 
@@ -926,9 +926,9 @@ INSERT INTO `phpshop_modules_button_system` (`id`, `enabled`, `serial`) VALUES
 
 CREATE TABLE IF NOT EXISTS `phpshop_modules_key` (
   `path` varchar(64) NOT NULL DEFAULT '',
-  `date` int(11) NOT NULL DEFAULT '0',
-  `key` text NOT NULL,
-  `verification` varchar(32) NOT NULL DEFAULT '',
+  `date` int(11) DEFAULT '0',
+  `key` text,
+  `verification` varchar(32) DEFAULT '',
   PRIMARY KEY (`path`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
 
@@ -941,15 +941,15 @@ CREATE TABLE IF NOT EXISTS `phpshop_modules_key` (
 
 CREATE TABLE IF NOT EXISTS `phpshop_modules_oneclick_jurnal` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `date` int(11) NOT NULL DEFAULT '0',
-  `name` varchar(64) NOT NULL DEFAULT '',
-  `tel` varchar(64) NOT NULL DEFAULT '',
-  `message` text NOT NULL,
-  `product_name` varchar(64) NOT NULL DEFAULT '',
-  `product_id` int(11) NOT NULL,
-  `product_price` varchar(64) NOT NULL DEFAULT '',
-  `status` enum('1','2','3','4') NOT NULL DEFAULT '1',
-  `ip` varchar(64) NOT NULL DEFAULT '',
+  `date` int(11) DEFAULT '0',
+  `name` varchar(64) DEFAULT '',
+  `tel` varchar(64)  DEFAULT '',
+  `message` text,
+  `product_name` varchar(64) DEFAULT '',
+  `product_id` int(11),
+  `product_price` varchar(64) DEFAULT '',
+  `status` enum('1','2','3','4') DEFAULT '1',
+  `ip` varchar(64) DEFAULT '',
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
 
@@ -961,12 +961,12 @@ CREATE TABLE IF NOT EXISTS `phpshop_modules_oneclick_jurnal` (
 
 CREATE TABLE IF NOT EXISTS `phpshop_modules_oneclick_system` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `enabled` enum('0','1','2') NOT NULL DEFAULT '1',
-  `title` text NOT NULL,
-  `title_end` text NOT NULL,
-  `serial` varchar(64) NOT NULL DEFAULT '',
-  `windows` enum('0','1') NOT NULL DEFAULT '0',
-  `version` float NOT NULL DEFAULT '1.1',
+  `enabled` enum('0','1','2') DEFAULT '1',
+  `title` text,
+  `title_end` text,
+  `serial` varchar(64) DEFAULT '',
+  `windows` enum('0','1') DEFAULT '0',
+  `version` float DEFAULT '1.1',
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
 
@@ -985,14 +985,14 @@ INSERT INTO `phpshop_modules_oneclick_system` (`id`, `enabled`, `title`, `title_
 
 CREATE TABLE IF NOT EXISTS `phpshop_modules_returncall_jurnal` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `date` int(11) NOT NULL DEFAULT '0',
-  `time_start` float NOT NULL DEFAULT '10',
-  `time_end` float NOT NULL DEFAULT '18',
-  `name` varchar(64) NOT NULL DEFAULT '',
-  `tel` varchar(64) NOT NULL DEFAULT '',
-  `message` text NOT NULL,
-  `status` enum('1','2','3','4') NOT NULL DEFAULT '1',
-  `ip` varchar(64) NOT NULL DEFAULT '',
+  `date` int(11) DEFAULT '0',
+  `time_start` float DEFAULT '10',
+  `time_end` float DEFAULT '18',
+  `name` varchar(64) DEFAULT '',
+  `tel` varchar(64) DEFAULT '',
+  `message` text,
+  `status` enum('1','2','3','4') DEFAULT '1',
+  `ip` varchar(64) DEFAULT '',
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
 
@@ -1004,13 +1004,13 @@ CREATE TABLE IF NOT EXISTS `phpshop_modules_returncall_jurnal` (
 
 CREATE TABLE IF NOT EXISTS `phpshop_modules_returncall_system` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `enabled` enum('0','1','2') NOT NULL DEFAULT '1',
-  `title` varchar(64) NOT NULL DEFAULT '',
-  `title_end` text NOT NULL,
-  `serial` varchar(64) NOT NULL DEFAULT '',
-  `windows` enum('0','1') NOT NULL DEFAULT '0',
-  `captcha_enabled` enum('1','2') NOT NULL DEFAULT '1',
-  `version` float NOT NULL DEFAULT '1.4',
+  `enabled` enum('0','1','2') DEFAULT '1',
+  `title` varchar(64) DEFAULT '',
+  `title_end` text,
+  `serial` varchar(64) DEFAULT '',
+  `windows` enum('0','1') DEFAULT '0',
+  `captcha_enabled` enum('1','2') DEFAULT '1',
+  `version` float DEFAULT '1.4',
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
 
@@ -1029,10 +1029,10 @@ INSERT INTO `phpshop_modules_returncall_system` (`id`, `enabled`, `title`, `titl
 
 CREATE TABLE IF NOT EXISTS `phpshop_modules_seourlpro_system` (
   `id` int(11) NOT NULL auto_increment,
-  `paginator` enum('1','2') NOT NULL default '1',
-  `cat_content_enabled` enum('1','2') NOT NULL default '1',
-  `serial` varchar(64) NOT NULL default '',
-  `version` FLOAT(2) DEFAULT '1.5' NOT NULL,
+  `paginator` enum('1','2') default '1',
+  `cat_content_enabled` enum('1','2') default '1',
+  `serial` varchar(64) default '',
+  `version` FLOAT(2) DEFAULT '1.5',
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
 
@@ -1052,7 +1052,7 @@ INSERT INTO `phpshop_modules_seourlpro_system` (`id`, `paginator`, `serial`, `ve
 
 CREATE TABLE IF NOT EXISTS `phpshop_modules_socauth_system` (
   `id` smallint(1) NOT NULL DEFAULT '0',
-  `authConfig` blob NOT NULL,
+  `authConfig` blob,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
 
@@ -1072,12 +1072,12 @@ INSERT INTO `phpshop_modules_socauth_system` (`id`, `authConfig`) VALUES
 
 CREATE TABLE IF NOT EXISTS `phpshop_modules_visualcart_memory` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `memory` varchar(64) NOT NULL DEFAULT '',
-  `cart` text NOT NULL,
-  `date` int(11) NOT NULL DEFAULT '0',
-  `user` int(11) NOT NULL DEFAULT '0',
-  `ip` varchar(64) NOT NULL DEFAULT '',
-  `referal` text NOT NULL,
+  `memory` varchar(64)DEFAULT '',
+  `cart` text,
+  `date` int(11) DEFAULT '0',
+  `user` int(11) DEFAULT '0',
+  `ip` varchar(64) DEFAULT '',
+  `referal` text ,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
 
@@ -1089,12 +1089,12 @@ CREATE TABLE IF NOT EXISTS `phpshop_modules_visualcart_memory` (
 
 CREATE TABLE IF NOT EXISTS `phpshop_modules_visualcart_system` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `enabled` enum('0','1','2') NOT NULL DEFAULT '1',
-  `flag` enum('1','2') NOT NULL DEFAULT '1',
-  `title` varchar(64) NOT NULL DEFAULT '',
-  `pic_width` tinyint(100) NOT NULL DEFAULT '0',
-  `memory` enum('0','1') NOT NULL DEFAULT '1',
-  `serial` varchar(64) NOT NULL DEFAULT '',
+  `enabled` enum('0','1','2') DEFAULT '1',
+  `flag` enum('1','2') DEFAULT '1',
+  `title` varchar(64) DEFAULT '',
+  `pic_width` tinyint(100) DEFAULT '0',
+  `memory` enum('0','1') DEFAULT '1',
+  `serial` varchar(64) DEFAULT '',
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
 
@@ -1113,11 +1113,11 @@ INSERT INTO `phpshop_modules_visualcart_system` (`id`, `enabled`, `flag`, `title
 
 CREATE TABLE IF NOT EXISTS `phpshop_news` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `datas` varchar(32) NOT NULL DEFAULT '',
-  `zag` varchar(255) NOT NULL DEFAULT '',
-  `kratko` text NOT NULL,
-  `podrob` text NOT NULL,
-  `datau` int(11) NOT NULL DEFAULT '0',
+  `datas` varchar(32) DEFAULT '',
+  `zag` varchar(255) DEFAULT '',
+  `kratko` text,
+  `podrob` text,
+  `datau` int(11) DEFAULT '0',
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
 
@@ -1129,11 +1129,11 @@ CREATE TABLE IF NOT EXISTS `phpshop_news` (
 
 CREATE TABLE IF NOT EXISTS `phpshop_notice` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `user_id` int(11) NOT NULL DEFAULT '0',
-  `product_id` int(11) NOT NULL DEFAULT '0',
-  `datas_start` varchar(64) NOT NULL DEFAULT '',
-  `datas` varchar(64) NOT NULL DEFAULT '',
-  `enabled` enum('0','1') NOT NULL DEFAULT '1',
+  `user_id` int(11) DEFAULT '0',
+  `product_id` int(11) DEFAULT '0',
+  `datas_start` varchar(64)DEFAULT '',
+  `datas` varchar(64) DEFAULT '',
+  `enabled` enum('0','1') DEFAULT '1',
   PRIMARY KEY (`id`),
   KEY `product_id` (`product_id`),
   KEY `user_id` (`user_id`)
@@ -1147,10 +1147,10 @@ CREATE TABLE IF NOT EXISTS `phpshop_notice` (
 
 CREATE TABLE IF NOT EXISTS `phpshop_opros` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `category` int(11) unsigned NOT NULL DEFAULT '0',
-  `name` varchar(255) NOT NULL DEFAULT '',
-  `total` int(11) NOT NULL DEFAULT '0',
-  `num` tinyint(32) NOT NULL DEFAULT '0',
+  `category` int(11) unsigned DEFAULT '0',
+  `name` varchar(255) DEFAULT '',
+  `total` int(11) DEFAULT '0',
+  `num` tinyint(32) DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `category` (`category`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
@@ -1175,9 +1175,9 @@ INSERT INTO `phpshop_opros` (`id`, `category`, `name`, `total`, `num`) VALUES
 
 CREATE TABLE IF NOT EXISTS `phpshop_opros_categories` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` text NOT NULL,
-  `dir` varchar(32) NOT NULL DEFAULT '',
-  `flag` enum('0','1') NOT NULL DEFAULT '0',
+  `name` text,
+  `dir` varchar(32) DEFAULT '',
+  `flag` enum('0','1') DEFAULT '0',
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
 
@@ -1196,36 +1196,36 @@ INSERT INTO `phpshop_opros_categories` (`id`, `name`, `dir`, `flag`) VALUES
 
 CREATE TABLE IF NOT EXISTS `phpshop_orders` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `datas` varchar(64) NOT NULL DEFAULT '',
-  `uid` varchar(64) NOT NULL DEFAULT '0',
-  `orders` blob NOT NULL,
-  `status` text NOT NULL,
-  `user` int(11) unsigned NOT NULL DEFAULT '0',
-  `seller` enum('0','1') NOT NULL DEFAULT '0',
-  `statusi` tinyint(11) NOT NULL DEFAULT '0',
-  `country` varchar(255) NOT NULL,
-  `state` varchar(255) NOT NULL,
-  `city` varchar(255) NOT NULL,
-  `index` varchar(255) NOT NULL,
-  `fio` varchar(255) NOT NULL,
-  `tel` varchar(255) NOT NULL,
-  `street` varchar(255) NOT NULL,
-  `house` varchar(255) NOT NULL,
-  `porch` varchar(255) NOT NULL,
-  `door_phone` varchar(255) NOT NULL,
-  `flat` varchar(255) NOT NULL,
-  `delivtime` varchar(255) NOT NULL,
-  `org_name` varchar(255) NOT NULL,
-  `org_inn` varchar(255) NOT NULL,
-  `org_kpp` varchar(255) NOT NULL,
-  `org_yur_adres` varchar(255) NOT NULL,
-  `org_fakt_adres` varchar(255) NOT NULL,
-  `org_ras` varchar(255) NOT NULL,
-  `org_bank` varchar(255) NOT NULL,
-  `org_kor` varchar(255) NOT NULL,
-  `org_bik` varchar(255) NOT NULL,
-  `org_city` varchar(255) NOT NULL,
-  `dop_info` text NOT NULL,
+  `datas` varchar(64) DEFAULT '',
+  `uid` varchar(64) DEFAULT '0',
+  `orders` blob,
+  `status` text,
+  `user` int(11) unsigned DEFAULT '0',
+  `seller` enum('0','1')  DEFAULT '0',
+  `statusi` tinyint(11)  DEFAULT '0',
+  `country` varchar(255) DEFAULT '',
+  `state` varchar(255) DEFAULT '',
+  `city` varchar(255) DEFAULT '',
+  `index` varchar(255) DEFAULT '',
+  `fio` varchar(255) DEFAULT '',
+  `tel` varchar(255) DEFAULT '',
+  `street` varchar(255) DEFAULT '',
+  `house` varchar(255) DEFAULT '',
+  `porch` varchar(255) DEFAULT '',
+  `door_phone` varchar(255) DEFAULT '',
+  `flat` varchar(255) DEFAULT '',
+  `delivtime` varchar(255) DEFAULT '',
+  `org_name` varchar(255) DEFAULT '',
+  `org_inn` varchar(255) DEFAULT '',
+  `org_kpp` varchar(255) DEFAULT '',
+  `org_yur_adres` varchar(255) DEFAULT '',
+  `org_fakt_adres` varchar(255) DEFAULT '',
+  `org_ras` varchar(255) DEFAULT '',
+  `org_bank` varchar(255) DEFAULT '',
+  `org_kor` varchar(255) DEFAULT '',
+  `org_bik` varchar(255) DEFAULT '',
+  `org_city` varchar(255) DEFAULT '',
+  `dop_info` text,
   `sum` float,
   UNIQUE KEY `id` (`id`),
   UNIQUE KEY `uid` (`uid`)
@@ -1245,10 +1245,10 @@ INSERT INTO `phpshop_orders` (`id`, `datas`, `uid`, `orders`, `status`, `user`, 
 
 CREATE TABLE IF NOT EXISTS `phpshop_order_status` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(64) NOT NULL DEFAULT '',
-  `color` varchar(64) NOT NULL DEFAULT '',
+  `name` varchar(64) DEFAULT '',
+  `color` varchar(64) DEFAULT '',
   `sklad_action` enum('0','1') DEFAULT '0',
-  `cumulative_action` ENUM('0','1') NOT NULL DEFAULT '0',
+  `cumulative_action` ENUM('0','1') DEFAULT '0',
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
 
@@ -1271,20 +1271,20 @@ INSERT INTO `phpshop_order_status` (`id`, `name`, `color`, `sklad_action`) VALUE
 
 CREATE TABLE IF NOT EXISTS `phpshop_page` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` text NOT NULL,
-  `link` varchar(64) NOT NULL DEFAULT '',
-  `category` int(11) NOT NULL DEFAULT '0',
-  `keywords` text NOT NULL,
-  `description` varchar(255) NOT NULL DEFAULT '',
-  `content` text NOT NULL,
-  `flag` varchar(16) NOT NULL DEFAULT '1',
-  `num` smallint(3) NOT NULL DEFAULT '0',
-  `datas` int(11) NOT NULL DEFAULT '0',
-  `odnotip` text NOT NULL,
-  `title` varchar(255) NOT NULL DEFAULT '',
-  `enabled` enum('0','1') NOT NULL DEFAULT '0',
-  `secure` enum('0','1') NOT NULL DEFAULT '0',
-  `secure_groups` varchar(255) NOT NULL DEFAULT '',
+  `name` text,
+  `link` varchar(64) DEFAULT '',
+  `category` int(11) DEFAULT '0',
+  `keywords` text,
+  `description` varchar(255) DEFAULT '',
+  `content` text,
+  `flag` varchar(16) DEFAULT '1',
+  `num` smallint(3) DEFAULT '0',
+  `datas` int(11) DEFAULT '0',
+  `odnotip` text,
+  `title` varchar(255) DEFAULT '',
+  `enabled` enum('0','1') DEFAULT '0',
+  `secure` enum('0','1') DEFAULT '0',
+  `secure_groups` varchar(255) DEFAULT '',
   UNIQUE KEY `id` (`id`),
   UNIQUE KEY `link` (`link`),
   FULLTEXT KEY `content` (`content`)
@@ -1296,8 +1296,9 @@ CREATE TABLE IF NOT EXISTS `phpshop_page` (
 
 INSERT INTO `phpshop_page` (`id`, `name`, `link`, `category`, `keywords`, `description`, `content`, `flag`, `num`, `datas`, `odnotip`, `title`, `enabled`, `secure`, `secure_groups`) VALUES
 (1, 'Благодарим вас за установку PHPShop @version@', 'index', 2000, '', '', '<p><img style="float: left; margin: 0px 10px 10px 0px;" alt="" src="/UserFiles/Image/Trial/box.png">Представляем PHPShop 5 - новую версию интернет-магазина, в которой мы \nсоединили современные веб-технологии и наш 12-летний опыт создания и \nподдержки интернет-магазинов. Начинка PHPShop 5 - это HTML5, Bootstrap, \nJQuery,  позволяющие создавать качественные, функциональные проекты с \nсовременным и адаптивным дизайном.\n</p>\n<p><strong></strong>\n</p>\n<p>PHPShop - это целый <strong>программный комплекс</strong> для создания и управления интернет-магазином. Кроме самого PHP-скрипта для продажи товара и обработки заказов на сервере,  существует специальный набор дополнительных <strong>бесплатных Windows утилит</strong>, объединенных в пакет <a target="_blank" href="http://phpshop.ru/loads/files/setup.exe">EasyControl</a>. Утилиты делятся на 4 группы по назначению: заполнение товарной базы, управление заказами, настройка дизайна магазина и техническое обслуживание.\n</p>\n<p>К первой относится мощная, уникальная утилита <strong></strong><a target="_blank" href="http://faq.phpshop.ru/page/batch-loading.html">PriceLoader</a><strong></strong> для комплексной обработки прайс-листов поставщиков, автоматической загрузки и обновления номенклатуры в ваш магазин. Так же PriceLoader позволяет делать копии товарной базы на основе файл Яндекс.Маркета (YML-прайс), пакетно добавлять и обрабатывать изображения к товарам, удалять с сервера устаревшие изображения, переводить описание товара на любой язык через Яндекс.Перевод. Вам не понадобится часами заполнять описания товаров, достаточно <strong>один раз настроить PriceLoader</strong> на автоматическую обработку и синхронизацию цен.\n</p>\n<p>Утилиты Order Agent, Monitor, Chat помогают осуществлять <strong>контроль и обработку новых заказов</strong>, получать статистику посещений и общаться с пользователями сайта с помощью <strong>текстового чата</strong> приложения Chat.<br>\n</p>\n<p>С помощью утилиты визуальной настройки дизайна  <strong></strong><a target="_blank" href="http://wiki.phpshop.ru/index.php/PHPShop_Editor">Editor</a>, приложения эмулятора интернет-магазина <strong>Мой Магазин</strong> и синхронизации <strong>Server Synhronizer</strong>  можно легко на своем локальном компьютере настроить внешний вид магазина, заполнить его товарами (например, через PriceLoader или 1С), настроить все функции и модули, а затем одним кликом <a target="_blank" href="http://faq.phpshop.ru/page/synch.html">синхронизировать</a> результат с рабочим сайтом. Это сэкономит ваше время и не потребует постоянного подключения к интернету.\n</p>\n<p>К последней группе относятся утилиты для обслуживания PHP скриптов на сервере. Installer и <strong>Updater</strong> позволяют установить и обновить PHPShop в 3 клика. После ввода нескольких  параметров доступа к сайту утилиты загрузят нужные файлы и обновят данные. Своевременные обновления защищают магазин и расширяют его технические возможности. Для <strong>восстановления потерянного пароля</strong> используется <a target="_blank" href="http://wiki.phpshop.ru/index.php/Password_Restore_Help">PasswordRestore</a>. SiteLock поможет защитить сайт дополнительными сложно подбираемыми паролями. <strong></strong>Интегрированная среда разработки<strong> </strong><a target="_blank" href="http://wiki.phpshop.ru/index.php/PHPShop_IDE">IDE</a><strong></strong> послужит серьезным подспорьем разработчикам для расширения возможностей PHPShop и написания собственных модулей.\n</p>\n<p>Для пользователей 1С существует возможность автоматизировать заполнение номенклатурой и обработки заказов с PHPShop. Мощный фирменный функционал <a target="_blank" href="http://phpshop.ru/page/1c.html">синхронизации интернет-магазина с 1С</a> намного повысит эффективность вашего бизнеса. Бесплатная удаленная настройка нашими специалистами такой синхронизации  сократит время запуска проекта.\n</p>\n<p>По любым техническим вопросам или программным доработкам можно обратится в <a target="_blank" href="https://help.phpshop.ru">службу технической поддержки</a>. Мы оказываем <strong>полный спектр услуг</strong>, в том числе создание уникального <a target="_blank" href="http://phpshop-design.ru/page/brif-design.html">персонального дизайна</a> или доработка существующего.\n</p>\n<blockquote>Мы делаем прибыльные интернет-магазины уже 12 лет, - доверьте свой бизнес опытным разработчикам!\n<footer class="text-right"><cite>Команда PHPShop Software</cite></footer>\n</blockquote>', '', 0, 1458900915, '', '', '1', '0', ''),
-(24, 'Дизайн', 'design', 1000, '', '', '<p>В комплект интернет-магазина PHPShop @version@ входят 16 шаблонов с десятками дополнительных цветовых оттенков. В установочный пакет включены только 6 самых популярных адаптивных шаблонов, остальные шаблоны можно установить из панели управления в разделе <kbd>Настройка</kbd> - <kbd>Шаблоны дизайна</kbd>\n</p>\n<a href="/?skin=spice"><img class="template" title="spice" src="/UserFiles/Image/Trial/template_icon/spice.gif" alt="" width="150" height="120"></a>\n<a href="/?skin=astero"><img class="template" title="astero" src="/UserFiles/Image/Trial/template_icon/astero.gif" alt="" height="120" width="150"></a>\n<a href="/?skin=bootstrap"><img class="template" title="bootstrap" src="/UserFiles/Image/Trial/template_icon/bootstrap.gif" alt="" height="120" width="150"></a><a href="/?skin=white_brick"><img class="template" title="white_brick" src="/UserFiles/Image/Trial/template_icon/white_brick.gif" alt="" height="120" width="150"></a><a href="/?skin=variaty"><img class="template" title="variaty" src="/UserFiles/Image/Trial/template_icon/variaty.gif" alt="" height="120" width="150"></a><a href="/?skin=mobile"><img class="template" title="mobil" src="/UserFiles/Image/Trial/template_icon/mobile.gif" alt="" height="120" width="150"></a><a href="/?skin=sky"><img class="template" title="skyblue" src="/UserFiles/Image/Trial/template_icon/skyblue.gif" alt="" height="120" width="150"></a><a href="/?skin=phpshop_8"><img class="template" title="phpshop_8" src="/UserFiles/Image/Trial/template_icon/phpshop_8.gif" alt="" height="120" width="150"></a><a href="/?skin=phpshop_7"><img class="template" title="phpshop_7" src="/UserFiles/Image/Trial/template_icon/phpshop_7.gif" alt="" height="120" width="150"></a><a href="/?skin=phpshop_6"><img class="template" title="phpshop_6" src="/UserFiles/Image/Trial/template_icon/phpshop_6.gif" alt="" height="120" width="150"></a><a href="/?skin=phpshop_5"><img class="template" title="phpshop_5" src="/UserFiles/Image/Trial/template_icon/phpshop_5.gif" alt="" height="120" width="150"></a><a href="/?skin=phpshop_4"><img class="template" title="phpshop_4" src="/UserFiles/Image/Trial/template_icon/phpshop_4.gif" alt="" height="120" width="150"></a><a href="/?skin=phpshop_3"><img class="template" title="phpshop_3" src="/UserFiles/Image/Trial/template_icon/phpshop_3.gif" alt="" height="120" width="150"></a><a href="/?skin=phpshop_2"><img class="template" title="phpshop_2" src="/UserFiles/Image/Trial/template_icon/phpshop_2.gif" alt="" height="120" width="150"></a><a href="/?skin=phpshop_1"><img class="template" title="phpshop_1" src="/UserFiles/Image/Trial/template_icon/phpshop_1.gif" alt="" height="120" width="150"></a><a href="/?skin=aero"><img class="template" title="aeroblue" src="/UserFiles/Image/Trial/template_icon/aeroblue.gif" alt="" height="120" width="150"></a><a href="/?skin=classic"><img class="template" title="classic" src="/UserFiles/Image/Trial/template_icon/green_classic.gif" alt="" height="120" width="150"></a>\n<h2>Изменение  дизайна</h2>\nДля редактирования дизайна из панели управления используется функция <strong>Редактор шаблонов</strong>.\n<p><a title="Инструкция Template Edit" href="http://faq.phpshop.ru/page/template-edit.html" target="_blank"><img class="template" src="/UserFiles/Image/Trial/template_edit.jpg" alt="" width="95%"></a>\n</p>\n<p>Для редактирования дизайна на локальном компьютере под управлением  Windows существует <strong>визуальный редактор</strong> шаблонов  PHPShop Editor.\n</p>\n<p><a title="Инструкция PHPShop Editor" href="http://faq.phpshop.ru/page/your-design.html" target="_blank"><img class="template" src="/UserFiles/Image/Trial/phpshop_editor.jpg" alt="PHPShop Editor" width="95%"></a>\n</p>\n<h2>Персональный  дизайн</h2>\nДизайн-бюро <a href="http://phpshop-design.ru" target="_blank">PHPShop.Design</a> делает дизайны только для  PHPShop, а значит, неожиданностей при создании дизайна не произойдет, и  вы получите уникальный профессиональный дизайн в срок, отвечающий всем  требованиям сегодняшнего дня.\n<ol>\n	<li>Мы на 100% знаем свою платформу, а это значит, что  Вам не придется переплачивать за часы работы дизайнера, не знакомого с  PHPShop. </li>\n	<li>Мы стараемся учитывать всю функциональность PHPShop  еще на первом этапе его создания, и вы получите работающий  интернет-магазин таким, каким Вы его видите на утвержденном Вами макете. </li>\n	<li>Большинство доработок, ранее требовавших  вмешательства в код платформы, на новой версии PHPShop 5,  производятся с помощью "дизайн-хуков", - это значит, что в будущем вы  сможете обновляться без потери доработок. </li>\n	<li>Мы соблюдаем сроки, и предоставляем гарантии - если  после завершения проекта Вы заметите недочет с нашей стороны  мы  устраним его. </li>\n</ol>\n<p>Для заказа персонального дизайна нужно заполнить бриф, в котором вы  формулируете будущий проект, все возникающие вопросы уточнить у наших  консультантов. Cрок создания макета дизайна - 15 рабочих  дней\n</p>\n<a href="http://phpshop-design.ru/page/brif-design.html" target="_blank" class="btn btn-sm btn-success"><span class="glyphicon glyphicon-share-alt"></span> Бриф на Персональный дизайн сайта</a>', '1', 1, 1477663500, '', 'Дополнительные шаблоны PHPShop', '1', '0', ''),
-(26, 'Купить', 'purchase', 1000, '', '', '<div>Ваш тестовый интернет-магазин <strong>@serverName@</strong> на базе платформы PHPShop @version@ будет работать 30 дней. <strong>Вы можете уже сейчас наполнять свой магазин, все данные после покупки сохранятся! </strong>Купив <strong>бессрочную лицензию PHPShop</strong>, вам потребуется <strong>загрузить лишь один файл лицензии</strong>, вся заполненная товарная база останется нетронутой.\n<p>Для приобретения программного обеспечения PHPShop, нужно перейти в раздел оформления заказа по кнопке ниже. Далее, вам нужно выбрать удобный тип оплаты - электронный: картами Visa, Mastercard, через банкоматы Qiwi, через Сбербанк, банковским переводом для юридических лиц. После выбора оплаты, в разделе Счета появится счет на оплату в электронном виде. Оригиналы всех документов мы отправляем по почте, указанной в разделе Профиль вашего личного кабинета.</p>\n<p><input id="addToCartFromPages" name="addToCartFromPages" type="hidden" value="scriptenterprise" /><input id="addToCartFromPagesDomen" name="addToCartFromPagesDomen" type="hidden" value="@serverName@" /><input onclick="document.product_license.submit()" type="button" class="btn btm-sm btn-primary" value="Перейти к оформлению заказа PHPShop" /></p>\n<p> </p>\n<h2>Консультации</h2>\n<p>Мы будем рады видеть вас у нас в офисе с понедельника по пятницу с 10:00 до 19:00. Не забудьте предупредить нас о встрече по телефону.</p>\n<p><b>Тел: +7 (495) 989-11-15</b></p>\n<p>Адрес: Рязанский проспект, д. 24 корп. 2, 2 этаж, офис 3., м. Рязанский проспект. Бизнес-центр "Юнион-Центр".</p>\n<p><iframe src="https://www.google.ru/maps?f=q&source=s_q&hl=ru&geocode=FbEtUgMdgq5AAg%3BFaQ8UgMdCWhAAiGO9hUAe8ehdCm1mSQod7VKQTGO9hUAe8ehdA&q=%D0%A0%D1%8F%D0%B7%D0%B0%D0%BD%D1%81%D0%BA%D0%B8%D0%B9 %D0%BF%D1%80%D0%BE%D1%81%D0%BF., 24 %D0%BA%D0%BE%D1%80%D0%BF%D1%83%D1%81 2, %D0%9C%D0%BE%D1%81%D0%BA%D0%B2%D0%B0&aq=1&oq=%D1%80%D1%8F%D0%B7%D0%B0%D0%BD%D1%81%D0%BA%D0%B8%D0%B9 %D0%BF%D1%80%D0%BE%D1%81%D0%BF%D0%B5%D0%BA%D1%82 &sll=55.720729,37.774676&sspn=0.004061,0.011362&ie=UTF8&hq=&hnear=%D0%A0%D1%8F%D0%B7%D0%B0%D0%BD%D1%81%D0%BA%D0%B8%D0%B9 %D0%BF%D1%80%D0%BE%D1%81%D0%BF., 24 %D0%BA%D0%BE%D1%80%D0%BF%D1%83%D1%81 2, %D0%9C%D0%BE%D1%81%D0%BA%D0%B2%D0%B0, %D0%B3%D0%BE%D1%80%D0%BE%D0%B4 %D0%9C%D0%BE%D1%81%D0%BA%D0%B2%D0%B0&t=m&start=0&ll=55.725805,37.774343&spn=0.016918,0.036478&z=14&iwloc=A&output=embed" frameborder="0" scrolling="no" height="350" width="100%"></iframe><br /><small><a style="color: #0000ff; text-align: left;" href="https://www.google.ru/maps?f=q&source=embed&hl=ru&geocode=FbEtUgMdgq5AAg%3BFaQ8UgMdCWhAAiGO9hUAe8ehdCm1mSQod7VKQTGO9hUAe8ehdA&q=%D0%A0%D1%8F%D0%B7%D0%B0%D0%BD%D1%81%D0%BA%D0%B8%D0%B9 %D0%BF%D1%80%D0%BE%D1%81%D0%BF., 24 %D0%BA%D0%BE%D1%80%D0%BF%D1%83%D1%81 2, %D0%9C%D0%BE%D1%81%D0%BA%D0%B2%D0%B0&aq=1&oq=%D1%80%D1%8F%D0%B7%D0%B0%D0%BD%D1%81%D0%BA%D0%B8%D0%B9 %D0%BF%D1%80%D0%BE%D1%81%D0%BF%D0%B5%D0%BA%D1%82 &sll=55.720729,37.774676&sspn=0.004061,0.011362&ie=UTF8&hq=&hnear=%D0%A0%D1%8F%D0%B7%D0%B0%D0%BD%D1%81%D0%BA%D0%B8%D0%B9 %D0%BF%D1%80%D0%BE%D1%81%D0%BF., 24 %D0%BA%D0%BE%D1%80%D0%BF%D1%83%D1%81 2, %D0%9C%D0%BE%D1%81%D0%BA%D0%B2%D0%B0, %D0%B3%D0%BE%D1%80%D0%BE%D0%B4 %D0%9C%D0%BE%D1%81%D0%BA%D0%B2%D0%B0&t=m&start=0&ll=55.725805,37.774343&spn=0.016918,0.036478&z=14&iwloc=A" target="_blank">Просмотреть увеличенную карту</a></small></p>\n</div>', '1', 1, 1455711721, '', 'Купить PHPShop', '1', '0', ''),
+(24, 'Дизайн', 'design', 1000, '', '', '<p>В комплект интернет-магазина PHPShop @version@ входят 17 шаблонов с десятками дополнительных цветовых оттенков. В установочный пакет включены только 8 самых популярных адаптивных шаблонов, остальные шаблоны можно установить из панели управления в разделе <kbd>Настройка</kbd> - <kbd>Шаблоны дизайна</kbd>\n</p>\n<a href="?skin=diggi"><img class="template" title="diggi" src="/UserFiles/Image/Trial/template_icon/diggi.gif" alt="" width="150" height="120"></a><a href="?skin=spice"><img class="template" title="spice" src="/UserFiles/Image/Trial/template_icon/spice.gif" alt="" width="150" height="120"></a><a href="?skin=astero"><img class="template" title="astero" src="/UserFiles/Image/Trial/template_icon/astero.gif" alt="" width="150" height="120"></a>
+<a href="?skin=bootstrap"><img class="template" title="bootstrap" src="/UserFiles/Image/Trial/template_icon/bootstrap.gif" alt="" width="150" height="120"></a><a href="?skin=bootstrap_fluid"><img class="template" title="bootstrap_fluid" src="/UserFiles/Image/Trial/template_icon/bootstrap_fluid.gif" alt="" width="150" height="120"></a><a href="?skin=white_brick"><img class="template" title="white_brick" src="/UserFiles/Image/Trial/template_icon/white_brick.gif" alt="" width="150" height="120"></a><a href="?skin=variaty"><img class="template" title="variaty" src="/UserFiles/Image/Trial/template_icon/variaty.gif" alt="" width="150" height="120"></a><a href="?skin=mobile"><img class="template" title="mobil" src="/UserFiles/Image/Trial/template_icon/mobile.gif" alt="" width="150" height="120"></a>\n<h2>Изменение  дизайна</h2>\nДля редактирования дизайна из панели управления используется функция <strong>Редактор шаблонов</strong>.\n<p><a title="Инструкция Template Edit" href="http://faq.phpshop.ru/page/template-edit.html" target="_blank"><img class="template" src="/UserFiles/Image/Trial/template_edit.jpg" alt="" width="95%"></a>\n</p>\n<p>Для редактирования дизайна на локальном компьютере под управлением  Windows существует <strong>визуальный редактор</strong> шаблонов  PHPShop Editor.\n</p>\n<p><a title="Инструкция PHPShop Editor" href="http://faq.phpshop.ru/page/your-design.html" target="_blank"><img class="template" src="/UserFiles/Image/Trial/phpshop_editor.jpg" alt="PHPShop Editor" width="95%"></a>\n</p>\n<h2>Персональный  дизайн</h2>\nДизайн-бюро <a href="http://phpshop-design.ru" target="_blank">PHPShop.Design</a> делает дизайны только для  PHPShop, а значит, неожиданностей при создании дизайна не произойдет, и  вы получите уникальный профессиональный дизайн в срок, отвечающий всем  требованиям сегодняшнего дня.\n<ol>\n	<li>Мы на 100% знаем свою платформу, а это значит, что  Вам не придется переплачивать за часы работы дизайнера, не знакомого с  PHPShop. </li>\n	<li>Мы стараемся учитывать всю функциональность PHPShop  еще на первом этапе его создания, и вы получите работающий  интернет-магазин таким, каким Вы его видите на утвержденном Вами макете. </li>\n	<li>Большинство доработок, ранее требовавших  вмешательства в код платформы, на новой версии PHPShop 5,  производятся с помощью "дизайн-хуков", - это значит, что в будущем вы  сможете обновляться без потери доработок. </li>\n	<li>Мы соблюдаем сроки, и предоставляем гарантии - если  после завершения проекта Вы заметите недочет с нашей стороны  мы  устраним его. </li>\n</ol>\n<p>Для заказа персонального дизайна нужно заполнить бриф, в котором вы  формулируете будущий проект, все возникающие вопросы уточнить у наших  консультантов. Cрок создания макета дизайна - 15 рабочих  дней\n</p>\n<a href="http://phpshop-design.ru/page/brif-design.html" target="_blank" class="btn btn-sm btn-success"><span class="glyphicon glyphicon-share-alt"></span> Бриф на Персональный дизайн сайта</a>', '1', 1, 1477663500, '', 'Дополнительные шаблоны PHPShop', '1', '0', ''),
+(26, 'Купить', 'purchase', 1000, '', '', '<div>Ваш тестовый интернет-магазин <strong>@serverName@</strong> на базе платформы PHPShop @version@ будет работать 30 дней. <strong>Вы можете уже сейчас наполнять свой магазин, все данные после покупки сохранятся! </strong>Купив <strong>бессрочную лицензию PHPShop</strong>, вам потребуется <strong>загрузить лишь один файл лицензии</strong>, вся заполненная товарная база останется нетронутой.\n<p>Для приобретения программного обеспечения PHPShop, нужно перейти в раздел оформления заказа по кнопке ниже. Далее, вам нужно выбрать удобный тип оплаты - электронный: картами Visa, Mastercard, через банкоматы Qiwi, через Сбербанк, банковским переводом для юридических лиц. После выбора оплаты, в разделе Счета появится счет на оплату в электронном виде. Оригиналы всех документов мы отправляем по почте, указанной в разделе Профиль вашего личного кабинета.</p>\n<p><a class="btn btm-sm btn-primary" target="_blank" href="http://www.phpshop.ru/order/?from=@serverName@&action=order">Перейти к оформлению заказа PHPShop</a><p> </p>\n<h2>Консультации</h2>\n<p>Мы будем рады видеть вас у нас в офисе с понедельника по пятницу с 10:00 до 19:00. Не забудьте предупредить нас о встрече по телефону.</p>\n<p><b>Тел: +7 (495) 989-11-15</b></p>\n<p>Адрес: Рязанский проспект, д. 24 корп. 2, 2 этаж, офис 3., м. Рязанский проспект. Бизнес-центр "Юнион-Центр".</p>\n<p><iframe src="https://www.google.ru/maps?f=q&source=s_q&hl=ru&geocode=FbEtUgMdgq5AAg%3BFaQ8UgMdCWhAAiGO9hUAe8ehdCm1mSQod7VKQTGO9hUAe8ehdA&q=%D0%A0%D1%8F%D0%B7%D0%B0%D0%BD%D1%81%D0%BA%D0%B8%D0%B9 %D0%BF%D1%80%D0%BE%D1%81%D0%BF., 24 %D0%BA%D0%BE%D1%80%D0%BF%D1%83%D1%81 2, %D0%9C%D0%BE%D1%81%D0%BA%D0%B2%D0%B0&aq=1&oq=%D1%80%D1%8F%D0%B7%D0%B0%D0%BD%D1%81%D0%BA%D0%B8%D0%B9 %D0%BF%D1%80%D0%BE%D1%81%D0%BF%D0%B5%D0%BA%D1%82 &sll=55.720729,37.774676&sspn=0.004061,0.011362&ie=UTF8&hq=&hnear=%D0%A0%D1%8F%D0%B7%D0%B0%D0%BD%D1%81%D0%BA%D0%B8%D0%B9 %D0%BF%D1%80%D0%BE%D1%81%D0%BF., 24 %D0%BA%D0%BE%D1%80%D0%BF%D1%83%D1%81 2, %D0%9C%D0%BE%D1%81%D0%BA%D0%B2%D0%B0, %D0%B3%D0%BE%D1%80%D0%BE%D0%B4 %D0%9C%D0%BE%D1%81%D0%BA%D0%B2%D0%B0&t=m&start=0&ll=55.725805,37.774343&spn=0.016918,0.036478&z=14&iwloc=A&output=embed" frameborder="0" scrolling="no" height="350" width="100%"></iframe><br /><small><a style="color: #0000ff; text-align: left;" href="https://www.google.ru/maps?f=q&source=embed&hl=ru&geocode=FbEtUgMdgq5AAg%3BFaQ8UgMdCWhAAiGO9hUAe8ehdCm1mSQod7VKQTGO9hUAe8ehdA&q=%D0%A0%D1%8F%D0%B7%D0%B0%D0%BD%D1%81%D0%BA%D0%B8%D0%B9 %D0%BF%D1%80%D0%BE%D1%81%D0%BF., 24 %D0%BA%D0%BE%D1%80%D0%BF%D1%83%D1%81 2, %D0%9C%D0%BE%D1%81%D0%BA%D0%B2%D0%B0&aq=1&oq=%D1%80%D1%8F%D0%B7%D0%B0%D0%BD%D1%81%D0%BA%D0%B8%D0%B9 %D0%BF%D1%80%D0%BE%D1%81%D0%BF%D0%B5%D0%BA%D1%82 &sll=55.720729,37.774676&sspn=0.004061,0.011362&ie=UTF8&hq=&hnear=%D0%A0%D1%8F%D0%B7%D0%B0%D0%BD%D1%81%D0%BA%D0%B8%D0%B9 %D0%BF%D1%80%D0%BE%D1%81%D0%BF., 24 %D0%BA%D0%BE%D1%80%D0%BF%D1%83%D1%81 2, %D0%9C%D0%BE%D1%81%D0%BA%D0%B2%D0%B0, %D0%B3%D0%BE%D1%80%D0%BE%D0%B4 %D0%9C%D0%BE%D1%81%D0%BA%D0%B2%D0%B0&t=m&start=0&ll=55.725805,37.774343&spn=0.016918,0.036478&z=14&iwloc=A" target="_blank">Просмотреть увеличенную карту</a></small></p>\n</div>', '1', 1, 1455711721, '', 'Купить PHPShop', '1', '0', ''),
 (25, 'Разработчикам', 'developers', 1000, '', '', '<div>В помощь разработчикам PHPShop Software разработала специально интегрированную среду разработки <strong>PHPShop IDE</strong> и визуальный редактор шаблонов <strong>PHPShop Editor</strong>.\n<h3>PHPShop IDE</h3>\n<p>PHPShop IDE обладает большими возможностями и ускоряет процесс редактирования кода, ориентированна на широкий круг пользователей от новичков до профессионалов.</p>\n<p><strong>Возможности:</strong></p>\n<ol>\n<li class="trial">Подсвет и редактирование встроенных функций PHPShop API </li>\n<li>Парсинг и возможность редактирования добавления методов через окна настроек </li>\n<li>Быстрый доступ к часто используемым HTML и PHP функциям </li>\n<li>Автоматическое создание новых модулей и библиотек </li>\n<li>Добавление новых возможностей через внешний XML-файл настроек </li>\n<li>Редактирование шаблонов дизайна </li>\n<li>Форматирование и выравнивание кода </li>\n<li>Создание закладок в коде для быстрого доступа к участкам кода </li>\n</ol>\n<p> </p>\n<p><a title="Инструкция PHPShop IDE" href="http://wiki.phpshop.ru/index.php/PHPShop_IDE" target="_blank"><img class="template" src="/UserFiles/Image/Trial/phpshop_ide.jpg" alt="PHPShop IDE"></a></p>\n<h3>PHPShop Editor</h3>\n<p>PHPShop Editor позволяет самостоятельно менять местами блоки, убирать ненужные элементы дизайна, управлять всеми доступными внутренними переменными шаблонизатора в визуальном режиме.</p>\n<p><strong>Режим визуального управления и редактирования</strong> позволяет менять местами и управлять кодом внутренних блоков дизайна: опросами, баннерами, каталогами и т.д. Блоки можно перемещать в любое место, удалять из шаблона. Поддерживается режим HTML-редактора кода для выбранного блока.</p>\n<strong>Мастер оформления</strong> дает возможность через визуальные средства менять цветовые стили оформления CSS: подложка, цвета, шрифт, кнопки, селекты, ссылки элементов дизайна.\n<p> </p>\n<p><strong>Режим правки HTML кода</strong> служит для изменения кода шаблона и помогает ориентироваться настройке шаблона. В режим можно попасть, нажав правой кнопкой мыши на нужном блоке и выбрав в меню опцию редактирования. Все элементы изображены в виде дерева файлов с описанием содержания файлов шаблонов. Для каждого шаблона выводятся доступные переменные с описанием для использования в шаблоне.</p>\n<p><a title="Инструкция PHPShop Editor" href="http://wiki.phpshop.ru/index.php/PHPShop_Editor" target="_blank"><img class="template" src="/UserFiles/Image/Trial/phpshop_editor.jpg" alt="PHPShop Editor"></a></p>\n<p><strong>Более 20 бесплатных утилит для работы с PHPShop</strong> собраны в пакет <a title="Описание ути лит EasyControl" href="http://wiki.phpshop.ru/index.php/PHPShop_EasyControl" target="_blank">EasyControl</a> и доступны для загрузки на сайте разработчика в разделе <a title="Центр загрузки PHPShop" href="http://phpshop.ru/page/downloads.html" target="_blank">Центр загрузки</a>.</p>\n</div>', '1', 1, 1455631148, '', 'Разработчикам PHPShop', '0', '0', ''),
 (23, 'Администрирование', 'admin', 1000, '', '', '<div>Для доступа к панели управления PHPShop нажмите сочетание клавиш <kbd>Ctrl</kbd>   <kbd>F12</kbd> или используйте кнопку перехода ниже.<br /> Логин по умолчанию <strong>demo</strong>, пароль <strong>demouser</strong>. Если вы при установке задали свой логин и пароль, то используйте свои данные при авторизации.\n<p><a href="..phpshop/admpanel/" target="_blank" class="btn btn-success btn-sm"><span class="glyphicon glyphicon-share-alt"></span> Переход в панель управления</a></p>\n<h2>Тестовая база</h2>\nПри установке магазина заполняется тестовая товарная база для демонстрации возможностей программы. Для очистки тестовой базы следует в панели управления магазином перейти в меню <kbd>База</kbd> - <kbd>SQL запрос к базе</kbd> выбрать в выпадающем списке опцию <strong>"Очистить базу"</strong>. Обращаем Ваше внимание, что очистится вся товарная база с момента начала работы магазина.\n<h2>Дополнительные утилиты</h2>\nPHPShop EasyControl - <strong>уникальный набор  бесплатных утилит</strong> для создания и управления интернет-магазином PHPShop на локальном компьютере . EasyControl прост в установке и не требует никаких специальных навыков. С помощью EasyControl Вы сможете установить сайт локально на ПК либо на хостинг, обновлять платформу сайта, обрабатывать заказы, заполнять товарную базу и редактировать шаблоны. В состав пакета входят 20 утилит: <strong>Order Agent, Monitor, Updater, Installer, Chat,  Price Loader, Editor, IDE, Password Restore</strong> и другие.\n<p><a href="http://www.phpshop.ru/loads/files/setup.exe" target="_blank" class="btn btn-info btn-sm"><span class="glyphicon glyphicon-share-alt"></span> Скачать утилиты EasyControl</a></p>\n</div>', '1', 1, 1455711992, '39,40', 'Администрирование PHPShop', '1', '0', ''),
 (27, 'Ресурсы', 'help', 4, '', '', '<h3>Справка</h3> Справочно-информационный сайт (F.A.Q.), описывающий возможности PHPShop и ответы на частые вопросы по управлению интернет-магазином. Снабжен большим количеством скриншотов и видео-уроков.<br>Адрес: <a href="http://faq.phpshop.ru" target="_blank">faq.phpshop.ru</a><h3>Техническая документация</h3> Справочный сайт для разработчиков (WIKI). Содержит большое количество технической документации с примерами по разработке PHPShop. Описание утилит EasyControl и дополнительных модулей.<br>Адрес: <a href="http://wiki.phpshop.ru" target="_blank">wiki.phpshop.ru</a><h3>Описание API</h3> Справочный сайт для разработчиков (PHPDoc). Содержит подробное описание API PHPShop, функций и классов.<br>Адрес: <a href="http://doc.phpshop.ru" target="_blank">doc.phpshop.ru</a><h3>База знаний</h3> Справочный сайт службы технической поддержки. Содержит ответы по наиболее частым вопросам, встречающихся у пользователей PHPShop в поддержке.<br>Адрес: <a href="https://help.phpshop.ru" target="_blank">help.phpshop.ru</a><h3>Социальные сети</h3> Персональные странички в популярных социальный сетях. Содержат много интересных публикаций по возможностям платформы, новостях и акциям.<br>Адрес: <a href="https://www.facebook.com/shopsoft" target="_blank">https://www.facebook.com/shopsoft</a><br><a href="https://twitter.com/PHPShopCMS" target="_blank">https://twitter.com/PHPShopCMS</a><br><a href="https://plus.google.com/+PhpshopRu" target="_blank">https://plus.google.com/+PhpshopRu</a><h3>Видео-уроки</h3> Информационный портал с видео-уроками по работе с PHPShop на портале YouTube. Содержат подробные уроки по настройки и работе с 1С-Синхронизацией, PHPShop и утилитами EasyControl.<br>Адрес: <a href="http://www.youtube.com/user/phpshopsoftware" target="_blank">http://www.youtube.com/user/phpshopsoftware</a>', '1', 1, 0, '', '', '1', '0', ''),
@@ -1326,9 +1327,9 @@ INSERT INTO `phpshop_page` (`id`, `name`, `link`, `category`, `keywords`, `descr
 CREATE TABLE IF NOT EXISTS `phpshop_page_categories` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) DEFAULT NULL,
-  `num` int(64) NOT NULL DEFAULT '1',
-  `parent_to` int(11) NOT NULL DEFAULT '0',
-  `content` text NOT NULL,
+  `num` int(64) DEFAULT '1',
+  `parent_to` int(11) DEFAULT '0',
+  `content` text,
   PRIMARY KEY (`id`),
   KEY `parent_to` (`parent_to`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
@@ -1349,9 +1350,9 @@ INSERT INTO `phpshop_page_categories` (`id`, `name`, `num`, `parent_to`, `conten
 
 CREATE TABLE IF NOT EXISTS `phpshop_payment` (
   `uid` int(11) NOT NULL DEFAULT '0',
-  `name` varchar(255) NOT NULL DEFAULT '',
-  `sum` float NOT NULL DEFAULT '0',
-  `datas` int(11) NOT NULL DEFAULT '0',
+  `name` varchar(255) DEFAULT '',
+  `sum` float  DEFAULT '0',
+  `datas` int(11) DEFAULT '0',
   PRIMARY KEY (`uid`),
   KEY `order` (`uid`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
@@ -1364,14 +1365,14 @@ CREATE TABLE IF NOT EXISTS `phpshop_payment` (
 
 CREATE TABLE IF NOT EXISTS `phpshop_payment_systems` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) NOT NULL DEFAULT '',
-  `path` varchar(255) NOT NULL DEFAULT '',
-  `enabled` enum('0','1') NOT NULL DEFAULT '1',
-  `num` tinyint(11) NOT NULL DEFAULT '0',
-  `message` text NOT NULL,
-  `message_header` text NOT NULL,
-  `yur_data_flag` enum('0','1') NOT NULL DEFAULT '0',
-  `icon` varchar(255) NOT NULL,
+  `name` varchar(255) DEFAULT '',
+  `path` varchar(255) DEFAULT '',
+  `enabled` enum('0','1')  DEFAULT '1',
+  `num` tinyint(11) DEFAULT '0',
+  `message` text,
+  `message_header` text,
+  `yur_data_flag` enum('0','1')DEFAULT '0',
+  `icon` varchar(255) DEFAULT '',
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
 
@@ -1393,54 +1394,54 @@ INSERT INTO `phpshop_payment_systems` (`id`, `name`, `path`, `enabled`, `num`, `
 
 CREATE TABLE IF NOT EXISTS `phpshop_products` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `category` int(11) NOT NULL DEFAULT '0',
-  `name` varchar(255) NOT NULL DEFAULT '',
-  `description` text NOT NULL,
-  `content` text NOT NULL,
-  `price` float NOT NULL DEFAULT '0',
-  `price_n` float NOT NULL DEFAULT '0',
-  `sklad` enum('0','1') NOT NULL DEFAULT '0',
-  `p_enabled` enum('0','1') NOT NULL DEFAULT '0',
-  `enabled` enum('0','1') NOT NULL DEFAULT '1',
-  `uid` varchar(64) NOT NULL DEFAULT '',
-  `spec` enum('0','1') NOT NULL DEFAULT '0',
-  `odnotip` varchar(64) NOT NULL DEFAULT '',
-  `vendor` varchar(255) NOT NULL DEFAULT '',
-  `vendor_array` blob NOT NULL,
-  `yml` enum('0','1') NOT NULL DEFAULT '0',
-  `num` int(11) NOT NULL DEFAULT '1',
-  `newtip` enum('0','1') NOT NULL DEFAULT '0',
-  `title` varchar(255) NOT NULL DEFAULT '',
-  `title_enabled` enum('0','1','2') NOT NULL DEFAULT '0',
-  `datas` int(11) NOT NULL DEFAULT '0',
-  `page` varchar(255) NOT NULL DEFAULT '',
-  `user` tinyint(11) NOT NULL DEFAULT '0',
-  `descrip` varchar(255) NOT NULL DEFAULT '',
-  `descrip_enabled` enum('0','1','2') NOT NULL DEFAULT '0',
-  `title_shablon` varchar(255) NOT NULL DEFAULT '',
-  `descrip_shablon` varchar(255) NOT NULL DEFAULT '',
-  `keywords` varchar(255) NOT NULL DEFAULT '',
-  `keywords_enabled` enum('0','1','2') NOT NULL DEFAULT '0',
-  `keywords_shablon` varchar(255) NOT NULL DEFAULT '',
-  `pic_small` varchar(255) NOT NULL DEFAULT '',
-  `pic_big` varchar(255) NOT NULL DEFAULT '',
-  `yml_bid_array` tinyblob NOT NULL,
-  `parent_enabled` enum('0','1') NOT NULL DEFAULT '0',
-  `parent` text NOT NULL,
-  `items` int(11) NOT NULL DEFAULT '0',
-  `weight` float NOT NULL DEFAULT '0',
-  `price2` float NOT NULL DEFAULT '0',
-  `price3` float NOT NULL DEFAULT '0',
-  `price4` float NOT NULL DEFAULT '0',
-  `price5` float NOT NULL DEFAULT '0',
-  `files` text NOT NULL,
-  `baseinputvaluta` int(11) NOT NULL DEFAULT '0',
-  `ed_izm` varchar(255) NOT NULL DEFAULT '',
-  `dop_cat` varchar(255) NOT NULL DEFAULT '',
-  `rate` float unsigned NOT NULL DEFAULT '0',
-  `rate_count` int(10) unsigned NOT NULL DEFAULT '0',
-  `prod_seo_name` varchar(255) NOT NULL,
-  `price_search` float NOT NULL DEFAULT '0',
+  `category` int(11) DEFAULT '0',
+  `name` varchar(255) DEFAULT '',
+  `description` text,
+  `content` text,
+  `price` float DEFAULT '0',
+  `price_n` float DEFAULT '0',
+  `sklad` enum('0','1') DEFAULT '0',
+  `p_enabled` enum('0','1') DEFAULT '0',
+  `enabled` enum('0','1') DEFAULT '1',
+  `uid` varchar(64) DEFAULT '',
+  `spec` enum('0','1') DEFAULT '0',
+  `odnotip` varchar(64) DEFAULT '',
+  `vendor` varchar(255) DEFAULT '',
+  `vendor_array` blob,
+  `yml` enum('0','1') DEFAULT '0',
+  `num` int(11) DEFAULT '1',
+  `newtip` enum('0','1') DEFAULT '0',
+  `title` varchar(255)  DEFAULT '',
+  `title_enabled` enum('0','1','2') DEFAULT '0',
+  `datas` int(11) DEFAULT '0',
+  `page` varchar(255) DEFAULT '',
+  `user` tinyint(11) DEFAULT '0',
+  `descrip` varchar(255) DEFAULT '',
+  `descrip_enabled` enum('0','1','2') DEFAULT '0',
+  `title_shablon` varchar(255) DEFAULT '',
+  `descrip_shablon` varchar(255) DEFAULT '',
+  `keywords` varchar(255) DEFAULT '',
+  `keywords_enabled` enum('0','1','2') DEFAULT '0',
+  `keywords_shablon` varchar(255) DEFAULT '',
+  `pic_small` varchar(255) DEFAULT '',
+  `pic_big` varchar(255) DEFAULT '',
+  `yml_bid_array` tinyblob,
+  `parent_enabled` enum('0','1') DEFAULT '0',
+  `parent` text,
+  `items` int(11) DEFAULT '0',
+  `weight` float DEFAULT '0',
+  `price2` float DEFAULT '0',
+  `price3` float DEFAULT '0',
+  `price4` float DEFAULT '0',
+  `price5` float DEFAULT '0',
+  `files` text,
+  `baseinputvaluta` int(11) DEFAULT '0',
+  `ed_izm` varchar(255) DEFAULT '',
+  `dop_cat` varchar(255) DEFAULT '',
+  `rate` float unsigned DEFAULT '0',
+  `rate_count` int(10) unsigned DEFAULT '0',
+  `prod_seo_name` varchar(255) DEFAULT '',
+  `price_search` float DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `category` (`category`),
   KEY `enabled` (`enabled`),
@@ -1518,9 +1519,9 @@ INSERT INTO `phpshop_products` (`id`, `category`, `name`, `description`, `conten
 
 CREATE TABLE IF NOT EXISTS `phpshop_rating_categories` (
   `id_category` int(11) NOT NULL AUTO_INCREMENT,
-  `ids_dir` varchar(255) NOT NULL DEFAULT '',
-  `name` varchar(255) NOT NULL DEFAULT '',
-  `enabled` enum('0','1') NOT NULL DEFAULT '0',
+  `ids_dir` varchar(255) DEFAULT '',
+  `name` varchar(255) DEFAULT '',
+  `enabled` enum('0','1') DEFAULT '0',
   `revoting` enum('0','1') DEFAULT NULL,
   PRIMARY KEY (`id_category`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
@@ -1540,10 +1541,10 @@ INSERT INTO `phpshop_rating_categories` (`id_category`, `ids_dir`, `name`, `enab
 
 CREATE TABLE IF NOT EXISTS `phpshop_rating_charact` (
   `id_charact` int(11) NOT NULL AUTO_INCREMENT,
-  `id_category` int(11) NOT NULL DEFAULT '0',
-  `name` varchar(255) NOT NULL DEFAULT '',
-  `num` int(11) NOT NULL DEFAULT '0',
-  `enabled` enum('0','1') NOT NULL DEFAULT '0',
+  `id_category` int(11) DEFAULT '0',
+  `name` varchar(255)  DEFAULT '',
+  `num` int(11) DEFAULT '0',
+  `enabled` enum('0','1') DEFAULT '0',
   PRIMARY KEY (`id_charact`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
 
@@ -1564,13 +1565,13 @@ INSERT INTO `phpshop_rating_charact` (`id_charact`, `id_category`, `name`, `num`
 
 CREATE TABLE IF NOT EXISTS `phpshop_rating_votes` (
   `id_vote` int(11) NOT NULL AUTO_INCREMENT,
-  `id_charact` int(11) NOT NULL DEFAULT '0',
-  `id_good` int(11) NOT NULL DEFAULT '0',
-  `id_user` int(11) NOT NULL DEFAULT '0',
-  `userip` varchar(16) NOT NULL DEFAULT '',
-  `rate` tinyint(4) NOT NULL DEFAULT '0',
-  `date` int(11) NOT NULL DEFAULT '0',
-  `enabled` enum('0','1') NOT NULL DEFAULT '0',
+  `id_charact` int(11)DEFAULT '0',
+  `id_good` int(11) DEFAULT '0',
+  `id_user` int(11) DEFAULT '0',
+  `userip` varchar(16) DEFAULT '',
+  `rate` tinyint(4) DEFAULT '0',
+  `date` int(11) DEFAULT '0',
+  `enabled` enum('0','1') DEFAULT '0',
   PRIMARY KEY (`id_vote`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
 
@@ -1582,13 +1583,13 @@ CREATE TABLE IF NOT EXISTS `phpshop_rating_votes` (
 
 CREATE TABLE IF NOT EXISTS `phpshop_rssgraber` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `link` text NOT NULL,
-  `day_num` int(1) NOT NULL DEFAULT '1',
-  `news_num` mediumint(8) NOT NULL DEFAULT '0',
-  `enabled` enum('0','1') NOT NULL DEFAULT '1',
-  `start_date` int(16) unsigned NOT NULL DEFAULT '0',
-  `end_date` int(16) unsigned NOT NULL DEFAULT '0',
-  `last_load` int(16) unsigned NOT NULL DEFAULT '0',
+  `link` text,
+  `day_num` int(1) DEFAULT '1',
+  `news_num` mediumint(8) DEFAULT '0',
+  `enabled` enum('0','1') DEFAULT '1',
+  `start_date` int(16) unsigned DEFAULT '0',
+  `end_date` int(16) unsigned DEFAULT '0',
+  `last_load` int(16) unsigned DEFAULT '0',
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
 
@@ -1607,9 +1608,9 @@ INSERT INTO `phpshop_rssgraber` (`id`, `link`, `day_num`, `news_num`, `enabled`,
 
 CREATE TABLE IF NOT EXISTS `phpshop_rssgraber_jurnal` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `date` int(15) unsigned NOT NULL DEFAULT '0',
-  `link_id` int(11) NOT NULL DEFAULT '0',
-  `status` enum('0','1') NOT NULL DEFAULT '0',
+  `date` int(15) unsigned DEFAULT '0',
+  `link_id` int(11) DEFAULT '0',
+  `status` enum('0','1') DEFAULT '0',
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
 
@@ -1621,9 +1622,9 @@ CREATE TABLE IF NOT EXISTS `phpshop_rssgraber_jurnal` (
 
 CREATE TABLE IF NOT EXISTS `phpshop_search_base` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) NOT NULL DEFAULT '',
-  `uid` varchar(255) NOT NULL DEFAULT '',
-  `enabled` enum('0','1') NOT NULL DEFAULT '1',
+  `name` varchar(255) DEFAULT '',
+  `uid` varchar(255) DEFAULT '',
+  `enabled` enum('0','1') DEFAULT '1',
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
 
@@ -1635,12 +1636,12 @@ CREATE TABLE IF NOT EXISTS `phpshop_search_base` (
 
 CREATE TABLE IF NOT EXISTS `phpshop_search_jurnal` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) NOT NULL DEFAULT '',
-  `num` tinyint(32) NOT NULL DEFAULT '0',
-  `datas` varchar(11) NOT NULL DEFAULT '',
-  `dir` varchar(255) NOT NULL DEFAULT '',
-  `cat` tinyint(11) NOT NULL DEFAULT '0',
-  `set` tinyint(2) NOT NULL DEFAULT '0',
+  `name` varchar(255) DEFAULT '',
+  `num` tinyint(32) DEFAULT '0',
+  `datas` varchar(11) DEFAULT '',
+  `dir` varchar(255)  DEFAULT '',
+  `cat` tinyint(11) DEFAULT '0',
+  `set` tinyint(2)  DEFAULT '0',
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
 
@@ -1656,9 +1657,9 @@ INSERT INTO `phpshop_search_jurnal` (`id`, `name`, `num`, `datas`, `dir`, `cat`,
 
 CREATE TABLE IF NOT EXISTS `phpshop_servers` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) NOT NULL DEFAULT '',
-  `host` varchar(255) NOT NULL DEFAULT '',
-  `enabled` enum('0','1') NOT NULL DEFAULT '0',
+  `name` varchar(255) DEFAULT '',
+  `host` varchar(255) DEFAULT '',
+  `enabled` enum('0','1') DEFAULT '0',
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
 
@@ -1670,21 +1671,21 @@ CREATE TABLE IF NOT EXISTS `phpshop_servers` (
 
 CREATE TABLE IF NOT EXISTS `phpshop_shopusers` (
   `id` int(64) unsigned NOT NULL AUTO_INCREMENT,
-  `login` varchar(64) NOT NULL DEFAULT '',
-  `password` varchar(64) NOT NULL DEFAULT '',
-  `datas` varchar(64) NOT NULL DEFAULT '',
-  `mail` varchar(64) NOT NULL DEFAULT '',
-  `name` varchar(255) NOT NULL DEFAULT '',
-  `company` varchar(255) NOT NULL DEFAULT '',
-  `inn` varchar(64) NOT NULL DEFAULT '',
-  `tel` varchar(64) NOT NULL DEFAULT '',
-  `adres` text NOT NULL,
-  `enabled` enum('0','1') NOT NULL DEFAULT '0',
-  `status` varchar(64) NOT NULL DEFAULT '0',
-  `kpp` varchar(64) NOT NULL DEFAULT '',
-  `tel_code` varchar(64) NOT NULL DEFAULT '',
-  `wishlist` blob NOT NULL,
-  `data_adres` blob NOT NULL,
+  `login` varchar(64) DEFAULT '',
+  `password` varchar(64) DEFAULT '',
+  `datas` varchar(64) DEFAULT '',
+  `mail` varchar(64) DEFAULT '',
+  `name` varchar(255) DEFAULT '',
+  `company` varchar(255) DEFAULT '',
+  `inn` varchar(64) DEFAULT '',
+  `tel` varchar(64) DEFAULT '',
+  `adres` text,
+  `enabled` enum('0','1') DEFAULT '0',
+  `status` varchar(64) DEFAULT '0',
+  `kpp` varchar(64) DEFAULT '',
+  `tel_code` varchar(64) DEFAULT '',
+  `wishlist` blob,
+  `data_adres` blob,
   `cumulative_discount` INT(11) DEFAULT '0',
   PRIMARY KEY (`id`),
   UNIQUE KEY `login` (`login`)
@@ -1707,10 +1708,10 @@ INSERT INTO `phpshop_shopusers` (`id`, `login`, `password`, `datas`, `mail`, `na
 
 CREATE TABLE IF NOT EXISTS `phpshop_shopusers_status` (
   `id` tinyint(11) unsigned NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) NOT NULL DEFAULT '',
+  `name` varchar(255) DEFAULT '',
   `discount` float DEFAULT '0',
-  `price` enum('1','2','3','4','5') NOT NULL DEFAULT '1',
-  `enabled` enum('0','1') NOT NULL DEFAULT '1',
+  `price` enum('1','2','3','4','5') DEFAULT '1',
+  `enabled` enum('0','1') DEFAULT '1',
   `cumulative_discount_check` enum('0','1') DEFAULT '0',
   `cumulative_discount` BLOB,
   PRIMARY KEY (`id`)
@@ -1731,11 +1732,11 @@ INSERT INTO `phpshop_shopusers_status` (`id`, `name`, `discount`, `price`, `enab
 
 CREATE TABLE IF NOT EXISTS `phpshop_slider` (
   `id` int(8) NOT NULL AUTO_INCREMENT,
-  `image` varchar(255) NOT NULL,
-  `enabled` enum('0','1') NOT NULL DEFAULT '0',
-  `num` smallint(6) NOT NULL,
-  `link` varchar(255) NOT NULL,
-  `alt` varchar(255) NOT NULL,
+  `image` varchar(255) DEFAULT '',
+  `enabled` enum('0','1') DEFAULT '0',
+  `num` smallint(6) DEFAULT '0',
+  `link` varchar(255) DEFAULT '',
+  `alt` varchar(255) DEFAULT '',
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
 
@@ -1755,11 +1756,11 @@ INSERT INTO `phpshop_slider` (`id`, `image`, `enabled`, `num`, `link`, `alt`) VA
 
 CREATE TABLE IF NOT EXISTS `phpshop_sort` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `name` varchar(64) NOT NULL DEFAULT '',
-  `category` int(11) unsigned NOT NULL DEFAULT '0',
-  `num` int(11) NOT NULL DEFAULT '0',
-  `page` varchar(255) NOT NULL DEFAULT '',
-  `icon` varchar(255) NOT NULL,
+  `name` varchar(64) DEFAULT '',
+  `category` int(11) unsigned DEFAULT '0',
+  `num` int(11) DEFAULT '0',
+  `page` varchar(255) DEFAULT '',
+  `icon` varchar(255) DEFAULT '',
   PRIMARY KEY (`id`),
   KEY `category` (`category`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
@@ -1814,16 +1815,16 @@ INSERT INTO `phpshop_sort` (`id`, `name`, `category`, `num`, `page`, `icon`) VAL
 
 CREATE TABLE IF NOT EXISTS `phpshop_sort_categories` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `name` varchar(64) NOT NULL DEFAULT '',
-  `num` int(11) NOT NULL DEFAULT '0',
-  `category` int(11) NOT NULL DEFAULT '0',
+  `name` varchar(64) DEFAULT '',
+  `num` int(11) DEFAULT '0',
+  `category` int(11) DEFAULT '0',
   `filtr` enum('0','1') DEFAULT '0',
   `description` varchar(255) DEFAULT '',
   `goodoption` enum('0','1') DEFAULT '0',
   `optionname` enum('0','1') DEFAULT '0',
   `page` varchar(255) DEFAULT '',
   `brand` enum('0','1')  DEFAULT '0',
-  `product` enum('0','1') NOT NULL DEFAULT '0',
+  `product` enum('0','1') DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `category` (`category`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
@@ -1860,7 +1861,7 @@ CREATE TABLE IF NOT EXISTS `phpshop_system` (
   `dengi` tinyint(11) DEFAULT NULL,
   `percent` varchar(16) DEFAULT '',
   `skin` varchar(32) DEFAULT NULL,
-  `adminmail2` varchar(64) NOT NULL DEFAULT '',
+  `adminmail2` varchar(64) DEFAULT '',
   `title` varchar(255)  DEFAULT '',
   `keywords` varchar(255) DEFAULT '',
   `kurs` float DEFAULT '0',
@@ -1899,7 +1900,7 @@ CREATE TABLE IF NOT EXISTS `phpshop_system` (
 --
 
 INSERT INTO `phpshop_system` (`id`, `name`, `company`, `num_row`, `num_row_adm`, `dengi`, `percent`, `skin`, `adminmail2`, `title`, `keywords`, `kurs`, `spec_num`, `new_num`, `tel`, `bank`, `num_vitrina`, `width_icon`, `updateU`, `nds`, `nds_enabled`, `admoption`, `kurs_beznal`, `descrip`, `descrip_shablon`, `title_shablon`, `keywords_shablon`, `title_shablon2`, `descrip_shablon2`, `keywords_shablon2`, `logo`, `promotext`, `title_shablon3`, `descrip_shablon3`, `keywords_shablon3`, `rss_use`, `1c_load_accounts`, `1c_load_invoice`, `1c_option`) VALUES
-(1, 'Название интернет-магазина', 'Продавец', 9, 0, 6, '0', 'spice', 'admin@localhost', 'Демо-версия скрипта интернет-магазина PHPShop', 'скрипт магазина, купить интернет-магазин', 6, 4, 4, '(495)111-22-33', 0x613a393a7b733a383a226f72675f6e616d65223b733a31343a22cecece2022cff0eee4e0e2e5f622223b733a31323a226f72675f75725f6164726573223b733a34313a2230303030303020e32e20cceef1eae2e02c20f3eb2e20def0e8e4e8f7e5f1eae0ff2c20e4eeec20312e223b733a393a226f72675f6164726573223b733a33303a22cceef1eae2e02c20f3eb2e20d4e8e7e8f7e5f1eae0ff2c20e4eeec20312e223b733a373a226f72675f696e6e223b733a393a22373737373737373737223b733a373a226f72675f6b7070223b733a31303a2238383838383838383838223b733a393a226f72675f7363686574223b733a31363a2231313131313131313131313131313131223b733a383a226f72675f62616e6b223b733a32333a22cec0ce2022c2e0f820f2e5f1f2eee2fbe920e1e0edea22223b733a373a226f72675f626963223b733a383a223436373738383838223b733a31343a226f72675f62616e6b5f7363686574223b733a31353a22323232323232323232323232323232223b7d, '3', '', '1409661405', '18', '1', 0x613a35343a7b733a31373a227072657670616e656c5f656e61626c6564223b733a313a2231223b733a31323a22736b6c61645f737461747573223b733a313a2233223b733a31343a2268656c7065725f656e61626c6564223b733a313a2231223b733a31333a22636c6f75645f656e61626c6564223b733a313a2231223b733a32333a226469676974616c5f70726f647563745f656e61626c6564223b4e3b733a31333a22757365725f63616c656e646172223b4e3b733a31393a22757365725f70726963655f6163746976617465223b4e3b733a32323a22757365725f6d61696c5f61637469766174655f707265223b4e3b733a31383a227273735f6772616265725f656e61626c6564223b733a313a2231223b733a31373a22696d6167655f736176655f736f75726365223b733a313a2231223b733a363a22696d675f776d223b4e3b733a353a22696d675f77223b733a333a22333030223b733a353a22696d675f68223b733a333a22333030223b733a363a22696d675f7477223b733a333a22313930223b733a363a22696d675f7468223b733a333a22313930223b733a31343a2277696474685f706f64726f626e6f223b733a333a22313030223b733a31323a2277696474685f6b7261746b6f223b733a333a22313030223b733a31353a226d6573736167655f656e61626c6564223b733a313a2231223b733a31323a226d6573736167655f74696d65223b733a323a223230223b733a31353a226465736b746f705f656e61626c6564223b4e3b733a31323a226465736b746f705f74696d65223b4e3b733a383a226f706c6174615f31223b733a313a2231223b733a383a226f706c6174615f32223b733a313a2231223b733a383a226f706c6174615f33223b733a313a2231223b733a383a226f706c6174615f34223b4e3b733a383a226f706c6174615f35223b733a313a2231223b733a383a226f706c6174615f36223b733a313a2231223b733a383a226f706c6174615f37223b733a313a2231223b733a383a226f706c6174615f38223b733a313a2231223b733a31343a2273656c6c65725f656e61626c6564223b4e3b733a31323a22626173655f656e61626c6564223b4e3b733a31313a22736d735f656e61626c6564223b4e3b733a31343a226e6f746963655f656e61626c6564223b4e3b733a31343a227570646174655f656e61626c6564223b733a313a2231223b733a373a22626173655f6964223b733a303a22223b733a393a22626173655f686f7374223b733a303a22223b733a343a226c616e67223b733a373a227275737369616e223b733a31333a22736b6c61645f656e61626c6564223b733a313a2231223b733a31303a2270726963655f7a6e616b223b733a313a2230223b733a31383a22757365725f6d61696c5f6163746976617465223b4e3b733a31313a22757365725f737461747573223b733a313a2230223b733a393a22757365725f736b696e223b733a313a2231223b733a31323a22636172745f6d696e696d756d223b733a343a2231303030223b733a31343a22656469746f725f656e61626c6564223b733a313a2231223b733a31333a2277617465726d61726b5f626967223b613a32313a7b733a31343a226269675f6d657267654c6576656c223b693a37303b733a31313a226269675f656e61626c6564223b733a313a2231223b733a383a226269675f74797065223b733a333a22706e67223b733a31323a226269675f706e675f66696c65223b733a33303a222f5573657246696c65732f496d6167652f73686f705f6c6f676f2e706e67223b733a31323a226269675f636f7079466c6167223b733a313a2230223b733a363a226269675f736d223b693a303b733a31363a226269675f706f736974696f6e466c6167223b733a313a2234223b733a31333a226269675f706f736974696f6e58223b693a303b733a31333a226269675f706f736974696f6e59223b693a303b733a393a226269675f616c706861223b693a37303b733a383a226269675f74657874223b733a303a22223b733a32313a226269675f746578745f706f736974696f6e466c6167223b693a303b733a383a226269675f73697a65223b693a303b733a393a226269675f616e676c65223b693a303b733a31383a226269675f746578745f706f736974696f6e58223b693a303b733a31383a226269675f746578745f706f736974696f6e59223b693a303b733a31303a226269675f636f6c6f7252223b693a303b733a31303a226269675f636f6c6f7247223b693a303b733a31303a226269675f636f6c6f7242223b693a303b733a31343a226269675f746578745f616c706861223b693a303b733a383a226269675f666f6e74223b733a31363a226e6f726f626f745f666f6e742e747466223b7d733a31353a2277617465726d61726b5f736d616c6c223b613a32313a7b733a31363a22736d616c6c5f6d657267654c6576656c223b693a3130303b733a31333a22736d616c6c5f656e61626c6564223b733a313a2231223b733a31303a22736d616c6c5f74797065223b733a333a22706e67223b733a31343a22736d616c6c5f706e675f66696c65223b733a32353a222f5573657246696c65732f496d6167652f6c6f676f2e706e67223b733a31343a22736d616c6c5f636f7079466c6167223b733a313a2230223b733a383a22736d616c6c5f736d223b693a303b733a31383a22736d616c6c5f706f736974696f6e466c6167223b733a313a2231223b733a31353a22736d616c6c5f706f736974696f6e58223b693a303b733a31353a22736d616c6c5f706f736974696f6e59223b693a303b733a31313a22736d616c6c5f616c706861223b693a35303b733a31303a22736d616c6c5f74657874223b733a303a22223b733a32333a22736d616c6c5f746578745f706f736974696f6e466c6167223b693a303b733a31303a22736d616c6c5f73697a65223b693a303b733a31313a22736d616c6c5f616e676c65223b693a303b733a32303a22736d616c6c5f746578745f706f736974696f6e58223b693a303b733a32303a22736d616c6c5f746578745f706f736974696f6e59223b693a303b733a31323a22736d616c6c5f636f6c6f7252223b693a303b733a31323a22736d616c6c5f636f6c6f7247223b693a303b733a31323a22736d616c6c5f636f6c6f7242223b693a303b733a31363a22736d616c6c5f746578745f616c706861223b693a303b733a31303a22736d616c6c5f666f6e74223b733a31363a226e6f726f626f745f666f6e742e747466223b7d733a31353a2277617465726d61726b5f6973686f64223b613a32313a7b733a31363a226973686f645f6d657267654c6576656c223b693a3130303b733a31333a226973686f645f656e61626c6564223b4e3b733a31303a226973686f645f74797065223b733a333a22706e67223b733a31343a226973686f645f706e675f66696c65223b733a303a22223b733a31343a226973686f645f636f7079466c6167223b733a313a2230223b733a383a226973686f645f736d223b693a303b733a31383a226973686f645f706f736974696f6e466c6167223b733a313a2231223b733a31353a226973686f645f706f736974696f6e58223b693a303b733a31353a226973686f645f706f736974696f6e59223b693a303b733a31313a226973686f645f616c706861223b693a303b733a31303a226973686f645f74657874223b733a303a22223b733a32333a226973686f645f746578745f706f736974696f6e466c6167223b693a303b733a31303a226973686f645f73697a65223b693a303b733a31313a226973686f645f616e676c65223b693a303b733a32303a226973686f645f746578745f706f736974696f6e58223b693a303b733a32303a226973686f645f746578745f706f736974696f6e59223b693a303b733a31323a226973686f645f636f6c6f7252223b693a303b733a31323a226973686f645f636f6c6f7247223b693a303b733a31323a226973686f645f636f6c6f7242223b693a303b733a31363a226973686f645f746578745f616c706861223b693a303b733a31303a226973686f645f666f6e74223b733a31363a226e6f726f626f745f666f6e742e747466223b7d733a31303a2263616c69627261746564223b4e3b733a31343a226e6f776275795f656e61626c6564223b733a313a2232223b733a393a22786d6c656e636f6465223b733a353a225554462d38223b733a363a22656469746f72223b733a383a2274696e795f6d6365223b733a353a227468656d65223b733a373a2264656661756c74223b733a32343a22736d735f7374617475735f6f726465725f656e61626c6564223b4e3b733a31343a22737570706f72745f6e6f74696365223b623a313b7d, 6, 'PHPShop – это готовое решение для быстрого создания интернет-магазина.', '@Podcatalog@, @Catalog@, @System@', '@Podcatalog@ - @Catalog@ - @System@', '@Podcatalog@, @Catalog@, @Generator@', '@Product@ - @Podcatalog@ - @Catalog@', '@Product@, @Podcatalog@, @Catalog@', '@Product@,@System@', '/UserFiles/Image/Trial/your_logo.png', '', '@Catalog@ - @System@', '@Catalog@', '@Catalog@', 0, '0', '0', 0x613a353a7b733a31313a227570646174655f6e616d65223b733a313a2231223b733a31343a227570646174655f636f6e74656e74223b733a313a2231223b733a31383a227570646174655f6465736372697074696f6e223b733a313a2231223b733a31353a227570646174655f63617465676f7279223b733a313a2231223b733a31313a227570646174655f736f7274223b733a313a2231223b7d);
+(1, 'Название интернет-магазина', 'Продавец', 9, 0, 6, '0', 'diggi', 'admin@localhost', 'Демо-версия скрипта интернет-магазина PHPShop', 'скрипт магазина, купить интернет-магазин', 6, 4, 4, '(495)111-22-33', 0x613a393a7b733a383a226f72675f6e616d65223b733a31343a22cecece2022cff0eee4e0e2e5f622223b733a31323a226f72675f75725f6164726573223b733a34313a2230303030303020e32e20cceef1eae2e02c20f3eb2e20def0e8e4e8f7e5f1eae0ff2c20e4eeec20312e223b733a393a226f72675f6164726573223b733a33303a22cceef1eae2e02c20f3eb2e20d4e8e7e8f7e5f1eae0ff2c20e4eeec20312e223b733a373a226f72675f696e6e223b733a393a22373737373737373737223b733a373a226f72675f6b7070223b733a31303a2238383838383838383838223b733a393a226f72675f7363686574223b733a31363a2231313131313131313131313131313131223b733a383a226f72675f62616e6b223b733a32333a22cec0ce2022c2e0f820f2e5f1f2eee2fbe920e1e0edea22223b733a373a226f72675f626963223b733a383a223436373738383838223b733a31343a226f72675f62616e6b5f7363686574223b733a31353a22323232323232323232323232323232223b7d, '3', '', '1409661405', '18', '1', 0x613a35343a7b733a31373a227072657670616e656c5f656e61626c6564223b733a313a2231223b733a31323a22736b6c61645f737461747573223b733a313a2233223b733a31343a2268656c7065725f656e61626c6564223b733a313a2231223b733a31333a22636c6f75645f656e61626c6564223b733a313a2231223b733a32333a226469676974616c5f70726f647563745f656e61626c6564223b4e3b733a31333a22757365725f63616c656e646172223b4e3b733a31393a22757365725f70726963655f6163746976617465223b4e3b733a32323a22757365725f6d61696c5f61637469766174655f707265223b4e3b733a31383a227273735f6772616265725f656e61626c6564223b733a313a2231223b733a31373a22696d6167655f736176655f736f75726365223b733a313a2231223b733a363a22696d675f776d223b4e3b733a353a22696d675f77223b733a333a22333030223b733a353a22696d675f68223b733a333a22333030223b733a363a22696d675f7477223b733a333a22313930223b733a363a22696d675f7468223b733a333a22313930223b733a31343a2277696474685f706f64726f626e6f223b733a333a22313030223b733a31323a2277696474685f6b7261746b6f223b733a333a22313030223b733a31353a226d6573736167655f656e61626c6564223b733a313a2231223b733a31323a226d6573736167655f74696d65223b733a323a223230223b733a31353a226465736b746f705f656e61626c6564223b4e3b733a31323a226465736b746f705f74696d65223b4e3b733a383a226f706c6174615f31223b733a313a2231223b733a383a226f706c6174615f32223b733a313a2231223b733a383a226f706c6174615f33223b733a313a2231223b733a383a226f706c6174615f34223b4e3b733a383a226f706c6174615f35223b733a313a2231223b733a383a226f706c6174615f36223b733a313a2231223b733a383a226f706c6174615f37223b733a313a2231223b733a383a226f706c6174615f38223b733a313a2231223b733a31343a2273656c6c65725f656e61626c6564223b4e3b733a31323a22626173655f656e61626c6564223b4e3b733a31313a22736d735f656e61626c6564223b4e3b733a31343a226e6f746963655f656e61626c6564223b4e3b733a31343a227570646174655f656e61626c6564223b733a313a2231223b733a373a22626173655f6964223b733a303a22223b733a393a22626173655f686f7374223b733a303a22223b733a343a226c616e67223b733a373a227275737369616e223b733a31333a22736b6c61645f656e61626c6564223b733a313a2231223b733a31303a2270726963655f7a6e616b223b733a313a2230223b733a31383a22757365725f6d61696c5f6163746976617465223b4e3b733a31313a22757365725f737461747573223b733a313a2230223b733a393a22757365725f736b696e223b733a313a2231223b733a31323a22636172745f6d696e696d756d223b733a343a2231303030223b733a31343a22656469746f725f656e61626c6564223b733a313a2231223b733a31333a2277617465726d61726b5f626967223b613a32313a7b733a31343a226269675f6d657267654c6576656c223b693a37303b733a31313a226269675f656e61626c6564223b733a313a2231223b733a383a226269675f74797065223b733a333a22706e67223b733a31323a226269675f706e675f66696c65223b733a33303a222f5573657246696c65732f496d6167652f73686f705f6c6f676f2e706e67223b733a31323a226269675f636f7079466c6167223b733a313a2230223b733a363a226269675f736d223b693a303b733a31363a226269675f706f736974696f6e466c6167223b733a313a2234223b733a31333a226269675f706f736974696f6e58223b693a303b733a31333a226269675f706f736974696f6e59223b693a303b733a393a226269675f616c706861223b693a37303b733a383a226269675f74657874223b733a303a22223b733a32313a226269675f746578745f706f736974696f6e466c6167223b693a303b733a383a226269675f73697a65223b693a303b733a393a226269675f616e676c65223b693a303b733a31383a226269675f746578745f706f736974696f6e58223b693a303b733a31383a226269675f746578745f706f736974696f6e59223b693a303b733a31303a226269675f636f6c6f7252223b693a303b733a31303a226269675f636f6c6f7247223b693a303b733a31303a226269675f636f6c6f7242223b693a303b733a31343a226269675f746578745f616c706861223b693a303b733a383a226269675f666f6e74223b733a31363a226e6f726f626f745f666f6e742e747466223b7d733a31353a2277617465726d61726b5f736d616c6c223b613a32313a7b733a31363a22736d616c6c5f6d657267654c6576656c223b693a3130303b733a31333a22736d616c6c5f656e61626c6564223b733a313a2231223b733a31303a22736d616c6c5f74797065223b733a333a22706e67223b733a31343a22736d616c6c5f706e675f66696c65223b733a32353a222f5573657246696c65732f496d6167652f6c6f676f2e706e67223b733a31343a22736d616c6c5f636f7079466c6167223b733a313a2230223b733a383a22736d616c6c5f736d223b693a303b733a31383a22736d616c6c5f706f736974696f6e466c6167223b733a313a2231223b733a31353a22736d616c6c5f706f736974696f6e58223b693a303b733a31353a22736d616c6c5f706f736974696f6e59223b693a303b733a31313a22736d616c6c5f616c706861223b693a35303b733a31303a22736d616c6c5f74657874223b733a303a22223b733a32333a22736d616c6c5f746578745f706f736974696f6e466c6167223b693a303b733a31303a22736d616c6c5f73697a65223b693a303b733a31313a22736d616c6c5f616e676c65223b693a303b733a32303a22736d616c6c5f746578745f706f736974696f6e58223b693a303b733a32303a22736d616c6c5f746578745f706f736974696f6e59223b693a303b733a31323a22736d616c6c5f636f6c6f7252223b693a303b733a31323a22736d616c6c5f636f6c6f7247223b693a303b733a31323a22736d616c6c5f636f6c6f7242223b693a303b733a31363a22736d616c6c5f746578745f616c706861223b693a303b733a31303a22736d616c6c5f666f6e74223b733a31363a226e6f726f626f745f666f6e742e747466223b7d733a31353a2277617465726d61726b5f6973686f64223b613a32313a7b733a31363a226973686f645f6d657267654c6576656c223b693a3130303b733a31333a226973686f645f656e61626c6564223b4e3b733a31303a226973686f645f74797065223b733a333a22706e67223b733a31343a226973686f645f706e675f66696c65223b733a303a22223b733a31343a226973686f645f636f7079466c6167223b733a313a2230223b733a383a226973686f645f736d223b693a303b733a31383a226973686f645f706f736974696f6e466c6167223b733a313a2231223b733a31353a226973686f645f706f736974696f6e58223b693a303b733a31353a226973686f645f706f736974696f6e59223b693a303b733a31313a226973686f645f616c706861223b693a303b733a31303a226973686f645f74657874223b733a303a22223b733a32333a226973686f645f746578745f706f736974696f6e466c6167223b693a303b733a31303a226973686f645f73697a65223b693a303b733a31313a226973686f645f616e676c65223b693a303b733a32303a226973686f645f746578745f706f736974696f6e58223b693a303b733a32303a226973686f645f746578745f706f736974696f6e59223b693a303b733a31323a226973686f645f636f6c6f7252223b693a303b733a31323a226973686f645f636f6c6f7247223b693a303b733a31323a226973686f645f636f6c6f7242223b693a303b733a31363a226973686f645f746578745f616c706861223b693a303b733a31303a226973686f645f666f6e74223b733a31363a226e6f726f626f745f666f6e742e747466223b7d733a31303a2263616c69627261746564223b4e3b733a31343a226e6f776275795f656e61626c6564223b733a313a2232223b733a393a22786d6c656e636f6465223b733a353a225554462d38223b733a363a22656469746f72223b733a383a2274696e795f6d6365223b733a353a227468656d65223b733a373a2264656661756c74223b733a32343a22736d735f7374617475735f6f726465725f656e61626c6564223b4e3b733a31343a22737570706f72745f6e6f74696365223b623a313b7d, 6, 'PHPShop – это готовое решение для быстрого создания интернет-магазина.', '@Podcatalog@, @Catalog@, @System@', '@Podcatalog@ - @Catalog@ - @System@', '@Podcatalog@, @Catalog@, @Generator@', '@Product@ - @Podcatalog@ - @Catalog@', '@Product@, @Podcatalog@, @Catalog@', '@Product@,@System@', '/UserFiles/Image/Trial/your_logo.png', '', '@Catalog@ - @System@', '@Catalog@', '@Catalog@', 0, '0', '0', 0x613a353a7b733a31313a227570646174655f6e616d65223b733a313a2231223b733a31343a227570646174655f636f6e74656e74223b733a313a2231223b733a31383a227570646174655f6465736372697074696f6e223b733a313a2231223b733a31353a227570646174655f63617465676f7279223b733a313a2231223b733a31313a227570646174655f736f7274223b733a313a2231223b7d);
 -- --------------------------------------------------------
 
 
@@ -1909,10 +1910,10 @@ INSERT INTO `phpshop_system` (`id`, `name`, `company`, `num_row`, `num_row_adm`,
 
 CREATE TABLE IF NOT EXISTS `phpshop_users` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `status` blob NOT NULL,
-  `login` varchar(64) NOT NULL DEFAULT '',
-  `password` varchar(64) NOT NULL DEFAULT '',
-  `mail` varchar(64) NOT NULL DEFAULT '',
+  `status` blob,
+  `login` varchar(64) DEFAULT '',
+  `password` varchar(64) DEFAULT '',
+  `mail` varchar(64) DEFAULT '',
   `enabled` enum('0','1') DEFAULT '1',
   `name` varchar(255) DEFAULT '',
   `hash` varchar(255) DEFAULT '',
@@ -1927,12 +1928,12 @@ CREATE TABLE IF NOT EXISTS `phpshop_users` (
 
 CREATE TABLE IF NOT EXISTS `phpshop_valuta` (
   `id` tinyint(11) unsigned NOT NULL AUTO_INCREMENT,
-  `name` varchar(64) NOT NULL DEFAULT '',
-  `code` varchar(64) NOT NULL DEFAULT '',
-  `iso` varchar(64) NOT NULL DEFAULT '',
-  `kurs` varchar(64) NOT NULL DEFAULT '0',
-  `num` tinyint(11) NOT NULL DEFAULT '0',
-  `enabled` enum('0','1') NOT NULL DEFAULT '1',
+  `name` varchar(64) DEFAULT '',
+  `code` varchar(64) DEFAULT '',
+  `iso` varchar(64) DEFAULT '',
+  `kurs` varchar(64) DEFAULT '0',
+  `num` tinyint(11) DEFAULT '0',
+  `enabled` enum('0','1') DEFAULT '1',
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
 
@@ -1952,9 +1953,9 @@ INSERT INTO `phpshop_valuta` (`id`, `name`, `code`, `iso`, `kurs`, `num`, `enabl
 
 CREATE TABLE IF NOT EXISTS `phpshop_citylist_city` (
   `city_id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `country_id` int(11) unsigned NOT NULL DEFAULT '0',
-  `region_id` int(10) unsigned NOT NULL DEFAULT '0',
-  `name` varchar(128) NOT NULL DEFAULT '',
+  `country_id` int(11) unsigned DEFAULT '0',
+  `region_id` int(10) unsigned  DEFAULT '0',
+  `name` varchar(128) DEFAULT '',
   PRIMARY KEY (`city_id`),
   KEY `country_id` (`country_id`),
   KEY `region_id` (`region_id`)
@@ -1966,8 +1967,8 @@ CREATE TABLE IF NOT EXISTS `phpshop_citylist_city` (
 
 CREATE TABLE IF NOT EXISTS `phpshop_citylist_country` (
   `country_id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `city_id` int(11) NOT NULL DEFAULT '0',
-  `name` varchar(128) NOT NULL DEFAULT '',
+  `city_id` int(11) DEFAULT '0',
+  `name` varchar(128) DEFAULT '',
   PRIMARY KEY (`country_id`),
   KEY `city_id` (`city_id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
@@ -1979,9 +1980,9 @@ CREATE TABLE IF NOT EXISTS `phpshop_citylist_country` (
 
 CREATE TABLE IF NOT EXISTS `phpshop_citylist_region` (
   `region_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `country_id` int(10) unsigned NOT NULL DEFAULT '0',
-  `city_id` int(10) unsigned NOT NULL DEFAULT '0',
-  `name` varchar(64) NOT NULL DEFAULT '',
+  `country_id` int(10) unsigned DEFAULT '0',
+  `city_id` int(10) unsigned DEFAULT '0',
+  `name` varchar(64) DEFAULT '',
   PRIMARY KEY (`region_id`),
   KEY `country_id` (`country_id`),
   KEY `city_id` (`city_id`)
@@ -1993,10 +1994,10 @@ CREATE TABLE IF NOT EXISTS `phpshop_citylist_region` (
 
 CREATE TABLE IF NOT EXISTS `phpshop_newsletter` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) NOT NULL,
-  `content` text NOT NULL,
+  `name` varchar(255) DEFAULT '',
+  `content` text ,
   `template` int(11) DEFAULT '0',
-  `date` int(11) NOT NULL,
+  `date` int(11) DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `id` (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;

@@ -58,8 +58,10 @@ class PHPShopForma extends PHPShopCore {
         // Перехват модуля
         if ($this->setHook(__CLASS__, __FUNCTION__, $_POST))
             return true;
+        
+        preg_match_all('/http:?/', $_POST['content'], $url, PREG_SET_ORDER);
 
-        if (!empty($_SESSION['text']) and strtoupper($_POST['key']) == strtoupper($_SESSION['text'])) {
+        if (!empty($_SESSION['text']) and strtoupper($_POST['key']) == strtoupper($_SESSION['text']) and strpos($_SERVER["HTTP_REFERER"], $_SERVER['SERVER_NAME']) and count($url)==0) {
             $this->send();
         }
         else
@@ -91,18 +93,16 @@ class PHPShopForma extends PHPShopCore {
 ";
 
             // Информация по сообщению
-            foreach ($_POST as $val)
+            foreach ($_POST as $k=>$val){
                 $message.=$val . "
 ";
+            unset($_POST[$k]);   
+
+            }
 
             $message.="
-Дата:               " . date("d-m-y H:s a") . "
-IP:
-" . $_SERVER['REMOTE_ADDR'] . "
----------------
-
-С уважением,
-http://" . $_SERVER['SERVER_NAME'];
+Дата: " . date("d-m-y H:s a") . "
+IP: " . $_SERVER['REMOTE_ADDR'];
             
             new PHPShopMail($this->PHPShopSystem->getEmail(), $this->PHPShopSystem->getEmail(), $subject, $message, false, false, array('replyto'=>$_POST['mail']));
             

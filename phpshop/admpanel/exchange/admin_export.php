@@ -211,7 +211,7 @@ function serializeSelect($str, $cols_name = false) {
 
 // Функция обновления
 function actionSave() {
-    global $PHPShopOrm, $key_name, $subpath, $PHPShopOrderStatusArray,$PHPShopUserStatusArray;
+    global $PHPShopOrm, $key_name, $subpath, $PHPShopOrderStatusArray, $PHPShopUserStatusArray;
 
     $PHPShopOrm->debug = false;
     $PHPShopOrm->mysql_error = false;
@@ -273,9 +273,10 @@ function actionSave() {
                 elseif ($cols_name == 'orders') {
                     $order = unserialize($row['orders']);
                     $csv_line.='"';
-                    foreach ($order['Cart']['cart'] as $k => $v) {
-                        $csv_line.= '[' . $v['name'] . '(' . $v['num'] . '*' . $v['price'] . ')]';
-                    }
+                    if (is_array($order['Cart']['cart']))
+                        foreach ($order['Cart']['cart'] as $k => $v) {
+                            $csv_line.= '[' . $v['name'] . '(' . $v['num'] . '*' . $v['price'] . ')]';
+                        }
                     $csv_line.='"' . $delim;
                 }
 
@@ -329,8 +330,6 @@ function actionSave() {
     else
         header("Location: " . $sorce);
 }
-
-
 
 // Стартовый вид
 function actionStart() {

@@ -1,4 +1,4 @@
-<?
+<?php
 $_classPath = "../../../../";
 include($_classPath . "class/obj.class.php");
 PHPShopObj::loadClass("base");
@@ -76,7 +76,7 @@ $data_person = unserialize($pbrf_system['data']);
 ?>
 
 <head>
-    <title>Бланк Заказа №<?= $ouid ?></title>
+    <title>Бланк Заказа №<?php echo $ouid ?></title>
     <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=windows-1251">
     <META HTTP-EQUIV="PRAGMA" CONTENT="NO-CACHE">
     <meta http-equiv="Content-Type" content="text/html; charset=windows-1251">
@@ -106,7 +106,7 @@ $data_person = unserialize($pbrf_system['data']);
 </head>
 <body onload="window.focus()" bgcolor="#FFFFFF" text="#000000" marginwidth=5 leftmargin=5 style="padding: 2px;">
     
-    <?
+    <?php
         //Получаем тип бланка
         $type = $_POST['type_send'];
         //Результат
@@ -123,7 +123,7 @@ $data_person = unserialize($pbrf_system['data']);
         <div align="center"><table align="center" width="100%">
             <tr>
                 <td align="center"></td>
-                <td align="right"><h4 align=center>Заказ&nbsp;№&nbsp;<?= $ouid ?>&nbsp;от&nbsp;<?= $datas ?></h4></td>
+                <td align="right"><h4 align=center>Заказ&nbsp;№&nbsp;<?php echo $ouid ?>&nbsp;от&nbsp;<?php echo $datas ?></h4></td>
             </tr>
         </table>
     </div>
@@ -140,7 +140,7 @@ $data_person = unserialize($pbrf_system['data']);
           <label class="inline right">Кому</label>
         </div>
         <div class="four columns left">
-          <input placeholder="Фамилия" id="whom_surname" type="text" value="<?=$fio_new?>" rel="" name="F7[whom_surname]" class="twelve validate[required] capitalize" maxlength="30">
+          <input placeholder="Фамилия" id="whom_surname" type="text" value="<?php echo $fio_new?>" rel="" name="F7[whom_surname]" class="twelve validate[required] capitalize" maxlength="30">
         </div>
         <div class="six columns">
           <label class="inline left">Фамилия</label>
@@ -162,7 +162,7 @@ $data_person = unserialize($pbrf_system['data']);
           <label class="inline right">Город</label>
         </div>
         <div class="six columns end">
-          <input placeholder="Название города" id="whom_city" type="text" name="F7[whom_city]" class="twelve validate[required]" value="<?=$city_new?>">
+          <input placeholder="Название города" id="whom_city" type="text" name="F7[whom_city]" class="twelve validate[required]" value="<?php echo $city_new?>">
         </div>
       </div>
       <div class="row">
@@ -170,19 +170,19 @@ $data_person = unserialize($pbrf_system['data']);
           <label class="inline right">Улица</label>
         </div>
         <div class="three columns">
-          <input placeholder="Название улицы" id="whom_street" type="text" name="F7[whom_street]" class="twelve" value="<?=$street_new?>">
+          <input placeholder="Название улицы" id="whom_street" type="text" name="F7[whom_street]" class="twelve" value="<?php echo $street_new?>">
         </div>
         <div class="one columns">
           <label class="inline right">Дом</label>
         </div>
         <div class="two columns">
-          <input placeholder="номер" id="whom_build" type="text" name="F7[whom_build]" class="twelve" value="<?=$house_new?>" maxlength="6">
+          <input placeholder="номер" id="whom_build" type="text" name="F7[whom_build]" class="twelve" value="<?php echo $house_new?>" maxlength="6">
         </div>
         <div class="two columns">
           <label class="inline right">Квартира</label>
         </div>
         <div class="two columns">
-          <input placeholder="номер" id="whom_appartment" type="text" name="F7[whom_appartment]" class="twelve validate[custom[numAfterLetter]]" value="<?=$flat_new?>" maxlength="7">
+          <input placeholder="номер" id="whom_appartment" type="text" name="F7[whom_appartment]" class="twelve validate[custom[numAfterLetter]]" value="<?php echo $flat_new?>" maxlength="7">
         </div>
       </div>      
       <div class="row">
@@ -190,7 +190,7 @@ $data_person = unserialize($pbrf_system['data']);
           <label class="inline right">Почтовый индекс</label>
         </div>
         <div class="three columns left end">
-          <input placeholder="000000" id="whom_zip" type="text" value="<?=$index_new?>" rel="" name="F7[whom_zip]" class="twelve validate[required,custom[integer]]" maxlength="6">
+          <input placeholder="000000" id="whom_zip" type="text" value="<?php echo $index_new?>" rel="" name="F7[whom_zip]" class="twelve validate[required,custom[integer]]" maxlength="6">
         </div>
       </div>
     </fieldset>
@@ -201,7 +201,7 @@ $data_person = unserialize($pbrf_system['data']);
           <label class="inline right">От кого</label>
         </div>
         <div class="four columns left">
-          <input placeholder="Фамилия" id="from_surname" type="text" value="<?=$data_person['surname']?>" rel="" name="F7[from_surname]" class="twelve validate[required, ecustom[onlyLetterSp]] capitalize" maxlength="25">
+          <input placeholder="Фамилия" id="from_surname" type="text" value="<?php echo $data_person['surname']?>" rel="" name="F7[from_surname]" class="twelve validate[required, ecustom[onlyLetterSp]] capitalize" maxlength="25">
         </div>
         <div class="six columns">
           <label class="inline left">Фамилия</label>
@@ -212,7 +212,7 @@ $data_person = unserialize($pbrf_system['data']);
           <label class="inline right">&nbsp;</label>
         </div>
         <div class="six columns left">
-          <input placeholder="Имя Отчество" id="from_name" type="text" value="<?=$data_person['name']?> <?=$data_person['name2']?>" rel="" name="F7[from_name]" class="twelve" maxlength="32">
+          <input placeholder="Имя Отчество" id="from_name" type="text" value="<?php echo $data_person['name'].' '.$data_person['name2']?>" rel="" name="F7[from_name]" class="twelve" maxlength="32">
         </div>
         <div class="four columns">
           <label class="inline left">Имя Отчество</label>
@@ -223,7 +223,7 @@ $data_person = unserialize($pbrf_system['data']);
           <label class="inline right">Город</label>
         </div>
         <div class="six columns end">
-          <input placeholder="Название города" id="from_city" type="text" name="F7[from_city]" class="twelve validate[required]" value="<?=$data_person['city']?>">
+          <input placeholder="Название города" id="from_city" type="text" name="F7[from_city]" class="twelve validate[required]" value="<?php echo $data_person['city']?>">
         </div>
       </div>
       <div class="row">
@@ -231,19 +231,19 @@ $data_person = unserialize($pbrf_system['data']);
           <label class="inline right">Улица</label>
         </div>
         <div class="three columns">
-          <input placeholder="Название улицы" id="from_street" type="text" name="F7[from_street]" class="twelve" value="<?=$data_person['street']?>">
+          <input placeholder="Название улицы" id="from_street" type="text" name="F7[from_street]" class="twelve" value="<<?php echo $data_person['street']?>">
         </div>
         <div class="one columns">
           <label class="inline right">Дом</label>
         </div>
         <div class="two columns">
-          <input placeholder="номер" id="from_build" type="text" name="F7[from_build]" class="twelve" value="<?=$data_person['build']?>" maxlength="6">
+          <input placeholder="номер" id="from_build" type="text" name="F7[from_build]" class="twelve" value="<?php echo $data_person['build']?>" maxlength="6">
         </div>
         <div class="two columns">
           <label class="inline right">Квартира</label>
         </div>
         <div class="two columns">
-          <input placeholder="номер" id="from_appartment" type="text" name="F7[from_appartment]" class="twelve validate[custom[numAfterLetter]]" value="<?=$data_person['appartment']?>" maxlength="7">
+          <input placeholder="номер" id="from_appartment" type="text" name="F7[from_appartment]" class="twelve validate[custom[numAfterLetter]]" value="<?php echo $data_person['appartment']?>" maxlength="7">
         </div>
       </div>
       <div class="row">
@@ -251,7 +251,7 @@ $data_person = unserialize($pbrf_system['data']);
           <label class="inline right">Почтовый индекс</label>
         </div>
         <div class="three columns left end">
-          <input placeholder="000000" id="from_zip" type="text" value="<?=$data_person['zip']?>" rel="" name="F7[from_zip]" class="eight validate[required,custom[integer]]" maxlength="6">
+          <input placeholder="000000" id="from_zip" type="text" value="<?php echo $data_person['zip']?>" rel="" name="F7[from_zip]" class="eight validate[required,custom[integer]]" maxlength="6">
         </div>
       </div>
 

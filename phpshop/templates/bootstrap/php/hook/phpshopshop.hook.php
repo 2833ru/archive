@@ -13,7 +13,10 @@ function template_CID_Product($obj, $data, $rout) {
             case 2:
                 $obj->set('gridSetBactive', 'active');
                 break;
-            default: $obj->set('gridSetBactive', 'active');
+            default: if ($obj->cell == 1)
+                    $obj->set('gridSetAactive', 'active');
+                else
+                    $obj->set('gridSetBactive', 'active');
         }
 
 
@@ -46,10 +49,10 @@ function template_CID_Product($obj, $data, $rout) {
 function template_parent($obj, $dataArray, $rout) {
 
     if ($rout == 'END') {
-        
+
         if (count($obj->select_value > 0)) {
             $obj->set('parentList', '');
-            
+
             foreach ($obj->select_value as $value) {
                 $obj->set('parentName', $value[0]);
                 $obj->set('parentId', $value[1]);

@@ -10,8 +10,7 @@ function snow_footer_hook() {
 
 case "1":
         $dis='
-       <script language="JavaScript" src="/phpshop/modules/snow/js/jquery.snow.js"></script>            
-// Snow           
+       <script language="JavaScript" src="/phpshop/modules/snow/js/jquery.snow.js"></script>                   
 <script>
 var mod_snow_color="'.$option['color'].'";
 	(function($){
@@ -23,7 +22,6 @@ var mod_snow_color="'.$option['color'].'";
 case "2":
       $dis='     
 <script>
-// Snow    
 var mod_snow_color="'.$option['color'].'";  
 </script>
 <script language="JavaScript" src="phpshop/modules/snow/js/snow.js"></script>';  

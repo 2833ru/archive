@@ -28,4 +28,4 @@
         </div>
     </div>
 </div>
-<a href="#" data-toggle="modal" data-target="#oneClickModal" class="btn btn-success"> упить в 1 клик!</a>
+<a href="#" data-toggle="modal" data-target="#oneClickModal" class="btn btn-cart"><i class="fa fa-bell" aria-hidden="true"></i>  упить в 1 клик</a>

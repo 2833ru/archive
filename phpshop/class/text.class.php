@@ -56,12 +56,12 @@ class PHPShopText {
      * @param string $color цвет текста
      * @return string
      */
-    static function message($string, $icon = false, $size = false, $color = 'green',$class=false) {
+    static function message($string, $icon = false, $size = false, $color = 'green', $class = false) {
         if (!empty($icon))
             $img = PHPShopText::img($icon);
         else
             $img = null;
-        return $img . '<span style="color:' . $color . ';font-size:' . $size . '" class="'.$class.'">' . $string . '</span>';
+        return $img . '<span style="color:' . $color . ';font-size:' . $size . '" class="' . $class . '">' . $string . '</span>';
     }
 
     /**
@@ -129,8 +129,8 @@ class PHPShopText {
      * @param string $string текст
      * @return string
      */
-    static function h1($string,$class=false) {
-        return '<h1 class="'.$class.'">' . $string . '</h1>';
+    static function h1($string, $class = false) {
+        return '<h1 class="' . $class . '">' . $string . '</h1>';
     }
 
     /**
@@ -138,8 +138,8 @@ class PHPShopText {
      * @param string $string текст
      * @return string
      */
-    static function h2($string,$class=false) {
-        return '<h2 class="'.$class.'">' . $string . '</h2>';
+    static function h2($string, $class = false) {
+        return '<h2 class="' . $class . '">' . $string . '</h2>';
     }
 
     /**
@@ -147,8 +147,8 @@ class PHPShopText {
      * @param string $string текст
      * @return string
      */
-    static function h3($string,$class=false) {
-        return '<h3 class="'.$class.'">' . $string . '</h3>';
+    static function h3($string, $class = false) {
+        return '<h3 class="' . $class . '">' . $string . '</h3>';
     }
 
     /**
@@ -156,8 +156,8 @@ class PHPShopText {
      * @param string $string текст
      * @return string
      */
-    static function h4($string,$class=false) {
-        return '<h4 class="'.$class.'">' . $string . '</h4>';
+    static function h4($string, $class = false) {
+        return '<h4 class="' . $class . '">' . $string . '</h4>';
     }
 
     /**
@@ -455,6 +455,10 @@ class PHPShopText {
      */
     static function setInputText($caption, $name, $value, $size = 300, $description = false, $float = "none", $class = false) {
         return PHPShopText::setInput('text', $name, $value, $float, $size, false, $class, $caption, $description);
+    }
+
+    static function alert($content, $class='warning') {
+        return '<div class="alert alert-'.$class.'" role="alert">'.$content.'</div>';
     }
 
 }

@@ -47,6 +47,8 @@ $key_name = array(
     'p_enabled' => 'Наличие в Яндекс.Маркет',
     'parent_enabled' => 'Подтип',
     'data_adres' => 'Адрес',
+    'descrip' => 'Meta description',
+    'keywords' => 'Meta keywords',
 );
 
 
@@ -257,6 +259,34 @@ function csv_update($data) {
 
                 $PHPShopOrm->debug = false;
                 $PHPShopOrm->mysql_error = false;
+                
+                // Списывание со склада
+                if (isset($row['items'])) {
+                    switch ($GLOBALS['admoption_sklad_status']) {
+
+                        case(3):
+                            if ($row['items'] < 1) {
+                                $row['sklad'] = 1;
+                            } else {
+                                $row['sklad'] = 0;
+                            }
+                            break;
+
+                        case(2):
+                            if ($row['items'] < 1) {
+                                $row['enabled'] = 0;
+                            } else {
+                                $row['enabled'] = 1;
+                            }
+                            break;
+
+                        default:
+                            break;
+                    }
+                }
+
+                // Дата создания
+                $row['datas'] = time();
 
                 // Проверка уникальности товаров
                 if (empty($subpath[2]) and !empty($_POST['export_uniq']) and !empty($row['uid'])) {
@@ -299,9 +329,34 @@ function csv_update($data) {
                     unset($row);
                     return false;
                 }
-                
+
+                // Списывание со склада
+                if (isset($row['items'])) {
+                    switch ($GLOBALS['admoption_sklad_status']) {
+
+                        case(3):
+                            if ($row['items'] < 1) {
+                                $row['sklad'] = 1;
+                            } else {
+                                $row['sklad'] = 0;
+                            }
+                            break;
+
+                        case(2):
+                            if ($row['items'] < 1) {
+                                $row['enabled'] = 0;
+                            } else {
+                                $row['enabled'] = 1;
+                            }
+                            break;
+
+                        default:
+                            break;
+                    }
+                }
+
                 // Дата обновления
-                $row['datas']=time();
+                $row['datas'] = time();
 
                 if (!empty($where)) {
                     $PHPShopOrm->debug = false;
@@ -318,9 +373,12 @@ function csv_update($data) {
 
 // Функция обновления
 function actionSave() {
-    global $PHPShopGUI, $key_name, $key_name, $result_message, $csv_load_count;
+    global $PHPShopGUI, $PHPShopSystem, $key_name, $key_name, $result_message, $csv_load_count;
 
     $delim = $_POST['export_delim'];
+
+    // Настройка нулевого склада
+    $GLOBALS['admoption_sklad_status'] = $PHPShopSystem->getSerilizeParam('admoption.sklad_status');
 
     // Память разделителей характеристик
     $memory = json_decode($_COOKIE['check_memory'], true);
@@ -329,7 +387,7 @@ function actionSave() {
     $memory[$_GET['path']]['export_sortsdelim'] = $_POST['export_sortsdelim'];
 
     if (is_array($memory))
-        setcookie("check_memory", json_encode($memory), time() + 3600000, $GLOBALS['SysValue']['dir']['dir'].'/phpshop/admpanel/');
+        setcookie("check_memory", json_encode($memory), time() + 3600000, $GLOBALS['SysValue']['dir']['dir'] . '/phpshop/admpanel/');
 
 
     // Копируем csv от пользователя
@@ -387,7 +445,7 @@ function actionStart() {
     $list = null;
     $PHPShopOrm->clean();
     $data = $PHPShopOrm->select(array('*'), false, false, array('limit' => 1));
-    if (is_array($data)){
+    if (is_array($data)) {
         foreach ($data as $key => $val) {
 
             if (!empty($key_name[$key]))
@@ -407,7 +465,8 @@ function actionStart() {
                 $list.='<div class="pull-left" style="width:200px">' . ucfirst($name) . '</div>';
         }
     }
-    else $list = '<span class="text-warning hidden-xs">Недостаточно данных для создания карты полей. Создайте одну запись в нужном разделе в ручном режиме для начала работы.</span>';
+    else
+        $list = '<span class="text-warning hidden-xs">Недостаточно данных для создания карты полей. Создайте одну запись в нужном разделе в ручном режиме для начала работы.</span>';
 
     // Размер названия поля
     $PHPShopGUI->field_col = 3;
@@ -454,8 +513,8 @@ function actionStart() {
 
     if (!empty($_COOKIE['check_memory'])) {
         $memory = json_decode($_COOKIE['check_memory'], true);
-        $export_sortdelim=$memory[$_GET['path']]['export_sortdelim'];
-        $export_sortsdelim=$memory[$_GET['path']]['export_sortsdelim'];
+        $export_sortdelim = $memory[$_GET['path']]['export_sortdelim'];
+        $export_sortsdelim = $memory[$_GET['path']]['export_sortsdelim'];
     }
 
     $delim_value[] = array('Точка с запятой', ';', 'selected');

@@ -7,7 +7,7 @@ $PHPShopOrder = new PHPShopOrderFunction();
  * Обработчик оформления заказа
  * @author PHPShop Software
  * @tutorial http://wiki.phpshop.ru/index.php/PHPShopOrder
- * @version 1.3
+ * @version 1.4
  * @package PHPShopCore
  */
 class PHPShopOrder extends PHPShopCore {
@@ -16,7 +16,7 @@ class PHPShopOrder extends PHPShopCore {
      * Конструктор
      */
     function __construct() {
-        
+
         // Отладка
         $this->debug = false;
 
@@ -187,8 +187,8 @@ document.getElementById('order').style.display = 'none';
      * @return string
      */
     function message($title, $content) {
-        $message = PHPShopText::h4($title,'text-danger');
-        $message.=PHPShopText::message($content, false, false,false, 'text-muted');
+        $message = PHPShopText::h4($title, 'text-danger');
+        $message.=PHPShopText::message($content, false, false, false, 'text-muted');
         return $message;
     }
 
@@ -308,7 +308,7 @@ document.getElementById('order').style.display = 'none';
             $this->setHook(__CLASS__, __FUNCTION__, false, 'MIDDLE-END');
         } else {
             // форма сообщения, что сумма заказа меньше минимальной.
-            $this->set('orderContent', $this->message($this->lang('cart_minimum') . ' ' . $cart_min.' '.$this->get('currency'), $this->lang('bad_order_mesage_2')));
+            $this->set('orderContent', $this->message($this->lang('cart_minimum') . ' ' . $cart_min . ' ' . $this->get('currency'), $this->lang('bad_order_mesage_2')));
         }
 
         // Перехват модуля в конце функции
@@ -331,7 +331,7 @@ document.getElementById('order').style.display = 'none';
         $ferst_num = $all_num[0];
         $order_num = $ferst_num + 1;
         //$this->order_num = $order_num . "-" . substr(abs(crc32(uniqid(session_id()))), 0, $this->format);
-        $this->order_num = $order_num . "-" . substr(rand(1000,99999), 0, $this->format);
+        $this->order_num = $order_num . "-" . substr(rand(1000, 99999), 0, $this->format);
 
         // Перехват модуля
         $this->setHook(__CLASS__, __FUNCTION__, $row);
@@ -365,16 +365,17 @@ function ordercartforma($val, $option) {
     if ($hook)
         return $hook;
 
-    // Проверка подтипа товара, выдача ссылки главного товара
-    if (empty($val['parent']))
+    // Проверка подтипа товара, выдача ссылки и изображения главного товара
+    if (empty($val['parent'])) {
         PHPShopParser::set('cart_id', $val['id']);
-    else
+    } else {
         PHPShopParser::set('cart_id', $val['parent']);
+    }
 
+    PHPShopParser::set('cart_pic_small', $val['pic_small']);
     PHPShopParser::set('cart_xid', $option['xid']);
     PHPShopParser::set('cart_name', $val['name']);
     PHPShopParser::set('cart_art', $val['uid']);
-    PHPShopParser::set('cart_pic_small', $val['pic_small']);
     PHPShopParser::set('cart_num', $val['num']);
     PHPShopParser::set('cart_price', $val['price']);
     PHPShopParser::set('cart_price_all', $val['price'] * $val['num']);
@@ -385,7 +386,8 @@ function ordercartforma($val, $option) {
 
     if (PHPShopParser:: checkFile('order/product.tpl'))
         return ParseTemplateReturn('order/product.tpl');
-    else return ParseTemplateReturn('./phpshop/lib/templates/order/product.tpl', true);
+    else
+        return ParseTemplateReturn('./phpshop/lib/templates/order/product.tpl', true);
 }
 
 ?>

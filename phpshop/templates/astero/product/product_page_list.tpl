@@ -65,7 +65,7 @@
         </div> 
         <a name="sort"></a>
         <form method="post" action="/shop/CID_@productId@@nameLat@.html" name="sort" id="sorttable" class="hide">
-            <table><tr>@vendorDisp@ <td>&nbsp;</td><td>@vendorSelectDisp@</td></tr></table>
+            <table><tr>@vendorDisp@ <td>@vendorSelectDisp@</td></tr></table>
         </form>                      
     </div>
 <!-- Product Filter Ends -->

@@ -53,7 +53,7 @@ class PHPShopBase {
      * @param bool $connectdb подюченеи к БД
      * @param bool $error блокировка ошибок PHP
      */
-    function __construct($iniPath, $connectdb = true, $error = false) {
+    function __construct($iniPath, $connectdb = true, $error = true) {
 
         // Временная зона
         $this->setTimeZone();
@@ -153,9 +153,10 @@ class PHPShopBase {
      */
     function connect() {
         global $link_db;
-        $link_db = @mysqli_connect($this->getParam("connect.host"), $this->getParam("connect.user_db"), $this->getParam("connect.pass_db")) or die($this->errorConnect(101));
+        $link_db = mysqli_connect($this->getParam("connect.host"), $this->getParam("connect.user_db"), $this->getParam("connect.pass_db")) or die($this->errorConnect(101));
         mysqli_select_db($link_db, $this->getParam("connect.dbase")) or die($this->errorConnect(101));
         mysqli_query($link_db, "SET NAMES '" . $this->codBase . "'");
+        mysqli_query($link_db, "SET SESSION sql_mode=''");
 
         return $link_db;
     }

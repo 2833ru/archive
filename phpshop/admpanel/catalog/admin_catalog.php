@@ -133,6 +133,10 @@ function actionStart() {
             break;
         default: $core = 'REGEXP';
     }
+    
+    // ID всегда eq
+    if(!empty($_GET['where']['id']))
+        $core = ' = ';
 
 
     $where = false;
@@ -294,10 +298,10 @@ function actionStart() {
             $sort_list = null;
             $sort = unserialize($row['vendor_array']);
             if (is_array($sort))
-                foreach ($sort as $scat=>$sorts) {
+                foreach ($sort as $scat => $sorts) {
                     if (is_array($sorts))
                         foreach ($sorts as $s)
-                            $sort_list.='<a href="?path=sort&id='.$scat.'" class="text-muted">' . $PHPShopSort[$s]['name'] . '</a>, ';
+                            $sort_list.='<a href="?path=sort&id=' . $scat . '" class="text-muted">' . $PHPShopSort[$s]['name'] . '</a>, ';
                 }
 
             $sort_list = substr($sort_list, 0, strlen($sort_list) - 2);
@@ -310,13 +314,16 @@ function actionStart() {
     // Левый сайдбар дерева категорий
     $CategoryArray[0]['name'] = 'Корень';
     $tree_array = array();
-    foreach ($PHPShopCategoryArray->getKey('parent_to.id', true) as $k => $v) {
-        foreach ($v as $cat) {
-            $tree_array[$k]['sub'][$cat] = $CategoryArray[$cat]['name'];
+    $CategoryArrayKey = $PHPShopCategoryArray->getKey('parent_to.id', true);
+
+    if (is_array($CategoryArrayKey))
+        foreach ($CategoryArrayKey as $k => $v) {
+            foreach ($v as $cat) {
+                $tree_array[$k]['sub'][$cat] = $CategoryArray[$cat]['name'];
+            }
+            $tree_array[$k]['name'] = $CategoryArray[$k]['name'];
+            $tree_array[$k]['id'] = $k;
         }
-        $tree_array[$k]['name'] = $CategoryArray[$k]['name'];
-        $tree_array[$k]['id'] = $k;
-    }
 
     $GLOBALS['tree_array'] = &$tree_array;
 

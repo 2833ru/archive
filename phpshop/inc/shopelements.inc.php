@@ -615,9 +615,9 @@ class PHPShopProductIndexElements extends PHPShopProductElements {
             $where['parent_enabled'] = "='0'";
 
             /*
-            $randMultibase = $this->randMultibase();
-            if (!empty($randMultibase))
-                $where['category'] = $randMultibase;
+              $randMultibase = $this->randMultibase();
+              if (!empty($randMultibase))
+              $where['category'] = $randMultibase;
              */
 
 

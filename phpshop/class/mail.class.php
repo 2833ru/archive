@@ -9,13 +9,6 @@
  * // example:
  * $PHPShopMail= new PHPShopMail('user@localhost','admin@localhost','Test','Hi, user!');
  * </code>
- * @param string $to куда
- * @param string $from от кого
- * @param string $zag заголовок письма
- * @param string $content содержание письма
- * @param boolean $type тип письма, текст или html, true ='text/html', false = text/plain
- * @param boolean $noSend true - не отсылать письмо при создании экземпл€ра класса. 
- * @param array $option дополнительные параметры SMTP 
  */
 class PHPShopMail {
 
@@ -32,6 +25,13 @@ class PHPShopMail {
 
     /**
      *  онструктор
+     * @param string $to куда
+     * @param string $from от кого
+     * @param string $zag заголовок письма
+     * @param string $content содержание письма
+     * @param boolean $type тип письма, текст или html, true ='text/html', false = text/plain
+     * @param boolean $noSend true - не отсылать письмо при создании экземпл€ра класса. 
+     * @param array $option дополнительные параметры SMTP 
      */
     function __construct($to, $from, $subject, $content, $type = false, $noSend = false, $option = false) {
         global $PHPShopSystem, $_classPath;

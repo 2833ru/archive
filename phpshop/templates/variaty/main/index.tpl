@@ -220,10 +220,7 @@
                                         <h3>Меню</h3>
                                     </div>
                                     <ul class="unstyled">
-                                        <li><a class="invarseColor" href="/page/purchase.html" title="Купить">Купить</a></li>
-                                        <li><a class="invarseColor" href="/page/developers.html" title="Разработчикам">Разработчикам</a></li>
-                                        <li><a class="invarseColor" href="/page/admin.html" title="Администрирование">Администрирование</a></li>
-                                        <li><a class="invarseColor" href="/page/design.html" title="Дизайн">Дизайн</a></li>
+                                       @topMenu@
                                     </ul>
                                 </div>
                                 <div class="span3">
@@ -244,7 +241,7 @@
                                         <h3>Каталог статей</h3>
                                     </div>
                                     <ul class="unstyled">
-                                        <li><a class="invarseColor" href="/page/CID_4.html">Учебные материалы</a></li><li><a class="invarseColor" href="/page/CID_3.html">Наши бренды</a></li>
+                                        @pageCatal@
                                     </ul>
                                 </div>
                                 <div class="span3">

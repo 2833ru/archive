@@ -2,7 +2,7 @@
 /**
  * Файл выгрузки для Яндекс Маркет
  * @author PHPShop Software
- * @version 1.9
+ * @version 1.10
  * @package PHPShopXML
  * @example ?ssl [bool] SSL
  * @example ?getall [bool] Выгрузка всех товаров без учета флага YML
@@ -38,7 +38,7 @@ class PHPShopSortSearch {
      * @param string $name имя характеристики
      * @param string $tag тэг обрамления
      */
-    function PHPShopSortSearch($name, $tag) {
+    function __contsruct($name, $tag) {
 
         if (!empty($name)) {
             $this->tag = $tag;
@@ -143,7 +143,7 @@ class PHPShopYml {
     /**
      * Конструктор
      */
-    function PHPShopYml() {
+    function __construct() {
         global $PHPShopModules;
 
         $this->PHPShopSystem = new PHPShopSystem();
@@ -233,7 +233,7 @@ class PHPShopYml {
             foreach ($data as $row) {
                 if ($row['id'] != $row['parent_to']) {
                     $Catalog[$row['id']]['id'] = $row['id'];
-                    $Catalog[$row['id']]['name'] = $row['name'];
+                    $Catalog[$row['id']]['name'] = '<![CDATA[' . $row['name'] . ']]>';
                     $Catalog[$row['id']]['parent_to'] = $row['parent_to'];
                 }
             }
@@ -258,7 +258,7 @@ class PHPShopYml {
         $result = $PHPShopOrm->query("select * from " . $GLOBALS['SysValue']['base']['products'] . " where $where enabled='1' and parent_enabled='0' and price>0");
         while ($row = mysqli_fetch_array($result)) {
             $id = $row['id'];
-            $name = '<![CDATA[' . trim(strip_tags($row['name'])) . ']]>';
+            $name = trim(strip_tags($row['name']));
             $category = $row['category'];
             $uid = $row['uid'];
             $price = $row['price'];
@@ -483,7 +483,7 @@ class PHPShopYml {
       <currencyId>' . $this->defvalutaiso . '</currencyId>
       <categoryId>' . $val['category'] . '</categoryId>
       <picture>'.$this->ssl  . $_SERVER['SERVER_NAME'] . $val['picture'] . '</picture>
-      <name>' . $this->cleanStr($val['name']) . '</name>' .
+      <name><![CDATA[' . $this->cleanStr($val['name'])  . ']]> </name>' .
                     $vendor . '
       <description>' . $this->cleanStr($val['description']) . '</description>' .
                     $param . '

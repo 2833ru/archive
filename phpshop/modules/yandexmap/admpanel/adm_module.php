@@ -9,6 +9,7 @@ function actionUpdate() {
     global $PHPShopOrm;
 
     $action = $PHPShopOrm->update($_POST);
+    header('Location: ?path=modules&install=check');
     return $action;
 }
 

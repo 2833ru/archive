@@ -16,6 +16,7 @@ ALTER TABLE `phpshop_products` ADD `store` enum('1','2') DEFAULT '2';
 ALTER TABLE `phpshop_sort_categories` ADD `yandex_param` enum('1','2') DEFAULT '1';
 ALTER TABLE `phpshop_sort_categories` ADD `yandex_param_unit` varchar(64) DEFAULT '';
 ALTER TABLE `phpshop_delivery` ADD `yandex_day_min` int(11) DEFAULT '1';
+ALTER TABLE `phpshop_delivery` ADD `yandex_order_before` int(11) DEFAULT '16';
 
 CREATE TABLE `phpshop_modules_yandexcart_system` (
   `id` int(11) NOT NULL auto_increment,

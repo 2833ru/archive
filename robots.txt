@@ -16,6 +16,7 @@ Disallow: /forma/
 Disallow: /users/
 Disallow: /phpshop/
 Disallow: /selection/
+Disallow: /rss/
 Disallow: /*?*$
 
 User-agent: Googlebot
@@ -36,6 +37,7 @@ Disallow: /forma/
 Disallow: /users/
 Disallow: /phpshop/
 Disallow: /selection/
+Disallow: /rss/
 Disallow: /*?*$
 
 User-agent: *
@@ -56,4 +58,5 @@ Disallow: /forma/
 Disallow: /users/
 Disallow: /phpshop/
 Disallow: /selection/
+Disallow: /rss/
 Disallow: /*?*$

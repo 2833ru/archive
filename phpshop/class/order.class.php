@@ -313,7 +313,10 @@ class PHPShopOrderFunction extends PHPShopObj {
         $PHPShopDelivery = new PHPShopDelivery($order['Person']['dostavka_metod']);
         $delivery['id'] = $order['Person']['dostavka_metod'];
         $name = $PHPShopDelivery->getCity();
+        
+        if(empty($order['Cart']['dostavka']))
         $delivery['price'] = number_format($PHPShopDelivery->getPrice($order['Cart']['sum'], $order['Cart']['weight']), $this->format, '.', '');
+        else $delivery['price'] = number_format($order['Cart']['dostavka'], $this->format, '.', '');
         $delivery['data_fields'] = $PHPShopDelivery->getParam('data_fields');
 
         $PID = $PHPShopDelivery->getParam('PID');
@@ -357,6 +360,10 @@ class PHPShopOrderFunction extends PHPShopObj {
      */
     function getDeliverySumma() {
         $order = $this->unserializeParam('orders');
+        
+        if(!empty($order['Cart']['dostavka']))
+             return  $order['Cart']['dostavka'];
+        
         if (!empty($order['Person']['discount']))
             $discount = $order['Person']['discount'];
         else

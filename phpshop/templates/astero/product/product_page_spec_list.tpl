@@ -56,11 +56,7 @@
                     </div>
                 </div>
             </div>
-        </div> 
-        <a name="sort"></a>
-        <form method="post" action="/shop/CID_@productId@@nameLat@.html" name="sort" id="sorttable" class="hide">
-            <table><tr>@vendorDisp@ <td>&nbsp;</td><td>@vendorSelectDisp@</td></tr></table>
-        </form>                      
+        </div>                
     </div>
 <!-- Product Filter Ends -->
 <div class="template-product-list">@productPageDis@</div>

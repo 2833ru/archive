@@ -9,8 +9,8 @@
       'v'				: 70,						//скорость падения снежинок 
       'colour'			: '#AAAACC', 	//цвет снежинок любое rgb, rgba значение
       'array'			: Array("❄","❅","❆","❇","✶","✷","✻"), //массив символов снежинок
-      'ligthning'		: true,						//включить(true) или выключить(false) text-shadow снежинок. выключение немного снижает нагрузку.
-      'overall'			: false,						//включить(true) или выключить(false) отображение снежинок поверх контента.
+      'ligthning'		: false,						//включить(true) или выключить(false) text-shadow снежинок. выключение немного снижает нагрузку.
+      'overall'			: true,						//включить(true) или выключить(false) отображение снежинок поверх контента.
       'r'				: 20,						//интервал обновления - чем меньше значение, тем больше нагрузка.
       'body'			: $(this),					//родительский элемент (в котором будут снежинки)
       'wrapper'			: $("body").children()		//дочерний элемент, содержащий контент (который будет над снежинками при выключенном параметре overall).
@@ -43,7 +43,7 @@
 		bodywidth = body.width();
 		if ($(window).height() < $("body").height()) { bodyheight = body.height() } else { bodyheight = $(window).height(); }
 		body.css({overflowX:'hidden'});
-		wrapper.css({zIndex:'2'});
+		//wrapper.css({zIndex:'2'});
 		//$(".wrapper").html(bodywidth+" "+bodyheight+" "+$(window).height());
 		for (i=0;i<col;i++) {
 			positiontop = parseInt(Math.random()*bodyheight);

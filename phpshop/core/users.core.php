@@ -46,6 +46,9 @@ class PHPShopUsers extends PHPShopCore {
         // Проверка на подтверждение активации
         if ($this->PHPShopSystem->ifSerilizeParam('admoption.user_mail_activate') or $this->PHPShopSystem->ifSerilizeParam('admoption.user_mail_activate_pre'))
             $this->activation = true;
+
+        // Навигация хлебные крошки
+        $this->title = __('Личный кабинет');
     }
 
     /**
@@ -301,8 +304,8 @@ class PHPShopUsers extends PHPShopCore {
                     $content = ParseTemplateReturn('./phpshop/lib/templates/users/mail_admin_activation.tpl', true);
 
                     // Отправка e-mail администратору
-                    $PHPShopMail = new PHPShopMail($this->PHPShopSystem->getValue('adminmail2'), $this->PHPShopSystem->getValue('adminmail2'), $title, '', true, true,array('replyto'=>$data['login']));
-                    
+                    $PHPShopMail = new PHPShopMail($this->PHPShopSystem->getValue('adminmail2'), $this->PHPShopSystem->getValue('adminmail2'), $title, '', true, true, array('replyto' => $data['login']));
+
                     // Содержание e-mail  администратору
                     $content = ParseTemplateReturn('./phpshop/lib/templates/users/mail_admin_activation.tpl', true);
                     $PHPShopMail->sendMailNow($content);
@@ -524,7 +527,7 @@ class PHPShopUsers extends PHPShopCore {
 
                 // Отправка e-mail пользователю
                 $PHPShopMail = new PHPShopMail($data['login'], $this->PHPShopSystem->getParam('adminmail2'), $title, '', true, true);
-                
+
                 // Содержание e-mail пользователю
                 $content = ParseTemplateReturn('./phpshop/lib/templates/users/mail_sendpassword.tpl', true);
                 $PHPShopMail->sendMailNow($content);
@@ -608,15 +611,20 @@ class PHPShopUsers extends PHPShopCore {
         if ($this->true_user()) {
             $PHPShopUser = new PHPShopUser($_SESSION['UsersId']);
             $wishlist = unserialize($PHPShopUser->objRow['wishlist']);
+        } else {
+            // если не авторизован, берём из сессии
+            $wishlist = &$_SESSION['wishlist'];
+        }
+
+//print_r($_SESSION['wishlist']); die();
             if (is_array($wishlist)) {
-                
                 // удаление из вишлиста
                 if ($_REQUEST['delete']) {
                     unset($wishlist[$_REQUEST['delete']]);
                     // обновляем кол-во для вывода в топе
                     $_SESSION['wishlistCount'] = count($wishlist);
-                    $this->PHPShopOrm->update(array(
-                        'wishlist' => serialize($wishlist)), array('id' => '=' . $_SESSION['UsersId']), false, false);
+                if ($this->true_user())
+                    $this->PHPShopOrm->update(array('wishlist' => serialize($wishlist)), array('id' => '=' . $_SESSION['UsersId']), false, false);
                     header("Location: ./wishlist.html");
                     die();
                 }
@@ -626,10 +634,11 @@ class PHPShopUsers extends PHPShopCore {
                     $objProduct = new PHPShopProduct($key);
 
                     if ($objProduct->getParam("enabled") == 1) {
-                        
-                        if($objProduct->getParam("sklad") == 1)
+
+                        if ($objProduct->getParam("sklad") == 1)
                             $this->set('prodDisabled', 'disabled');
-                        else $this->set('prodDisabled', '');
+                        else
+                            $this->set('prodDisabled', '');
 
                         $this->set('prodId', $key);
                         $this->set('prodName', $objProduct->getParam("name"));
@@ -647,12 +656,7 @@ class PHPShopUsers extends PHPShopCore {
                 $this->set('formaContent', ParseTemplateReturn('users/wishlist/wishlist_list_empty.tpl'));
             }
             $this->ParseTemplate($this->getValue('templates.users_page_list'));
-        } else {
-
-            // Форма регистрации нового пользователя
-            $this->action_register();
         }
-    }
 
     /**
      * Персональные данные пользователя
@@ -1049,6 +1053,10 @@ class PHPShopUsers extends PHPShopCore {
             $this->set('formaContent', ParseTemplateReturn('users/register.tpl'));
         else
             $this->set('formaContent', ParseTemplateReturn('phpshop/lib/templates/users/register.tpl', true));
+
+
+        if (empty($_SESSION['cart']))
+            $this->set('formaContent', PHPShopText::alert($this->lang('error_register')));
 
         $this->setHook(__CLASS__, __FUNCTION__);
 

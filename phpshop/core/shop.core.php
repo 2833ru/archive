@@ -280,7 +280,15 @@ class PHPShopShop extends PHPShopShopCore {
             return $this->setError404();
 
         // Выборка данных
-        $row = parent::getFullInfoItem(array('*'), array('id' => "=" . $this->PHPShopNav->getId(), 'enabled' => "='1'", 'parent_enabled' => "='0'"), __CLASS__, __FUNCTION__);
+        $row = parent::getFullInfoItem(array('*'), array('id' => "=" . $this->PHPShopNav->getId(), 'parent_enabled' => "='0'"), __CLASS__, __FUNCTION__);
+
+        // Показывать отключенные товары по прямым ссылкам для поисковиков вместо 404 ошибки
+        if (empty($row['enabled'])) {
+            if ($this->PHPShopSystem->getSerilizeParam('admoption.safe_links') == 1)
+                $row['sklad'] = 1;
+            else
+                unset($row);
+        }
 
         // 404 ошибка
         if (empty($row['id']))
@@ -553,7 +561,21 @@ class PHPShopShop extends PHPShopShopCore {
                     // Если товар на складе
                     if (empty($p['priceSklad']) and (!empty($p['items']) or (empty($p['items']) and $sklad_status == 1))) {
                         $price = $this->price($p);
-                        $this->select_value[] = array($p['name'] . ' -  (' . $price . ' ' . $this->currency . ')', $p['id'], $p['items']);
+
+
+                        // Перехват модуля в середине функции, занесение в память наличия модуля для оптимизации
+                        if ($this->memory_get(__CLASS__ . '.' . __FUNCTION__, true)) {
+
+                            $hook = $this->setHook(__CLASS__, __FUNCTION__, $p, 'MIDDLE');
+                            if ($hook) {
+                                $this->select_value[] = $hook;
+                            } else {
+                                $this->memory_set(__CLASS__ . '.' . __FUNCTION__, 0);
+                                $this->select_value[] = array($p['name'] . ' -  (' . $price . ' ' . $this->currency . ')', $p['id'], $p['items']);
+                            }
+                        }
+                        else
+                            $this->select_value[] = array($p['name'] . ' -  (' . $price . ' ' . $this->currency . ')', $p['id'], $p['items']);
                     }
                 }
             }
@@ -654,6 +676,9 @@ function CID_Product($category = null) {
     // Путь для навигации
     $this->objPath = './CID_' . $this->category . '_';
 
+    // Количество ячеек для вывода товара
+    $this->cell = $cell = $this->calculateCell($this->category, $this->PHPShopCategory->getParam('num_row'));
+    
     // Перехват модуля в начале
     if ($this->setHook(__CLASS__, __FUNCTION__, false, 'START'))
         return true;
@@ -664,9 +689,6 @@ function CID_Product($category = null) {
 
     // Валюта
     $this->set('productValutaName', $this->currency());
-
-    // Количество ячеек для вывода товара
-    $cell = $this->calculateCell($this->category, $this->PHPShopCategory->getParam('num_row'));
 
     // Фильтр сортировки
     $order = $this->query_filter();

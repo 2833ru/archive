@@ -354,10 +354,10 @@ class PHPShopUserSoc extends PHPShopElements {
                     }
 
                 $_SESSION['wishlistCount'] = count($wishlist);
+                unset($_SESSION['wishlist']);
                 $wishlist = serialize($wishlist);
                 $this->PHPShopOrm->update(array('wishlist' => "$wishlist"), array('id' => '=' . $data['id']), false);
-                unset($_SESSION['wishlist']);
-
+                
                 // ID пользователя
                 $_SESSION['UsersId'] = $data['id'];
 

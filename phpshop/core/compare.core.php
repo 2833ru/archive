@@ -7,10 +7,10 @@
  * @return string 
  */
 function getfullname($id = 0) {
-    global $SysValue,$link_db;
+    global $SysValue, $link_db;
 
     $sql = 'select name,parent_to from ' . $SysValue['base']['table_name'] . ' where id=' . intval($id);
-    $result = mysqli_query($link_db,$sql);
+    $result = mysqli_query($link_db, $sql);
     @$row = mysqli_fetch_array(@$result);
     if ($row['parent_to']) {
         return getfullname($row['parent_to']) . ' / ' . $row['name'];
@@ -32,16 +32,19 @@ class PHPShopCompare extends PHPShopCore {
      */
     function __construct() {
         parent::__construct();
+
+        // Навигация хлебные крошки
+        $this->navigation(false, __('Сравнение'));
     }
 
     /**
      * Экшен по умолчанию
      */
     function index() {
-        global $SysValue,$PHPShopSystem,$PHPShopValutaArray,$link_db;
+        global $SysValue, $PHPShopSystem, $PHPShopValutaArray, $link_db;
 
         $limit = 4; //Максимум товаров для сравнения
-        
+
         $LoadItems['Valuta'] = $PHPShopValutaArray->getArray();
         $LoadItems['System'] = $PHPShopSystem->getArray();
 
@@ -110,8 +113,8 @@ class PHPShopCompare extends PHPShopCore {
 		<td width="50"></td></tr>';
                 } else {
                     $dis.='
-		<tr><td id=allspec colspan="2"><b>' . $name . '</b> <p class="text-danger">Недостаточно товаров для сравнения. Добавьте еще товары из этой категории</p></td>
-		</tr>';
+  <tr><td id=allspec colspan="2"><b>' . $name . '</b> </td>
+  </tr>';
                 }
                 foreach ($goods[$catid] as $id => $val) {
                     $dis.='<tr><td>' . $val['name'] . ' </td><td width="50" class="text-center"><a href="../compare/DID_' . $val['id'] . '.html" class="btn btn-danger btn-xs" title="Убрать товар из сравнения"><span >X</span></a></td></tr>';
@@ -131,7 +134,7 @@ class PHPShopCompare extends PHPShopCore {
                 }
                 $dis.='
 		<tr><td colspan="2" id=allspec>' . $as . $name . $ae . '</td>
-		<td>&nbsp;</td></tr>';
+		<!--<td>&nbsp;</td>--></tr>';
                 $green[] = "ALL"; //Добавить каталог в разрешенные
             } elseif (count($compare) > $limit) {
                 $dis.='
@@ -166,10 +169,10 @@ class PHPShopCompare extends PHPShopCore {
             if ($id == "ALL") {
                 $_SESSION['compare'] = null;
                 unset($_SESSION['compare']);
-                echo '<SCRIPT>window.location.replace(\'../compare/\');</SCRIPT>';
+                header("Location: ../compare/");
             } else {
                 unset($_SESSION['compare'][$id]);
-                echo '<SCRIPT>window.location.replace(\'../compare/\');</SCRIPT>';
+                header("Location: ../compare/");
             }
         }
 
@@ -189,13 +192,13 @@ class PHPShopCompare extends PHPShopCore {
 
                 if ($COMCID != "ALL") {
                     $sql = 'select sort from ' . $SysValue['base']['table_name'] . ' where id=' . intval($COMCID);
-                    $result = mysqli_query($link_db,$sql);
+                    $result = mysqli_query($link_db, $sql);
                     @$row = mysqli_fetch_array(@$result);
                     $sorts = unserialize($row['sort']);
                 } else {
                     foreach ($cats as $catid => $name) {
                         $sql = 'select sort from ' . $SysValue['base']['table_name'] . ' where id=' . intval($catid);
-                        $result = mysqli_query($link_db,$sql);
+                        $result = mysqli_query($link_db, $sql);
                         @$row = mysqli_fetch_array(@$result);
                         $tempsorts = unserialize($row['sort']);
                         if (is_array($tempsorts))
@@ -212,7 +215,7 @@ class PHPShopCompare extends PHPShopCore {
                 if (is_array($sorts))
                     foreach ($sorts as $sort) {
                         $sql = 'select name from ' . $SysValue['base']['table_name20'] . ' where id=' . intval($sort) . " AND goodoption = '0'";
-                        $result = mysqli_query($link_db,$sql);
+                        $result = mysqli_query($link_db, $sql);
                         @$row = mysqli_fetch_array(@$result);
                         $sorts_name[$sort] = $row['name'];
                     }
@@ -224,7 +227,7 @@ class PHPShopCompare extends PHPShopCore {
                 if (is_array($sorts_name))
                     foreach ($sorts_name as $sort => $name) {
                         $sql = 'select id from ' . $SysValue['base']['table_name20'] . ' where name LIKE \'' . $name . '\'';
-                        $result = mysqli_query($link_db,$sql);
+                        $result = mysqli_query($link_db, $sql);
                         while ($row = mysqli_fetch_array(@$result)) {
                             $sorts_name2[$name][$row['id']] = 1;
                         }
@@ -256,7 +259,7 @@ class PHPShopCompare extends PHPShopCore {
 
                 // Получаем умолчательню валюту
                 $sql = "select dengi from " . $SysValue['base']['table_name3'];
-                $result = mysqli_query($link_db,$sql);
+                $result = mysqli_query($link_db, $sql);
                 $row = mysqli_fetch_array($result);
                 $defvaluta = $row['dengi'];
                 // Получаем умолчательню валюту
@@ -267,7 +270,7 @@ class PHPShopCompare extends PHPShopCore {
 
                     //Выбираем товар из базы
                     $sql = 'select id,price,pic_small,vendor_array,content,baseinputvaluta from ' . $SysValue['base']['table_name2'] . ' where id=' . intval($val['id']);
-                    $result = mysqli_query($link_db,$sql);
+                    $result = mysqli_query($link_db, $sql);
                     @$row = mysqli_fetch_array(@$result);
                     if (trim($row['pic_small'])) {
                         $tdR[$igood][] = '<img class="media-object" src="' . $row['pic_small'] . '">';
@@ -296,7 +299,7 @@ class PHPShopCompare extends PHPShopCore {
                     $price = $price * $kurs;
 
                     // Если цены показывать только после аторизации
-                    if ($admoption['user_price_activate'] == 1 and !$_SESSION['UsersId']) {
+                    if ($admoption['user_price_activate'] == 1 and ! $_SESSION['UsersId']) {
                         $price = "-";
                     }
 
@@ -313,7 +316,7 @@ class PHPShopCompare extends PHPShopCore {
                                 if (is_array($ca))
                                     foreach ($ca as $charid) {
                                         $sql2 = 'select name from ' . $SysValue['base']['table_name21'] . ' where id=' . intval($charid);
-                                        $result2 = mysqli_query($link_db,$sql2);
+                                        $result2 = mysqli_query($link_db, $sql2);
                                         @$row2 = mysqli_fetch_array(@$result2);
                                         $curchar.=' ' . $row2['name'] . '<br>';
                                     }
@@ -370,4 +373,5 @@ class PHPShopCompare extends PHPShopCore {
     }
 
 }
+
 ?>

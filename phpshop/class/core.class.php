@@ -5,7 +5,7 @@
  * Примеры использования размещены в папке phpshop/core/
  * @author PHPShop Software
  * @tutorial http://wiki.phpshop.ru/index.php/PHPShopCore
- * @version 1.8
+ * @version 1.9
  * @package PHPShopClass
  */
 class PHPShopCore {
@@ -168,8 +168,9 @@ class PHPShopCore {
      * Навигация хлебных крошек
      * @param int $id текущий ИД родителя
      * @param string $name имя раздела
+     * @param array $title массив родителя [url,name]
      */
-    function navigation($id, $name) {
+    function navigation($id, $name, $title = false) {
         $dis = null;
         // Шаблоны разделителя навигации
         $spliter = ParseTemplateReturn($this->getValue('templates.breadcrumbs_splitter'));
@@ -192,14 +193,17 @@ class PHPShopCore {
                 // назначаем thisCat, чтобы в метках сохранить ИД дерева октрытых категорий в разделе shop.
                 if ($this->PHPShopNav->getPath() == "shop")
                     $this->set('thisCat' . $i++, $v['id']);
-//                    echo 'thisCat' . $i++." = {$v['id']}!";
                 $dis.= $spliter . PHPShopText::a('/' . $this->PHPShopNav->getPath() . '/CID_' . $v['id'] . '.html', $v['name']);
             }
         }
 
         // назначаем thisCat, чтобы в метках сохранить ИД дерева октрытых категорий в разделе shop.
-        if ($this->PHPShopNav->getPath() == "shop")
+        if (!empty($this->PHPShopNav) and $this->PHPShopNav->getPath() == "shop")
             $this->set('thisCat' . $i++, $this->PHPShopNav->getId());
+
+        // Указан массив родителя
+        if (empty($dis) and is_array($title))
+            $dis = $spliter . PHPShopText::a($title['url'], $title['name']);
 
         $dis = $home . $dis . $spliter . PHPShopText::b($name);
         $this->set('breadCrumbs', $dis);
@@ -228,7 +232,7 @@ class PHPShopCore {
 
             @header("Last-Modified: " . $updateDate . " GMT");
         }
-        
+
         @header("X-Powered-By: PHPShop");
     }
 
@@ -253,6 +257,14 @@ class PHPShopCore {
                 $this->set('pageKeyw', $this->keywords);
             else
                 $this->set('pageKeyw', $this->PHPShopSystem->getValue("keywords"));
+        }
+
+        // Навигация хлебные крошки если не заполнено
+        if ($this->get('breadCrumbs') == '') {
+            if (strstr($this->title, '-'))
+                $title = explode("-", $this->title);
+            else $title[0]=$this->title;
+            $this->navigation(false, $title[0]);
         }
     }
 
@@ -887,6 +899,7 @@ class PHPShopCore {
             timer('end', 'Garbage');
         }
     }
+
 }
 
 ?>

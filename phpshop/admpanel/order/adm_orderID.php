@@ -35,7 +35,6 @@ function updateDiscount($data) {
         $row_st = mysqli_fetch_array($query_st);
         $status_user = $row_st['status'];
 
-
         //Запрос алгоритма расчета персональной скидки
         $sql_d = "SELECT * FROM `" . $GLOBALS['SysValue']['base']['shopusers_status'] . "` WHERE `id` =" . intval($status_user) . " ";
         $query_d = mysqli_query($link_db, $sql_d);
@@ -230,7 +229,7 @@ function actionStart() {
         $currency = $PHPShopOrder->default_valuta_iso;
 
 
-    $PHPShopGUI->setActionPanel(__("Заказ") . ' № ' . $data['uid'] . ' <span class="hidden-xs hidden-md">/ ' . PHPShopDate::dataV($data['datas']) . $update_date . ' / ' . __("Итого") . ': ' . $PHPShopOrder->getTotal(false, ' ') . $currency . '</span>', array('Сделать копию', 'Все заказы пользователя', 'Отчет по заказам', '|','csv','xml', '|', 'Удалить'), array('Сохранить', 'Сохранить и закрыть'));
+    $PHPShopGUI->setActionPanel(__("Заказ") . ' № ' . $data['uid'] . ' <span class="hidden-xs hidden-md">/ ' . PHPShopDate::dataV($data['datas']) . $update_date . ' / ' . __("Итого") . ': ' . $PHPShopOrder->getTotal(false, ' ') . $currency . '</span>', array('Сделать копию', 'Все заказы пользователя', 'Отчет по заказам', '|', 'csv', 'xml', '|', 'Удалить'), array('Сохранить', 'Сохранить и закрыть'));
 
     // Нет данных
     if (!is_array($data)) {
@@ -306,10 +305,6 @@ function actionStart() {
 
     // Информация об оплате
     $sidebarright[] = array('title' => 'Информация об оплате', 'content' => $payment_dropdown);
-
-    // время доставки под старый формат данных в заказе
-    if (!empty($order['Person']['dos_ot']) OR !empty($order['Person']['dos_do']))
-        $dost_ot = " От: " . $order['Person']['dos_ot'] . ", до: " . $order['Person']['dos_do'];
 
     // Печатные бланки
     $Tab_print = $PHPShopGUI->loadLib('tab_print', $data);
@@ -426,32 +421,44 @@ function actionUpdate() {
     // Перехват модуля
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $data);
 
-    // Новые данные
-    if (is_array($_POST['person']))
-        foreach ($_POST['person'] as $k => $v)
-            $order['Person'][$k] = $v;
+    // Изменение из формы заказа
+    if (is_array($_POST['person'])) {
 
-    // Доставка
-    $PHPShopCart = new PHPShopCart($order['Cart']['cart']);
-    $PHPShopDelivery = new PHPShopDelivery($_POST['person']['dostavka_metod']);
-    $order['Cart']['dostavka'] = $PHPShopDelivery->getPrice($PHPShopCart->getSum(false), $PHPShopCart->getWeight());
+        // Новые данные
+        if (is_array($_POST['person']))
+            foreach ($_POST['person'] as $k => $v)
+                $order['Person'][$k] = $v;
 
-    // Сериализация данных заказа
-    $_POST['orders_new'] = serialize($order);
+        // Доставка
+        $PHPShopCart = new PHPShopCart($order['Cart']['cart']);
+        $PHPShopDelivery = new PHPShopDelivery($_POST['person']['dostavka_metod']);
+        $PHPShopDelivery->checkMod($order['Cart']['dostavka']);
+        $order['Cart']['dostavka'] = $PHPShopDelivery->getPrice($PHPShopCart->getSum(false), $PHPShopCart->getWeight());
 
-    // Библиотека заказа
-    $PHPShopOrder = new PHPShopOrderFunction(false, $order['Cart']['cart']);
+        // Сериализация данных заказа
+        $_POST['orders_new'] = serialize($order);
 
-    // Комментарий и время обработки
-    $_POST['status']['time'] = PHPShopDate::dataV();
-    $_POST['status_new'] = serialize($_POST['status']);
+        // Библиотека заказа
+        $PHPShopOrder = new PHPShopOrderFunction(false, $order['Cart']['cart']);
 
-    // Скидка
-    $discount = $PHPShopOrder->ChekDiscount($order['Cart']['sum']);
+        // Комментарий и время обработки
+        $_POST['status']['time'] = PHPShopDate::dataV();
+        $_POST['status_new'] = serialize($_POST['status']);
 
-    // Итого
-    $_POST['sum_new'] = $PHPShopOrder->returnSumma($order['Cart']['sum'], $discount) + $order['Cart']['dostavka'];
-    //$_POST['sum_new'] = $order['Cart']['sum'] + $order['Cart']['dostavka'];
+        // Скидка
+        $discount = $PHPShopOrder->ChekDiscount($order['Cart']['sum']);
+
+        // Итого
+        $_POST['sum_new'] = $PHPShopOrder->returnSumma($order['Cart']['sum'], $discount) + $order['Cart']['dostavka'];
+    }
+    // Только смена статуса
+    else {
+        
+        // Комментарий и время обработки
+        $status=unserialize($data['status']);
+        $status['time'] = PHPShopDate::dataV();
+        $_POST['status_new'] = serialize($status);
+    }
 
     $PHPShopOrm->clean();
 
@@ -461,7 +468,7 @@ function actionUpdate() {
     // Оповещение пользователя о новом статусе
     sendUserMail($data);
 
-    $action = $PHPShopOrm->update($_POST, array('id' => '=' . $_POST['rowID']));
+    $action = $PHPShopOrm->update($_POST, array('id' => '=' . intval($_POST['rowID'])));
 
     // Персональная скидка
     updateDiscount($data);
@@ -578,7 +585,6 @@ function actionCartUpdate() {
                     // Добавление
                     if (empty($_SESSION['selectCart'][$productID])) {
 
-
                         // Добавляем новый товар 1 шт по ID
                         if ($PHPShopCart->add($productID, abs($_REQUEST['selectNum']))) {
 
@@ -592,12 +598,15 @@ function actionCartUpdate() {
                     // Редактирование кол-во
                     else {
 
-                        $PHPShopCart->edit($productID, abs($_REQUEST['selectNum']));
+                        if ($_SESSION['selectCart'][$productID]['num'] != abs($_REQUEST['selectNum'])) {
 
-                        // Возвращаем массив измененной корзины
-                        $order['Cart']['cart'] = $PHPShopCart->getArray();
-                        $order['Cart']['num'] = $PHPShopCart->getNum();
-                        $order['Cart']['sum'] = $PHPShopCart->getSum(false);
+                            $PHPShopCart->edit($productID, abs($_REQUEST['selectNum']));
+
+                            // Возвращаем массив измененной корзины
+                            $order['Cart']['cart'] = $PHPShopCart->getArray();
+                            $order['Cart']['num'] = $PHPShopCart->getNum();
+                            $order['Cart']['sum'] = $PHPShopCart->getSum(false);
+                        }
                     }
                 }
                 break;
@@ -625,6 +634,7 @@ function actionCartUpdate() {
         $order['Cart']['sum'] = $PHPShopOrder->returnSumma($PHPShopCart->getSum(false), $order['Person']['discount']);
         $order['Cart']['num'] = $PHPShopCart->getNum();
         $order['Cart']['weight'] = $PHPShopCart->getWeight();
+        $PHPShopDelivery->checkMod($order['Cart']['dostavka']);
         $order['Cart']['dostavka'] = $PHPShopDelivery->getPrice($PHPShopCart->getSum(false), $PHPShopCart->getWeight());
 
         // Сериализация данных заказа

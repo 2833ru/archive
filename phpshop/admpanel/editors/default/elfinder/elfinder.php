@@ -12,14 +12,14 @@ else
     $resizable = 'true';
 
 //  UTF-8 Default Charset Fix
- if (stristr(ini_get("default_charset"), "utf") and function_exists('ini_set')) {
+if (stristr(ini_get("default_charset"), "utf") and function_exists('ini_set')) {
     ini_set("default_charset", "cp1251");
 }
 
 // UTF-8 Env Fix
 if (ini_get("mbstring.func_overload") > 0 and function_exists('ini_set')) {
-            ini_set("mbstring.internal_encoding", null);
- }
+    ini_set("mbstring.internal_encoding", null);
+}
 ?>
 <!DOCTYPE html>
 <html>
@@ -44,13 +44,37 @@ if (ini_get("mbstring.func_overload") > 0 and function_exists('ini_set')) {
 
         <!-- elFinder initialization (REQUIRED) -->
         <script>
+
+            var FileBrowserDialogue = {
+                init: function() {
+                    // Here goes your code for setting your custom things onLoad.
+                },
+                mySubmit: function(URL) {
+                    // pass selected file path to TinyMCE
+                    parent.tinymce.activeEditor.windowManager.getParams().setUrl(URL);
+
+                    // force the TinyMCE dialog to refresh and fill in the image dimensions
+                    var t = parent.tinymce.activeEditor.windowManager.windows[0];
+                    t.find('#src').fire('change');
+
+                    // close popup window
+                    parent.tinymce.activeEditor.windowManager.close();
+                }
+            }
+
             $().ready(function() {
 
                 var elf = $('#elfinder').elfinder({
                     getFileCallback: function(file) {
+                        
+                        
+                         // Tinymce
+                        if(parent.tinymce){
+                             FileBrowserDialogue.mySubmit(file);
+                        }
 
                         // Window
-                        if (window.opener) {
+                        else if (window.opener) {
                             window.opener.window.$('[data-icon="<?php echo $_GET['return']; ?>"]').html(file);
                             window.opener.window.$('input[name="<?php echo $_GET['return']; ?>"]').val(file);
                             window.opener.window.$('.img-thumbnail[data-thumbnail="<?php echo $_GET['return']; ?>"]').attr('src', file);
@@ -70,6 +94,7 @@ if (ini_get("mbstring.func_overload") > 0 and function_exists('ini_set')) {
                             parent.window.$('[data-icon="<?php echo $_GET['return']; ?>"]').prev('.glyphicon').removeClass('hide');
                             parent.window.$('#elfinderModal').modal('hide');
                         }
+                       
                     },
                     resizable: <?php echo $resizable; ?>,
                     height: 500,
@@ -121,7 +146,7 @@ if (ini_get("mbstring.func_overload") > 0 and function_exists('ini_set')) {
                             'rm', '|', 'edit', 'resize', '|', 'archive', 'extract', '|', 'info'
                         ]
                     },
-                    onlyMimes: ["image/png", "application/x-shockwave-flash", "application/zip", "text/x-comma-separated-values", "image/jpeg", "image/gif", "application/rar", 'application/vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'text/x-sql', 'application/x-gzip', 'text/x-tpl', 'application/pdf','application/x-rar']
+                    onlyMimes: ["image/png", "application/x-shockwave-flash", "application/zip", "text/x-comma-separated-values", "image/jpeg", "image/gif", "application/rar", 'application/vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'text/x-sql', 'application/x-gzip', 'text/x-tpl', 'application/pdf', 'application/x-rar']
                 }).elfinder('instance');
 
 

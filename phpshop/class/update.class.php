@@ -3,7 +3,7 @@
 /**
  * Библиотека восстановления файлов
  * @author PHPShop Software
- * @version 1.0
+ * @version 1.2
  * @package PHPShopClass
  */
 class PHPShopRestore extends PHPShopUpdate {
@@ -374,18 +374,21 @@ class PHPShopUpdate {
         if (is_array($map)) {
             foreach ($map as $k => $v) {
 
-                if (strstr($v['files'], ';')) {
-                    $files = explode(";", $v['files']);
+                if (!empty($v['files'])) {
 
-                    if (is_array($files)) {
-                        foreach ($files as $file) {
-                            if (file_exists($_SERVER['DOCUMENT_ROOT'] . $GLOBALS['SysValue']['dir']['dir'] . '/' . $k . '/' . $file))
-                                $zip_files.= $_SERVER['DOCUMENT_ROOT'] . $GLOBALS['SysValue']['dir']['dir'] . '/' . $k . '/' . $file . ',';
+                    if (strstr($v['files'], ';')) {
+                        $files = explode(";", $v['files']);
+
+                        if (is_array($files)) {
+                            foreach ($files as $file) {
+                                if (file_exists($_SERVER['DOCUMENT_ROOT'] . $GLOBALS['SysValue']['dir']['dir'] . '/' . $k . '/' . $file))
+                                    $zip_files.= $_SERVER['DOCUMENT_ROOT'] . $GLOBALS['SysValue']['dir']['dir'] . '/' . $k . '/' . $file . ',';
+                            }
                         }
                     }
+                    elseif (file_exists($_SERVER['DOCUMENT_ROOT'] . $GLOBALS['SysValue']['dir']['dir'] . '/' . $k . '/' . $v['files']))
+                        $zip_files.= $_SERVER['DOCUMENT_ROOT'] . $GLOBALS['SysValue']['dir']['dir'] . '/' . $k . '/' . $v['files'] . ',';
                 }
-                elseif (file_exists($_SERVER['DOCUMENT_ROOT'] . $GLOBALS['SysValue']['dir']['dir'] . '/' . $k . '/' . $v['files']))
-                    $zip_files.= $_SERVER['DOCUMENT_ROOT'] . $GLOBALS['SysValue']['dir']['dir'] . '/' . $k . '/' . $v['files'] . ',';
             }
         }
 

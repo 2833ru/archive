@@ -1,6 +1,2 @@
-
-@productPageNav@
-
-@productPageDis@
-
-@productPageNav@
+<p>@productPageDis@</p>
+<div>@productPageNav@</div>

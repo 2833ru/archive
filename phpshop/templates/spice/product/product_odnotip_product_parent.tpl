@@ -3,10 +3,10 @@
     @parentList@
 </div>
 <div class="cart-button button-group cart-list-button-wrapper">
-    <button type="button" class="btn btn-cart addToCartListParent" role="button" data-num="1" data-uid="@productUid@">
+    <button type="button" class="btn btn-cart addToCartListParent" role="button" data-num="1" data-uid="@parentId@" data-parent="@productUid@">
         <i class="fa fa-shopping-cart"></i>                                 
             @productSale@
-    </button>                                   
+    </button>                                     
 </div>
 <div class="cart-button button-group compare-list-button-wrapper">
     <button type="button" class="btn btn-cart addToWishList" role="button" data-uid="@productUid@">

@@ -21,8 +21,6 @@ $PHPShopBase = new PHPShopBase($_classPath . "inc/config.ini");
 $PHPShopSystem = new PHPShopSystem();
 $LoadItems['System'] = $PHPShopSystem->getArray();
 
-
-
 // Подключаем реквизиты
 $SysValue['bank'] = unserialize($LoadItems['System']['bank']);
 $pathTemplate = $SysValue['dir']['templates'] . chr(47) . $_SESSION['skin'];
@@ -45,10 +43,10 @@ $datas = $row['datas'];
 $ouid = $row['uid'];
 $order = unserialize($row['orders']);
 $status = unserialize($row['status']);
-
+$dis = $this_nds_summa=$sum=$num=null;
 if (is_array($order['Cart']['cart']))
     foreach ($order['Cart']['cart'] as $val) {
-        @$dis.="
+        $dis.="
   <tr class=tablerow>
 		<td class=tablerow>" . $n . "</td>
 		<td class=tablerow>" . $val['name'] . "</td>
@@ -134,7 +132,7 @@ if ($row['flat'])
 $adr_info = substr($adr_info, 2);
 ?>
 <head>
-    <title>Бланк Заказа №<?= $ouid ?></title>
+    <title>Бланк Заказа №<?php echo $ouid ?></title>
     <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=windows-1251">
     <META HTTP-EQUIV="PRAGMA" CONTENT="NO-CACHE">
     <meta http-equiv="Content-Type" content="text/html; charset=windows-1251">
@@ -162,8 +160,8 @@ $adr_info = substr($adr_info, 2);
         return false;" >Распечатать</a><br><br></div>
     <div align="center"><table align="center" width="100%">
             <tr>
-                <td align="center"><img src="<?= $PHPShopSystem->getLogo(); ?>" alt="" border="0"></td>
-                <td align="center"><h4 align=center>Заказ&nbsp;№&nbsp;<?= $ouid ?>&nbsp;от&nbsp;<?= $datas ?></h4></td>
+                <td align="center"><img src="<?php echo $PHPShopSystem->getLogo(); ?>" alt="" border="0"></td>
+                <td align="center"><h4 align=center>Заказ&nbsp;№&nbsp;<?php echo $ouid ?>&nbsp;от&nbsp;<?php echo $datas ?></h4></td>
             </tr>
         </table>
     </div>
@@ -173,47 +171,47 @@ $adr_info = substr($adr_info, 2);
     <table width=99% cellpadding=2 cellspacing=0 align=center>
         <tr class=tablerow>
             <td class=tablerow width="150">Заказчик:</td>
-            <td class=tableright><?= @$order['Person']['name_person'] . $row['fio'] ?></td>
+            <td class=tableright><?php echo @$order['Person']['name_person'] . $row['fio'] ?></td>
         </tr>
         <tr class=tablerow>
             <td class=tablerow>Компания:</td>
-            <td class=tableright>&nbsp;<?= @$order['Person']['org_name'] . $row['org_name'] ?></td>
+            <td class=tableright>&nbsp;<?php echo @$order['Person']['org_name'] . $row['org_name'] ?></td>
         </tr>
         <tr class=tablerow>
             <td class=tablerow>Почта:</td>
-            <td class=tableright><a href="mailto:<?= $order['Person']['mail'] ?>"><?= $order['Person']['mail'] ?></a></td>
+            <td class=tableright><a href="mailto:<?php echo $order['Person']['mail'] ?>"><?php echo  $order['Person']['mail'] ?></a></td>
         </tr>
         <tr class=tablerow>
             <td class=tablerow>ИНН:</td>
-            <td class=tableright>&nbsp;<?= @$order['Person']['org_inn'] . $row['org_inn'] ?></td>
+            <td class=tableright>&nbsp;<?php echo @$order['Person']['org_inn'] . $row['org_inn'] ?></td>
         </tr>
         <tr class=tablerow>
             <td class=tablerow>КПП:</td>
-            <td class=tableright>&nbsp;<?= @$order['Person']['org_kpp'] . $row['org_kpp'] ?></td>
+            <td class=tableright>&nbsp;<?php echo @$order['Person']['org_kpp'] . $row['org_kpp'] ?></td>
         </tr>
         <tr class=tablerow>
             <td class=tablerow>Тел:</td>
-            <td class=tableright><?= @$order['Person']['tel_code'] . " " . @$order['Person']['tel_name'] . $row['tel'] ?></td>
+            <td class=tableright><?php echo @$order['Person']['tel_code'] . " " . @$order['Person']['tel_name'] . $row['tel'] ?></td>
         </tr>
         <tr class=tablerow>
             <td class=tablerow>Адрес:</td>
-            <td class=tableright><?= @$adr_info ?></td>
+            <td class=tableright><?php echo @$adr_info ?></td>
         </tr>
         <tr class=tablerow>
             <td class=tablerow>Грузополучатель:</td>
-            <td class=tableright><?= $PHPShopDelivery->getCity() ?></td>
+            <td class=tableright><?php echo $PHPShopDelivery->getCity() ?></td>
         </tr>
         <tr class=tablerow>
             <td class=tablerow>Время доставки:</td>
-            <td class=tableright><?= $dost_ot ?></td>
+            <td class=tableright><?php echo $dost_ot ?></td>
         </tr>
         <tr class=tablerow >
             <td class=tablerow>Тип оплаты:</td>
-            <td class=tableright><?= $PHPShopOrder->getOplataMetodName() ?></td>
+            <td class=tableright><?php echo $PHPShopOrder->getOplataMetodName() ?></td>
         </tr>
         <tr class=tablerow >
             <td class=tablerow style="border-bottom: 1px solid #000000;">Комментарии:</td>
-            <td class=tableright style="border-bottom: 1px solid #000000;">&nbsp;<?= $status['maneger'] ?></td>
+            <td class=tableright style="border-bottom: 1px solid #000000;">&nbsp;<?php echo $status['maneger'] ?></td>
         </tr>
     </table>
     <p><br></p>
@@ -226,30 +224,30 @@ $adr_info = substr($adr_info, 2);
             <td class=tablerow>Цена</td>
             <td class=tableright>Сумма</td>
         </tr>
-        <?
+        <?php
         echo @$dis;
         $my_total = $PHPShopOrder->returnSumma($sum, $order['Person']['discount']) + $deliveryPrice;
         $my_nds = number_format($my_total * $LoadItems['System']['nds'] / (100 + $LoadItems['System']['nds']), "2", ".", "");
         ?>
         <tr>
             <td colspan=5 align=right style="border-top: 1px solid #000000;border-left: 1px solid #000000;">Скидка:</td>
-            <td class=tableright nowrap><b><?= @$order['Person']['discount'] ?>%</b></td>
+            <td class=tableright nowrap><b><?php echo @$order['Person']['discount'] ?>%</b></td>
         </tr>
         <tr>
             <td colspan=5 align=right style="border-top: 1px solid #000000;border-left: 1px solid #000000;">Итого:</td>
-            <td class=tableright nowrap><b><?= $my_total ?></b></td>
+            <td class=tableright nowrap><b><?php echo $my_total ?></b></td>
         </tr>
-        <? if ($LoadItems['System']['nds_enabled']) { ?>
+        <?php if ($LoadItems['System']['nds_enabled']) { ?>
             <tr>
-                <td colspan=5 align=right style="border-top: 1px solid #000000;border-left: 1px solid #000000;">В т.ч. НДС: <?= $LoadItems['System']['nds'] ?>%</td>
-                <td class=tableright nowrap><b><?= $my_nds ?></b></td>
+                <td colspan=5 align=right style="border-top: 1px solid #000000;border-left: 1px solid #000000;">В т.ч. НДС: <?php echo $LoadItems['System']['nds'] ?>%</td>
+                <td class=tableright nowrap><b><?php echo $my_nds ?></b></td>
             </tr>
-        <? } ?>
+        <?php } ?>
         <tr><td colspan=6 style="border: 0px; border-top: 1px solid #000000;">&nbsp;</td></tr>
     </table>
-    <p><b>Всего наименований <?= ($num + 1) ?>, на сумму <?= ($PHPShopOrder->returnSumma($sum, $order['Person']['discount']) + $deliveryPrice) . " " . $PHPShopOrder->default_valuta_code; ?>
+    <p><b>Всего наименований <?php echo ($num + 1) ?>, на сумму <?php echo ($PHPShopOrder->returnSumma($sum, $order['Person']['discount']) + $deliveryPrice) . " " . $PHPShopOrder->default_valuta_code; ?>
             <br />
-            <?
+            <?php
             $iw = new inwords;
             $s = $iw->get($PHPShopOrder->returnSumma($sum, $order['Person']['discount']) + $deliveryPrice);
             $v = $PHPShopOrder->default_valuta_code;
@@ -257,7 +255,7 @@ $adr_info = substr($adr_info, 2);
                 echo $s;
             ?>
         </b></p><br>
-    <p>Дата <u><?= date("d-m-y H:m a") ?></u></p>
+    <p>Дата <u><?php echo date("d-m-y H:m a") ?></u></p>
 <p>Руководитель<u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</u></p>
 <p>Главный бухгалтер<u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</u></p>
 <br>

@@ -53,6 +53,9 @@ class PHPShopDone extends PHPShopCore {
             PHPShopObj::loadClass('payment');
             $this->PHPShopPayment = new PHPShopPayment($_POST['order_metod']);
         }
+
+        // Навигация хлебные крошки
+        $this->navigation(false, __('Оформление заказа'));
     }
 
     /**
@@ -182,13 +185,11 @@ class PHPShopDone extends PHPShopCore {
 
                 // Подключаем шаблон
                 $disp = ParseTemplateReturn($this->getValue('templates.order_forma_mesage'));
-                $disp.=PHPShopText::notice(PHPShopText::a('javascript:history.back(1)', $this->lang('order_return')), 'images/shop/icon-setup.gif');
+                $disp.=PHPShopText::notice(PHPShopText::a('javascript:history.back(1)', $this->lang('order_return')), false);
                 $this->set('orderMesage', $disp);
             }
         } else {
-
-            $this->set('mesageText', $this->message($this->lang('bad_cart_1'), $this->lang('bad_order_mesage_2')));
-            $disp = ParseTemplateReturn($this->getValue('templates.order_forma_mesage'));
+            $disp =  PHPShopText::alert($this->lang('bad_order_mesage_2'),'danger');
             $this->set('orderMesage', $disp);
         }
 
@@ -218,7 +219,7 @@ class PHPShopDone extends PHPShopCore {
         $this->set('ouid', $this->ouid);
         $this->set('date', date("d-m-y"));
         $this->set('adr_name', PHPShopSecurity::CleanStr(@$_POST['adr_name']));
-        $this->set('deliveryCity', $this->PHPShopDelivery->getCity());
+
         $this->set('mail', $_POST['mail']);
 
         if ($this->PHPShopPayment)
@@ -227,7 +228,10 @@ class PHPShopDone extends PHPShopCore {
         $this->set('company', $this->PHPShopSystem->getParam('name'));
 
         // формируем список данных полей доставки.
-        $this->set('adresList', $this->PHPShopDelivery->getAdresListFromOrderData($_POST, "\n"));
+        if ($this->PHPShopDelivery) {
+            $this->set('deliveryCity', $this->PHPShopDelivery->getCity());
+            $this->set('adresList', $this->PHPShopDelivery->getAdresListFromOrderData($_POST, "\n"));
+        }
 
         // метки письма о заказе для старых версий системы.
         $this->set('dos_ot', @$_POST['dos_ot']);
@@ -248,7 +252,7 @@ class PHPShopDone extends PHPShopCore {
 
         // Заголовок письма покупателю
         $title = $this->lang('mail_title_user_start') . $_POST['ouid'] . $this->lang('mail_title_user_end');
-        
+
         // Отсылаем письмо покупателю
         $PHPShopMail = new PHPShopMail($_POST['mail'], $this->PHPShopSystem->getEmail(), $title, '', true, true);
         $content = ParseTemplateReturn('./phpshop/lib/templates/order/usermail.tpl', true);
@@ -256,7 +260,7 @@ class PHPShopDone extends PHPShopCore {
         // Перехват модуля в середине функции
         if ($this->setHook(__CLASS__, __FUNCTION__, $content, 'MIDDLE'))
             return true;
-        
+
         $PHPShopMail->sendMailNow($content);
 
 
@@ -265,10 +269,10 @@ class PHPShopDone extends PHPShopCore {
         $this->set('ip', $_SERVER['REMOTE_ADDR']);
 
         $title_adm = $this->lang('mail_title_adm') . $_POST['ouid'] . "/" . date("d-m-y");
-        
+
         // Отсылаем письмо администратору
-        $PHPShopMail = new PHPShopMail($this->PHPShopSystem->getEmail(),$this->PHPShopSystem->getEmail(), $title_adm, '', true, true, array('replyto'=>$_POST['mail']));
-        
+        $PHPShopMail = new PHPShopMail($this->PHPShopSystem->getEmail(), $this->PHPShopSystem->getEmail(), $title_adm, '', true, true, array('replyto' => $_POST['mail']));
+
         $content_adm = ParseTemplateReturn('./phpshop/lib/templates/order/adminmail.tpl', true);
         // Перехват модуля в конце функции
         if ($this->setHook(__CLASS__, __FUNCTION__, $content_adm, 'END'))

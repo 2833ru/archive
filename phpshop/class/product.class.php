@@ -147,9 +147,7 @@ class PHPShopProductFunction {
 
 
         // Форматирование цены
-        $format = $PHPShopSystem->getSerilizeParam("admoption.price_znak");
-        if (empty($format))
-            $format = 0;
+        $format = intval($PHPShopSystem->getSerilizeParam("admoption.price_znak"));
 
         if (!empty($_SESSION['UsersStatus']) and !empty($check_user_price)) {
 

@@ -93,7 +93,7 @@
                                 <!-- Currency Starts -->
                                 <div class="btn-group header-valuta-disp-wrapper">
                                     <!--@valutaDisp@-->
-                                    <h4><i class="fa fa-phone-square" aria-hidden="true"></i> Тел: @telNum@</h4>
+                                    <h4><i class="fa fa-phone-square" aria-hidden="true"></i> Тел: @telNumMobile@</h4>
                                 </div>
                                 <!-- Currency Ends -->                      
                             </div>
@@ -130,7 +130,7 @@
                         <!-- Shopping Cart Starts -->
                         <div class="col-md-3 col-sm-4 col-xs-12">
                             <div id="cart" class="btn-group btn-block">
-                                <button id="cartlink" type="button" data-toggle="dropdown" class="btn btn-block btn-lg dropdown-toggle" data-trigger="click" data-container="body" data-toggle="popover" data-placement="bottom" data-html="true" data-url="/order/" data-content='@visualcart@'>
+                                <button id="cartlink" type="button" data-toggle="dropdown" class="btn btn-block btn-lg dropdown-toggle" data-trigger="click" data-container="body" data-placement="bottom" data-html="true" data-url="/order/" data-content='@visualcart@'>
                                     <i class="fa fa-shopping-cart"></i>
                                     <span>Корзина:</span> 
                                     <span id="cart-total"><span><span id="num">@num@</span>шт. -</span><span id="sum"> @sum@</span> <span class="rubznak">@productValutaName@</span></span>
@@ -283,7 +283,7 @@
                             <li><a href="/users/order.html">Отследить заказ</a></li>
                             <li><a href="/users/notice.html">Уведомления о товарах</a></li>
                             <li><a href="/users/message.html">Связь с менеджерами</a></li>
-                            @php if($_SESSION['UsersId']) echo '<li><a href="javascript:UserLogOut();">Выйти</a></li>'; php@
+                            @php if($_SESSION['UsersId']) echo '<li><a href="?logout=true">Выйти</a></li>'; php@
                         </ul>
                     </div>
                     <!-- My Account Links Ends -->

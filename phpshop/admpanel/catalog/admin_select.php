@@ -8,6 +8,7 @@ $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['products']);
 
 // Определение визульного вывода поля
 function getKeyView($val) {
+    global $key_placeholder;
 
     if (strpos($val['Type'], "(")) {
         $a = explode("(", $val['Type']);
@@ -16,10 +17,10 @@ function getKeyView($val) {
     else
         $b = $val['Type'];
     $key_view = array(
-        'varchar' => array('type' => 'text', 'name' => $val['Field'] . '_new'),
-        'text' => array('type' => 'textarea', 'height' => 150, 'name' => $val['Field'] . '_new'),
-        'int' => array('type' => 'text', 'size' => 100, 'name' => $val['Field'] . '_new'),
-        'float' => array('type' => 'text', 'size' => 200, 'name' => $val['Field'] . '_new'),
+        'varchar' => array('type' => 'text', 'name' => $val['Field'] . '_new', 'placeholder' => $key_placeholder[$val['Field']]),
+        'text' => array('type' => 'textarea', 'height' => 150, 'name' => $val['Field'] . '_new', 'placeholder' => $key_placeholder[$val['Field']]),
+        'int' => array('type' => 'text', 'size' => 100, 'name' => $val['Field'] . '_new', 'placeholder' => $key_placeholder[$val['Field']]),
+        'float' => array('type' => 'text', 'size' => 200, 'name' => $val['Field'] . '_new', 'placeholder' => $key_placeholder[$val['Field']]),
         'enum' => array('type' => 'checkbox', 'name' => $val['Field'] . '_new', 'value' => 1, 'caption' => 'Вкл.'),
     );
 
@@ -70,7 +71,7 @@ $key_name = array(
     'odnotip' => 'Сопутствующие товары (IDS)',
     'page' => 'Страницы',
     'parent' => 'Подчиненные товары (IDS)',
-    'dop_cat' => 'Дополнительные каталоги ',
+    'dop_cat' => 'Дополнительные каталоги',
     'ed_izm' => 'Единица измерения',
     'baseinputvaluta' => 'Валюта (ID)',
     'p_enabled' => 'Яндекс.Маркет под заказ',
@@ -82,6 +83,12 @@ $key_name = array(
     'price_search' => 'Цена для поиска',
     'prod_seo_name' => 'SEO ссылка',
     'vendor_array' => 'Характеристики'
+);
+
+$key_placeholder = array(
+    'dop_cat' => '#10#11#',
+    'odnotip' => '10,11,12',
+    'parent' => '10,11,12',
 );
 
 // Стоп лист
@@ -168,7 +175,7 @@ function sortParse($current_sort) {
  * Экшен сохранения
  */
 function actionSave() {
-    global $PHPShopOrm;
+    global $PHPShopOrm, $PHPShopSystem;
 
     if (is_array($_SESSION['select']['product'])) {
         $val = array_values($_SESSION['select']['product']);
@@ -248,8 +255,36 @@ function actionSave() {
     unset($_POST['vendor_array_new']);
     unset($_POST['vendor_new']);
 
+// Списывание со склада
+    if (isset($_POST['items_new'])) {
+        switch ($PHPShopSystem->getSerilizeParam('admoption.sklad_status')) {
+
+            case(3):
+                if ($_POST['items_new'] < 1) {
+                    $_POST['sklad_new'] = 1;
+                } else {
+                    $_POST['sklad_new'] = 0;
+                }
+                break;
+
+            case(2):
+                if ($_POST['items_new'] < 1) {
+                    $_POST['enabled_new'] = 0;
+                } else {
+                    $_POST['enabled_new'] = 1;
+                }
+                break;
+
+            default:
+                break;
+        }
+    }
+
+    // Дата обновления
+    $_POST['datas_new'] = time();
+
     if ($PHPShopOrm->update($_POST, $where)) {
-        header('Location: ?path=catalog&cat=' . $_GET['cat']);
+        header('Location: ?path=catalog&cat=' . intval($_GET['cat']));
         return true;
     }
     else

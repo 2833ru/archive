@@ -99,7 +99,7 @@ function action_order_info($obj, $tip) {
             $payment = userorderpaymentlink($obj, $PHPShopOrderFunction, $tip, $row);
             // Описание столбцов
             $caption = $obj->caption(__('Статус заказа'), __('Способ оплаты'));
-            $table .= PHPShopText::p(PHPShopText::table($caption . $payment = PHPShopText::tr($time, $payment), 3, 1, 'center', '99%', false, 0, 'allspecwhite', 'list table table-striped table-bordered'));
+            $table .= PHPShopText::p(PHPShopText::table($caption . $payment = PHPShopText::tr($time, $payment), 3, 1, 'left', '99%', false, 0, 'allspecwhite', 'list table table-striped table-bordered'));
 
             // Описание столбцов
             if (!empty($yurData)) {
@@ -110,12 +110,12 @@ function action_order_info($obj, $tip) {
                 $temp = PHPShopText::tr($delivery['name'], $delivery['adres']);
             }
 
-            $table .= PHPShopText::p(PHPShopText::table($caption . $temp, 3, 1, 'center', '99%', false, 0, 'allspecwhite', 'list'));
+            $table .= PHPShopText::p(PHPShopText::table($caption . $temp, 3, 1, 'left', '99%', false, 0, 'allspecwhite', 'list table table-striped table-bordered'));
 
             // содержание заказа.
             // Описание столбцов
             $caption = $obj->caption(__('Наименование'), __('Кол-во'), __('Сумма'));
-            $table .= PHPShopText::p(PHPShopText::table($caption . $cart . $delivery['tr'] . $total . $docs . $files, 3, 1, 'center', '99%', false, 0, 'allspecwhite', 'list table table-striped table-bordered'));
+            $table .= PHPShopText::p(PHPShopText::table($caption . $cart . $delivery['tr'] . $total . $docs . $files, 3, 1, 'left', '99%', false, 0, 'allspecwhite', 'list table table-striped table-bordered'));
 
 
             $obj->set('formaContent', $table, true);
@@ -175,7 +175,7 @@ function usercartforma($val, $option) {
         $link = '/shop/UID_' . $val['parent'] . '.html';
 
 //    $icon = PHPShopText::img('phpshop/lib/templates/icon/accept.png', $hspace = 5, 'absmiddle');
-    $dis = PHPShopText::tr(PHPShopText::a($link, $icon . $val['name'], $val['name'], false, false, '_blank', 'b'), $val['num'], $val['total']);
+    $dis = PHPShopText::tr(PHPShopText::a($link, $icon . $val['name'], $val['name'], false, false, '_blank', 'b'), $val['num'], $val['total']. ' ' . $option['currency']);
     return $dis;
 }
 

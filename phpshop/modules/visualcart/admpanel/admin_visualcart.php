@@ -44,6 +44,9 @@ function actionStart() {
         'type' => 'submit',
         'icon' => 'glyphicon glyphicon-export'
     );
+        
+     unset($select_name[0]);
+     unset($select_name[1]);
 
     $PHPShopInterface->checkbox_action = false;
     $PHPShopInterface->setActionPanel($TitlePage, $select_name, array('Выгрузить'));

@@ -4,8 +4,14 @@
 function commentList(xid, comand, page, cid) {
     var message = "";
     var rateVal = 0;
-    var cid = 0;
-    var page = 0;
+
+    if (page === undefined)
+        page = 0;
+
+    if (cid === undefined)
+        cid = 0;
+
+
     if (comand == "add") {
         message = $('#message').val();
         if (message == "")
@@ -761,6 +767,7 @@ $(document).ready(function() {
             });
         }
         else {
+            $("#search").attr('data-content', '');
             $("#search").popover('hide');
         }
     });
@@ -861,8 +868,11 @@ $(document).ready(function() {
 
     // Скрыть пустые блоки в описании товара
     $('.empty-check').each(function() {
-        if ($(this).find('a').html() === undefined || $(this).find('.vendorenabled').html() == '') {
+        if ($(this).find('a').html() === undefined && $(this).find('.vendorenabled').html() === undefined ) {
             $(this).fadeOut('slow');
+        }
+        else if($(this).find('.vendorenabled').html() == ''){
+             $(this).fadeOut('slow');
         }
     });
 

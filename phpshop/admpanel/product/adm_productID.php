@@ -43,7 +43,7 @@ function treegenerator($array, $i, $curent) {
 }
 
 function actionStart() {
-    global $PHPShopGUI, $PHPShopModules, $PHPShopOrm,$PHPShopBase,$PHPShopSystem;
+    global $PHPShopGUI, $PHPShopModules, $PHPShopOrm, $PHPShopBase, $PHPShopSystem;
 
     // Выборка
     $data = $PHPShopOrm->select(array('*'), array('id' => '=' . intval($_GET['id'])));
@@ -73,8 +73,8 @@ function actionStart() {
     $PHPShopGUI->field_col = 2;
     $PHPShopGUI->addJSFiles('./js/jquery.tagsinput.min.js', './catalog/gui/catalog.gui.js', './js/jquery.waypoints.min.js', './product/gui/product.gui.js');
     $PHPShopGUI->addCSSFiles('./css/jquery.tagsinput.css');
-    
-        // Права менеджеров
+
+    // Права менеджеров
     if ($PHPShopSystem->ifSerilizeParam('admoption.rule_enabled', 1) and !$PHPShopBase->Rule->CheckedRules('catalog', 'remove')) {
         $where = array('secure_groups' => " REGEXP 'i" . $_SESSION['idPHPSHOP'] . "i' or secure_groups = ''");
         $secure_groups = true;
@@ -205,7 +205,7 @@ function actionStart() {
 
     // YML
     $data['yml_bid_array'] = unserialize($data['yml_bid_array']);
-    $Tab_yml = $PHPShopGUI->setField(__('YML'), $PHPShopGUI->setCheckbox('yml_new', 1, __('Вывод в Яндекс Маркете'), $data['yml']) .'<br>'.
+    $Tab_yml = $PHPShopGUI->setField(__('YML'), $PHPShopGUI->setCheckbox('yml_new', 1, __('Вывод в Яндекс Маркете'), $data['yml']) . '<br>' .
             $PHPShopGUI->setRadio('p_enabled_new', 1, __('В наличии'), $data['p_enabled']) .
             $PHPShopGUI->setRadio('p_enabled_new', 0, __('Уведомить (Под заказ)'), $data['p_enabled'])
     );
@@ -273,8 +273,6 @@ function actionStart() {
 
     // Вывод формы закладки
     $PHPShopGUI->setTab(array(__("Основное"), $Tab1), array(__("Изображение"), $Tab6), array(__("Описание"), $Tab2), array(__("Подробно"), $Tab3), array(__("Документы"), $Tab_docs), array(__("Характеристики"), $Tab_sorts), array(__("Заголовки"), $Tab_header));
-
-
 
     // Вывод кнопок сохранить и выход в футер
     $ContentFooter =
@@ -347,11 +345,37 @@ function actionUpdate() {
         if (is_array($_POST['vendor_array_add'])) {
             foreach ($_POST['vendor_array_add'] as $k => $val) {
 
+                $sort_array = $result = null;
+
                 if (!empty($val)) {
-                    $PHPShopOrmSort = new PHPShopOrm($GLOBALS['SysValue']['base']['sort']);
-                    $result = $PHPShopOrmSort->insert(array('name_new' => $val, 'category_new' => $k));
-                    if (!empty($result))
-                        $_POST['vendor_array_new'][$k][] = $result;
+
+                    if (strstr($val, '#')) {
+                        $sort_array = explode('#', $val);
+                    }
+                    else
+                        $sort_array[] = $val;
+
+                    if (is_array($sort_array))
+                        foreach ($sort_array as $val_sort) {
+
+                            $PHPShopOrmSort = new PHPShopOrm($GLOBALS['SysValue']['base']['sort']);
+
+                            // Проверка уникальности
+                            $checkName = $PHPShopOrmSort->select(array('id'), array('name' => '="' . trim($val_sort) . '"', 'category' => '='.intval($k)), false, array('limit' => 1));
+
+                            // Нет характеристики, создаем новую
+                            if (empty($checkName['id'])) {
+                                $PHPShopOrmSort->clean();
+
+                                $result = $PHPShopOrmSort->insert(array('name_new' => trim($val_sort), 'category_new' => intval($k)));
+                                if (!empty($result))
+                                    $_POST['vendor_array_new'][$k][] = $result;
+                            }
+                            // Есть, назначем Из базы
+                            else {
+                                $_POST['vendor_array_new'][$k][] = $checkName['id'];
+                            }
+                        }
                 }
                 else
                     unset($_POST['vendor_array_add'][$k]);
@@ -376,8 +400,10 @@ function actionUpdate() {
         $_POST['vendor_array_new'] = serialize($_POST['vendor_array_new']);
 
         // Статьи
-        if (isset($_POST['editID']))
-            $_POST['page_new'] = array_pop($_POST['page_new']);
+        if (isset($_POST['editID'])) {
+            if (is_array($_POST['page_new']))
+                $_POST['page_new'] = array_pop($_POST['page_new']);
+        }
         else
             $_POST['page_new'] = @implode(',', $_POST['page_new']);
 
@@ -411,7 +437,7 @@ function actionUpdate() {
         $_POST['pic_small_new'] = $insert['pic_small_new'];
     if (empty($_POST['pic_big_new']) and !empty($insert['name_new']))
         $_POST['pic_big_new'] = $insert['name_new'];
-    
+
     // Права пользователя
     $_POST['user_new'] = $_SESSION['idPHPSHOP'];
 
@@ -476,11 +502,11 @@ function fotoAdd() {
     }
 
     if (!empty($file)) {
-        
+
         // Маленькое изображение (тумбнейл)
         $thumb = new PHPThumb($file);
         $thumb->setOptions(array('jpegQuality' => $width_kratko));
-        
+
         // Адаптивность
         if (!empty($img_adaptive))
             $thumb->adaptiveResize($img_tw, $img_th);

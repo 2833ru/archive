@@ -91,6 +91,13 @@ class PHPShopCart {
             if (!empty($parentID))
                 $cart['parent'] = intval($parentID);
 
+            // Изображения главного товара
+            if (empty($cart['pic_small'])) {
+                $objProduct = new PHPShopProduct($cart['parent']);
+                $cart['pic_small'] = $objProduct->getImage();
+            }
+
+
             // Проверка кол-ва товара на складе
             if ($this->store_check) {
                 if ($cart['num'] > PHPShopSecurity::TotalClean($objProduct->getParam("items"), 1))

@@ -249,6 +249,7 @@ $(document).ready(function () {
             });
         }
         else {
+            $("#search").attr('data-content', '');
             $("#search").popover('hide');
         }
     });

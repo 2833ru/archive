@@ -97,3 +97,5 @@ ALTER TABLE `phpshop_products` ADD `option1` VARCHAR(255) NOT NULL;
 ALTER TABLE `phpshop_products` ADD `option2` VARCHAR(255) NOT NULL;
 ALTER TABLE `phpshop_products` ADD `option3` VARCHAR(255) NOT NULL;
 ALTER TABLE `phpshop_products` ADD `option4` VARCHAR(255) NOT NULL;
+
+ALTER TABLE `phpshop_delivery` ADD `is_mod` enum('1','2') DEFAULT '1';

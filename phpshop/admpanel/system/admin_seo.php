@@ -9,21 +9,22 @@ function actionStart() {
 
     // Выборка
     $data = $PHPShopOrm->select();
-    $option = unserialize($data['1c_option']);
+    $option = unserialize($data['admoption']);
+    ;
 
     // Размер названия поля
     $PHPShopGUI->field_col = 3;
-    $PHPShopGUI->addJSFiles('./js/jquery.waypoints.min.js','./system/gui/system.gui.js','./system/gui/tab_headers.gui.js');
+    $PHPShopGUI->addJSFiles('./js/jquery.waypoints.min.js', './system/gui/system.gui.js', './system/gui/tab_headers.gui.js');
     $PHPShopGUI->setActionPanel($TitlePage, false, array('Сохранить'));
 
-
-    $PHPShopGUI->_CODE = '<p></p>' . $PHPShopGUI->setField('Основной заголовок (Title)', $PHPShopGUI->setTextarea('title_new', $data['title'], false, false, 100));
+    $PHPShopGUI->_CODE .= '<p></p>' . $PHPShopGUI->setField('Основной заголовок (Title)', $PHPShopGUI->setTextarea('title_new', $data['title'], false, false, 100));
     $PHPShopGUI->_CODE .= $PHPShopGUI->setField('Основное описание (Description)', $PHPShopGUI->setTextarea('descrip_new', $data['descrip'], false, false, 100));
     $PHPShopGUI->_CODE .= $PHPShopGUI->setField('Основные ключевые слова (Keywords)', $PHPShopGUI->setTextarea('keywords_new', $data['keywords'], false, false, 100));
-    
-    $PHPShopGUI->_CODE .= $PHPShopGUI->setCollapse('Шаблон каталога',$PHPShopGUI->loadLib('tab_headers', $data, './system/','catalog'));
-    $PHPShopGUI->_CODE .= $PHPShopGUI->setCollapse('Шаблон подкаталога',$PHPShopGUI->loadLib('tab_headers', $data, './system/','podcatalog'));
-$PHPShopGUI->_CODE .= $PHPShopGUI->setCollapse('Шаблон товара',$PHPShopGUI->loadLib('tab_headers', $data, './system/','product'));
+    $PHPShopGUI->_CODE .=$PHPShopGUI->setField("Ссылочная масса", $PHPShopGUI->setCheckbox('option[safe_links]', 1, 'Показывать отключенные товары по прямым ссылкам для поисковиков вместо 404 ошибки', $option['safe_links']));
+
+    $PHPShopGUI->_CODE .= $PHPShopGUI->setCollapse('Шаблон каталога', $PHPShopGUI->loadLib('tab_headers', $data, './system/', 'catalog'));
+    $PHPShopGUI->_CODE .= $PHPShopGUI->setCollapse('Шаблон подкаталога', $PHPShopGUI->loadLib('tab_headers', $data, './system/', 'podcatalog'));
+    $PHPShopGUI->_CODE .= $PHPShopGUI->setCollapse('Шаблон товара', $PHPShopGUI->loadLib('tab_headers', $data, './system/', 'product'));
 
     // Запрос модуля на закладку
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $data);
@@ -60,7 +61,21 @@ function actionSave() {
 function actionUpdate() {
     global $PHPShopOrm, $PHPShopModules;
 
+    // Выборка
+    $data = $PHPShopOrm->select();
+    $option = unserialize($data['admoption']);
     
+    // Корректировка пустых значений
+    $PHPShopOrm->updateZeroVars('option.safe_links');
+    
+    if (is_array($_POST['option']))
+        foreach ($_POST['option'] as $key => $val)
+            $option[$key] = $val;
+    
+   
+    $_POST['admoption_new'] = serialize($option);
+
+
     // Перехват модуля
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $_POST);
 

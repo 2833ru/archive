@@ -3,35 +3,6 @@
 function setProducts_yandexcart_hook($obj, $data) {
     $add = $list = null;
 
-
-    /*
-      if (!isset($_SESSION['module']['yandexcart']['outlet'])) {
-
-      // Настройки модуля
-      $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['yandexcart']['yandexcart_system']);
-      $option = $PHPShopOrm->select(array('outlet'));
-
-      if (!empty($option['outlet'])) {
-      if (strstr($option['outlet'], ','))
-      $outlet = explode(",", $option['outlet']);
-      else
-      $outlet[] = $option['outlet'];
-
-      if (is_array($outlet)) {
-      foreach ($outlet as $val) {
-      $outlets.='<outlet id="' . $val . '"/>';
-      $_SESSION['module']['yandexcart']['outlet'] = $outlet;
-      }
-
-      $_SESSION['module']['yandexcart']['outlet'] = '<outlets>' . $outlets . '</outlets>';
-      }
-      else
-      $_SESSION['module']['yandexcart']['outlet'] = false;
-      }
-      else
-      $_SESSION['module']['yandexcart']['outlet'] = false;
-      } */
-
     // Характеристики
     if (!empty($obj->vendor) or !empty($obj->param)) {
 
@@ -61,11 +32,6 @@ function setProducts_yandexcart_hook($obj, $data) {
     if (!empty($data['val']['oldprice']))
         $data['xml'] = str_replace('<price>' . $data['val']['price'] . '</price>', '<price>' . $data['val']['price'] . '</price><oldprice>' . $data['val']['oldprice'] . '</oldprice>', $data['xml']);
 
-    /*
-      // outlet
-      if (!empty($_SESSION['module']['yandexcart']['outlet']))
-      $data['xml'] = str_replace('</offer>', $_SESSION['module']['yandexcart']['outlet'] . '</offer>', $data['xml']);
-     * */
 
     // Доставка
     if ($data['val']['delivery'] == 1)
@@ -73,16 +39,12 @@ function setProducts_yandexcart_hook($obj, $data) {
     else
         $add.='<delivery>false</delivery>';
 
-    /*
-      $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['delivery']);
-      $delivery = $PHPShopOrm->select(array('price', 'yandex_day'), array('enabled' => "='1'", 'is_folder' => "='0'", 'yandex_enabled' => "='2'", 'yandex_check' => "='2'"), false, array('limit' => 300));
-     */
     $i = 0;
     $delivery = $GLOBALS['delivery'];
     if (is_array($delivery)) {
         foreach ($delivery as $row) {
             if ($i < 5)
-                $list.='<option cost="' . $row['price'] . '" days="' . $row['yandex_day'] . '"/>';
+                $list.='<option cost="' . $row['price'] . '" days="' . $row['yandex_day_min'] . '-' . $row['yandex_day'] . '" order-before="' . $row['yandex_order_before'] . '"/>';
             else
                 continue;
             $i++;
@@ -145,7 +107,7 @@ function setDelivery_yandexcart_hook($obj, $data) {
 
     // Доставка
     $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['delivery']);
-    $delivery = $PHPShopOrm->select(array('price', 'yandex_day'), array('enabled' => "='1'", 'is_folder' => "!='1'", 'yandex_enabled' => "='2'", 'yandex_check' => "='2'"), false, array('limit' => 300));
+    $delivery = $PHPShopOrm->select(array('price', 'yandex_day', 'yandex_day_min', 'yandex_order_before'), array('enabled' => "='1'", 'is_folder' => "!='1'", 'yandex_enabled' => "='2'", 'yandex_check' => "='2'",'yandex_type'=>"='1'"), false, array('limit' => 300));
     $GLOBALS['delivery'] = $delivery;
 
     if (!empty($delivery))

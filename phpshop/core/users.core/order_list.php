@@ -62,7 +62,7 @@ function order_list($obj, $tip, $uid = null) {
 
 //    $table=$title.PHPShopText::p(PHPShopText::table($caption.$tr,3,1,'center','99%',false,0,'allspecwhite'));
     if (!empty($tr))
-        $table = PHPShopText::p(PHPShopText::table($caption . $tr, 3, 1, 'center', '99%', false, 0, 'allspecwhite', 'list table table-striped'));
+        $table = PHPShopText::p(PHPShopText::table($caption . $tr, 3, 1, 'center', '99%', false, 0, 'allspecwhite', 'list table table-striped table-bordered table-hover'));
     else
         $table = __("У Вас еще нет ни одного заказа.");
 

@@ -44,7 +44,7 @@ function create_theme_menu($file) {
         else
             $check = null;
 
-        return '<div class="bootstrap-theme text-center" style="background:' . $icon . '" title="' . $match[1] . '" data-skin="bootstrap-theme-' . $match[1] . '">' . $check . '</div>';
+        return '<div class="bootstrap-theme text-center" style="background:' . $icon . '" title="' . $match[1] . '" data-random="?rand='.time().'" data-skin="bootstrap-theme-' . $match[1] . '">' . $check . '</div>';
     }
 }
 

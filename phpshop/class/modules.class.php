@@ -349,13 +349,13 @@ class PHPShopModules {
      * @return string
      */
     function Parser($preg, $TemplateName) {
-        $file = newGetFile($GLOBALS['SysValue']['dir']['templates'] . chr(47) . $_SESSION['skin'] . chr(47) . $TemplateName);
+        $file = tmpGetFile($GLOBALS['SysValue']['dir']['templates'] . chr(47) . $_SESSION['skin'] . chr(47) . $TemplateName);
 
         // Замена
         foreach ($preg as $k => $v)
             $file = str_replace($k, $v, $file);
 
-        $dis = newParser($file);
+        $dis = Parser($file);
         return @$dis;
     }
 

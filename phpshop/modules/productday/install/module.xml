@@ -3,9 +3,8 @@
     <version>1.1</version>
     <name>Товар дня</name>
     <description>Модуль вывода товара дня с обратным отсчетом.</description>
-    <category>form,develop</category>
+    <category>form,sale</category>
     <faqlink>http://faq.phpshop.ru/page/product-day.html</faqlink>
-    <status>update</status>
     <adminmenu>
         <title>Товар дня</title>
         <capability>true</capability>

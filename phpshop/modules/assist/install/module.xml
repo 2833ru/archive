@@ -5,7 +5,6 @@
     <faqlink>http://assist.ru</faqlink>
     <description>Прием оплат через Assist.</description>
     <category>assist,sale</category>
-    <status>update</status>
     <adminmenu>
         <title>Прием оплат через Assist</title>
         <capability>true</capability>

@@ -1,0 +1,1 @@
+ALTER TABLE `phpshop_delivery` ADD `yandex_order_before` int(11) DEFAULT '16';

@@ -156,11 +156,11 @@ class PHPShopSeoPro {
     function AjaxCompile($result) {
 
         // Товары
-        $array_str_prod = array_values($this->memory_prod);
-        $array_id_prod = array_keys($this->memory_prod);
-
-        if (is_array($this->memory_prod))
+        if (is_array($this->memory_prod)) {
+            $array_str_prod = array_values($this->memory_prod);
+            $array_id_prod = array_keys($this->memory_prod);
             $result = $this->stro_replace($array_id_prod, $array_str_prod, $result);
+        }
 
         return $result;
     }

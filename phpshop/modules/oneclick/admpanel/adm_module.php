@@ -60,7 +60,7 @@ function actionStart() {
     $Tab3 = $PHPShopGUI->setPay(false, false, $data['version'], true);
 
     // Вывод формы закладки
-    $PHPShopGUI->setTab(array("Основное", $Tab1), array("Инструкция", $Tab2), array("О Модуле", $Tab3),array("Обзор заявок", 0,'?path=modules.dir.oneclick'));
+    $PHPShopGUI->setTab(array("Основное", $Tab1,true), array("Инструкция", $Tab2), array("О Модуле", $Tab3),array("Обзор заявок", 0,'?path=modules.dir.oneclick'));
 
     // Вывод кнопок сохранить и выход в футер
     $ContentFooter =

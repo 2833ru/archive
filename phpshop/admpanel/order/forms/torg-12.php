@@ -45,6 +45,7 @@ $order = unserialize($row['orders']);
 $status = unserialize($row['status']);
 $nds = $LoadItems['System']['nds'];
 $dis = null;
+if(is_array($order['Cart']['cart']))
 foreach ($order['Cart']['cart'] as $val) {
     $this_price = ($PHPShopOrder->returnSumma(number_format($val['price'], "2", ".", ""), $order['Person']['discount']));
     $this_nds = number_format($this_price * $nds / (100 + $nds), "2", ".", "");
@@ -100,6 +101,7 @@ $total_summa_nds=number_format($row['sum'], "2", ".", "");
 $total_summa=$total_summa_nds;
 
 $PHPShopDelivery = new PHPShopDelivery($order['Person']['dostavka_metod']);
+$PHPShopDelivery->checkMod($order['Cart']['dostavka']);
 $deliveryPrice = $PHPShopDelivery->getPrice($sum, $weight);
 
 $summa_nds_dos = number_format($deliveryPrice * $nds / (100 + $nds), "2", ".", "");
@@ -154,10 +156,11 @@ $adr_info = substr($adr_info, 2);
 
 <!DOCTYPE html
   PUBLIC "-//W3C//DTD XHTML 1.1 plus MathML 2.0//EN" "http://www.w3.org/Math/DTD/mathml2/xhtml-math11-f.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"><!--This file was converted to xhtml by OpenOffice.org - see http://xml.openoffice.org/odf2xhtml for more info.--><head profile="http://dublincore.org/documents/dcmi-terms/">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head profile="http://dublincore.org/documents/dcmi-terms/">
     <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=windows-1251">
     <META HTTP-EQUIV="PRAGMA" CONTENT="NO-CACHE">
-    <title>Унифицированная форма № ТОРГ-12 №<?= @$ouid ?></title>
+    <title>Унифицированная форма № ТОРГ-12 №<?php echo @$ouid ?></title>
     <meta name="DCTERMS.title" content="" xml:lang="en-US"/>
     <meta name="DCTERMS.language" content="en-US" scheme="DCTERMS.RFC4646"/>
     <meta name="DCTERMS.source" content="http://xml.openoffice.org/odf2xhtml"/>
@@ -373,7 +376,7 @@ $adr_info = substr($adr_info, 2);
         <td style="text-align:left;width:2.124cm; " class="Таблица1_e7"><p class="P31"> </p></td>
       </tr>
       <tr class="Таблица113">   <td colspan="3" style="text-align:left;width:0.924cm; " class="Таблица1_A1"><p class="P29">Грузополучатель</p></td>
-        <td colspan="22" style="text-align:left;width:4.884cm; " class="Таблица1_A5"><p class="P29"><?=$blank_person_user?> <?=$blank_person_org?></p></td>
+        <td colspan="22" style="text-align:left;width:4.884cm; " class="Таблица1_A5"><p class="P29"><?php echo $blank_person_user?> <?php echo $blank_person_org?></p></td>
         <td style="text-align:left;width:0.319cm; " class="Таблица1_A1"><p class="P24"></p></td>
         <td colspan="4" style="text-align:left;width:1.326cm; " class="Таблица1_Y4"><p class="P28">по ОКПО </p></td>
         <td style="text-align:left;width:2.124cm; " class="Таблица1_e4"><p class="P31"> </p></td>
@@ -389,7 +392,7 @@ $adr_info = substr($adr_info, 2);
 
       <tr class="Таблица110">   <td colspan="2" style="text-align:left;width:0.924cm; " class="Таблица1_A1" valign="top"><p class="P29">Поставщик</p></td>
         <td style="text-align:left;width:0.212cm; " class="Таблица1_A1"><p class="P24"> </p></td>
-        <td colspan="22" style="text-align:left;width:4.884cm; " class="Таблица1_A1"><p class="P29"><?=$blank_org_name?>, &nbsp;ИНН&nbsp;<?=$blank_org_inn?>, КПП&nbsp;<?=$blank_org_kpp?>, Юр. адрес:&nbsp;<?=$blank_org_ur_adres?>, Почтовый адрес:&nbsp;<?=$blank_org_adres?></p></td>
+        <td colspan="22" style="text-align:left;width:4.884cm; " class="Таблица1_A1"><p class="P29"><?php echo $blank_org_name?>, &nbsp;ИНН&nbsp;<?php echo$blank_org_inn?>, КПП&nbsp;<?php echo $blank_org_kpp?>, Юр. адрес:&nbsp;<?php echo $blank_org_ur_adres?>, Почтовый адрес:&nbsp;<?php echo $blank_org_adres?></p></td>
         <td style="text-align:left;width:0.319cm; " class="Таблица1_A1"><p class="P12"> </p></td>
         <td colspan="4" style="text-align:left;width:1.326cm; " class="Таблица1_Y4"><p class="P28"></p></td>
         <td style="text-align:left;width:2.124cm; " class="Таблица1_e4"><p class="P31"> </p></td>
@@ -405,7 +408,7 @@ $adr_info = substr($adr_info, 2);
 
       <tr class="Таблица110">   <td colspan="2" style="text-align:left;width:0.924cm; " class="Таблица1_A1"><p class="P29">Плательщик</p></td>
         <td style="text-align:left;width:0.212cm; " class="Таблица1_A1"><p class="P13"> </p></td>
-        <td colspan="22" style="text-align:left;width:4.884cm; " class="Таблица1_A1"><p class="P29"><?=$blank_person_user?> <?=$blank_person_org?></p></td>
+        <td colspan="22" style="text-align:left;width:4.884cm; " class="Таблица1_A1"><p class="P29"><?php echo $blank_person_user?> <?php echo $blank_person_org?></p></td>
         <td style="text-align:left;width:0.319cm; " class="Таблица1_A1"><p class="P12"> </p></td>
         <td colspan="4" style="text-align:left;width:1.326cm; " class="Таблица1_Y4"><p class="P28"></p></td>
         <td style="text-align:left;width:2.124cm; " class="Таблица1_e4"><p class="P31"> </p></td>
@@ -512,26 +515,26 @@ $adr_info = substr($adr_info, 2);
         <td colspan="4" style="text-align:left;width:0.459cm; " class="Таблица1_B33"><p class="P46">14</p></td>
         <td colspan="2" style="text-align:left;width:0.132cm; " class="Таблица1_B33"><p class="P46">15</p></td>
       </tr>
-      <?=$dis?>
+      <?php echo $dis?>
       <tr class="Таблица131">   <td colspan="12" style="text-align:left;width:0.924cm; " class="Таблица1_A43"><p class="P28">Итого </p></td>
         <td style="text-align:left;width:0.903cm; " class="Таблица1_M43"><p class="P31"> </p></td>
         <td style="text-align:left;width:0.903cm; " class="Таблица1_M43"><p class="P31"> </p></td>
         <td colspan="2" style="text-align:left;width:0.24cm; " class="Таблица1_M43"><p class="P28"> </p></td>
         <td colspan="3" style="text-align:left;width:1.619cm; " class="Таблица1_M43"><p class="P27">X</p></td>
-        <td colspan="4" style="text-align:left;width:0.22cm; " class="Таблица1_M43"><p class="P28"><?=$total_summa_nds?></p></td>
+        <td colspan="4" style="text-align:left;width:0.22cm; " class="Таблица1_M43"><p class="P28"><?php echo $total_summa_nds?></p></td>
         <td colspan="2" style="text-align:left;width:1.171cm; " class="Таблица1_M43"><p class="P27">X</p></td>
-        <td colspan="4" style="text-align:left;width:0.459cm; " class="Таблица1_M43"><p class="P28"><?=$total_summa_nds_taxe?></p></td>
-        <td colspan="2" style="text-align:left;width:0.132cm; " class="Таблица1_M43"><p class="P28"><?=$total_summa?></p></td>
+        <td colspan="4" style="text-align:left;width:0.459cm; " class="Таблица1_M43"><p class="P28"><?php echo $total_summa_nds_taxe?></p></td>
+        <td colspan="2" style="text-align:left;width:0.132cm; " class="Таблица1_M43"><p class="P28"><?php echo $total_summa?></p></td>
       </tr>
       <tr class="Таблица131">   <td colspan="12" style="text-align:left;width:0.924cm; "><p class="P28">Всего по накладной </p></td>
         <td style="text-align:left;width:0.903cm; " class="Таблица1_M43"><p class="P31"> </p></td>
         <td style="text-align:left;width:0.903cm; " class="Таблица1_M43"><p class="P31"> </p></td>
         <td colspan="2" style="text-align:left;width:0.24cm; " class="Таблица1_M43"><p class="P28"> </p></td>
         <td colspan="3" style="text-align:left;width:1.619cm; " class="Таблица1_M43"><p class="P27">X</p></td>
-        <td colspan="4" style="text-align:left;width:0.22cm; " class="Таблица1_M43"><p class="P28"><?=$total_summa_nds?></p></td>
+        <td colspan="4" style="text-align:left;width:0.22cm; " class="Таблица1_M43"><p class="P28"><?php echo $total_summa_nds?></p></td>
         <td colspan="2" style="text-align:left;width:1.171cm; " class="Таблица1_M43"><p class="P27">X</p></td>
-        <td colspan="4" style="text-align:left;width:0.459cm; " class="Таблица1_M43"><p class="P28"><?=$total_summa_nds_taxe?></p></td>
-        <td colspan="2" style="text-align:left;width:0.132cm; " class="Таблица1_M43"><p class="P28"><?=$total_summa?></p></td>
+        <td colspan="4" style="text-align:left;width:0.459cm; " class="Таблица1_M43"><p class="P28"><?php echo $total_summa_nds_taxe?></p></td>
+        <td colspan="2" style="text-align:left;width:0.132cm; " class="Таблица1_M43"><p class="P28"><?php echo $total_summa?></p></td>
       </tr>
       </table>
       <table border="0" cellspacing="0" cellpadding="0" class="Таблица2">

@@ -26,22 +26,24 @@ function modulesSubMenu() {
         }
 
         // Инструкция
-        if (!empty($db['faqlink']))
+        if (!empty($db['faqlink'])) {
+
             $wikiPath = $db['faqlink'];
-        else
-            $wikiPath = 'http://wiki.phpshop.ru/index.php/Modules#' . str_replace(' ', '_', $db[0]['name']);
+
+            $action_select['Инструкция'] = array(
+                'name' => 'Инструкция',
+                'url' => $wikiPath,
+                'target' => '_blank'
+            );
+
+            $action_select['|'] = array(
+                'name' => '|',
+                'action' => 'divider',
+            );
+        }
     }
+    else return false;
 
-    $action_select['Инструкция'] = array(
-        'name' => 'Инструкция',
-        'url' => $wikiPath,
-        'target' => '_blank'
-    );
-
-    $action_select['|'] = array(
-        'name' => '|',
-        'action' => 'divider',
-    );
 
     $action_select['Выключить'] = array(
         'name' => 'Выключить',
@@ -61,12 +63,15 @@ foreach ($mod_podmenu as $title) {
 }
 
 
-
 $PHPShopGUI->field_col = 2;
 $PHPShopGUI->addJSFiles('./modules/gui/modules.gui.js');
-$PHPShopGUI->setActionPanel(__("Настройка модуля") . ' <span id="module-name">' . ucfirst($_GET['id']).'</span>', $select_name, array('Сохранить и закрыть'));
-$path = '../modules/' . substr($_GET['id'],0,20) . '/admpanel/adm_module.php';
-if(file_exists($path))
-include_once($path);
-else header('Location: ?path=modules&install=check')
+$PHPShopGUI->setActionPanel(__("Настройка модуля") . ' <span id="module-name">' . ucfirst($_GET['id']) . '</span>', $select_name, array('Сохранить и закрыть'));
+$path = '../modules/' . substr($_GET['id'], 0, 20) . '/admpanel/adm_module.php';
+if (file_exists($path) and !empty($mod_podmenu))
+    include_once($path);
+else
+    header('Location: ?path=modules&install=check')
+
+
+    
 ?>

@@ -27,6 +27,9 @@ class PHPShopPrice extends PHPShopShopCore {
         parent::__construct();
 
         $this->title = $this->lang('price_title') . ' - ' . $this->PHPShopSystem->getValue("title");
+
+        // Навигация хлебные крошки
+        $this->navigation(false, __('Прайс-лист'));
     }
 
     /**

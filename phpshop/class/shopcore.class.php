@@ -94,6 +94,7 @@ class PHPShopShopCore extends PHPShopCore {
         $this->user_price_activate = $this->PHPShopSystem->getSerilizeParam('admoption.user_price_activate');
         $this->sklad_enabled = $this->PHPShopSystem->getSerilizeParam('admoption.sklad_enabled');
         $this->sklad_status = $this->PHPShopSystem->getSerilizeParam('admoption.sklad_status');
+        $this->format = intval($this->PHPShopSystem->getSerilizeParam("admoption.price_znak"));
 
         // HTML опции верстки
         $this->setHtmlOption(__CLASS__);
@@ -765,6 +766,7 @@ class PHPShopShopCore extends PHPShopCore {
      * @param Int $num_row  кол-во колонок в категории по умолчанию
      */
     function calculateCell($category, $num_row) {
+        
         if (!empty($_REQUEST['gridChange'])) {
             if ($_REQUEST['gridChange'] == 2 AND $num_row > 1) {
                 $_SESSION['gridChange'][$category] = $num_row;

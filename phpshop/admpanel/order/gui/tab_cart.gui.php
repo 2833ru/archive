@@ -6,7 +6,7 @@
  * @return string 
  */
 function tab_cart($data, $option = false) {
-    global$PHPShopInterface;
+    global $PHPShopInterface;
 
 
     $PHPShopInterface->action_title['cart-value-edit'] = 'Редактировать';

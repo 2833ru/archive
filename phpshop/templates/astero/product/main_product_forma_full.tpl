@@ -28,6 +28,7 @@
                 </div>
             </li>
             <li> @promotionInfo@ </li>
+            <li>@oneclick@</li>
         </ul>
         <!-- Manufacturer Ends -->
         <hr>

@@ -4,8 +4,14 @@
 function commentList(xid, comand, page, cid) {
     var message = "";
     var rateVal = 0;
-    var cid = 0;
-    var page = 0;
+
+    if (page === undefined)
+        page = 0;
+
+    if (cid === undefined)
+        cid = 0;
+
+
     if (comand == "add") {
         message = $('#message').val();
         if (message == "")
@@ -617,48 +623,6 @@ $(document).ready(function() {
         commentList($(this).attr('data-uid'), 'list');
     });
 
-    // смена оформления
-    $(".bootstrap-theme, .non-responsive-switch").on('click', function() {
-        skin = $(this).attr('data-skin');
-        var cookie = $.cookie('bootstrap_theme');
-
-        $(".bootstrap-theme, .non-responsive-switch").each(function() {
-            $(this).html('');
-        });
-
-        $(this).html('<span class="glyphicon glyphicon-ok"></span>');
-
-        // переход на responsive
-        if (skin == 'non-responsive' && cookie == 'non-responsive')
-            skin = 'bootstrap';
-
-        $('#body').fadeOut('slow', function() {
-            $('#bootstrap_theme').attr('href', ROOT_PATH + '/phpshop/templates/bootstrap/css/' + skin + '.css');
-        });
-
-        setTimeout(function() {
-            $('#body').fadeIn();
-        }, 1000);
-
-        $.cookie('bootstrap_theme', skin, {
-            path: '/'
-        });
-    });
-
-    // сохранение оформления
-    $(".saveTheme").on('click', function() {
-        $.ajax({
-            url: ROOT_PATH + '/phpshop/ajax/skin.php',
-            type: 'post',
-            data: 'template=bootstrap&type=json',
-            dataType: 'json',
-            success: function(json) {
-                if (json['success']) {
-                    showAlertMessage(json['status']);
-                }
-            }
-        });
-    });
 
     // Validator Fix brands url
     $('#brand-menu .mega-menu a').on('click', function(event) {
@@ -763,7 +727,7 @@ $(document).ready(function() {
 
     // Стилизация select
     $('.selectpicker').selectpicker({
-        width: "auto"
+        width: "100%"
     });
 
     // Переход из прайса на форму с описанием
@@ -791,7 +755,7 @@ $(document).ready(function() {
                     // Результат поиска
                     if (data != 'false') {
 
-                        if (data != $("#search").attr('data-content')) {
+                      if (data != $("#search").attr('data-content')) {
                             $("#search").attr('data-content', data);
 
                             $("#search").popover('show');
@@ -802,7 +766,9 @@ $(document).ready(function() {
             });
         }
         else {
+            $("#search").attr('data-content', '');
             $("#search").popover('hide');
+            
         }
     });
 
@@ -874,7 +840,6 @@ $(document).ready(function() {
     }
 
 
-
     // Фотогалерея в по карточке товара с большими изображениями
     $(document).on('click', '.bxslider a', function(event) {
         event.preventDefault();
@@ -908,18 +873,6 @@ $(document).ready(function() {
         slider.goToSlide(sliderbig.getCurrentSlide());
         sliderbig.destroySlider();
         delete sliderbig;
-    });
-
-
-    // Скрыть панель bar при скроле
-    $(window).on('mousewheel DOMMouseScroll', function(e) {
-        var delta = e.originalEvent.wheelDelta ? e.originalEvent.wheelDelta : -e.originalEvent.detail;
-
-        if (delta >= 0) {
-            $('.navbar-fixed-bottom').fadeIn('slow').removeClass('hidden-xs').removeClass('hidden-sm');
-        } else {
-            $('.navbar-fixed-bottom').addClass('hidden-xs').addClass('hidden-sm').fadeOut('slow');
-        }
     });
 
 });

@@ -37,8 +37,18 @@ var DDeliveryIframe = (function () {
 
             $.post(componentUrl, data, function (dataHtml) {
                 $('#ddelivery_loader').hide();
+	
+                /*
+                for (key in data) {
+                alert( key + " : " + data[key] );
+                }
+				*/
+
+			    try{
                 $('#ddelivery').html(dataHtml.html.replace(/!KasperskyHack!/g, '')).show();
 				//$('#ddelivery').html(dataHtml.html()).show();
+			    }catch(e){}
+				
 
 
                 if (typeof(dataHtml.orderId) != 'undefined' && dataHtml.orderId) {
@@ -74,6 +84,7 @@ var DDeliveryIframe = (function () {
                 for (var k = 0; k < js.length; k++) {
                     switch (js[k]) {
                         case 'courier':
+							
                             Courier.init();
                             break;
                         case 'map':

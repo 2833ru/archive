@@ -114,7 +114,7 @@ $chek_num = substr(abs(crc32(uniqid(rand(), true))), 0, 5);
 $LoadBanc = unserialize($LoadItems['System']['bank']);
 ?>
 <head>
-    <title>Товарный чек № <?= @$chek_num ?></title>
+    <title>Товарный чек № <?php echo @$chek_num ?></title>
     <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=windows-1251">
     <META HTTP-EQUIV="PRAGMA" CONTENT="NO-CACHE">
     <meta http-equiv="Content-Type" content="text/html; charset=windows-1251">
@@ -138,31 +138,31 @@ $LoadBanc = unserialize($LoadItems['System']['bank']);
 </head>
 <body onload="window.focus()" bgcolor="#FFFFFF" text="#000000" marginwidth=5 leftmargin=5 style="padding: 2px;">
     <div align="right" class="nonprint"><a href="#" onclick="window.print();
-        return false;" ><img border=0 align=absmiddle hspace=3 vspace=3 src="http://<?= $_SERVER['SERVER_NAME'] . $SysValue['dir']['dir'] ?>/phpshop/admpanel/img/action_print.gif">Распечатать</a> | <a href="#" class="save" onclick="document.execCommand('SaveAs');
-        return false;">Сохранить на диск<img border=0 align=absmiddle hspace=3 vspace=3 src="http://<?= $_SERVER['SERVER_NAME'] . $SysValue['dir']['dir'] ?>/phpshop/admpanel/img/action_save.gif"></a><br><br></div>
+        return false;" ><img border=0 align=absmiddle hspace=3 vspace=3 src="http://<?php echo $_SERVER['SERVER_NAME'] . $SysValue['dir']['dir'] ?>/phpshop/admpanel/img/action_print.gif">Распечатать</a> | <a href="#" class="save" onclick="document.execCommand('SaveAs');
+        return false;">Сохранить на диск<img border=0 align=absmiddle hspace=3 vspace=3 src="http://<?php echo $_SERVER['SERVER_NAME'] . $SysValue['dir']['dir'] ?>/phpshop/admpanel/img/action_save.gif"></a><br><br></div>
 
     <TABLE cellSpacing=0 cellPadding=0 width="100%" border=0><TBODY>
             <TR>
-                <TH scope=row align=middle width="50%" rowSpan=3><img src="<?= $PHPShopSystem->getLogo(); ?>" alt="" border="0"></TH>
+                <TH scope=row align=middle width="50%" rowSpan=3><img src="<?php echo $PHPShopSystem->getLogo(); ?>" alt="" border="0"></TH>
                 <TD align=right>
                     <BLOCKQUOTE>
-                        <P>Товарный чек <SPAN class=style4><?= @$chek_num ?> от <?= PHPShopDate::dataV(date("U"), "update") ?></SPAN> </P></BLOCKQUOTE></TD></TR>
+                        <P>Товарный чек <SPAN class=style4><?php echo @$chek_num ?> от <?php echo PHPShopDate::dataV(date("U"), "update") ?></SPAN> </P></BLOCKQUOTE></TD></TR>
             <TR>
                 <TD align=right>
                     <BLOCKQUOTE>
-                        <P><SPAN class=style4><?= $LoadBanc['org_adres'] ?>, телефон <?= $LoadItems['System']['tel'] ?> </SPAN></P></BLOCKQUOTE></TD></TR>
+                        <P><SPAN class=style4><?php echo $LoadBanc['org_adres'] ?>, телефон <?php echo $LoadItems['System']['tel'] ?> </SPAN></P></BLOCKQUOTE></TD></TR>
             <TR>
                 <TD align=right>
                     <BLOCKQUOTE>
-                        <P class=style4>Поставщик: <?= $LoadItems['System']['company'] ?></P></BLOCKQUOTE></TD></TR></TBODY></TABLE>
+                        <P class=style4>Поставщик: <?php echo $LoadItems['System']['company'] ?></P></BLOCKQUOTE></TD></TR></TBODY></TABLE>
 
 
 
     <TABLE cellSpacing=0 cellPadding=0 width="100%" border=0><TBODY>
             <TR>
                 <TH scope=row align=middle width="50%">
-        <P class=style4>Покупатель: <?= @$order['Person']['name_person'] . $row['fio'] ?></P></TH>
-    <TH scope=row align=middle><b>Заказ №<?= $ouid ?> </b></TH></TR></TBODY></TABLE>
+        <P class=style4>Покупатель: <?php echo @$order['Person']['name_person'] . $row['fio'] ?></P></TH>
+    <TH scope=row align=middle><b>Заказ №<?php echo $ouid ?> </b></TH></TR></TBODY></TABLE>
 
 
 
@@ -183,31 +183,31 @@ $LoadBanc = unserialize($LoadItems['System']['bank']);
         <td width=50% class=tablerow>Наименование</td>
         <td class=tablerow>Цена</td>
         <td class=tablerow>Количество</td>
-        <td class=tableright>Стоимость (<?= $PHPShopOrder->default_valuta_code; ?>)</td>
+        <td class=tableright>Стоимость (<?php echo $PHPShopOrder->default_valuta_code; ?>)</td>
     </tr>
-    <?
+    <?php
     echo @$dis;
     $my_total = $PHPShopOrder->returnSumma($sum, $order['Person']['discount']) + $deliveryPrice;
     $my_nds = number_format($my_total * $LoadItems['System']['nds'] / (100 + $LoadItems['System']['nds']), "2", ".", "");
     ?>
     <tr>
-        <td colspan=5 align=right style="border-top: 1px solid #000000;border-left: 1px solid #000000;border-right: 1px solid #000000;">Скидка: <?= @$order['Person']['discount'] ?>%</td>
+        <td colspan=5 align=right style="border-top: 1px solid #000000;border-left: 1px solid #000000;border-right: 1px solid #000000;">Скидка: <?php echo @$order['Person']['discount'] ?>%</td>
     </tr>
     <tr>
         <td colspan=5 align=right style="border-top: 1px solid #000000;border-left: 1px solid #000000;border-right: 1px solid #000000;">Итого:
-            <?= $my_total ?>
-            <? if ($LoadItems['System']['nds_enabled']) { ?> 
-                в т.ч. НДС:  <?= $my_nds ?>
-            <? } ?>
-
+            <?php echo $my_total;
+            if ($LoadItems['System']['nds_enabled']) { 
+                echo "в т.ч. НДС:  ".$my_nds; 
+             } 
+             ?>
         </td>
     </tr>
 
     <tr><td colspan=6 style="border: 0px; border-top: 1px solid #000000;">&nbsp;</td></tr>
 </table>
-<p><b>Всего наименований <?= ($num + 1) ?>, на сумму <?= ($PHPShopOrder->returnSumma($sum, $order['Person']['discount']) + $deliveryPrice) . " " . $PHPShopOrder->default_valuta_code; ?>
+<p><b>Всего наименований <?php echo ($num + 1) ?>, на сумму <?php echo ($PHPShopOrder->returnSumma($sum, $order['Person']['discount']) + $deliveryPrice) . " " . $PHPShopOrder->default_valuta_code; ?>
         <br />
-        <?
+        <?php
         $iw = new inwords;
         $s = $iw->get($PHPShopOrder->returnSumma($sum, $order['Person']['discount']) + $deliveryPrice);
         $v = $PHPShopOrder->default_valuta_code;
@@ -224,6 +224,6 @@ $LoadBanc = unserialize($LoadItems['System']['bank']);
     <P class=style4>Продавец: ________________ М.П. </P>
     <P>&nbsp;</P></TH>
 <TD vAlign=center align=left><SPAN class=style5>Гарантийное обслуживание товаров осуществляется в авторизованном сервисном центре изготовителя. При отсутствии соответствующего сервисного центра гарантийное обслуживание осуществляется у продавца. </SPAN></TD></TR></TBODY></TABLE>
-        <?= $LoadItems['System']['promotext'] ?>
+        <?php echo $LoadItems['System']['promotext'] ?>
 </body>
 </html>

@@ -6,7 +6,7 @@ function addCartPromotions($data) {
     //узнаем, применен ли промокод
     $orders = unserialize($data['orders']);
     $promocode = $orders['Person']['promocode'];
-
+    
     if($promocode=='*'):
         // Корзина
         $Tab5 = $PHPShopGUI->loadLib('tab_cart_newo', $data, '../../phpshop/modules/promotions/admpanel/');

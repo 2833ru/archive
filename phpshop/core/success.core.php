@@ -4,7 +4,7 @@
  * Обработчик успешной оплаты
  * @author PHPShop Software
  * @tutorial http://wiki.phpshop.ru/index.php/PHPShopSuccess
- * @version 1.1
+ * @version 1.2
  * @package PHPShopCore
  */
 class PHPShopSuccess extends PHPShopCore {
@@ -24,6 +24,9 @@ class PHPShopSuccess extends PHPShopCore {
         $this->objBase = $GLOBALS['SysValue']['base']['orders'];
 
         parent::__construct();
+        
+        // Мета
+        $this->title = "Оплата - " . $this->PHPShopSystem->getValue("name");
     }
 
     /**
@@ -45,6 +48,7 @@ class PHPShopSuccess extends PHPShopCore {
      */
     function true_num($uid) {
         $order_prefix_format = $this->getValue('my.order_prefix_format');
+        if(empty($order_prefix_format)) $order_prefix_format = 2;
         $last_num = substr($uid, -$order_prefix_format);
         $total = strlen($uid);
         $ferst_num = substr($uid, 0, ($total - $order_prefix_format));
@@ -62,6 +66,7 @@ class PHPShopSuccess extends PHPShopCore {
      */
     function true_order() {
         $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['orders']);
+        $PHPShopOrm->debug = $this->debug;
         $data = $PHPShopOrm->select(array('uid'), array('uid' => '="' . $this->true_num($this->inv_id) . '"'), false, array('limit' => 1));
         if (is_array($data))
             if (!empty($data['uid']))

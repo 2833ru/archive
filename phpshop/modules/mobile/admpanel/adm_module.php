@@ -18,7 +18,7 @@ function actionStart() {
     // Выборка
     $data = $PHPShopOrm->select();
 
-    $Tab1 = $PHPShopGUI->setField(__('Сообщение'), $PHPShopGUI->setTextarea('message_new', $data['message']));
+    $Tab1 = $PHPShopGUI->setField(__('Сообщение'), $PHPShopGUI->setTextarea('message_new', $data['message']),1,'Пустое поле не показывает окно запроса на переход');
 
     // Иконка
     $Tab1.= $PHPShopGUI->setField(__('Изображение в шапке'), $PHPShopGUI->setInputText(false, "logo_new", $data['logo']));
@@ -31,7 +31,7 @@ function actionStart() {
     $Tab2 = $PHPShopGUI->setPay();
 
     // Вывод формы закладки
-    $PHPShopGUI->setTab(array("Основное", $Tab1), array("О Модуле", $Tab2));
+    $PHPShopGUI->setTab(array("Основное", $Tab1,true), array("О Модуле", $Tab2));
 
     // Вывод кнопок сохранить и выход в футер
     $ContentFooter =

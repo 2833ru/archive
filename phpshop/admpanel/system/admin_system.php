@@ -180,9 +180,9 @@ function actionStart() {
     $num_vitrina_value[] = array(3, 3, $data['num_vitrina']);
     $num_vitrina_value[] = array(4, 4, $data['num_vitrina']);
 
-    $nowbuy_enabled_value[] = array('Выключить', 0, $data['nowbuy_enabled']);
-    $nowbuy_enabled_value[] = array('Компактный список', 1, $data['nowbuy_enabled']);
-    $nowbuy_enabled_value[] = array('Сетка', 2, $data['nowbuy_enabled']);
+    $nowbuy_enabled_value[] = array('Выключить', 0, $option['nowbuy_enabled']);
+    $nowbuy_enabled_value[] = array('Компактный список', 1, $option['nowbuy_enabled']);
+    $nowbuy_enabled_value[] = array('Сетка', 2, $option['nowbuy_enabled']);
 
     $sklad_status_value[] = array('Не используется', 1, $option['sklad_status']);
     $sklad_status_value[] = array('Товар убирается с продаж', 2, $option['sklad_status']);

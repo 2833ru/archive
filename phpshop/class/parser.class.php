@@ -4,7 +4,7 @@
  * Библиотека парсинга данных
  * @author PHPShop Software
  * @version 1.5
- * @package PHPShopClass
+ * @package PHPShopParser
  */
 class PHPShopParser {
 
@@ -131,11 +131,11 @@ class PHPShopParser {
 function phpshopparserevalstr($str) {
     ob_start();
     if (eval(stripslashes($str[2])) !== NULL) {
-        echo ('<center style="color:red"><br><br><b>PHPShop Template Code: В шаблоне обнаружена ошибка выполнения php</b><br>');
+        echo ('<div class="alert alert-danger"><h4>В шаблоне обнаружена ошибка выполнения PHP</h4>');
         echo ('Код содержащий ошибки:');
         echo ('<pre>');
         echo ($str[2]);
-        echo ('</pre></center>');
+        echo ('</pre></div>');
         return ob_get_clean();
     }
     return ob_get_clean();
@@ -145,7 +145,7 @@ function phpshopparserevalstr($str) {
  * Библиотека парсинга CSS
  * @author PHPShop Software
  * @version 1.0
- * @package PHPShopClass
+ * @package PHPShopParser
  */
 class PHPShopCssParser {
 
@@ -221,3 +221,189 @@ class PHPShopCssParser {
     }
 
 }
+
+/**
+ * Парсер главного шаблона и вывод результата на экран
+ * @package PHPShopParser
+ * @param string $TemplateName имя файла шаблона
+ * @return string
+ */
+function ParseTemplate($TemplateName) {
+    global $SysValue;
+
+    $file = tmpGetFile($SysValue['dir']['templates'] . chr(47) . $_SESSION['skin'] . chr(47) . $TemplateName);
+    $string = Parser($file);
+
+    // Реальный путь
+    $path_parts = pathinfo($_SERVER['PHP_SELF']);
+    if (getenv("COMSPEC"))
+        $dirSlesh = "\\";
+    else
+        $dirSlesh = "/";
+    $root = $path_parts['dirname'] . "/";
+    if ($path_parts['dirname'] != $dirSlesh) {
+        $replaces = array(
+            "/images\//i" => $SysValue['dir']['templates'] . chr(47) . $_SESSION['skin'] . "/images/",
+            "/!images!\//i" => "images/",
+            "/\/favicon.ico/i" => $root . "favicon.ico",
+            "/java\//i" => $root . "java/",
+            "/css\//i" => "/css/",
+            "/phpshop\//i" => $root . "phpshop/",
+            "/\/order\//i" => $root . "order/",
+            "/\/done\//i" => $root . "done/",
+            "/\/print\//i" => $root . "print/",
+            "/\/links\//i" => $root . "links/",
+            "/\/files\//i" => $root . "files/",
+            "/\/opros\//i" => $root . "opros/",
+            "/\/page\//i" => $root . "page/",
+            "/\/news\//i" => $root . "news/",
+            "/\/gbook\//i" => $root . "gbook/",
+            "/\/users\//i" => $root . "users/",
+            "/\/clients\//i" => $root . "clients/",
+            "/\/price\//i" => $root . "price/",
+            "/\/pricemail\//i" => $root . "pricemail/",
+            "/\/compare\//i" => $root . "compare/",
+            "/\/wishlist\//i" => $root . "wishlist/",
+            "/\/shop\/CID/i" => $root . "shop/CID",
+            "/\/shop\/UID/i" => $root . "shop/UID",
+            "/\/search\//i" => $root . "search/",
+            "/\"\/\"/i" => $root,
+            "/\/notice\//i" => $root . "notice/",
+            "/\/map\//i" => $root . "map/",
+            "/\/success\//i" => $root . "success/",
+            "/\/fail\//i" => $root . "fail/",
+            "/\/rss\//i" => $root . "rss/",
+            "/\/newtip\//i" => $root . "newtip/",
+            "/\/spec\//i" => $root . "spec/",
+            "/\/forma\//i" => $root . "forma/",
+            "/\/newprice\//i" => $root . "newprice/",
+        );
+    } else {
+        $replaces = array(
+            "/images\//i" => $SysValue['dir']['templates'] . chr(47) . $_SESSION['skin'] . "/images/",
+            "/!images!\//i" => "images/",
+            "/java\//i" => "/java/",
+            "/css\//i" => "/css/",
+            "/phpshop\//i" => "/phpshop/",
+        );
+    }
+    echo preg_replace(array_keys($replaces), array_values($replaces), $string);
+}
+
+/**
+ * Парсер дополнительного шаблона и возврат результата
+ * @package PHPShopParser
+ * @param string $TemplateName имя файла шаблона
+ * @param bool $mod шаблон для модуля
+ * @return string
+ */
+function ParseTemplateReturn($TemplateName, $mod = false) {
+    global $SysValue;
+
+    if ($mod)
+        $file = tmpGetFile($TemplateName);
+    else
+        $file = tmpGetFile($SysValue['dir']['templates'] . chr(47) . $_SESSION['skin'] . chr(47) . $TemplateName);
+    $dis = Parser($file);
+
+    return $dis;
+}
+
+// Обработка PHP тегов
+function evalstr($str) {
+    ob_start();
+    if (parser_function_guard == 'true') {
+        if (!allowedFunctions($str[2]))
+            return ob_get_clean();
+    }
+    if (eval(stripslashes($str[2])) !== NULL) {
+        echo ('<div class="alert alert-danger"><h4>В шаблоне обнаружена ошибка выполнения PHP</h4>');
+        echo ('Код содержащий ошибки:');
+        echo ('<pre>');
+        echo ($str[2]);
+        echo ('</pre></div>');
+        return ob_get_clean();
+    }
+    return ob_get_clean();
+}
+
+// Обработка PHP тегов, список разрешенных функций
+function allowedFunctions($str) {
+    $Functions = array(
+        'if',
+        'else',
+        'switch',
+        'for',
+        'foreach',
+        'echo',
+        'print',
+        'print_r',
+        'array',
+        'isset',
+        'empty',
+        'chr',
+        'str_replace',
+        'empty'
+    );
+
+    $allowFunctions = array_merge($Functions, explode(',', parser_function_allowed));
+    preg_match_all('/\s*([A-Za-z0-9_$]+)\s*\(/isU', $str, $findedFunctions);
+    $remElements = array_diff($findedFunctions[1], $allowFunctions);
+
+    $denyFunctions = explode(',', parser_function_deny);
+    foreach ($denyFunctions as $deny)
+        if (stristr($str, $deny))
+            $remElements[] = $deny;
+
+    if (count($remElements) > 0) {
+        echo ('<div class="alert alert-warning"><h4>В шаблоне обнаружена запрещенная функция</h4>');
+        echo ('Список найденных запрещенных функций:');
+        echo ('<pre>');
+        foreach ($remElements as $remElement) {
+            echo ($remElement . '()');
+        }
+        echo ('</pre>');
+        echo ('Список разрешенных функций (добавить свою функцию можно в phpshop/inc/config.ini секция [function]):');
+        echo ('<pre>');
+        foreach ($allowFunctions as $allowFunction) {
+            echo ($allowFunction . '()<br>');
+        }
+        echo ('</pre></div>');
+        return false;
+    } else {
+        return true;
+    }
+}
+
+// Обертка парсера
+function SysValueReturn($m) {
+    global $SysValue;
+    return $SysValue["other"][$m[1]];
+}
+
+/**
+ * Парсер PHP тегов в тексте
+ * @package PHPShopParser
+ * @param string $string текст
+ * @return string
+ */
+function Parser($string) {
+    return @preg_replace_callback("/@([a-zA-Z0-9_]+)@/", 'SysValueReturn', @preg_replace_callback("/(@php)(.*)(php@)/sU", "evalstr", $string));
+}
+
+/**
+ * Чтение файла шаблона
+ * @param string $path имя файла шаблона
+ * @return mixed
+ */
+function tmpGetFile($path) {
+    if (strpos($path, '.tpl')) {
+        $file = @file_get_contents($path);
+        if (!$file)
+            return false;
+        return $file;
+    }
+    else
+        return false;
+}
+?>

@@ -32,12 +32,12 @@ class PHPShopCoreElement extends PHPShopElements {
      * @return string
      */
     function checkskin() {
-        if (!file_exists("phpshop/templates/" . $_SESSION['skin'] . "/main/index.tpl")) {
+        if (!@file_exists("phpshop/templates/" . $_SESSION['skin'] . "/main/index.tpl")) {
             $dir = $this->getValue('dir.templates') . chr(47);
             if (is_dir($dir)) {
                 if (@$dh = opendir($dir)) {
                     while (($file = readdir($dh)) !== false) {
-                        if (is_file($dir . $file . chr(47) . 'main/index.tpl')) {
+                        if (@is_file($dir . $file . chr(47) . 'main/index.tpl')) {
                             $_SESSION['skin'] = $file;
                             header('Location: /?status=template_error');
                         }
@@ -61,7 +61,7 @@ class PHPShopCoreElement extends PHPShopElements {
 
         // Телефон для звонков
         if (strstr($tel, ","))
-            $tel_xs = explode(" ", $tel);
+            $tel_xs = explode(",", $tel);
         else
             $tel_xs[] = $tel;
 
@@ -134,7 +134,7 @@ class PHPShopUserElement extends PHPShopElements {
         parent::__construct();
 
         // Если есть параметр from, нужно сохранить реферальную страницу и вернуть на нее пользователя после авторизации, регистрации.
-        if ($_REQUEST['from'] AND !$_REQUEST['fromSave'])
+        if ($_REQUEST['from'] AND ! $_REQUEST['fromSave'])
             $this->set('fromSave', $_SERVER['HTTP_REFERER']);
         else
             $this->set('fromSave', $_REQUEST['fromSave']);
@@ -176,9 +176,9 @@ class PHPShopUserElement extends PHPShopElements {
             $this->set('wishlistCount', $_SESSION['wishlistCount']);
             $dis = $this->parseTemplate('users/wishlist/wishlist_top_enter.tpl');
         } else {
-            $this->set('wishlistCount', 0);
-            //$this->set('wishlistCount', count($_SESSION['wishlist']));
-            $dis = $this->parseTemplate('users/wishlist/wishlist_top.tpl');
+            //$this->set('wishlistCount', 0);
+            $this->set('wishlistCount', count($_SESSION['wishlist']));
+            $dis = $this->parseTemplate('users/wishlist/wishlist_top_enter.tpl');
         }
         return $dis;
     }
@@ -203,9 +203,13 @@ class PHPShopUserElement extends PHPShopElements {
                         $wishlist[$key] = 1;
                     }
                 $_SESSION['wishlistCount'] = count($wishlist);
+
+                // Очищаем вишлист из сессии, он сохранён в БД
+                unset($_SESSION['wishlist']);
+
                 $wishlist = serialize($wishlist);
                 $PHPShopOrm->update(array('wishlist' => $wishlist), array('id' => '=' . $data['id']), false);
-                //unset($_SESSION['wishlist']);
+
                 // ID пользователя
                 $_SESSION['UsersId'] = $data['id'];
 
@@ -232,11 +236,9 @@ class PHPShopUserElement extends PHPShopElements {
 
 
                 return true;
-            }
-            else
+            } else
                 $this->set("shortAuthError", "Неверный логин или пароль");
-        }
-        else
+        } else
             $this->set("shortAuthError", "Неверный логин или пароль");
     }
 
@@ -289,8 +291,7 @@ class PHPShopUserElement extends PHPShopElements {
 
             // header("Location: " . $url_user);
             $this->checkRedirect();
-        }
-        else
+        } else
             $this->set('usersError', $this->lang('error_login'));
     }
 
@@ -653,7 +654,7 @@ class PHPShopSkinElement extends PHPShopElements {
      */
     function skin() {
         if ($this->PHPShopSystem->getValue('num_vitrina')) {
-            if (file_exists("phpshop/templates/" . $_REQUEST['skin'] . "/main/index.tpl")) {
+            if (@file_exists("phpshop/templates/" . $_REQUEST['skin'] . "/main/index.tpl")) {
                 $skin = $_REQUEST['skin'];
                 if (PHPShopSecurity::true_skin($skin)) {
                     unset($_SESSION['Memory']);
@@ -712,8 +713,7 @@ class PHPShopNewsElement extends PHPShopElements {
                 $view = true;
             else
                 $view = false;
-        }
-        else
+        } else
             $view = true;
 
         if (!empty($view)) {
@@ -791,8 +791,7 @@ class PHPShopSliderElement extends PHPShopElements {
                 $view = true;
             else
                 $view = false;
-        }
-        else
+        } else
             $view = true;
         if (!empty($view)) {
             $result = $this->PHPShopOrm->select(array('image', 'alt', 'link'), array('enabled' => '="1"'), array('order' => 'num, id DESC'), array("limit" => $this->limit));

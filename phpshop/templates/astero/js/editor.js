@@ -128,15 +128,10 @@ $(document).ready(function() {
             path: '/'
         });
 
-        setTimeout(function() {
-
-            $('#body').fadeIn("slow", window.location.reload());
-            //$('.color').colorpicker('update');
-            //$('.color').colorpicker('reposition');
-
-        }, 1000);
-
-
+        $('.color').colorpicker('update');
+        $('.color').colorpicker('reposition');
+        
+        window.location.replace($(this).attr('data-random'));
     });
 
     $("#color-slide").slider({

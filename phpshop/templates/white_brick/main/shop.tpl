@@ -137,7 +137,7 @@
                 <div id="t-header" class="row">
                     <div id="logo"><a title="@name@" href="/"><img src="@logo@" alt="@name@"></a></div>
                     <div id="lc_dropdown">
-                        <div id="phone" class="hidden-phone">Тел: @telNum@</div>
+                        <div id="phone" class="hidden-phone">Тел: @telNumMobile@</div>
                         <div id="currency" class="dropdown_l"> @valutaDisp@</div>
                     </div>
                     <div class="links"> @usersDisp@ @wishlist@ <a href="/order/">Оформить заказ</a></div>

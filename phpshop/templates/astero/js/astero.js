@@ -144,4 +144,22 @@ $(document).ready(function() {
             $(this).parent("ul").siblings('a').addClass("active");
         }
     });
+
+    //Активация левого меню каталога на странице продукта
+        
+            $('.breadcrumb > li > a').each(function() {
+                var linkHref = $(this).attr('href');
+                $('.sidebar-nav li').each(function(){
+                    if ($(this).attr('data-cid')==linkHref) {
+                        $(this).addClass("active");
+                        $(this).parent("ul").addClass("active");
+                        $(this).parent("ul").siblings('a').addClass("active");
+                    }
+                });
+                $('.sidebar-nav ul').each(function(){
+                    if ($(this).hasClass('active')) {
+                        $(this).parent('li').removeClass('active');
+                    }
+                });
+            });
 });

@@ -9,89 +9,94 @@
 function promotions_write($obj, $data, $rout) {
     global $link_db;
 
-    
-    if ($_SESSION['totalsumma'] > 0) {
-        $sumn = $_SESSION['totalsumma'];
-    } else {
-        $sumn = $obj->sum;
+    if ($rout == 'MIDDLE') {
+
+        if ($_SESSION['totalsumma'] > 0) {
+            $sumn = $_SESSION['totalsumma'];
+        } else {
+            $sumn = $obj->sum;
+        }
+
+        //$sumn = $obj->sum;
+
+
+        if ($_SESSION['freedelivery'] == 0) {
+            $deliveryn = 0;
+        } else {
+            $deliveryn = $obj->delivery;
+        }
+
+        if ($_SESSION['discpromo'] != '') {
+            $discn = $_SESSION['discpromo'];
+            $discnreal = 0;
+            $tip_disc = $_SESSION['tip_disc'];
+        } else {
+            $discnreal = $obj->discount;
+        }
+
+        if ($_SESSION['promocode'] != '') {
+            $promocode = $_SESSION['promocode'];
+        } else {
+            $promocode = '';
+        }
+
+        //Если промокод одноразовый, то отключаем его
+        if ($_SESSION['codetip'] == 1) {
+            $sqlpro = 'UPDATE `phpshop_modules_promotions_forms` SET `enabled` = "0" WHERE `code` ="' . $_SESSION['promocode'] . '"';
+            mysqli_query($link_db, $sqlpro);
+        }
+
+        // Данные покупателя // Старая логика
+        $person = array(
+            "ouid" => $obj->ouid,
+            "data" => date("U"),
+            "time" => date("H:s a"),
+            "mail" => PHPShopSecurity::TotalClean($_POST['mail'], 3),
+            "name_person" => PHPShopSecurity::TotalClean($_POST['name_person']),
+            "org_name" => PHPShopSecurity::TotalClean($_POST['org_name']),
+            "org_inn" => PHPShopSecurity::TotalClean($_POST['org_inn']),
+            "org_kpp" => PHPShopSecurity::TotalClean($_POST['org_kpp']),
+            "tel_code" => PHPShopSecurity::TotalClean($_POST['tel_code']),
+            "tel_name" => PHPShopSecurity::TotalClean($_POST['tel_name']),
+            "adr_name" => PHPShopSecurity::TotalClean($_POST['adr_name']),
+            "dostavka_metod" => intval($_POST['dostavka_metod']),
+            "discount" => $discnreal,
+            "user_id" => $obj->userId,
+            "dos_ot" => PHPShopSecurity::TotalClean($_POST['dos_ot']),
+            "dos_do" => PHPShopSecurity::TotalClean($_POST['dos_do']),
+            "order_metod" => intval($_POST['order_metod']),
+            "promocode" => $promocode,
+            "discount_promo" => $discn,
+            "tip_disc" => $tip_disc,
+        );
+
+        //Перепишем сумму
+        $obj->sum = $sumn;
+        $obj->delivery = $deliveryn;
+        $obj->discount = $discnreal;
+
+        // Данные по корзине
+        $cart = array(
+            "cart" => $obj->PHPShopCart->getArray(),
+            "num" => $obj->num,
+            "sum" => $sumn,
+            "weight" => $obj->weight,
+            "dostavka" => $deliveryn);
+
+        // Статус заказа
+        $obj->status = array(
+            "maneger" => "",
+            "time" => "");
+
+        // Итого
+        $obj->total = $obj->PHPShopOrder->returnSumma($obj->sum, $obj->discount) + $obj->delivery;
+
+        // Серелиазованный массив заказа
+        $obj->order = serialize(array("Cart" => $cart, "Person" => $person));
+
+        //обнуляем сессию доставки
+        //$_SESSION['freedelivery'] = 1;
     }
-    
-    //$sumn = $obj->sum;
-    
-
-    if ($_SESSION['freedelivery'] == 0) {
-        $deliveryn = 0;
-    } else {
-        $deliveryn = $obj->delivery;
-    }
-
-    if ($_SESSION['discpromo'] != '') {
-        $discn = $_SESSION['discpromo'];
-        $discnreal = 0;
-        $tip_disc = $_SESSION['tip_disc'];
-    } else {
-        $discnreal = $obj->discount;
-    }
-
-    if ($_SESSION['promocode'] != '') {
-        $promocode = $_SESSION['promocode'];
-    } else {
-        $promocode = '';
-    }
-
-    //Если промокод одноразовый, то отключаем его
-    if ($_SESSION['codetip'] == 1) {
-        $sqlpro = 'UPDATE `phpshop_modules_promotions_forms` SET `enabled` = "0" WHERE `code` ="' . $_SESSION['promocode'] . '"';
-        mysqli_query($link_db, $sqlpro);
-    }
-
-    // Данные покупателя // Старая логика
-    $person = array(
-        "ouid" => $obj->ouid,
-        "data" => date("U"),
-        "time" => date("H:s a"),
-        "mail" => PHPShopSecurity::TotalClean($_POST['mail'], 3),
-        "name_person" => PHPShopSecurity::TotalClean($_POST['name_person']),
-        "org_name" => PHPShopSecurity::TotalClean($_POST['org_name']),
-        "org_inn" => PHPShopSecurity::TotalClean($_POST['org_inn']),
-        "org_kpp" => PHPShopSecurity::TotalClean($_POST['org_kpp']),
-        "tel_code" => PHPShopSecurity::TotalClean($_POST['tel_code']),
-        "tel_name" => PHPShopSecurity::TotalClean($_POST['tel_name']),
-        "adr_name" => PHPShopSecurity::TotalClean($_POST['adr_name']),
-        "dostavka_metod" => intval($_POST['dostavka_metod']),
-        "discount" => $discnreal,
-        "user_id" => $obj->userId,
-        "dos_ot" => PHPShopSecurity::TotalClean($_POST['dos_ot']),
-        "dos_do" => PHPShopSecurity::TotalClean($_POST['dos_do']),
-        "order_metod" => intval($_POST['order_metod']),
-        "promocode" => $promocode,
-        "discount_promo" => $discn,
-        "tip_disc" => $tip_disc,
-    );
-
-    //Перепишем сумму
-    $obj->sum = $sumn;
-    $obj->delivery = $deliveryn;
-    $obj->discount = $discnreal;
-
-    // Данные по корзине
-    $cart = array(
-        "cart" => $obj->PHPShopCart->getArray(),
-        "num" => $obj->num,
-        "sum" => $sumn,
-        "weight" => $obj->weight,
-        "dostavka" => $deliveryn);
-
-    // Статус заказа
-    $obj->status = array(
-        "maneger" => "",
-        "time" => "");
-
-    // Серелиазованный массив заказа
-    $obj->order = serialize(array("Cart" => $cart, "Person" => $person));
-
-    //обнуляем сессию доставки
-    //$_SESSION['freedelivery'] = 1;
 }
 
 function promotions_mail($obj, $data, $rout) {
@@ -180,7 +185,7 @@ function promotions_mail($obj, $data, $rout) {
 
         // Отсылаем письмо покупателю
         $PHPShopMail = new PHPShopMail($_POST['mail'], $obj->PHPShopSystem->getEmail(), $title, '', true, true);
-        
+
         if ($_SESSION['promocode'] == '*'):
             //если промо-код есть
             $content = ParseTemplateReturn('phpshop/modules/promotions/templates/order/np_usermail.tpl', true);
@@ -202,7 +207,7 @@ function promotions_mail($obj, $data, $rout) {
         $title_adm = $obj->lang('mail_title_adm') . $_POST['ouid'] . "/" . date("d-m-y");
 
         // Отсылаем письмо администратору
-        $PHPShopMail = new PHPShopMail($obj->PHPShopSystem->getEmail(), $obj->PHPShopSystem->getEmail(), $title_adm, '', true, true,array('replyto'=>$_POST['mail']));
+        $PHPShopMail = new PHPShopMail($obj->PHPShopSystem->getEmail(), $obj->PHPShopSystem->getEmail(), $title_adm, '', true, true, array('replyto' => $_POST['mail']));
         if ($_SESSION['promocode'] == '*'):
             //если промо-код есть
             $content_adm = ParseTemplateReturn('phpshop/modules/promotions/templates/order/np_adminmail.tpl', true);

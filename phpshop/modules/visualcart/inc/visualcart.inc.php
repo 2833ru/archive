@@ -114,6 +114,12 @@ class AddToTemplateVisualCart extends PHPShopElements {
                 if (is_array($data)) {
                     $this->memory = $data['memory'];
                     $_SESSION['cart'] = $this->update_price(unserialize($data['cart']));
+
+                    // ×èñòêà
+                    $this->clean_memory();
+
+                    // Çàïèñü â ÁÄ
+                    $this->add_memory();
                 }
             }
 
@@ -144,6 +150,32 @@ class AddToTemplateVisualCart extends PHPShopElements {
             }
         }
         return $cart;
+    }
+
+    /**
+     * Çàòèğàíèå ñòàğîé ïàìÿòè
+     */
+    function clean_memory() {
+        $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['visualcart']['visualcart_memory']);
+        $PHPShopOrm->delete(array('memory' => "='" . $this->memory . "'"));
+    }
+
+    /**
+     * Çàïèñü êîğçèíû â ÁÄ
+     */
+    function add_memory() {
+        $insert = array();
+        $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['visualcart']['visualcart_memory']);
+        $insert['memory_new'] = $this->memory;
+        $insert['date_new'] = time();
+        $insert['user_new'] = $_SESSION['UsersId'];
+        $insert['cart_new'] = serialize($_SESSION['cart']);
+        $insert['ip_new'] = $_SERVER["REMOTE_ADDR"];
+
+        if (isset($_COOKIE['ps_referal']))
+            $insert['referal_new'] = base64_decode($_COOKIE['ps_referal']);
+
+        $PHPShopOrm->insert($insert);
     }
 
     /**

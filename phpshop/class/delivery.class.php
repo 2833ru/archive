@@ -8,7 +8,7 @@ if (!defined("OBJENABLED")){
 /**
  * Библиотека доставки
  * @author PHPShop Software
- * @version 1.2
+ * @version 1.3
  * @package PHPShopClass
  */
 class PHPShopDelivery extends PHPShopObj {
@@ -18,6 +18,8 @@ class PHPShopDelivery extends PHPShopObj {
      * @var int 
      */
     var $fee = 500;
+    
+    var $mod_price = false;
 
     /**
      * Конструктор
@@ -61,6 +63,10 @@ class PHPShopDelivery extends PHPShopObj {
      * @return float
      */
     function getPrice($sum, $weight = 0) {
+        
+        if($this->mod_price)
+            return $this->mod_price;
+        
         $row = $this->objRow;
         if ($row['price_null_enabled'] == 1 and $sum >= $row['price_null']) {
             return 0;
@@ -86,6 +92,19 @@ class PHPShopDelivery extends PHPShopObj {
     function getCity() {
         return parent::getParam("city");
     }
+    
+    /**
+     * Используется модулем, не менять стоимость
+     * @paramm $sum float сумма доставки в модуле
+     * @return bool
+     */
+    function checkMod($sum){
+        
+        $mod = parent::getParam("is_mod");
+        if($mod == 2 and !empty($sum))
+            $this->mod_price = $sum;
+    }
+   
 
     static function getPriceDefault() {
         $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['delivery']);

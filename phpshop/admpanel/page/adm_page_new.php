@@ -43,6 +43,7 @@ function actionStart() {
     // Начальные данные
     $data = array();
     $data['num'] = 1;
+    $data['enabled'] = 1;
 
     $PHPShopGUI->field_col = 2;
     $PHPShopGUI->setActionPanel($TitlePage, false, array('Создать и редактировать', 'Сохранить и закрыть'));

@@ -40,7 +40,7 @@
         </var>
     </element>
     <element>
-        <name>#main-menu, .product-head</name>
+        <name>.product-info-box .heading:before, #main-menu, .product-head</name>
         <description>Навигация</description>
         <content>Цвет основной навигации</content>
         <var>
@@ -90,7 +90,7 @@
         </var>
     </element>
         <element>
-        <name>.news-list a:hover, .product-filter .display label.active,.dl-horizontal.total,.product-info a, .product-col .btn-wishlist:hover, .product-col .btn-wishlist:focus, .product-col .btn-compare:hover, .product-col .btn-compare:focus, a</name>
+        <name>.sidebar-nav > li > a:hover, .news-list a:hover, .product-filter .display label.active,.dl-horizontal.total,.product-info a, .product-col .btn-wishlist:hover, .product-col .btn-wishlist:focus, .product-col .btn-compare:hover, .product-col .btn-compare:focus, a</name>
         <description>Ссылки </description>
         <content>Цвет ссылок в тексте</content>
         <var>

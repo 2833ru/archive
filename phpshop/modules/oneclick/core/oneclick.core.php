@@ -66,7 +66,8 @@ class PHPShopOneclick extends PHPShopCore {
      * Ёкшен записи при получении $_POST[returncall_mod_send]
      */
     function oneclick_mod_product_id() {
-        if (PHPShopSecurity::true_param($_POST['oneclick_mod_name'], $_POST['oneclick_mod_tel'])) {
+        preg_match_all('/http:?/', $_POST['oneclick_mod_message'], $url, PREG_SET_ORDER);
+        if (PHPShopSecurity::true_param($_POST['oneclick_mod_name'], $_POST['oneclick_mod_tel']) and strpos($_SERVER["HTTP_REFERER"], $_SERVER['SERVER_NAME']) and count($url)==0) {
             $this->write();
             header('Location: ./done.html');
             exit();

@@ -38,12 +38,10 @@ function actionStart() {
         'url' => 'mailto:' . $data['login']
     );
 
-
     // Размер названия поля
     $PHPShopGUI->field_col = 2;
     $PHPShopGUI->setActionPanel(__("Покупатели") . '<span class="hidden-xs"> / ' . $data['name'] . '</span>', array('Отправить письмо', 'Создать заказ', 'Заказы пользователя', 'Сообщения пользователя', '|', 'Удалить'), array('Сохранить', 'Сохранить и закрыть'));
     $PHPShopGUI->addJSFiles('./js/validator.js');
-
 
     // Статусы пользователей
     $PHPShopUserStatus = new PHPShopUserStatusArray();
@@ -79,9 +77,6 @@ function actionStart() {
         $PHPShopGUI->sidebarLeftRight = 2;
     }
 
-
-
-
     // Запрос модуля на закладку
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $data);
 
@@ -106,7 +101,6 @@ function actionDelete() {
 
     // Перехват модуля
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $_POST);
-
 
     $action = $PHPShopOrm->delete(array('id' => '=' . $_POST['rowID']));
     return array("success" => $action);
@@ -161,11 +155,9 @@ function actionUpdate() {
         }
     }
 
-
     $_POST['data_adres_new']['list'] = $mass_decode;
     $_POST['data_adres_new'] = serialize($_POST['data_adres_new']);
     $_POST['password_new'] = base64_encode($_POST['password_new']);
-
 
     // Перехват модуля
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $_POST);

@@ -659,7 +659,7 @@ class PHPShopGUI {
     function setEditor($editor = false, $mod_enabled = false) {
 
         // Временный запрет подключения редакторов
-        if (!in_array($editor, array('ace', 'none', 'default')))
+        if (!in_array($editor, array('ace', 'none', 'default','tinymce')))
             $editor = 'default';
 
         // Временное перенаправление выбора редактора
@@ -694,9 +694,11 @@ class PHPShopGUI {
      * @param string $title заголовок легенды
      * @param string $content содержание
      * @param integer $size размер сетки описаняи поля 1-12
+     * @param string $help подсказка
+     * @param string $class класс стиля
      * @return string
      */
-    function setField($title, $content, $size = 1, $help = false, $class = false, $label = 'control-label') {
+    function setField($title, $content, $size = 1, $help = null, $class = null, $label = 'control-label') {
 
         if (!strpos($title, ':') and !empty($title))
             $title.=':';
@@ -1641,6 +1643,7 @@ class PHPShopInterface extends PHPShopGUI {
      * @param string $title заголовок легенды
      * @param string $content содержание
      * @param integer $size размер сетки описаняи поля 1-12
+     * @param string $help справка
      * @return string
      */
     function setField($title, $content, $size = 1, $help = false, $class = false, $label = 'control-label') {

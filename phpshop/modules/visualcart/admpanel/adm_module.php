@@ -34,16 +34,16 @@ function actionStart() {
     $info = 'Для произвольной вставки элемента следует выбрать парамет вывода "Не выводить" и в ручном режиме вставить переменную
         <kbd>@visualcart@</kbd> в свой шаблон. Или через панель управления создайте текстовый блок, переключитесь в режим исходного кода (Система - Настройка - Режимы - Визуальный редактор),
         внесите метку <kbd>@visualcart@</kbd> - теперь блок будет выводить корзину в нужном вам месте.
-        <p>Для персонализации формы вывода отредактируйте шаблоны <code>phpshop/modules/visualcart/templates/</code></p>
+        <p>Для персонализации формы вывода отредактируйте шаблоны <code>phpshop/templates/имя_шаблона/modules/visualcart/templates/</code></p>
 ';
 
     $Tab2 = $PHPShopGUI->setInfo($info);
 
     // Форма регистрации
-    $Tab3 = $PHPShopGUI->setPay($serial);
+    $Tab3 = $PHPShopGUI->setPay();
 
     // Вывод формы закладки
-    $PHPShopGUI->setTab(array("Основное", $Tab1), array("Инструкция", $Tab2), array("О Модуле", $Tab3),array("Незавершенные заказы", null,'?path=modules.dir.visualcart'));
+    $PHPShopGUI->setTab(array("Основное", $Tab1,true), array("Инструкция", $Tab2), array("О Модуле", $Tab3),array("Незавершенные заказы", null,'?path=modules.dir.visualcart'));
 
     // Вывод кнопок сохранить и выход в футер
     $ContentFooter =

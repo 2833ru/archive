@@ -31,10 +31,10 @@ $datas = $row['datas'];
 $ouid = $row['uid'];
 $order = unserialize($row['orders']);
 $status = unserialize($row['status']);
-
+$dis=null;
 if (is_array($order['Cart']['cart']))
     foreach ($order['Cart']['cart'] as $val) {
-        @$dis.="
+        $dis.="
   <tr class=tablerow>
 		<td class=tablerow>" . $n . "</td>
 		<td class=tablerow>" . $val['name'] . "</td>
@@ -69,8 +69,9 @@ if ($zeroweight) {
 }
 
 $PHPShopDelivery = new PHPShopDelivery($order['Person']['dostavka_metod']);
+$PHPShopDelivery->checkMod($order['Cart']['dostavka']);
 $deliveryPrice = $PHPShopDelivery->getPrice($sum, $weight);
-@$dis.="
+$dis.="
   <tr class=tablerow>
 		<td class=tablerow>" . $n . "</td>
 		<td class=tablerow>Доставка - " . $PHPShopDelivery->getCity() . "</td>
@@ -82,9 +83,9 @@ $deliveryPrice = $PHPShopDelivery->getPrice($sum, $weight);
   ";
 if ($LoadItems['System']['nds_enabled']) {
     $nds = $LoadItems['System']['nds'];
-    @$nds = number_format($sum * $nds / (100 + $nds), "2", ".", "");
+    $nds = number_format($sum * $nds / (100 + $nds), "2", ".", "");
 }
-@$sum = number_format($sum, "2", ".", "");
+$sum = number_format($sum, "2", ".", "");
 
 $summa_nds_dos = number_format($deliveryPrice * $nds / (100 + $nds), "2", ".", "");
 
@@ -127,7 +128,7 @@ if ($PERSON['discount'] > 0) {
 }
 ?>
 <head>
-    <title>Бланк Заказа № <?= $ouid ?></title>
+    <title>Бланк Заказа № <?php echo $ouid ?></title>
     <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=windows-1251">
     <META HTTP-EQUIV="PRAGMA" CONTENT="NO-CACHE">
     <link href="style.css" type=text/css rel=stylesheet>
@@ -139,8 +140,8 @@ if ($PERSON['discount'] > 0) {
     </div>
     <div align="center"><table align="center" width="100%">
             <tr>
-                <td align="center"><img src="<?= $PHPShopSystem->getLogo(); ?>" alt="" border="0"></td>
-                <td align="center"><h4 align=center>Заказ&nbsp;№&nbsp;<?= $ouid ?>&nbsp;от&nbsp;<?= $datas ?></h4></td>
+                <td align="center"><img src="<?php echo $PHPShopSystem->getLogo(); ?>" alt="" border="0"></td>
+                <td align="center"><h4 align=center>Заказ&nbsp;№&nbsp;<?php echo $ouid ?>&nbsp;от&nbsp;<?php echo $datas ?></h4></td>
             </tr>
         </table>
     </div>
@@ -150,47 +151,47 @@ if ($PERSON['discount'] > 0) {
     <table width=99% cellpadding=2 cellspacing=0 align=center>
         <tr class=tablerow>
             <td class=tablerow width="150">Заказчик:</td>
-            <td class=tableright><?= @$order['Person']['name_person'] . $row['fio'] ?></td>
+            <td class=tableright><?php echo @$order['Person']['name_person'] . $row['fio'] ?></td>
         </tr>
         <tr class=tablerow>
             <td class=tablerow>Компания:</td>
-            <td class=tableright>&nbsp;<?= @$order['Person']['org_name'] . $row['org_name'] ?></td>
+            <td class=tableright>&nbsp;<?php echo @$order['Person']['org_name'] . $row['org_name'] ?></td>
         </tr>
         <tr class=tablerow>
             <td class=tablerow>Почта:</td>
-            <td class=tableright><a href="mailto:<?= $order['Person']['mail'] ?>"><?= $order['Person']['mail'] ?></a></td>
+            <td class=tableright><a href="mailto:<?php echo $order['Person']['mail'] ?>"><?php echo $order['Person']['mail'] ?></a></td>
         </tr>
         <tr class=tablerow>
             <td class=tablerow>ИНН:</td>
-            <td class=tableright>&nbsp;<?= @$order['Person']['org_inn'] . $row['org_inn'] ?></td>
+            <td class=tableright>&nbsp;<?php echo @$order['Person']['org_inn'] . $row['org_inn'] ?></td>
         </tr>
         <tr class=tablerow>
             <td class=tablerow>КПП:</td>
-            <td class=tableright>&nbsp;<?= @$order['Person']['org_kpp'] . $row['org_kpp'] ?></td>
+            <td class=tableright>&nbsp;<?php echo @$order['Person']['org_kpp'] . $row['org_kpp'] ?></td>
         </tr>
         <tr class=tablerow>
             <td class=tablerow>Тел:</td>
-            <td class=tableright><?= @$order['Person']['tel_code'] . " " . @$order['Person']['tel_name'] . $row['tel'] ?></td>
+            <td class=tableright><?php echo @$order['Person']['tel_code'] . " " . @$order['Person']['tel_name'] . $row['tel'] ?></td>
         </tr>
         <tr class=tablerow>
             <td class=tablerow>Адрес:</td>
-            <td class=tableright><?= @$adr_info ?></td>
+            <td class=tableright><?php echo @$adr_info ?></td>
         </tr>
         <tr class=tablerow>
             <td class=tablerow>Грузополучатель:</td>
-            <td class=tableright><?= $PHPShopDelivery->getCity() ?></td>
+            <td class=tableright><?php echo $PHPShopDelivery->getCity() ?></td>
         </tr>
         <tr class=tablerow>
             <td class=tablerow>Время доставки:</td>
-            <td class=tableright><?= $dost_ot . $row['delivtime']  ?></td>
+            <td class=tableright><?php echo $dost_ot . $row['delivtime']  ?></td>
         </tr>
         <tr class=tablerow >
             <td class=tablerow>Тип оплаты:</td>
-            <td class=tableright><?= $PHPShopOrder->getOplataMetodName() ?></td>
+            <td class=tableright><?php echo $PHPShopOrder->getOplataMetodName() ?></td>
         </tr>
         <tr class=tablerow >
             <td class=tablerow style="border-bottom: 1px solid #000000;">Комментарии:</td>
-            <td class=tableright style="border-bottom: 1px solid #000000;">&nbsp;<?= $row['dop_info']; ?></td>
+            <td class=tableright style="border-bottom: 1px solid #000000;">&nbsp;<?php echo $row['dop_info']; ?></td>
         </tr>
     </table>
     <p><br></p>
@@ -203,31 +204,31 @@ if ($PERSON['discount'] > 0) {
             <td class=tablerow>Цена</td>
             <td class=tableright>Сумма</td>
         </tr>
-        <?
-        echo @$dis;
+        <?php
+        echo $dis;
         $my_total = $row['sum'];
         $my_nds = number_format($my_total * $LoadItems['System']['nds'] / (100 + $LoadItems['System']['nds']), "2", ".", "");
         ?>
         <tr>
             <td colspan=5 align=right style="border-top: 1px solid #000000;border-left: 1px solid #000000;">Скидка:</td>
-            <td class=tableright nowrap><b><?= $discount ?></b></td>
+            <td class=tableright nowrap><b><?php echo $discount ?></b></td>
         </tr>
         <tr>
             <td colspan=5 align=right style="border-top: 1px solid #000000;border-left: 1px solid #000000;">Итого:</td>
-            <td class=tableright nowrap><b><?= $my_total ?></b></td>
+            <td class=tableright nowrap><b><?php echo $my_total ?></b></td>
         </tr>
-        <? if ($LoadItems['System']['nds_enabled']) { ?>
+        <?php if ($LoadItems['System']['nds_enabled']) { ?>
             <tr>
-                <td colspan=5 align=right style="border-top: 1px solid #000000;border-left: 1px solid #000000;">В т.ч. НДС: <?= $LoadItems['System']['nds'] ?>%</td>
-                <td class=tableright nowrap><b><?= $my_nds ?></b></td>
+                <td colspan=5 align=right style="border-top: 1px solid #000000;border-left: 1px solid #000000;">В т.ч. НДС: <?php echo $LoadItems['System']['nds'] ?>%</td>
+                <td class=tableright nowrap><b><?php echo $my_nds ?></b></td>
             </tr>
-        <? } ?>
+        <?php } ?>
         <tr><td colspan=6 style="border: 0px; border-top: 1px solid #000000;">&nbsp;</td></tr>
     </table>
 
-    <p><b>Всего наименований <?= ($num + 1) ?>, на сумму <?= ($row['sum']) . " " . $PHPShopOrder->default_valuta_code; ?>
+    <p><b>Всего наименований <?php echo ($num + 1) ?>, на сумму <?php echo ($row['sum']) . " " . $PHPShopOrder->default_valuta_code; ?>
             <br />
-            <?
+            <?php
             $iw = new inwords;
             $s = $iw->get($my_total);
             $v = $PHPShopOrder->default_valuta_code;
@@ -235,7 +236,7 @@ if ($PERSON['discount'] > 0) {
                 echo $s;
             ?>
         </b></p><br>
-    <p>Дата <u><?= date("d-m-y H:m a") ?></u></p>
+    <p>Дата <u><?php echo date("d-m-y H:m a") ?></u></p>
 <p>Руководитель<u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</u></p>
 <p>Главный бухгалтер<u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</u></p>
 <br>
@@ -244,7 +245,5 @@ if ($PERSON['discount'] > 0) {
         <td style="padding:50px;border-bottom: 1px solid #000000;border-top: 1px solid #000000;border-left: 1px solid #000000;border-right: 1px solid #000000;" align="center">М.П.</td>
     </tr>
 </table>
-
-
 </body>
 </html>

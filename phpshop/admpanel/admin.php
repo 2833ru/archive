@@ -173,14 +173,14 @@ if (empty($adm_title)) {
         <!-- Localization -->
         <script src="js/locale.ru.js"></script>
 
-        <div class="container" style="<?= $frameWidth; ?>">
+        <div class="container" style="<?php echo $frameWidth; ?>">
 
-            <nav class="navbar navbar-default <?= $isFrame; ?>">
+            <nav class="navbar navbar-default <?php echo $isFrame; ?>">
                 <div>
 
                     <!-- Brand  -->
                     <div class="navbar-header">
-                        <a class="navbar-brand" href="../../" title="Перейти в магазин" target="_blank"><span class="glyphicon glyphicon-cog"></span> <?= $adm_brand ?></a>
+                        <a class="navbar-brand" href="../../" title="Перейти в магазин" target="_blank"><span class="glyphicon glyphicon-cog"></span> <?php echo $adm_brand ?></a>
                         <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar1" aria-expanded="false" aria-controls="navbar">
                             <span class="sr-only">Toggle navigation</span>
                             <span class="icon-bar"></span>
@@ -192,17 +192,17 @@ if (empty($adm_title)) {
                     <!-- Collect the nav links, forms, and other content for toggling -->
                     <div id="navbar1" class="collapse navbar-collapse">
                         <ul class="nav navbar-nav navbar-right">
-                            <li class="dropdown <?= $menu_active_modules; ?>">
+                            <li class="dropdown <?php echo $menu_active_modules; ?>">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Модули <span class="caret"></span></a>
                                 <ul class="dropdown-menu" role="menu" id="modules-menu">
                                     <li><a href="?path=modules">Управление модулями</a></li>
                                     <li class="divider"></li>
                                     <li class="dropdown-header">Установленные модули</li>
-                                    <?= modulesMenu(); ?>
+                                    <?php echo modulesMenu(); ?>
 
                                 </ul>
                             </li>
-                            <li class="dropdown <?= $menu_active_system . $menu_active_system_company . $menu_active_system_seo . $menu_active_system_sync . $menu_active_tpleditor . $menu_active_system_image; ?>">
+                            <li class="dropdown <?php echo $menu_active_system . $menu_active_system_company . $menu_active_system_seo . $menu_active_system_sync . $menu_active_tpleditor . $menu_active_system_image; ?>">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Настройки <span class="caret"></span></a>
                                 <ul class="dropdown-menu" role="menu">
                                     <li><a href="?path=system">Основные</a></li>
@@ -215,7 +215,7 @@ if (empty($adm_title)) {
                                     <li><a href="?path=tpleditor"><span class="glyphicon glyphicon-picture"></span> Шаблоны дизайна</a></li>
                                 </ul>
                             </li>
-                            <li class="dropdown <?= $menu_active_exchange_export . $menu_active_exchange_import . $menu_active_exchange_sql . $menu_active_exchange_backup . $menu_active_exchange_service . $menu_active_exchange_export_order . $menu_active_exchange_export_user . $menu_active_exchange_export_catalog . $menu_active_exchange_import_order . $menu_active_exchange_import_user . $menu_active_exchange_import_catalog; ?>">
+                            <li class="dropdown <?php echo $menu_active_exchange_export . $menu_active_exchange_import . $menu_active_exchange_sql . $menu_active_exchange_backup . $menu_active_exchange_service . $menu_active_exchange_export_order . $menu_active_exchange_export_user . $menu_active_exchange_export_catalog . $menu_active_exchange_import_order . $menu_active_exchange_import_user . $menu_active_exchange_import_catalog; ?>">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">База <span class="caret"></span></a>
                                 <ul class="dropdown-menu" role="menu">
                                     <li><a href="?path=exchange.import"><span class="glyphicon glyphicon-import"></span> Импорт данных</a></li>
@@ -226,7 +226,7 @@ if (empty($adm_title)) {
                                     <li><a href="?path=exchange.backup">Резервное копирование</a></li>
                                 </ul>
                             </li>
-                            <li class="dropdown <?= $menu_active_update . $menu_active_update_restore . $menu_active_system_about ?>">
+                            <li class="dropdown <?php echo $menu_active_update . $menu_active_update_restore . $menu_active_system_about ?>">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Справка <span class="caret"></span></a>
                                 <ul class="dropdown-menu" role="menu">
                                     <li><a href="?path=system.about">О программе</a></li>
@@ -246,12 +246,12 @@ if (empty($adm_title)) {
                                 </ul>
                             </li>
                             <li class="divider"></li>
-                            <li class="dropdown <?= $menu_active_users . $menu_active_users_jurnal . $menu_active_users_stoplist; ?>">
+                            <li class="dropdown <?php echo $menu_active_users . $menu_active_users_jurnal . $menu_active_users_stoplist; ?>">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><span class="glyphicon glyphicon-user hidden-xs"></span> <span class="visible-xs">Администратор <span class="caret"></span></span><span class="caret  hidden-xs"></span></a>
                                 <ul class="dropdown-menu" role="menu">
-                                    <li class="dropdown-header">Вошел как <?= $_SESSION['logPHPSHOP']; ?></li>
+                                    <li class="dropdown-header">Вошел как <?php echo $_SESSION['logPHPSHOP']; ?></li>
                                     <li class="divider"></li>
-                                    <li><a href="?path=users&id=<?= $_SESSION['idPHPSHOP']; ?>">Профиль</a></li>
+                                    <li><a href="?path=users&id=<?php echo $_SESSION['idPHPSHOP']; ?>">Профиль</a></li>
                                     <li><a href="?path=users">Все администраторы</a></li>
                                     <li><a href="?path=users.jurnal">Журнал авторизации</a></li>
                                     <li class="divider"></li>
@@ -263,7 +263,7 @@ if (empty($adm_title)) {
                     </div><!-- /.navbar-collapse -->
                 </div>
             </nav>
-            <nav class="navbar navbar-inverse navbar-statick <?= $isFrame; ?>">
+            <nav class="navbar navbar-inverse navbar-statick <?php echo $isFrame; ?>">
                 <div>
 
                     <div class="navbar-header pull-left">
@@ -281,7 +281,7 @@ if (empty($adm_title)) {
                         <ul class="nav navbar-nav">
                             <li><a href="../../" title="Магазин" target="_blank" class="visible-xs">Магазин</a></li>
                             <li><a href="./admin.php" title="Стартовая панель" class="home"><span class="glyphicon glyphicon-home hidden-xs"></span><span class="visible-xs">Домой</span></a></li>
-                            <li class="dropdown <?= $menu_active_order . $menu_active_payment . $menu_active_order_paymentlog . $menu_active_order_status . $menu_active_report_statorder . $menu_active_report_statuser . $menu_active_report_statpayment. $menu_active_report_statproduct; ?>">
+                            <li class="dropdown <?php echo $menu_active_order . $menu_active_payment . $menu_active_order_paymentlog . $menu_active_order_status . $menu_active_report_statorder . $menu_active_report_statuser . $menu_active_report_statpayment. $menu_active_report_statproduct; ?>">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Заказы <span class="caret"></span></a>
                                 <ul class="dropdown-menu" role="menu">
                                     <li><a href="?path=order"><span>Заказы</span><span class="dropdown-header">Просмотр и оформление заказов, распечатка счетов</span></a></li>
@@ -294,7 +294,7 @@ if (empty($adm_title)) {
                                 </ul>
                             </li>
 
-                            <li class="dropdown <?= $menu_active_catalog . $menu_active_product . $menu_active_report_searchjurnal . $menu_active_report_searchreplace . $menu_active_sort; ?>" id="tour-product">
+                            <li class="dropdown <?php echo $menu_active_catalog . $menu_active_product . $menu_active_report_searchjurnal . $menu_active_report_searchreplace . $menu_active_sort; ?>" id="tour-product">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Товары <span class="caret"></span></a>
                                 <ul class="dropdown-menu" role="menu">
                                     <li><a href="?path=catalog"><span>Товары</span><span class="dropdown-header">Просмотр, добавление и редактирование товаров</span></a></li>
@@ -306,7 +306,7 @@ if (empty($adm_title)) {
                                 </ul>
                             </li>
 
-                            <li class="dropdown <?= $menu_active_shopusers . $menu_active_shopusers_status . $menu_active_shopusers_notice . $menu_active_shopusers_comment . $menu_active_shopusers_messages; ?>">
+                            <li class="dropdown <?php echo $menu_active_shopusers . $menu_active_shopusers_status . $menu_active_shopusers_notice . $menu_active_shopusers_comment . $menu_active_shopusers_messages; ?>">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Пользователи <span class="caret"></span></a>
                                 <ul class="dropdown-menu" role="menu">
                                     <li><a href="?path=shopusers">Покупатели<span class="dropdown-header">Список зарегистрированных покупателей магазина</span></a></li>
@@ -317,7 +317,7 @@ if (empty($adm_title)) {
                                 </ul>
                             </li>
 
-                            <li class="dropdown <?= $menu_active_menu . $menu_active_gbook . $menu_active_page_catalog . $menu_active_page . $menu_active_news . $menu_active_news_rss; ?>">
+                            <li class="dropdown <?php echo $menu_active_menu . $menu_active_gbook . $menu_active_page_catalog . $menu_active_page . $menu_active_news . $menu_active_news_rss; ?>">
                                 <a href="#" class="dropdown-toggle " data-toggle="dropdown" role="button" aria-expanded="false">Веб-сайт <span class="caret"></span></a>
                                 <ul class="dropdown-menu" role="menu">
                                     <li><a href="?path=page.catalog">Страницы<span class="dropdown-header">Создание и публикация страниц</span></a></li>
@@ -329,7 +329,7 @@ if (empty($adm_title)) {
                                 </ul>
                             </li>
 
-                            <li class="dropdown <?= $menu_active_slider . $menu_active_links . $menu_active_banner . $menu_active_opros; ?>" >
+                            <li class="dropdown <?php echo $menu_active_slider . $menu_active_links . $menu_active_banner . $menu_active_opros; ?>" >
                                 <a href="#" class="dropdown-toggle " data-toggle="dropdown" role="button" aria-expanded="false">Маркетинг <span class="caret"></span></a>
                                 <ul class="dropdown-menu" role="menu">
                                     <li><a href="?path=slider"><span>Слайдер</span><span class="dropdown-header">Рекламный слайдер на главной странице</span></a></li>
@@ -517,21 +517,21 @@ if (empty($adm_title)) {
         <!--/ Modal filemanager -->
 
         <!-- Fixed mobile bar -->
-        <div class="bar-padding-fix <?= $isMobile.$isFrame; ?>"> </div>
-        <nav class="navbar navbar-statick navbar-fixed-bottom bar bar-tab visible-xs visible-sm <?= $isFrame; ?>" role="navigation">
-            <a class="tab-item <?= $menu_active_intro; ?>" href="./admin.php">
+        <div class="bar-padding-fix <?php echo $isMobile.$isFrame; ?>"> </div>
+        <nav class="navbar navbar-statick navbar-fixed-bottom bar bar-tab visible-xs visible-sm <?php echo $isFrame; ?>" role="navigation">
+            <a class="tab-item <?php echo $menu_active_intro; ?>" href="./admin.php">
                 <span class="icon icon-home"></span>
                 <span class="tab-label">Домой</span>
             </a>
-            <a class="tab-item <?= $menu_active_order; ?>" href="?path=order" id="bar-cart">
-                <span class="icon icon-download"></span> <span class="badge badge-positive hide" id="orders-mobile-check"><?= $PHPShopBase->getNumRows('orders', "where statusi='0'"); ?></span>
+            <a class="tab-item <?php echo $menu_active_order; ?>" href="?path=order" id="bar-cart">
+                <span class="icon icon-download"></span> <span class="badge badge-positive hide" id="orders-mobile-check"><?php echo $PHPShopBase->getNumRows('orders', "where statusi='0'"); ?></span>
                 <span class="tab-label">Заказы</span>
             </a>
-            <a class="tab-item <?= $menu_active_catalog; ?>" href="?path=catalog">
+            <a class="tab-item <?php echo $menu_active_catalog; ?>" href="?path=catalog">
                 <span class="icon icon-compose"></span>
                 <span class="tab-label">Цены</span>
             </a>
-            <a class="tab-item <?= $menu_active_shopusers; ?>"  href="?path=shopusers">
+            <a class="tab-item <?php echo $menu_active_shopusers; ?>"  href="?path=shopusers">
                 <span class="icon icon-person"></span>
                 <span class="tab-label">Покупатели</span>
             </a>

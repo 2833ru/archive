@@ -305,7 +305,7 @@ $().ready(function() {
     // Сохранить из карточки
     $("button[name=editID]").on('click', function(event) {
         event.preventDefault();
-
+        
         var data = [];
         data.push({name: 'editID', value: 1});
         $('#product_edit .form-control, #product_edit .hidden-edit, #product_edit input:radio:checked, #product_edit input:checkbox:checked').each(function() {

@@ -91,11 +91,13 @@ class PHPShopReturncall extends PHPShopCore {
         // Проверка каптчи
         if ($this->system['captcha_enabled'] == 1) {
 
-            if (empty($_SESSION['mod_returncall_captcha']) or strtolower($_SESSION['mod_returncall_captcha']) != strtolower($_POST['key']))
+            if (empty($_SESSION['mod_returncall_captcha']) or strtolower($_SESSION['mod_returncall_captcha']) != strtolower($_POST['key']) or !strpos($_SERVER["HTTP_REFERER"], $_SERVER['SERVER_NAME']))
                 $error = true;
         }
 
-        if (PHPShopSecurity::true_param($_POST['returncall_mod_name'], $_POST['returncall_mod_tel'], empty($error))) {
+        preg_match_all('/http:?/', $_POST['returncall_mod_message'], $url, PREG_SET_ORDER);
+        
+        if (PHPShopSecurity::true_param($_POST['returncall_mod_name'], $_POST['returncall_mod_tel'], empty($error)) and count($url)==0) {
             $this->write();
             header('Location: ./done.html');
             exit();

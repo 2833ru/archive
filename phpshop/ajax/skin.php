@@ -73,6 +73,7 @@ if (!empty($_SESSION['logPHPSHOP']) and PHPShopSecurity::true_skin($_COOKIE[$_RE
 
 
         $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['system']);
+        $PHPShopOrm->debug=false;
         $admoption = unserialize($PHPShopSystem->getParam('admoption'));
 
         if (PHPShopSecurity::true_skin($_COOKIE[$_REQUEST['template'] . '_theme2'])) {

@@ -42,6 +42,9 @@ class PHPShopSelection extends PHPShopShopCore {
         $this->action = array("get" => "v", 'nav' => 'index');
         parent::__construct();
         $this->PHPShopOrm->cache_format = $this->cache_format;
+
+        // Навигация хлебные крошки
+        $this->navigation(false, __('Бренды'));
     }
 
     function index() {

@@ -62,7 +62,7 @@ function actionStart() {
     $Tab3 = $PHPShopGUI->setPay($data['serial'], false, $data['version'], true);
 
     // Вывод формы закладки
-    $PHPShopGUI->setTab(array("Основное", $Tab1), array("Инструкция", $Tab2), array("О Модуле", $Tab3),array("Обзор заявок", null,'?path=modules.dir.returncall'));
+    $PHPShopGUI->setTab(array("Основное", $Tab1,true), array("Инструкция", $Tab2), array("О Модуле", $Tab3),array("Обзор заявок", null,'?path=modules.dir.returncall'));
 
     // Вывод кнопок сохранить и выход в футер
     $ContentFooter =

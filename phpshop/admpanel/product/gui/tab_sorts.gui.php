@@ -30,16 +30,16 @@ function sorttemplate($value, $n, $title, $vendor) {
         }
     }
 
-    $value = $PHPShopGUI->setSelect('vendor_array_new[' . $n . '][]', $value_new, 300, null, false, $search = true, false, $size = 1, $multiple = true);
+    $value = $PHPShopGUI->setSelect('vendor_array_new[' . $n . '][]', $value_new, 500, null, false, $search = true, false, $size = 1, $multiple = true);
 
     $disp = $PHPShopGUI->setField($title, $value) .
-            $PHPShopGUI->setField(null, $PHPShopGUI->setInputArg(array('type' => 'text', 'placeholder' => __('¬вести другое'), 'size' => '300', 'name' => 'vendor_array_add[' . $n . ']','class'=>'vendor_add')));
+            $PHPShopGUI->setField(null, $PHPShopGUI->setInputArg(array('type' => 'text', 'placeholder' => __('¬вести другое через разделитель #'), 'size' => '500', 'name' => 'vendor_array_add[' . $n . ']','class'=>'vendor_add')));
 
     return $disp;
 }
 
 /**
- * ѕанель хактеристик товара
+ * ѕанель характеристик товара
  * @param array $row массив данных
  * @return string 
  */

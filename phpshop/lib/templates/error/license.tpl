@@ -71,7 +71,7 @@
                 </div>
             </div>
 
-            <div class="text-muted">Переход на страницу разработчика произойдет автоматически через <span id="time">20</span> секунд.</div>
+            <div class="text-muted">Переход на страницу разработчика произойдет автоматически через <span id="time">30</span> секунд.</div>
 
         </div>
         <footer class="footer">

@@ -1793,7 +1793,6 @@ use DDelivery\Order\DDeliveryOrder;
                 52 => array('name' => 'ЕКБ-доставка забор', 'ico' => 'pack'),
                 53 => array('name' => 'ЕКБ-доставка курьер', 'ico' => 'pack'),
                 54 => array('name' => 'Почта России 1-й класс.', 'ico' => 'mail'),
-                55 => array('name' => 'Почта России.', 'ico' => 'mail'),
                 106 => array('name' => 'Вестовой', 'ico' => 'pack'),
 			    108 => array('name' => 'B2Cpl', 'ico' => 'pack'),
                 130 => array('name' => 'Почта России', 'ico' => 'russianpost'),

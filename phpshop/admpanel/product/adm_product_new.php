@@ -371,19 +371,45 @@ function actionInsert() {
     $_POST['yml_bid_array_new'] = serialize($_POST['yml_bid_array']);
 
     // Добавление характеристик
-    if (is_array($_POST['vendor_array_add']))
+    if (is_array($_POST['vendor_array_add'])) {
         foreach ($_POST['vendor_array_add'] as $k => $val) {
 
+            $sort_array = $result = null;
+
             if (!empty($val)) {
-                $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['sort']);
-                $action = $PHPShopOrm->insert(array('name_new' => $val, 'category_new' => $k));
-                if (!empty($action))
-                    $_POST['vendor_array_new'][$k][0] = $action;
+
+                if (strstr($val, '#')) {
+                    $sort_array = explode('#', $val);
+                }
+                else
+                    $sort_array[] = $val;
+
+                if (is_array($sort_array))
+                    foreach ($sort_array as $val_sort) {
+
+                        $PHPShopOrmSort = new PHPShopOrm($GLOBALS['SysValue']['base']['sort']);
+
+                        // Проверка уникальности
+                        $checkName = $PHPShopOrmSort->select(array('id'), array('name' => '="' . trim($val_sort) . '"', 'category' => '=' . intval($k)), false, array('limit' => 1));
+
+                        // Нет характеристики, создаем новую
+                        if (empty($checkName['id'])) {
+                            $PHPShopOrmSort->clean();
+
+                            $result = $PHPShopOrmSort->insert(array('name_new' => trim($val_sort), 'category_new' => intval($k)));
+                            if (!empty($result))
+                                $_POST['vendor_array_new'][$k][] = $result;
+                        }
+                        // Есть, назначем Из базы
+                        else {
+                            $_POST['vendor_array_new'][$k][] = $checkName['id'];
+                        }
+                    }
             }
             else
                 unset($_POST['vendor_array_add'][$k]);
         }
-
+    }
 
     // Характеристики
     $_POST['vendor_new'] = null;
@@ -402,7 +428,8 @@ function actionInsert() {
     $_POST['vendor_array_new'] = serialize($_POST['vendor_array_new']);
 
     // Статьи
-    $_POST['page_new'] = array_pop($_POST['page_new']);
+    if (is_array($_POST['page_new']))
+        $_POST['page_new'] = array_pop($_POST['page_new']);
 
     // Файлы
     $_POST['files_new'] = serialize($_POST['files_new']);

@@ -16,7 +16,10 @@ function template_CID_Product($obj, $data, $rout) {
             case 2:
                 $obj->set('gridSetBactive', 'active');
                 break;
-            default: $obj->set('gridSetBactive', 'active');
+            default: if ($obj->cell == 1)
+                    $obj->set('gridSetAactive', 'active');
+                else
+                    $obj->set('gridSetBactive', 'active');
         }
 
 
@@ -49,10 +52,10 @@ function template_CID_Product($obj, $data, $rout) {
 function template_parent($obj, $dataArray, $rout) {
 
     if ($rout == 'END') {
-        
+
         if (count($obj->select_value > 0)) {
             $obj->set('parentList', '');
-            
+
             foreach ($obj->select_value as $value) {
                 $obj->set('parentName', $value[0]);
                 $obj->set('parentId', $value[1]);
@@ -128,24 +131,24 @@ function template_image_gallery($obj, $array) {
     $PHPShopOrm = new PHPShopOrm($obj->getValue('base.foto'));
     $data = $PHPShopOrm->select(array('*'), array('parent' => '=' . $array['id']), array('order' => 'num'), array('limit' => 100));
     $i = 0;
-    $s=1;
+    $s = 1;
 
     if (is_array($data)) {
-        
+
         // Сортировка
-        foreach($data as $k=>$v){
-            
-            if($v['name'] == $array['pic_big'])
-                $sort_data[0]=$v;
-            else 
-                 $sort_data[$s]=$v;
-            
+        foreach ($data as $k => $v) {
+
+            if ($v['name'] == $array['pic_big'])
+                $sort_data[0] = $v;
+            else
+                $sort_data[$s] = $v;
+
             $s++;
         }
-        
+
         ksort($sort_data);
-        
-        foreach ($sort_data as $k=>$row) {
+
+        foreach ($sort_data as $k => $row) {
             $name = $row['name'];
             $name_s = str_replace(".", "s.", $name);
             $name_bigstr = str_replace(".", "_big.", $name);

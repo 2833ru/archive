@@ -36,9 +36,9 @@ $datas = $row['datas'];
 $ouid = $row['uid'];
 $order = unserialize($row['orders']);
 $status = unserialize($row['status']);
-
+$dis=$num=$sum=null;
 foreach ($order['Cart']['cart'] as $val) {
-    @$dis.="
+    $dis.="
   <tr class=tablerow>
 		<td class=tablerow>" . $n . "</td>
 		<td class=tablerow>" . $val['name'] . "</td>
@@ -47,16 +47,16 @@ foreach ($order['Cart']['cart'] as $val) {
 		<td class=tableright>12</td>
 	</tr>
   ";
-    @$sum+=$val['price'] * $val['num'];
-    @$num+=$val['num'];
+    $sum+=$val['price'] * $val['num'];
+    $num+=$val['num'];
     $n++;
 }
 
 if ($LoadItems['System']['nds_enabled']) {
     $nds = $LoadItems['System']['nds'];
-    @$nds = number_format($sum * $nds / (100 + $nds), "2", ".", "");
+    $nds = number_format($sum * $nds / (100 + $nds), "2", ".", "");
 }
-@$sum = number_format($sum, "2", ".", "");
+$sum = number_format($sum, "2", ".", "");
 
 $name_person = $order['Person']['name_person'];
 $org_name = $order['Person']['org_name'];
@@ -68,7 +68,7 @@ $chek_num = substr(abs(crc32(uniqid(rand(), true))), 0, 5);
 $LoadBanc = unserialize($LoadItems['System']['bank']);
 ?>
 <head>
-    <title>Гарантийное обязательство №<?= @$chek_num ?></title>
+    <title>Гарантийное обязательство №<?php echo @$chek_num ?></title>
     <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=windows-1251">
     <META HTTP-EQUIV="PRAGMA" CONTENT="NO-CACHE">
     <meta http-equiv="Content-Type" content="text/html; charset=windows-1251">
@@ -96,18 +96,18 @@ $LoadBanc = unserialize($LoadItems['System']['bank']);
 
     <TABLE cellSpacing=0 cellPadding=0 width="100%" border=0><TBODY>
             <TR>
-                <TH scope=row align=middle width="50%" rowSpan=3><img src="<?= $PHPShopSystem->getLogo(); ?>" alt="" border="0"></TH>
+                <TH scope=row align=middle width="50%" rowSpan=3><img src="<?php echo $PHPShopSystem->getLogo(); ?>" alt="" border="0"></TH>
                 <TD align=right>
                     <BLOCKQUOTE>
-                        <P><b>Гарантийное обязательство</b> <SPAN class=style4>№<?= @$chek_num ?> от <?= $datas ?></SPAN> </P></BLOCKQUOTE></TD></TR>
+                        <P><b>Гарантийное обязательство</b> <SPAN class=style4>№<?php echo @$chek_num ?> от <?php echo $datas ?></SPAN> </P></BLOCKQUOTE></TD></TR>
             <TR>
                 <TD align=right>
                     <BLOCKQUOTE>
-                        <P><SPAN class=style4><?= $LoadBanc['org_adres'] ?>, телефон <?= $LoadItems['System']['tel'] ?> </SPAN></P></BLOCKQUOTE></TD></TR>
+                        <P><SPAN class=style4><?php echo $LoadBanc['org_adres'] ?>, телефон <?php echo $LoadItems['System']['tel'] ?> </SPAN></P></BLOCKQUOTE></TD></TR>
             <TR>
                 <TD align=right>
                     <BLOCKQUOTE>
-                        <P class=style4>Поставщик: <?= $LoadItems['System']['company'] ?></P></BLOCKQUOTE></TD></TR></TBODY></TABLE>
+                        <P class=style4>Поставщик: <?php echo $LoadItems['System']['company'] ?></P></BLOCKQUOTE></TD></TR></TBODY></TABLE>
 
     <p><br></p>
     <table width=99% cellpadding=2 cellspacing=0 align=center>
@@ -118,7 +118,7 @@ $LoadBanc = unserialize($LoadItems['System']['bank']);
             <td class=tablerow>Серийный номер</td>
             <td class=tablerow style="border-right: 1px solid #000000;">Гарантия (мес)</td>
         </tr>
-        <? echo @$dis; ?>
+        <?php echo $dis; ?>
 
 
         <tr><td colspan=6 style="border: 0px; border-top: 1px solid #000000;">&nbsp;</td></tr>
@@ -132,6 +132,6 @@ $LoadBanc = unserialize($LoadItems['System']['bank']);
         <P class=style4>Продавец: ________________ М.П. </P>
         <P>&nbsp;</P></TH>
     <TD vAlign=center align=left><SPAN class=style5>Гарантийное обслуживание товаров осуществляется в авторизованном сервисном центре изготовителя. При отсутствии соответствующего сервисного центра гарантийное обслуживание осуществляется у продавца. </SPAN></TD></TR></TBODY></TABLE>
-            <?= $LoadItems['System']['promotext'] ?>
+            <?php echo $LoadItems['System']['promotext'] ?>
 </body>
 </html>

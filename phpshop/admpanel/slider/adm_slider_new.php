@@ -10,7 +10,7 @@ function actionStart() {
 
     $PHPShopGUI->setActionPanel(__("Создание Слайдера"), false, array('Сохранить и закрыть'));
     
-    $data = array();
+    $data['enabled']=1;
 
     // Содержание закладки 1
     $Tab1 = $PHPShopGUI->setField(__("Изображение"), $PHPShopGUI->setIcon($data['image'], "image_new", false)) .

@@ -70,3 +70,7 @@
 .btn {
   padding: 5px 10px;
 }
+
+.btn-xs {
+  padding: 0px 5px 3px 5px;
+}
