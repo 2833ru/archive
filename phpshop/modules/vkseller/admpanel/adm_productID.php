@@ -55,6 +55,12 @@ function VksellerUpdate() {
             $prod['deleted'] = 1;
     }
 
+    if (isset($_POST['content_new']))
+        $data['content'] = $_POST['content_new'];
+
+    if (isset($_POST['description_new']))
+        $data['description'] = $_POST['description_new'];
+
     if (isset($_POST['price_new']))
         $data['price'] = $_POST['price_new'];
 
@@ -84,16 +90,23 @@ function VksellerUpdate() {
                             $photo_ids[] = $photo_result;
                     }
 
-                $data['photo_ids'] = implode(",", $photo_ids);
+                if (is_array($photo_ids))
+                    $data['photo_ids'] = implode(",", $photo_ids);
 
                 if (!empty($data['main_photo_id'])) {
-                    $export_vk_id = $VkSeller->sendProduct($data)['response']['market_item_id'];
+                    $export_vk = $VkSeller->sendProduct($data);
+                    $export_vk_id = $export_vk['response']['market_item_id'];
                 }
 
+                // Товар выгрузился
                 if (!empty($export_vk_id)) {
                     $PHPShopOrm->update(['export_vk_task_status_new' => time(), 'export_vk_id_new' => $export_vk_id], ['id' => '=' . (int) $_POST['rowID']]);
-
+                    $VkSeller->clean_log($data['id']);
                     unset($_POST['export_vk_id_new']);
+                }
+                // Ошибка
+                elseif (!empty($export_vk['error']['error_msg'])) {
+                    $VkSeller->export_log($export_vk['error']['error_msg'], $data['id'], $data['name']);
                 }
             }
             // обновление

@@ -35,10 +35,6 @@ function actionStart() {
         foreach ($OrderStatusArray as $order_status)
             $order_status_value[] = array($order_status['name'], $order_status['id'], $option['1c_load_status']);
 
-    // Тит загрузки характеристик
-    $sort_value[] = array(__('Отдельные характеристики для каталогов'), 0, $option['update_sort_type']);
-    $sort_value[] = array(__('Общие характеристики для каталогов'), 1, $option['update_sort_type']);
-
     $PHPShopGUI->_CODE = $PHPShopGUI->setCollapse('Данные', $PHPShopGUI->setField("Данные для синхронизации номенклатуры", $PHPShopGUI->setCheckbox('option[update_name]', 1, 'Наименование номенклатуры', $option['update_name']) . '<br>' .
                     $PHPShopGUI->setCheckbox('option[update_description]', 1, 'Краткое описание', $option['update_description']) . '<br>' .
                     $PHPShopGUI->setCheckbox('option[update_content]', 1, 'Подробное описание', $option['update_content']) . '<br>' .
@@ -48,8 +44,6 @@ function actionStart() {
                     $PHPShopGUI->setCheckbox('option[update_price]', 1, 'Цены', $option['update_price']) . '<br>' .
                     $PHPShopGUI->setCheckbox('option[update_item]', 1, 'Склад', $option['update_item']) . '<br>' .
                     $PHPShopGUI->setCheckbox('option[seo_update]', 1, 'SEO ссылка', $option['seo_update'])
-            ) .
-            $PHPShopGUI->setField("Характериcтики и свойства", $PHPShopGUI->setSelect('option[update_sort_type]', $sort_value, 300)
             ) .
             $PHPShopGUI->setField("Статус заказа", $PHPShopGUI->setSelect('option[1c_load_status]', $order_status_value, 300)
             , 1, 'Заказы выгружаются только при определенном статусе'));
@@ -124,7 +118,7 @@ function actionUpdate() {
     $_POST['option']['exchange_auth_path'] = substr($_POST['option']['exchange_auth_path'], 0, 10);
 
     if ($_POST['option']['exchange_image'] == 1) {
-        $_POST['option']['exchange_key'] = 'external';
+        //$_POST['option']['exchange_key'] = 'external';
         $_POST['option']['exchange_zip'] = 1;
     }
 

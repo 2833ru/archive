@@ -1,4 +1,6 @@
 <?php
+PHPShopObj::loadClass("array");
+PHPShopObj::loadClass("category");
 
 include_once dirname(__DIR__) . '/class/ThumbnailImages.php';
 
@@ -9,6 +11,9 @@ $PHPShopOrm->debug = false;
 // Функция обновления
 function actionUpdate() {
     global $PHPShopOrm;
+    
+    if(empty($_POST['stop_new']))
+        $_POST['stop_new']=0;
 
     $action = $PHPShopOrm->update($_POST);
     header('Location: ?path=modules&id=' . $_GET['id']);
@@ -142,6 +147,8 @@ function actionStart() {
     
 
     $Tab1 .= $PHPShopGUI->setField('Удалить старые изображения при смене формата', $PHPShopGUI->setSelect('delete_new', $d_value, 150, true));
+    
+    $Tab1 .= $PHPShopGUI->setField('Блокировать случайный запуск', $PHPShopGUI->setCheckbox('stop_new', 1, '', $data['stop']));
 
     $Info = '<p>
         Модуль позволяет сгенерировать новые картинки по указанным в <kbd>Настройки</kbd> &rarr; <kbd>Изображения</kbd> параметрам.<br>
@@ -154,11 +161,14 @@ function actionStart() {
             </li>
             <li>Все изображения товаров с суффиксом <code>_s</code> будут заменены новыми сгенерированными изображениями.</li>
             <li>Для перехода на webp всех изображений следует запустить обе генерации маленьких и больших картинок.</li>
+            <li>Для автоматизации процесса следует добавить новую задачу в <kbd>Cron</kbd> с адресом запускаемого файла <code>phpshop/modules/thumbnailimages/cron/images.php thumb</code> для генерации превью и <code>phpshop/modules/thumbnailimages/cron/images.php orig</code> для генерации больших картинок.</li>
         </ul>
-
+       </p>
+       <p>
        Генерация больших изображений возможна только, если включена настройка <kbd>Сохранять исходное изображение при ресайзинге</kbd> или уменьшены размеры 
        <kbd>Макс. ширина оригинала</kbd> и <kbd>Макс. высота оригинала</kbd> и необходимо сгенерировать меньшие изображения.
-        </p>';
+        </p>
+';
 
     $Tab2 = $PHPShopGUI->setInfo($Info);
 

@@ -288,7 +288,8 @@ function actionStart() {
                 $delivery['city'] = $name[0];
             }
 
-            $delivery_value[] = array($delivery['city'], $delivery['id'], $order['Person']['dostavka_metod'], 'data-subtext="' . $delivery['price'] . ' ' . $currency . '"');
+            if ($delivery['is_folder'] != 1)
+                $delivery_value[] = array($delivery['city'], $delivery['id'], $order['Person']['dostavka_metod'], 'data-subtext="' . $delivery['price'] . ' ' . $currency . '"');
         }
 
     $delivery_value[] = array(null, 'div', 'ider', 'data-divider="true"');
@@ -804,8 +805,8 @@ function actionReminder() {
     // Заголовок письма покупателю
     $title = __('Уведомление об неоплаченном заказе') . ' №' . $data['uid'];
 
-    (new PHPShopMail($PHPShopUser->getParam("mail"), $PHPShopSystem->getEmail(), $title, '', true, true))->sendMailNow(PHPShopParser::file('tpl/reminder.mail.tpl', true,false));
-    
+    (new PHPShopMail($PHPShopUser->getParam("mail"), $PHPShopSystem->getEmail(), $title, '', true, true))->sendMailNow(PHPShopParser::file('tpl/reminder.mail.tpl', true, false));
+
     return array('success' => true);
 }
 

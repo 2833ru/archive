@@ -71,7 +71,7 @@ function actionStart() {
             'action' => 'ymImportProducts',
             'class' => 'btn btn-default btn-sm navbar-btn',
             'type' => 'submit',
-            'icon' => 'glyphicon glyphicon-import'
+            'icon' => 'glyphicon glyphicon-export'
         ];
 
         $PHPShopGUI->addJSFiles('../modules/yandexcart/admpanel/gui/script.gui.js?v=2.9');

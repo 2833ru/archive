@@ -320,11 +320,17 @@ function actionStart() {
 
     if (empty($option['filter_cache_period']))
         $option['filter_cache_period'] = 10;
+    
+    // Тиg загрузки характеристик
+    $sort_value[] = array(__('Раздельные'), 0, $option['update_sort_type']);
+    $sort_value[] = array(__('Общие'), 1, $option['update_sort_type']);
 
-    $filter = $PHPShopGUI->setField("Кэшировать значения фильтра", $PHPShopGUI->setCheckbox('option[filter_cache_enabled]', 1, 'Запоминать пустые сортировки фильтра, чтобы не показывать их в последующем', $option['filter_cache_enabled']), 1) .
-            $PHPShopGUI->setField("Период кэширования", $PHPShopGUI->setInputText(false, 'option[filter_cache_period]', $option['filter_cache_period'], 100, __('дней'), false, false, false, false), 1, 'Сколько дней хранить кэшированные данные') .
+    $filter = $PHPShopGUI->setField("Кешировать значения фильтра", $PHPShopGUI->setCheckbox('option[filter_cache_enabled]', 1, 'Запоминать пустые сортировки фильтра, чтобы не показывать их в последующем', $option['filter_cache_enabled']), 1) .
+            $PHPShopGUI->setField("Период кеширования", $PHPShopGUI->setInputText(false, 'option[filter_cache_period]', $option['filter_cache_period'], 100, __('дней'), false, false, false, false), 1, 'Сколько дней хранить кешированные данные') .
             $PHPShopGUI->setField("Отображать количество товара", $PHPShopGUI->setCheckbox('option[filter_products_count]', 1, 'Выводить количество товара рядом со значением фильтра', $option['filter_products_count']), 1) .
-            $PHPShopGUI->setField('Логика фильтра', $PHPShopGUI->setSelect('option[filter_logic]', $filter_logic_value, null, true));
+            $PHPShopGUI->setField('Логика фильтра', $PHPShopGUI->setSelect('option[filter_logic]', $filter_logic_value, null, true)).
+            $PHPShopGUI->setField("Импортировать характеристики", $PHPShopGUI->setSelect('option[update_sort_type]', $sort_value)
+                    );
 
     $PHPShopGUI->_CODE .= $PHPShopGUI->setCollapse('Настройка фильтра', $filter);
 

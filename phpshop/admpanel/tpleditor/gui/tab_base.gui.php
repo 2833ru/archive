@@ -185,6 +185,9 @@ function tab_base($data) {
                 $load = __('Загрузить');
                 $icon = 'glyphicon-plus';
             }
+            
+            if(empty($_SESSION['update']))
+                $reload='hide';
 
             if ($row['type'] == 'new')
                 $new = ' <span class="label label-primary">new</span>';

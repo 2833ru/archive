@@ -132,6 +132,7 @@ function actionSave() {
     $phone = PHPShopString::utf8_win1251($order_info['recipient']['phone'], true);
     $mail = null;
     $comment = PHPShopString::utf8_win1251($order_info['comment'], true);
+    $pay = PHPShopString::utf8_win1251($order_info['payment']['status'], true);
 
     // таблица заказов
     $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['orders']);
@@ -174,7 +175,7 @@ function actionSave() {
     $order['Cart']['num'] = $qty;
     $order['Cart']['sum'] = $sum;
     $order['Cart']['weight'] = $weight;
-    $order['Cart']['dostavka'] = 0;
+    $order['Cart']['dostavka'] = intval($order_info['total_price']['amount']/100-$sum);
 
     $order['Person']['ouid'] = '';
     $order['Person']['data'] = time();
@@ -187,7 +188,7 @@ function actionSave() {
     $order['Person']['tel_code'] = '';
     $order['Person']['tel_name'] = '';
     $order['Person']['adr_name'] = '';
-    $order['Person']['dostavka_metod'] = '';
+    $order['Person']['dostavka_metod'] = (int) $VkSeller->delivery;
     $order['Person']['discount'] = 0;
     $order['Person']['user_id'] = '';
     $order['Person']['order_metod'] = '';
@@ -199,9 +200,9 @@ function actionSave() {
     $insert['orders_new'] = serialize($order);
     $insert['fio_new'] = $name;
     $insert['tel_new'] = $phone;
-    $insert['city_new'] = PHPShopString::utf8_win1251($order_info['delivery']['address'], true);
+    $insert['city_new'] = PHPShopString::utf8_win1251($order_info['delivery']['address'].' '.$order_info['delivery']['type'], true);
     $insert['statusi_new'] = $VkSeller->status;
-    $insert['status_new'] = serialize(array("maneger" => __('VK заказ &#8470;' . $_POST['rowID'])));
+    $insert['status_new'] = serialize(array("maneger" => __('VK заказ &#8470;' . $_POST['rowID']).', '.$pay));
     $insert['sum_new'] = $order['Cart']['sum'];
     $insert['vkseller_order_data_new'] = $_POST['rowID'];
 

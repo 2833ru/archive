@@ -258,9 +258,11 @@ function serializeSelect($str, $cat) {
             else
                 $csv_line .= $array_line;
         }
-    } else
+    } 
+        
+    if(empty($csv_line))
         $csv_line = '""' . $delim;
-
+    
     return $csv_line;
 }
 

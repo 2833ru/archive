@@ -34,7 +34,7 @@ function actionStart() {
 
     // Знак рубля
     if ($PHPShopSystem->getDefaultValutaIso() == 'RUB' or $PHPShopSystem->getDefaultValutaIso() == 'RUR')
-        $currency = ' <span class="rubznak hidden-xs">p</span>';
+        $currency = '<span class="rubznak hidden-xs">p</span>';
     else
         $currency = $PHPShopSystem->getDefaultValutaCode();
 
@@ -50,7 +50,8 @@ function actionStart() {
     $Tab1 .= $PHPShopGUI->setField("Статус", $PHPShopGUI->setText($OzonSeller->getStatus($order_info['result']['status'])));
     $Tab1 .= $PHPShopGUI->setField("Дата поступления", $PHPShopGUI->setText($order_info['result']['in_process_at']));
     $Tab1 .= $PHPShopGUI->setField("Дата доставки", $PHPShopGUI->setText($order_info['result']['shipment_date']));
-    $Tab1 .= $PHPShopGUI->setField("Доставка", $PHPShopGUI->setText(PHPShopString::utf8_win1251($order_info['result']['delivery_method']['name']), "left", false, false));
+    $Tab1 .= $PHPShopGUI->setField("Склад", $PHPShopGUI->setText(PHPShopString::utf8_win1251($order_info['result']['delivery_method']['warehouse'],true)));
+    $Tab1 .= $PHPShopGUI->setField("Доставка", $PHPShopGUI->setText(PHPShopString::utf8_win1251($order_info['result']['delivery_method']['name'],true).' - '.(int)$order_info['result']['delivery_price'].$currency, "left", false, false));
 
     $Tab1 = $PHPShopGUI->setCollapse('Данные', $Tab1);
     $Tab3 = $PHPShopGUI->setCollapse('JSON данные', $Tab3);
@@ -153,7 +154,7 @@ function actionSave() {
     $order['Cart']['num'] = $qty;
     $order['Cart']['sum'] = $sum;
     $order['Cart']['weight'] = $weight;
-    $order['Cart']['dostavka'] = $order_info['result']['delivery_price'];
+    $order['Cart']['dostavka'] = (int)$order_info['result']['delivery_price'];
 
     $order['Person']['ouid'] = '';
     $order['Person']['data'] = time();
@@ -166,7 +167,7 @@ function actionSave() {
     $order['Person']['tel_code'] = '';
     $order['Person']['tel_name'] = '';
     $order['Person']['adr_name'] = '';
-    $order['Person']['dostavka_metod'] = '';
+    $order['Person']['dostavka_metod'] = (int) $OzonSeller->delivery;
     $order['Person']['discount'] = 0;
     $order['Person']['user_id'] = '';
     $order['Person']['dos_ot'] = '';
@@ -180,8 +181,9 @@ function actionSave() {
     $insert['orders_new'] = serialize($order);
     $insert['fio_new'] = $name;
     $insert['tel_new'] = $phone;
+    $insert['city_new'] = PHPShopString::utf8_win1251($order_info['result']['delivery_method']['name'],true);
     $insert['statusi_new'] = $OzonSeller->status;
-    $insert['status_new'] = serialize(array("maneger" => __('OZON заказ &#8470;' . $_POST['rowID'])));
+    $insert['status_new'] = serialize(array("maneger" => __('OZON заказ').' &#8470;' . $_POST['rowID']));
     $insert['sum_new'] = $order['Cart']['sum'];
     $insert['ozonseller_order_data_new'] = $_POST['rowID'];
 

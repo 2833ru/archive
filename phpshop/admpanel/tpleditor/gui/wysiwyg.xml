@@ -1362,54 +1362,6 @@
             <description>Место вывода списка товара</description>
         </var>
     </template>
-
-
-    <template>
-        <name>Форма 2 страницы списка товаров</name>
-        <path>product/product_page_list_2.tpl</path>
-        <description>Форма 2 страницы списка товаров</description>
-        <var>
-            <name>productId</name>
-            <description>ID подкаталога</description>
-        </var>
-        <var>
-            <name>productPageThis</name>
-            <description>Номер страницы</description>
-        </var>
-        <var>
-            <name>productRriceOT</name>
-            <description>Сумма сортировки по цене от</description>
-        </var>
-        <var>
-            <name>productRriceDO</name>
-            <description>Сумма сортировки по цене до</description>
-        </var>
-        <var>
-            <name>vendorDispTitle</name>
-            <description>Заголовок таблица сортировок</description>
-        </var>
-        <var>
-            <name>vendorDisp</name>
-            <description>Таблица сортировок на характеристикам</description>
-        </var>
-        <var>
-            <name>vendorSelectDisp</name>
-            <description>Кнопка управления сортировкой</description>
-        </var>
-        <var>
-            <name>productPageNav</name>
-            <description>Навигация</description>
-        </var>
-        <var>
-            <name>catalogCategory</name>
-            <description>Наименование подкаталога</description>
-        </var>
-        <var>
-            <name>productPageDis</name>
-            <description>Место вывода списка товара</description>
-        </var>
-    </template>
-
     <template>
         <name>Страница подробного описания товара</name>
         <path>product/product_page_full.tpl</path>
@@ -1823,7 +1775,7 @@
             <description>Описание</description>
         </var>
         <var>
-            <name>vendorDisp</name>
+            <name>previewSorts</name>
             <description>Характеристики</description>
         </var>
         <var>
@@ -1884,7 +1836,7 @@
             <description>Описание</description>
         </var>
         <var>
-            <name>vendorDisp</name>
+            <name>previewSorts</name>
             <description>Характеристики</description>
         </var>
         <var>
@@ -1945,7 +1897,7 @@
             <description>Описание</description>
         </var>
         <var>
-            <name>vendorDisp</name>
+            <name>previewSorts</name>
             <description>Характеристики</description>
         </var>
         <var>
@@ -2012,7 +1964,7 @@
             <description>Описание</description>
         </var>
         <var>
-            <name>vendorDisp</name>
+            <name>previewSorts</name>
             <description>Характеристики</description>
         </var>
     </template>
@@ -2096,7 +2048,7 @@
             <description>Описание</description>
         </var>
         <var>
-            <name>vendorDisp</name>
+            <name>previewSorts</name>
             <description>Характеристики</description>
         </var>
     </template>

@@ -96,6 +96,7 @@ class PHPShopString {
     /**
      *  одирование utf8 в win1251
      * @param string $s строка
+     * @param bool $utf_check проверка кодировки
      * @return string
      */
     static function utf8_win1251($s, $utf_check = false) {

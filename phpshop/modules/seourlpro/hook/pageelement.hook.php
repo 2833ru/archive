@@ -62,7 +62,7 @@ function pageCatal_seourl_hook($obj, $data, $rout) {
                     $obj->set('catalogTemplates', $obj->getValue('dir.templates') . chr(47) . $obj->PHPShopSystem->getValue('skin') . chr(47));
 
                     // Если есть страницы
-                    if ($obj->chek($row['id'])) {
+                    if ($obj->check($row['id'])) {
 
                         $obj->set('catalogName', $row['name']);
                         $obj->set('catalogId', $row['id']);

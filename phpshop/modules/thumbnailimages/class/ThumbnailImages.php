@@ -1,10 +1,12 @@
 <?php
 
+PHPShopObj::loadClass("category");
+PHPShopObj::loadClass("string");
 include_once dirname(dirname(dirname(__DIR__))) . '/lib/thumb/phpthumb.php';
 
 class ThumbnailImages {
 
-    private $options = [];
+    public $options = [];
     private $originalWidth;
     private $originalHeight;
     private $thumbnailWidth;
@@ -29,11 +31,19 @@ class ThumbnailImages {
         $this->adaptive = (int) $this->system->getSerilizeParam('admoption.image_adaptive_resize') === 1;
     }
 
+    protected function getProduct($parent) {
+        $product = (new PHPShopOrm($GLOBALS['SysValue']['base']['products']))->getOne(['category', 'name', 'id'], ['id' => '=' . $parent . '']);
+        return ['category' => $product['category'], 'name' => $product['name'], 'id' => $product['id']];
+    }
+
     public function generateThumbnail() {
         $count = 0;
         $skipped = [];
 
-        foreach ($this->getImages('thumb') as $image) {
+        foreach ($this->getImages('thumb') as $row) {
+
+            $image = $row['name'];
+            $parent = $row['parent'];
             $source = $this->getSourceImage($image);
 
             if (!empty($source)) {
@@ -53,6 +63,55 @@ class ThumbnailImages {
 
                 $path = pathinfo(str_replace('_big.', '.', $source));
 
+                // Имя товара и каталог
+                if ($this->system->ifSerilizeParam('admoption.image_save_catalog') or $this->system->ifSerilizeParam('admoption.image_save_seo'))
+                    $getProduct = $this->getProduct($parent);
+
+                // Сохранять в папки каталогов
+                if ($this->system->ifSerilizeParam('admoption.image_save_catalog')) {
+
+                    $PHPShopCategory = new PHPShopCategory($getProduct['category']);
+                    $parent_to = $PHPShopCategory->getParam('parent_to');
+                    $pathName = ucfirst(PHPShopString::toLatin($PHPShopCategory->getName()));
+
+                    if (!empty($parent_to)) {
+                        $PHPShopCategory = new PHPShopCategory($parent_to);
+                        $pathName = ucfirst(PHPShopString::toLatin($PHPShopCategory->getName())) . '/' . $pathName;
+                        $parent_to = $PHPShopCategory->getParam('parent_to');
+                    }
+
+                    if (!empty($parent_to)) {
+                        $PHPShopCategory = new PHPShopCategory($parent_to);
+                        $pathName = '/' . ucfirst(PHPShopString::toLatin($PHPShopCategory->getName())) . '/' . $pathName;
+                    }
+
+                    $path['dirname'] = $_SERVER['DOCUMENT_ROOT'].$GLOBALS['SysValue']['dir']['dir'] .'/UserFiles/Image/' .$this->system->getSerilizeParam('admoption.image_result_path'). $pathName;
+                    
+
+                    if (!is_dir($path['dirname'] . '/')) {
+                        mkdir($path['dirname'] . '/', 0777, true);
+                        //echo "Попытка создать " . $path['dirname'];
+                    }
+
+                    $image_new = str_replace([$_SERVER['DOCUMENT_ROOT'],'//'], ['','/'], $path['dirname'] . '/' . $path['filename'] . '.' . $path['extension']);
+                }
+
+                // SEO название
+                if ($this->system->ifSerilizeParam('admoption.image_save_seo')) {
+
+                    // Соль
+                    $RName = $count+1;
+                    $path['filename'] = str_replace(array("_", "+", '&#43;'), array("-", "", ""), PHPShopString::toLatin($getProduct['name'])) . '-' . $getProduct['id'] . '-' . $RName;
+
+                    $image_new = str_replace($_SERVER['DOCUMENT_ROOT'], '', $path['dirname'] . '/' . $path['filename'] . '.' . $path['extension']);
+                }
+
+                // Коррекиция имени с учетом каталога и seo
+                if (empty($image_new))
+                    $image_current = $image;
+                else
+                    $image_current = $image_new;
+
                 // Сохранение в webp
                 if ($this->options['type'] == 3 and $path['extension'] != 'webp') {
 
@@ -60,13 +119,13 @@ class ThumbnailImages {
 
                     $update = new PHPShopOrm($GLOBALS['SysValue']['base']['products']);
                     $update->debug = false;
-                    $image_old = str_replace([".png", ".jpg", ".jpeg", ".gif", ".PNG", ".JPG", ".JPEG", ".GIF", ".WEBP", ".webp"], ["s.png", "s.jpg", "s.jpeg", "s.gif", "s.PNG", "s.JPG", "s.JPEG", "s.GIF", "s.WEBP", "s.webp"], $image);
-                    $image_new = str_replace([".png", ".jpg", ".jpeg", ".gif", ".PNG", ".JPG", ".JPEG", ".GIF"], 's.webp', $image);
-                    $update->update(['pic_small_new' => $image_new], ['pic_big' => '="' . $image . '"']);
+                    $image_old = str_replace([".png", ".jpg", ".jpeg", ".gif", ".PNG", ".JPG", ".JPEG", ".GIF", ".WEBP", ".webp"], ["s.png", "s.jpg", "s.jpeg", "s.gif", "s.PNG", "s.JPG", "s.JPEG", "s.GIF", "s.WEBP", "s.webp"], $image_current);
+                    $image_new = str_replace([".png", ".jpg", ".jpeg", ".gif", ".PNG", ".JPG", ".JPEG", ".GIF"], 's.webp', $image_current);
+                    $update->update(['pic_small_new' => $image_new,'datas_new'=>time()], ['id' => '=' . $parent,'pic_big' => '="' . $image . '"']);
 
                     // Удаление старого файла
                     if ($this->options['delete'] == 2)
-                        @unlink($_SERVER['DOCUMENT_ROOT'].$image_old);
+                        @unlink($_SERVER['DOCUMENT_ROOT'] . $image_old);
 
                     $path['extension'] = 'webp';
                 }
@@ -78,15 +137,23 @@ class ThumbnailImages {
 
                     $update = new PHPShopOrm($GLOBALS['SysValue']['base']['products']);
                     $update->debug = false;
-                    $image_old = str_replace([".png", ".jpg", ".jpeg", ".gif", ".PNG", ".JPG", ".JPEG", ".GIF", ".WEBP", ".webp"], ["s.png", "s.jpg", "s.jpeg", "s.gif", "s.PNG", "s.JPG", "s.JPEG", "s.GIF", "s.WEBP", "s.webp"], $image);
-                    $image_new = str_replace([".png", ".jpg", ".jpeg", ".gif", ".PNG", ".JPG", ".JPEG", ".GIF", '.WEBP', '.webp'], 's.jpg', $image);
-                    $update->update(['pic_small_new' => $image_new], ['pic_big' => '="' . $image . '"']);
+
+                    $image_old = str_replace([".png", ".jpg", ".jpeg", ".gif", ".PNG", ".JPG", ".JPEG", ".GIF", ".WEBP", ".webp"], ["s.png", "s.jpg", "s.jpeg", "s.gif", "s.PNG", "s.JPG", "s.JPEG", "s.GIF", "s.WEBP", "s.webp"], $image_current);
+                    $image_new = str_replace([".png", ".jpg", ".jpeg", ".gif", ".PNG", ".JPG", ".JPEG", ".GIF", '.WEBP', '.webp'], 's.jpg', $image_current);
+                    $update->update(['pic_small_new' => $image_new,'datas_new'=>time()],['id' => '=' . $parent,'pic_big' => '="' . $image . '"']);
 
                     // Удаление старого файла
                     if ($this->options['delete'] == 2)
-                        @unlink($_SERVER['DOCUMENT_ROOT'].$image_old);
+                        @unlink($_SERVER['DOCUMENT_ROOT'] . $image_old);
 
                     $path['extension'] = 'jpg';
+                }
+                // Оригинальный
+                elseif (!empty($image_new)) {
+                    $image_new = str_replace($_SERVER['DOCUMENT_ROOT'], '', $path['dirname'] . '/' . $path['filename'] . 's.' . $path['extension']);
+                    $update = new PHPShopOrm($GLOBALS['SysValue']['base']['products']);
+                    $update->debug = false;
+                    $update->update(['pic_small_new' => $image_new,'datas_new'=>time()], ['id' => '=' . $parent, 'pic_big' => '="' . $image . '"']);
                 }
 
                 $thumb->save($path['dirname'] . '/' . $path['filename'] . 's.' . $path['extension']);
@@ -103,7 +170,12 @@ class ThumbnailImages {
     public function generateOriginal() {
         $count = 0;
         $skipped = [];
-        foreach ($this->getImages('original') as $image) {
+        foreach ($this->getImages('original') as $row) {
+
+            $image = $row['name'];
+            $parent = $row['parent'];
+            $id = $row['id'];
+            
             $source = $this->getSourceImage($image);
 
             if (!empty($source)) {
@@ -123,6 +195,53 @@ class ThumbnailImages {
 
                 $path = pathinfo(str_replace('_big.', '.', $source));
 
+                // Имя товара и каталог
+                if ($this->system->ifSerilizeParam('admoption.image_save_catalog') or $this->system->ifSerilizeParam('admoption.image_save_seo'))
+                    $getProduct = $this->getProduct($parent);
+
+                // Сохранять в папки каталогов
+                if ($this->system->ifSerilizeParam('admoption.image_save_catalog')) {
+
+                    $PHPShopCategory = new PHPShopCategory($getProduct['category']);
+                    $parent_to = $PHPShopCategory->getParam('parent_to');
+                    $pathName = ucfirst(PHPShopString::toLatin($PHPShopCategory->getName()));
+
+                    if (!empty($parent_to)) {
+                        $PHPShopCategory = new PHPShopCategory($parent_to);
+                        $pathName = ucfirst(PHPShopString::toLatin($PHPShopCategory->getName())) . '/' . $pathName;
+                        $parent_to = $PHPShopCategory->getParam('parent_to');
+                    }
+
+                    if (!empty($parent_to)) {
+                        $PHPShopCategory = new PHPShopCategory($parent_to);
+                        $pathName = '/' . ucfirst(PHPShopString::toLatin($PHPShopCategory->getName())) . '/' . $pathName;
+                    }
+
+                    $path['dirname'] = $_SERVER['DOCUMENT_ROOT'].$GLOBALS['SysValue']['dir']['dir'] .'/UserFiles/Image/' .$this->system->getSerilizeParam('admoption.image_result_path'). $pathName;
+
+                    if (!is_dir($path['dirname'] . '/')) {
+                        mkdir($path['dirname'] . '/', 0777, true);
+                        //echo "Попытка создать " . $path['dirname'];
+                    }
+
+                    $image_new = str_replace([$_SERVER['DOCUMENT_ROOT'],'//'], ['','/'], $path['dirname'] . '/' . $path['filename'] . '.' . $path['extension']);
+                }
+
+                // SEO название
+                if ($this->system->ifSerilizeParam('admoption.image_save_seo')) {
+
+                    // Соль
+                    $RName = $count+1;
+                    $path['filename'] = str_replace(array("_", "+", '&#43;'), array("-", "", ""), PHPShopString::toLatin($getProduct['name'])) . '-' . $getProduct['id'] . '-' . $RName;
+
+                    $image_new = str_replace($_SERVER['DOCUMENT_ROOT'], '', $path['dirname'] . '/' . $path['filename'] . '.' . $path['extension']);
+                }
+
+                // Коррекиция имени с учетом каталога и seo
+                if (empty($image_new))
+                    $image_current = $image;
+                else
+                    $image_current = $image_new;
 
                 // Сохранение в webp
                 if ($this->options['type'] == 3 and $path['extension'] != 'webp') {
@@ -131,15 +250,15 @@ class ThumbnailImages {
 
                     $update = new PHPShopOrm($GLOBALS['SysValue']['base']['products']);
                     $update->debug = false;
-                    $image_new = str_replace([".png", ".jpg", ".jpeg", ".gif", ".PNG", ".JPG", ".JPEG", ".GIF"], '.webp', $image);
-                    $update->update(['pic_big_new' => $image_new], ['pic_big' => '="' . $image . '"']);
+                    $image_new = str_replace([".png", ".jpg", ".jpeg", ".gif", ".PNG", ".JPG", ".JPEG", ".GIF"], '.webp', $image_current);
+                    $update->update(['pic_big_new' => $image_new,'datas_new'=>time()], ['id' => '=' . $parent,'pic_big' => '="' . $image . '"']);
 
                     $update = new PHPShopOrm($GLOBALS['SysValue']['base']['foto']);
-                    $update->update(['name_new' => $image_new], ['name' => '="' . $image . '"']);
+                    $update->update(['name_new' => $image_new], ['id' => '=' . $id ]);
 
                     // Удаление старого файла
                     if ($this->options['delete'] == 2)
-                        @unlink($_SERVER['DOCUMENT_ROOT'].$image);
+                        @unlink($_SERVER['DOCUMENT_ROOT'] . $image);
 
                     $path['extension'] = 'webp';
                 }
@@ -150,17 +269,27 @@ class ThumbnailImages {
 
                     $update = new PHPShopOrm($GLOBALS['SysValue']['base']['products']);
                     $update->debug = false;
-                    $image_new = str_replace([".png", ".jpg", ".jpeg", ".gif", ".PNG", ".JPG", ".JPEG", ".GIF", '.WEBP', '.webp'], '.jpg', $image);
-                    $update->update(['pic_big_new' => $image_new], ['pic_big' => '="' . $image . '"']);
+                    $image_new = str_replace([".png", ".jpg", ".jpeg", ".gif", ".PNG", ".JPG", ".JPEG", ".GIF", '.WEBP', '.webp'], '.jpg', $image_current);
+                    $update->update(['pic_big_new' => $image_new,'datas_new'=>time()], ['id' => '=' . $parent,'pic_big' => '="' . $image . '"']);
 
                     $update = new PHPShopOrm($GLOBALS['SysValue']['base']['foto']);
-                    $update->update(['name_new' => $image_new], ['name' => '="' . $image . '"']);
+                    $update->update(['name_new' => $image_new], ['id' => '=' . $id ]);
 
                     // Удаление старого файла
                     if ($this->options['delete'] == 2)
-                        @unlink($_SERVER['DOCUMENT_ROOT'].$image);
+                        @unlink($_SERVER['DOCUMENT_ROOT'] . $image);
 
                     $path['extension'] = 'jpg';
+                }
+                // Оригинальный
+                elseif (!empty($image_new)) {
+                    $update = new PHPShopOrm($GLOBALS['SysValue']['base']['products']);
+                    $update->debug = false;
+                    $update->update(['pic_big_new' => $image_new,'datas_new'=>time()], ['id' => '=' . $parent,'pic_big' => '="' . $image . '"']);
+
+                    $update = new PHPShopOrm($GLOBALS['SysValue']['base']['foto']);
+                    $update->debug = false;
+                    $update->update(['name_new' => $image_new], ['id' => '=' . $id ]);
                 }
 
                 $thumb->save($path['dirname'] . '/' . $path['filename'] . '.' . $path['extension']);
@@ -187,15 +316,16 @@ class ThumbnailImages {
             $from = 0;
         }
 
-        $images = array_column($orm->getList(['name'], false, false, ['limit' => $from . ',' . $to]), 'name');
+        $images = $orm->getList(['name', 'parent','id'], false, false, ['limit' => $from . ',' . $to]);
 
         // Выбрано меньше чем лимит, значит картинки закончились. Обнуляем настройки, что бы процесс начался заново.
         if (count($images) < (int) $this->options['limit']) {
-            $settings->update(['processed_new' => '0', 'last_operation_new' => $operation], ['id' => '="1"']);
+            $settings->update(['processed_new' => '0','stop_new'=>'1','run_new'=>'0', 'last_operation_new' => $operation], ['id' => '="1"']);
         } else {
             $settings->update([
                 'processed_new' => (int) $this->options['processed'] + (int) $this->options['limit'],
-                'last_operation_new' => $operation
+                'last_operation_new' => $operation,
+                'run_new'=>1,
                     ], ['id' => '="1"']);
         }
 

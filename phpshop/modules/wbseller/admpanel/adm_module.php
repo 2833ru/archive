@@ -76,7 +76,7 @@ function actionStart() {
     $getWarehouse = $WbSeller->getWarehouse();
     if (is_array($getWarehouse))
         foreach ($getWarehouse as $warehouse)
-            $warehouse_value[] = array($warehouse['name'], $warehouse['id'], $data['warehouse']);
+            $warehouse_value[] = array(PHPShopString::utf8_win1251($warehouse['name'],true), $warehouse['id'], $data['warehouse']);
 
     $Tab3 = $PHPShopGUI->setCollapse('Цены', $PHPShopGUI->setField('Колонка цен WB', $PHPShopGUI->setSelect('price_new', $PHPShopGUI->setSelectValue($data['price'], 5), 100)) .
             $PHPShopGUI->setField('Наценка', $PHPShopGUI->setInputText($status_pre, 'fee_new', $data['fee'], 100, '%')) .

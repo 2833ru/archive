@@ -34,6 +34,11 @@ function actionStart() {
         'name' => 'Очистить кеш фильтра',
         'action' => 'ResetCache'
     );
+    
+    $PHPShopInterface->action_select['Удалить неиспользуемые'] = array(
+        'name' => 'Удалить неиспользуемые',
+        'action' => 'CleanSort'
+    );
 
     if (!empty($_GET['cat']))
         $PHPShopInterface->action_select['Редактировать группу'] = array(
@@ -45,7 +50,7 @@ function actionStart() {
     if (!empty($_GET['cat']))
         $TitlePage.=': ' . $SortCategoryArray[$_GET['cat']]['name'];
 
-    $PHPShopInterface->setActionPanel($TitlePage, array('Редактировать группу', 'Добавить группу', 'Очистить кеш', '|', 'Удалить выбранные'), array('Добавить характеристику'));
+    $PHPShopInterface->setActionPanel($TitlePage, array('Редактировать группу', 'Добавить группу', '|','Очистить кеш', 'Удалить неиспользуемые', '|', 'Удалить выбранные'), array('Добавить характеристику'));
     $PHPShopInterface->setCaption(array(null, "1%"), array("Название", "40%"), array("", "8%"), array("Каталог" . "", "10%", array('align' => 'center')), array("Бренд" . "", "10%", array('align' => 'center')), array("Опция" . "", "10%", array('align' => 'center')), array("Фильтр" . "", "10%", array('align' => 'center')));
 
     $where = array('category' => '!=0');

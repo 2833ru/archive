@@ -80,7 +80,7 @@ function actionCreate() {
     else if (!empty($_POST['export_comment']))
         $file = substr(PHPShopString::toLatin($_POST['export_comment']), 0, 25) . '.sql';
     else
-        $file = 'base_' . date("d_m_y_His") . '.sql';
+        $file = 'base_' . date("Y_m_d_His") . '.sql';
 
 
     $file = "./dumper/backup/" . $file;

@@ -302,6 +302,7 @@ if (!empty($_COOKIE['fullscreen'])) {
                                         <ul class="dropdown-menu">
                                             <li><a href="?path=exchange.service"><?php _e('Очистка базы данных'); ?></a></li>
                                             <li><a href="?path=exchange.file"><?php _e('Проверка изображений'); ?></a></li>
+                                            <li><a href="?path=product"><?php _e('Проверка товаров'); ?></a></li>
                                         </ul>
                                     </li>
 

@@ -44,8 +44,8 @@ function actionStart() {
                  </span>
             </div></div>';
 
-        // Левый сайдбар
-        $sidebarleft[] = array('title' => 'Категории', 'content' => $search . '<div id="tree">' . $treebar . '</div>', 'title-icon' => '<span class="glyphicon glyphicon-plus addNewCat" data-toggle="tooltip" data-placement="top" title="Добавить каталог"></span>&nbsp;<span class="glyphicon glyphicon-chevron-down" data-toggle="tooltip" data-placement="top" title="Развернуть"></span>&nbsp;<span class="glyphicon glyphicon-chevron-up" data-toggle="tooltip" data-placement="top" title="Свернуть"></span>&nbsp;<span class="glyphicon glyphicon-search" id="show-category-search" data-toggle="tooltip" data-placement="top" title="Поиск"></span>');
+    // Левый сайдбар
+    $sidebarleft[] = array('title' => 'Категории', 'content' => $search . '<div id="tree">' . $treebar . '</div>', 'title-icon' => '<span class="glyphicon glyphicon-plus addNewCat" data-toggle="tooltip" data-placement="top" title="Добавить каталог"></span>&nbsp;<span class="glyphicon glyphicon-chevron-down" data-toggle="tooltip" data-placement="top" title="Развернуть"></span>&nbsp;<span class="glyphicon glyphicon-chevron-up" data-toggle="tooltip" data-placement="top" title="Свернуть"></span>&nbsp;<span class="glyphicon glyphicon-search" id="show-category-search" data-toggle="tooltip" data-placement="top" title="Поиск"></span>');
 
     $PHPShopInterface->setSidebarLeft($sidebarleft, 3);
     $PHPShopInterface->sidebarLeftCell = 3;
@@ -86,8 +86,8 @@ function actionStart() {
           </div>
        </div>
    </div>';
-    
-        $PHPShopInterface->_CODE .= '   
+
+    $PHPShopInterface->_CODE .= '   
     <div class="row intro-row">
        <div class="col-md-3 col-xs-6 col-panel">
           <div class="panel panel-default">
@@ -124,17 +124,32 @@ function actionStart() {
    </div>';
 
     $fixVariants = [
-        [__('Перенести в Неопределенные товары &rarr; Удаленные'), 1, 1],
+        [__('Перенести в Неопределенные товары'), 1, 1],
         [__('Удалить'), 2, 1]
     ];
 
     $PHPShopInterface->_CODE .= '<div class="row intro-row">';
-    $PHPShopInterface->_CODE .= '<div class="col-md-12 text-center col-panel">';
+    $PHPShopInterface->_CODE .= '<div class="col-md-6 text-center col-panel">';
     $PHPShopInterface->_CODE .= '<div class="panel panel-default fix-products-block">';
     $PHPShopInterface->_CODE .= '<div class="panel-heading"><span class="glyphicon glyphicon-transfer"></span> ' . __('Товары с удаленными категориями') . '</div>';
     $PHPShopInterface->_CODE .= '<div class="panel-body text-left panel-intro text-center">';
-    $PHPShopInterface->_CODE .= $PHPShopGUI->setSelect('fix_products', $fixVariants, 400);
-    $PHPShopInterface->_CODE .= $PHPShopGUI->setButton('Перенести', 'ok', 'fix-products');
+    $PHPShopInterface->_CODE .= $PHPShopGUI->setSelect('fix_products', $fixVariants, 270);
+    $PHPShopInterface->_CODE .= $PHPShopGUI->setButton('Выполнить', 'ok', 'fix-products');
+    $PHPShopInterface->_CODE .= '</div>';
+    $PHPShopInterface->_CODE .= '</div>';
+    $PHPShopInterface->_CODE .= '</div>';
+
+    $fixCategory = [
+        [__('Скрыть'), 1, 1],
+        [__('Удалить'), 2, 1]
+    ];
+
+    $PHPShopInterface->_CODE .= '<div class="col-md-6 text-center col-panel">';
+    $PHPShopInterface->_CODE .= '<div class="panel panel-default fix-products-block">';
+    $PHPShopInterface->_CODE .= '<div class="panel-heading"><span class="glyphicon glyphicon-transfer"></span> ' . __('Категории с удаленными товарами') . '</div>';
+    $PHPShopInterface->_CODE .= '<div class="panel-body text-left panel-intro text-center">';
+    $PHPShopInterface->_CODE .= $PHPShopGUI->setSelect('fix_category', $fixCategory, 270);
+    $PHPShopInterface->_CODE .= $PHPShopGUI->setButton('Выполнить', 'ok', 'fix-category');
     $PHPShopInterface->_CODE .= '</div>';
     $PHPShopInterface->_CODE .= '</div>';
     $PHPShopInterface->_CODE .= '</div>';
@@ -143,8 +158,7 @@ function actionStart() {
     $PHPShopInterface->Compile(3);
 }
 
-function actionDeleteProducts()
-{
+function actionDeleteProducts() {
     $mode = (int) $_REQUEST['mode'];
 
     $orm = new PHPShopOrm($GLOBALS['SysValue']['base']['categories']);
@@ -153,7 +167,7 @@ function actionDeleteProducts()
     // Ищем у каких категорий удалена родительская, собираем в массив id таких категорий и всех их подкатегорий
     $childrens = [];
     foreach ($categories as $id => $parentId) {
-        if((int) $parentId > 0 && !isset($categories[$parentId])) {
+        if ((int) $parentId > 0 && !isset($categories[$parentId])) {
             $category = new PHPShopCategory((int) $id);
             $childrens[] = (int) $id;
             foreach (array_column($category->getChildrenCategories(1000, ['id'], false), 'id') as $child) {
@@ -170,8 +184,8 @@ function actionDeleteProducts()
 
     $orm = new PHPShopOrm($GLOBALS['SysValue']['base']['products']);
     $count = $orm->select(["COUNT('id') as count"], ['category' => sprintf(' NOT IN (%s)', implode(',', array_keys($categories)))]);
-    if((int) $count['count'] > 0) {
-        if($mode === 1) {
+    if ((int) $count['count'] > 0) {
+        if ($mode === 1) {
             $orm->update(['category_new' => 1000004], ['category' => sprintf(' NOT IN (%s)', implode(',', array_keys($categories)))]);
         } else {
             $orm->delete(['category' => sprintf(' NOT IN (%s)', implode(',', array_keys($categories)))]);
@@ -179,6 +193,39 @@ function actionDeleteProducts()
     }
 
     return ['success' => 1, 'count' => $count['count']];
+}
+
+function actionDeleteCategory() {
+    $mode = (int) $_REQUEST['mode'];
+    $count=0;
+
+    $PHPShopProduct = new PHPShopOrm($GLOBALS['SysValue']['base']['products']);
+    $PHPShopCat = new PHPShopOrm($GLOBALS['SysValue']['base']['categories']);
+
+    $data = $PHPShopCat->getList(['id', 'name'], false, ['order' => 'id']);
+    if (is_array($data))
+        foreach ($data as $row) {
+
+            $check_parent = $PHPShopCat->getOne(['id'], ['parent_to' => '=' . $row['id']]);
+
+            if (empty($check_parent)) {
+
+                $where['category'] = "=" . $row['id'] . ' OR dop_cat LIKE \'%#' . $row['id'] . '#%\' ';
+                $check_product = $PHPShopProduct->getOne(['id'], $where);
+
+                if (empty($check_product)) {
+
+                    if($mode == 2)
+                    $PHPShopCat->delete(['id' => '=' . $row['id']]);
+                    else 
+                        $PHPShopCat->update(['skin_enabled_new'=>1],['id' => '=' . $row['id']]);
+                    
+                    $count++;
+                }
+            }
+        }
+
+    return ['success' => 1, 'count' => $count];
 }
 
 // Обработка событий

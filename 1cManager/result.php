@@ -688,7 +688,7 @@ class ReadCsv1C extends PHPShopReadCsvNative {
             if ($this->ObjSystem->getSerilizeParam("1c_option.update_category") == 1 and $this->ObjSystem->getSerilizeParam("1c_option.update_sort") == 1 and ! empty($CsvToArray[$GLOBALS['option']['sort']])) {
 
                 // Генератор характеристик общие значения
-                if ($this->ObjSystem->getSerilizeParam("1c_option.update_sort_type") == 1) {
+                if ($this->ObjSystem->getSerilizeParam("admoption.update_sort_type") == 1) {
 
                     $resCharsArray = charsGeneratorGeneral($CsvToArray[15], $CsvToArray);
                 }
@@ -787,7 +787,7 @@ class ReadCsv1C extends PHPShopReadCsvNative {
 
 
                 // Генератор характеристик общие значения
-                if ($this->ObjSystem->getSerilizeParam("1c_option.update_sort_type") == 1) {
+                if ($this->ObjSystem->getSerilizeParam("admoption.update_sort_type") == 1) {
 
                     $resCharsArray = charsGeneratorGeneral($CsvToArray[15], $CsvToArray);
                 }

@@ -5,6 +5,7 @@ include_once dirname(__FILE__) . '/../class/VkSeller.php';
 PHPShopObj::loadClass("order");
 PHPShopObj::loadClass("array");
 PHPShopObj::loadClass("category");
+PHPShopObj::loadClass("delivery");
 
 // SQL
 $PHPShopOrm = new PHPShopOrm($PHPShopModules->getParam("base.vkseller.vkseller_system"));
@@ -44,7 +45,11 @@ function actionUpdate() {
             $where = array('category' => ' IN ("' . implode('","', $cat_array) . '")');
             $PHPShopOrmProducts = new PHPShopOrm($GLOBALS['SysValue']['base']['products']);
             $PHPShopOrmProducts->debug = false;
-            $PHPShopOrmProducts->update(array('export_vk_new' => intval($_POST['enabled_all'])), $where);
+
+            if ($_POST['enabled_all'] == 1)
+                $PHPShopOrmProducts->update(array('export_vk_new' => (int) $_POST['enabled_all']), $where);
+            else
+                $PHPShopOrmProducts->update(array('export_vk_new' => (int) $_POST['enabled_all'], 'export_vk_task_status_new' => 0, 'export_vk_id_new' => 0), $where);
         }
     }
 
@@ -89,14 +94,23 @@ function treegenerator($array, $i, $curent, $dop_cat_array) {
 }
 
 function actionStart() {
-    global $PHPShopGUI, $PHPShopOrm, $VkSeller;
-
+    global $PHPShopGUI, $PHPShopOrm, $TitlePage, $select_name;
 
     $PHPShopGUI->field_col = 4;
     $PHPShopGUI->addJSFiles('../modules/vkseller/admpanel/gui/vkseller.gui.js');
 
     // Выборка
     $data = $PHPShopOrm->select();
+
+    if ($data['model'] === 'API') {
+        $PHPShopGUI->action_button['Экспортировать данные'] = [
+            'name' => 'Экспортировать данные',
+            'class' => 'btn btn-default btn-sm navbar-btn vk-export',
+            'type' => 'button',
+            'icon' => 'glyphicon glyphicon-export'
+        ];
+        $PHPShopGUI->setActionPanel($TitlePage, $select_name, ['Экспортировать данные', 'Сохранить и закрыть']);
+    }
 
     // Статус
     $status[] = [__('Новый заказ'), 0, $data['status']];
@@ -172,6 +186,29 @@ function actionStart() {
         ];
 
     $Tab1 = $PHPShopGUI->setField('Модель работы', $PHPShopGUI->setSelect('model_new', $models, '100%', true));
+    
+    // Статусы автоматической загрузки
+    $status_import_array=['Новый заказ','Согласовывается','Собирается','Доставляется','Выполнен','Отменен','Возврат'];
+    foreach ($status_import_array as $k => $status_val) {
+        $order_status_import_value[] = array(__($status_val), $k, $data['status_import']);
+    }
+    
+        // Доставка
+    $PHPShopDeliveryArray = new PHPShopDeliveryArray();
+
+    $DeliveryArray = $PHPShopDeliveryArray->getArray();
+    if (is_array($DeliveryArray))
+        foreach ($DeliveryArray as $delivery) {
+
+            // Длинные наименования
+            if (strpos($delivery['city'], '.')) {
+                $name = explode(".", $delivery['city']);
+                $delivery['city'] = $name[0];
+            }
+
+            $delivery_value[] = array($delivery['city'], $delivery['id'], $data['delivery'], 'data-subtext="' . $delivery['price'] . '"');
+        }
+        
 
     if ($data['model'] === 'API') {
         $Tab1 .= $PHPShopGUI->setField('API key', $PHPShopGUI->setTextarea('token_new', $data['token'], false, '100%', '100') . $PHPShopGUI->setHelp('Получить <a href="../modules/vkseller/token.php?client_id=" id="client_token" target="_blank">Персональный ключ</a>'));
@@ -179,6 +216,8 @@ function actionStart() {
         $Tab1 .= $PHPShopGUI->setField("Защищенный ключ приложения", $PHPShopGUI->setInputText(null, "client_secret_new", $data['client_secret'], '100%'));
         $Tab1 .= $PHPShopGUI->setField("ID сообщества", $PHPShopGUI->setInputText('public', "owner_id_new", $data['owner_id'], '100%'));
         $Tab1 .= $PHPShopGUI->setField('Статус нового заказа', $PHPShopGUI->setSelect('status_new', $order_status_value, '100%'));
+        $Tab1 .= $PHPShopGUI->setField('Статус заказа в VK для автоматической загрузки', $PHPShopGUI->setSelect('status_import_new', $order_status_import_value, '100%'));
+       $Tab1 .= $PHPShopGUI->setField('Доставка', $PHPShopGUI->setSelect('delivery_new', $delivery_value, '100%'));
         $Tab1 .= $PHPShopGUI->setField('Ссылка на товар', $PHPShopGUI->setCheckbox('link_new', 1, 'Показать ссылку на товар в ВК', $data['link']));
     }
 
@@ -213,6 +252,11 @@ function actionStart() {
 
     // Вывод кнопок сохранить и выход в футер
     $ContentFooter = $PHPShopGUI->setInput("hidden", "rowID", $data['id']) .
+            $PHPShopGUI->setInput("hidden", "locale_vk_start_export", __('Вы действительно хотите запустить экспорт в ВКонтакте?')) .
+            $PHPShopGUI->setInput("hidden", "locale_vk_stop_export", __('Вы действительно хотите прервать экспорт данных?')) .
+            $PHPShopGUI->setInput("hidden", "locale_vk_export", __('Экспорт товаров в ВКонтакте')) .
+            $PHPShopGUI->setInput("hidden", "locale_vk_export_done", __('Экспорт в ВКонтакте выполнен, выгружено % товаров')) .
+            $PHPShopGUI->setInput("hidden", "stop", 0) .
             $PHPShopGUI->setInput("submit", "saveID", "Применить", "right", 80, "", "but", "actionUpdate.modules.edit");
 
     $PHPShopGUI->setFooter($ContentFooter);

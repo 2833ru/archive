@@ -313,7 +313,7 @@ $().ready(function () {
             alert(locale.select_no);
     });
 
-    // Автоматизация восстанвления бекапа
+    // Автоматизация восстановления бекапа
     function auto_restore(file, option) {
 
         var data = [];

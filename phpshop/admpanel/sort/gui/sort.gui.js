@@ -352,4 +352,38 @@ $().ready(function () {
             }
         });
     });
+
+    // Удалить неиспользуемые
+    $(".CleanSort").on('click', function (event) {
+        event.preventDefault();
+
+        var data = [];
+        data.push({name: 'actionList[CleanSort]', value: 'actionCleanSort.sort.edit'});
+        data.push({name: 'CleanSort', value: '1'});
+        data.push({name: 'ajax', value: 1});
+
+        $.MessageBox({
+            buttonDone: "OK",
+            buttonFail: locale.cancel,
+            message: locale.create_db_dump
+        }).done(function () {
+
+            $.ajax({
+                mimeType: 'text/html; charset=' + locale.charset,
+                url: '?path=catalog.select',
+                type: 'post',
+                data: data,
+                dataType: "json",
+                async: false,
+                success: function (json) {
+                    if (json['success'] == 1) {
+                        showAlertMessage(locale.done+'. '+locale.products_completed + ' ' + json['count']);
+                    } else
+                        showAlertMessage(locale.save_false, true);
+                }
+            });
+
+        });
+
+    });
 });

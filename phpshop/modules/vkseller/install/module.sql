@@ -13,11 +13,13 @@ CREATE TABLE IF NOT EXISTS `phpshop_modules_vkseller_system` (
 `password` varchar(64) default '',
 `model` varchar(64),
 `link` enum('0','1') NOT NULL default '0',
+`status_import` varchar(64) default '',
+`delivery` INT(11) NOT NULL default '0',
 `version` varchar(64) DEFAULT '1.0',
 PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
 
-INSERT INTO `phpshop_modules_vkseller_system` VALUES (1, '', '',1,0,'1','','','','1','','YML','0','1.0');
+INSERT INTO `phpshop_modules_vkseller_system` VALUES (1, '', '',1,0,'1','','','','1','','YML','0','',0,'1.2');
 
 CREATE TABLE IF NOT EXISTS `phpshop_modules_vkseller_log` (
 `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -36,3 +38,12 @@ ALTER TABLE `phpshop_products` ADD `price_vk` float DEFAULT '0';
 ALTER TABLE `phpshop_products` ADD `export_vk_task_status` int(11) DEFAULT 0;
 ALTER TABLE `phpshop_products` ADD `export_vk_id` int(11) DEFAULT 0;
 ALTER TABLE `phpshop_categories` ADD `category_vkseller` int(11) DEFAULT 0;
+
+CREATE TABLE IF NOT EXISTS `phpshop_modules_vkseller_export` (
+`id` int(11) NOT NULL AUTO_INCREMENT,
+`date` int(11) NOT NULL,
+`message` text NOT NULL,
+`product_id` int(11) NOT NULL,
+`product_name` VARCHAR(255) NOT NULL,
+PRIMARY KEY (`id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;

@@ -676,6 +676,8 @@ class CommerceMLLoader {
         curl_setopt_array($сurl, array(
             CURLOPT_URL => $url,
             CURLOPT_RETURNTRANSFER => true,
+			CURLOPT_SSL_VERIFYHOST => false,
+            CURLOPT_SSL_VERIFYPEER => false
         ));
         $action = curl_exec($сurl);
         curl_close($сurl);

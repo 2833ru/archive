@@ -5,7 +5,7 @@ PHPShopObj::loadClass("valuta");
 /**
  * Библиотека работы с VK Товары API
  * @author PHPShop Software
- * @version 1.0
+ * @version 1.2
  * @package PHPShopModules
  * @todo https://dev.vk.com/method/market
  */
@@ -51,6 +51,8 @@ class VkSeller {
         $this->owner_id = $this->options['owner_id'];
         $this->client_secret = $this->options['client_secret'];
         $this->access_token = $this->options['token'];
+        $this->status_import = $this->options['status_import'];
+        $this->delivery = $this->options['delivery'];
 
         if (!empty($_SERVER['HTTPS']) && 'off' !== strtolower($_SERVER['HTTPS']))
             $this->ssl = 'https://';
@@ -213,7 +215,7 @@ class VkSeller {
     }
 
     /**
-     * Запись в журнал
+     * Запись в журнал операций
      */
     public function log($message, $id, $type) {
         $PHPShopOrm = new PHPShopOrm('phpshop_modules_vkseller_log');
@@ -226,6 +228,30 @@ class VkSeller {
         );
 
         $PHPShopOrm->insert($log);
+    }
+
+    /**
+     * Запись в журнал экспорта
+     */
+    public function export_log($message, $id, $name) {
+        $PHPShopOrm = new PHPShopOrm('phpshop_modules_vkseller_export');
+
+        $log = array(
+            'message_new' => $message,
+            'product_id_new' => $id,
+            'product_name_new' => $name,
+            'date_new' => time()
+        );
+
+        $PHPShopOrm->insert($log);
+    }
+
+    /**
+     * Очистка журнала экспорта
+     */
+    public function clean_log($id) {
+        $PHPShopOrm = new PHPShopOrm('phpshop_modules_vkseller_export');
+        $PHPShopOrm->delete(['product_id' => '=' . $id]);
     }
 
     public function getImages($id, $pic_main) {
@@ -266,8 +292,19 @@ class VkSeller {
     public function sendImages($id, $image) {
 
 
+        // создание временной картинки для WEBP
+        if (!stristr($image, '.webp')) {
+            require_once $_SERVER['DOCUMENT_ROOT'] . $GLOBALS['SysValue']['dir']['dir'] . '/phpshop/lib/thumb/phpthumb.php';
+            $thumb = new PHPThumb($_SERVER['DOCUMENT_ROOT'] . $image);
+            $thumb->setFormat('JPG');
+            $image = str_replace([".WEBP", '.webp'], '.jpg', $image);
+            $thumb->save($image);
+            $webp = true;
+        } else
+            $webp = false;
+
         $data = array(
-            'file' => new CURLfile($_SERVER['DOCUMENT_ROOT'] . $image)
+            'file' => new CURLfile($_SERVER['DOCUMENT_ROOT'] . $GLOBALS['SysValue']['dir']['dir'] . $image)
         );
 
         // Url
@@ -293,6 +330,11 @@ class VkSeller {
         // Журнал
         $log['params'] = $params;
         $log['result'] = $result;
+
+
+        // Удаление временной картинки
+        if ($webp)
+            @unlink($_SERVER['DOCUMENT_ROOT'] . $GLOBALS['SysValue']['dir']['dir'] . $image);
 
         //$this->log($log, $id, self::SAVE_PHOTO);
 

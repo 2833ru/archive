@@ -23,6 +23,7 @@ class PHPShopAdminRule {
             'order' => 'visitor',
             'payment' => 'order',
             'catalog' => 'cat_prod',
+            'product' => 'report',
             'slider' => 'baner',
             'report' => 'stats1',
             'menu' => 'page_menu',

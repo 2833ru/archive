@@ -163,6 +163,10 @@ function actionUpdate() {
             $PHPShopMail->sendMailNow($content_adm);
         }
     }
+    
+    // Защита от блокировки самого себя
+    if($_POST['enabled_new'] == 0 and $_POST['rowID'] == $_SESSION['idPHPSHOP'])
+        $_POST['enabled_new'] = 1;
 
     // Перехват модуля
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $_POST);

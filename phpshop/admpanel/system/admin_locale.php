@@ -26,6 +26,7 @@ function actionStart() {
         $langArrayHelp = parse_ini_file_true($langFile. '.bak', 1);
     }
 
+    $PHPShopGUI->addJSFiles('./js/jquery.waypoints.min.js', './system/gui/system.gui.js');
     $PHPShopGUI->setActionPanel($TitlePage, false, array('Сбросить изменения', 'Сохранить'));
 
 

@@ -107,7 +107,7 @@ $key_placeholder = array(
 );
 
 // Стоп лист
-$key_stop = array('id', 'password', 'wishlist', 'datas', 'data_adres', 'sort', 'yml_bid_array', 'vendor', 'status', 'user', 'title_enabled', 'descrip_enabled', 'title_shablon', 'descrip_shablon', 'title_shablon', 'keywords_enabled', 'keywords_shablon','parent2');
+$key_stop = array('id', 'password', 'wishlist', 'datas', 'data_adres', 'sort', 'yml_bid_array', 'vendor', 'status', 'user', 'title_enabled', 'descrip_enabled', 'title_shablon', 'descrip_shablon', 'title_shablon', 'keywords_enabled', 'keywords_shablon', 'parent2');
 
 // Настраиваемые поля
 if (!empty($GLOBALS['SysValue']['base']['productoption']['productoption_system'])) {
@@ -725,6 +725,49 @@ function actionResetCache() {
     $PHPShopOrm->update(array('sort_cache_new' => '', 'sort_cache_created_at_new' => 0));
 
     return array('success' => true);
+}
+
+/*
+ * Удалить неиспользуемые характеристики
+ */
+
+function actionCleanSort() {
+    $PHPShopSort = new PHPShopOrm($GLOBALS['SysValue']['base']['sort']);
+    $PHPShopProduct = new PHPShopOrm($GLOBALS['SysValue']['base']['products']);
+    $PHPShopSortCat = new PHPShopOrm($GLOBALS['SysValue']['base']['sort_categories']);
+    $count = 0;
+
+    // Проверка значений характеристик
+    $data = $PHPShopSort->getList(['id', 'category', 'name'], false, ['order' => 'id'],['limit'=>300000]);
+    if (is_array($data))
+        foreach ($data as $row) {
+            $value = $row['category'] . '-' . $row['id'];
+            $check = $PHPShopProduct->getOne(['id'], ['vendor' => " REGEXP 'i" . $value . "i'"]);
+
+            // Удаление
+            if (empty($check)) {
+                //echo "Нет ".$row['name'].'<br>';
+                $PHPShopSort->delete(['id' => '=' . $row['id']]);
+                $count++;
+            }
+        }
+
+
+    // Проверка характеристик
+    $data = $PHPShopSortCat->getList(['id', 'category', 'name'], ['category' => '!=0'], ['order' => 'id'],['limit'=>300000]);
+    if (is_array($data))
+        foreach ($data as $row) {
+            $check = $PHPShopSort->getOne(['id'], ['category' => '=' . $row['id']]);
+
+            // Удаление
+            if (empty($check)) {
+                //echo "Нет ".$row['name'].'<br>';
+                $PHPShopSortCat->delete(['id' => '=' . $row['id']]);
+                $count++;
+            }
+        }
+
+    return array('success' => true,'count'=>$count);
 }
 
 // Обработка событий

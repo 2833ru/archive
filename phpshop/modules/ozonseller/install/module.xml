@@ -1,19 +1,15 @@
 <?xml version="1.0" encoding="windows-1251"?>
 <module>
-    <version>1.6</version>
+    <version>1.7</version>
     <name>OZON Seller</name>
     <description>Модуль продаж через OZON.</description>
     <category>pro,marketplaces</category>
-    <sign>1683022079</sign>
+    <sign>1684219287</sign>
     <faqlink>https://docs.phpshop.ru/moduli/prodazhi/ozon-seller</faqlink>
     <pro>true</pro>
     <adminmenu>
         <title>OZON Seller</title>
         <capability>true</capability>
-         <podmenu>
-            <podmenu_name>Товары для OZON</podmenu_name>
-            <podmenu_action>dir.ozonseller.product</podmenu_action>
-        </podmenu>
         <podmenu>
             <podmenu_name>Товары из OZON</podmenu_name>
             <podmenu_action>dir.ozonseller.import</podmenu_action>
@@ -21,6 +17,10 @@
          <podmenu>
             <podmenu_name>Заказы из OZON</podmenu_name>
             <podmenu_action>dir.ozonseller.order</podmenu_action>
+        </podmenu>
+                 <podmenu>
+            <podmenu_name>Журнал ошибок</podmenu_name>
+            <podmenu_action>dir.ozonseller.product</podmenu_action>
         </podmenu>
         <podmenu>
             <podmenu_name>Журнал операций</podmenu_name>

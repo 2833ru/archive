@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="windows-1251"?>
 <module>
-    <version>1.1</version>
+    <version>1.2</version>
     <name>Генерация превью картинок</name>
     <faqlink>https://docs.phpshop.ru/moduli/dizain/thumbnail</faqlink>
     <description>Генерация новых превью картинок товаров с учетом формата сжатия Webp. </description>
     <category>template</category>
-    <sign>1669014524</sign>
+    <sign>1684841801</sign>
     <adminmenu>
         <title>Генерация превью картинок</title>
         <capability>true</capability>

@@ -166,20 +166,6 @@ class PHPShopShop extends PHPShopShopCore {
     }
 
     /**
-     * Облако тегов
-     * @param array $row массив данных
-     */
-    function cloud($row) {
-        global $PHPShopCloudElement;
-
-        $disp = $PHPShopCloudElement->index($row);
-        $this->set('cloud', $disp);
-
-        // Перехват модуля
-        $this->setHook(__CLASS__, __FUNCTION__, $row);
-    }
-
-    /**
      * Прикрепленные статьи товара
      * @param string $pages
      */
@@ -319,8 +305,9 @@ class PHPShopShop extends PHPShopShopCore {
         // Прикрепленные файлы
         $this->file($row);
 
-        // Облако тегов
-        //$this->cloud($row);
+        // Вес
+        $this->set('productWeight', $row['weight']);
+
         // Фотогалерея
         $this->image_gallery($row);
 
@@ -764,8 +751,8 @@ function CID_Product($category = null, $mode = false) {
     $this->dataArray = parent::getListInfoItem(false, false, false, __CLASS__, __FUNCTION__, $order['sql']);
 
     if (!is_array($this->dataArray)) {
-        
-        if ($this->page > 1){
+
+        if ($this->page > 1) {
             $this->category_name = null;
             return $this->setError404();
         }
