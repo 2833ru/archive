@@ -3,7 +3,7 @@
 $TitlePage = __("Обслуживание и оптимизация");
 
 // Разрешенные таблицы
-$check_array = array('phpshop_1c_jurnal', 'phpshop_search_jurnal', 'phpshop_rssgraber_jurnal', 'phpshop_jurnal', 'phpshop_modules_guard_log', 'phpshop_modules_guard_crc', 'phpshop_modules_stat_visitors', 'phpshop_modules_productlastview_memory', 'phpshop_modules_admlog_log', 'phpshop_modules_errorlog_log', 'phpshop_modules_visualcart_memory', 'phpshop_modules_cron_log');
+$check_array = array('phpshop_1c_jurnal', 'phpshop_search_jurnal', 'phpshop_rssgraber_jurnal', 'phpshop_jurnal', 'phpshop_modules_guard_log', 'phpshop_modules_guard_crc', 'phpshop_modules_stat_visitors', 'phpshop_modules_productlastview_memory', 'phpshop_modules_admlog_log', 'phpshop_modules_errorlog_log', 'phpshop_modules_visualcart_memory', 'phpshop_modules_cron_log', 'phpshop_modules_visualcart_log');
 
 // Функция обновления
 function actionSave() {

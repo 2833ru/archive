@@ -34,6 +34,7 @@ class Home extends AbstractAvitoXml {
             $this->xml .= '<Ad>';
             $this->xml .= sprintf('<Id>%s</Id>', $product['id']);
             $this->xml .= sprintf('<Category>%s</Category>', $product['category']);
+            $this->xml .= sprintf('<AdType>%s</AdType>', $product['ad_type']);
             $this->xml .= sprintf('<GoodsType>%s</GoodsType>', $product['type']);
             if(!empty($product['subtype'])) {
                 $this->xml .= sprintf('<GoodsSubType>%s</GoodsSubType>', $product['subtype']);

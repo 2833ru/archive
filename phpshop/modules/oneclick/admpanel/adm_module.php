@@ -22,6 +22,9 @@ function actionUpdate() {
     // Настройки витрины
     $PHPShopModules->updateOption($_GET['id'], $_POST['servers']);
 
+    if (empty($_POST["only_available_new"]))
+        $_POST["only_available_new"] = 0;
+
     $PHPShopOrm->debug = false;
     $action = $PHPShopOrm->update($_POST);
     header('Location: ?path=modules&id=' . $_GET['id']);
@@ -75,7 +78,7 @@ function actionStart() {
     $Tab1 .= $PHPShopGUI->setField('Статус заказа', $PHPShopGUI->setSelect('status_new', $order_status_value, 250));
     
     $Tab1 .= $PHPShopGUI->setField('Защитная картинка', $PHPShopGUI->setSelect('captcha_new', $c_value, 250));
-
+    $Tab1 .= $PHPShopGUI->setField('Только в наличии', $PHPShopGUI->setCheckbox('only_available_new', 1, 'Отображать кнопку только у товаров в наличии', $data['only_available']));
 
     $info = 'Для произвольной вставки элемента, следует выбрать параметр вывода "Кнопка купить" и вставить переменную
         <kbd>@oneclick@</kbd> в свой шаблон в нужное вам место.

@@ -44,13 +44,13 @@ function treegenerator($array, $i, $curent, $dop_cat_array) {
                 $tree_select .= '<option value="' . $k . '" ' . $selected . $disabled . '>' . $del . $v . '</option>';
 
                 //if ($k < 1000000)
-                    $tree_select_dop .= '<option value="' . $k . '" ' . $selected_dop . $disabled . '>' . $del . $v . '</option>';
+                $tree_select_dop .= '<option value="' . $k . '" ' . $selected_dop . $disabled . '>' . $del . $v . '</option>';
 
                 $i = 1;
             } else {
                 $tree_select .= '<option value="' . $k . '" ' . $selected . $disabled . ' >' . $del . $v . '</option>';
-               // if ($k < 1000000)
-                    $tree_select_dop .= '<option value="' . $k . '" ' . $selected_dop . $disabled . '>' . $del . $v . '</option>';
+                // if ($k < 1000000)
+                $tree_select_dop .= '<option value="' . $k . '" ' . $selected_dop . $disabled . '>' . $del . $v . '</option>';
             }
 
             $tree_select .= $check['select'];
@@ -156,7 +156,7 @@ function actionStart() {
 
             $tree_select .= '<option value="' . $k . '"  ' . $selected . $disabled . '>' . $v . '</option>';
 
-                $tree_select_dop .= '<option value="' . $k . '" ' . $selected_dop . $disabled . '>' . $v . '</option>';
+            $tree_select_dop .= '<option value="' . $k . '" ' . $selected_dop . $disabled . '>' . $v . '</option>';
 
             $tree_select .= $check['select'];
             $tree_select_dop .= $check['select_dop'];
@@ -324,7 +324,7 @@ function actionUpdate() {
     $_POST['servers_new'] = "";
     if (is_array($_POST['servers']))
         foreach ($_POST['servers'] as $v)
-            if ($v != 'null' and !strstr($v, ',') )
+            if ($v != 'null' and ! strstr($v, ','))
                 $_POST['servers_new'] .= "i" . $v . "i";
 
     // Доп каталоги
@@ -350,7 +350,7 @@ function actionUpdate() {
     $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['categories']);
 
     // Корректировка пустых значений
-    $PHPShopOrm->updateZeroVars('vid_new', 'skin_enabled_new', 'menu_new','tile_new');
+    $PHPShopOrm->updateZeroVars('vid_new', 'skin_enabled_new', 'menu_new', 'tile_new');
     $PHPShopOrm->debug = false;
     $action = $PHPShopOrm->update($_POST, array('id' => '=' . $_POST['rowID']));
     $PHPShopOrm->clean();
@@ -372,6 +372,33 @@ function iconAdd() {
 
     // Папка сохранения
     $path = $GLOBALS['SysValue']['dir']['dir'] . '/UserFiles/Image/' . $PHPShopSystem->getSerilizeParam('admoption.image_result_path');
+
+    // Сохранять в папки каталогов
+    if ($PHPShopSystem->ifSerilizeParam('admoption.image_save_catalog')) {
+
+        $PHPShopCategory = new PHPShopCategory($_POST['rowID']);
+        $parent_to = $PHPShopCategory->getParam('parent_to');
+        $pathName = ucfirst(PHPShopString::toLatin($PHPShopCategory->getName()));
+
+        if (!empty($parent_to)) {
+            $PHPShopCategory = new PHPShopCategory($parent_to);
+            $pathName = ucfirst(PHPShopString::toLatin($PHPShopCategory->getName())) . '/' . $pathName;
+            $parent_to = $PHPShopCategory->getParam('parent_to');
+        }
+
+        if (!empty($parent_to)) {
+            $PHPShopCategory = new PHPShopCategory($parent_to);
+            $pathName = '/' . ucfirst(PHPShopString::toLatin($PHPShopCategory->getName())) . '/' . $pathName;
+        }
+
+        $path .= $pathName . '/';
+
+        if (!is_dir($_SERVER['DOCUMENT_ROOT'] . $path))
+            @mkdir($_SERVER['DOCUMENT_ROOT'] . $path, 0777, true);
+    }
+
+    // Корекция
+    $path = str_replace('//', '/', $path);
 
     // Копируем от пользователя
     if (!empty($_FILES['file']['name'])) {
@@ -397,6 +424,29 @@ function iconAdd() {
     if (empty($file))
         $file = '';
 
+    // Нарезка
+    if ($PHPShopSystem->ifSerilizeParam('admoption.image_cat') and ! empty($file)) {
+        require_once $_SERVER['DOCUMENT_ROOT'] . $GLOBALS['SysValue']['dir']['dir'] . '/phpshop/lib/thumb/phpthumb.php';
+
+        // Параметры ресайзинга
+        $img_tw = $PHPShopSystem->getSerilizeParam('admoption.img_tw_c');
+        $img_th = $PHPShopSystem->getSerilizeParam('admoption.img_th_c');
+        $img_tw = empty($img_tw) ? 410 : $img_tw;
+        $img_th = empty($img_th) ? 200 : $img_th;
+        $img_adaptive = $PHPShopSystem->getSerilizeParam('admoption.image_cat_adaptive');
+
+        // Маленькое изображение (тумбнейл)
+        $thumb = new PHPThumb($_SERVER['DOCUMENT_ROOT'] . $file);
+        $thumb->setOptions(array('jpegQuality' => $PHPShopSystem->getSerilizeParam('admoption.width_kratko')));
+
+        // Адаптивность
+        if (!empty($img_adaptive))
+            $thumb->adaptiveResize($img_tw, $img_th);
+        else
+            $thumb->resize($img_tw, $img_th);
+        $thumb->save($_SERVER['DOCUMENT_ROOT'] . $file);
+    }
+
     return $file;
 }
 
@@ -412,7 +462,7 @@ function actionDelete() {
     $PHPShopOrm->clean();
 
     $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['products']);
-    $PHPShopOrm->update(array("category" => "1000004", "enabled" => '0','datas'=>time()), array("category" => "=" . $_POST['rowID']), false);
+    $PHPShopOrm->update(array("category" => "1000004", "enabled" => '0', 'datas' => time()), array("category" => "=" . $_POST['rowID']), false);
 
     return array("success" => $action);
 }

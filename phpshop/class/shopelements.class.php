@@ -56,6 +56,8 @@ class PHPShopProductElements extends PHPShopElements {
      */
     var $cell_type_class = 'product-element-block';
 
+    var $warehouse;
+
     /**
      * Конструктор
      */
@@ -253,6 +255,13 @@ class PHPShopProductElements extends PHPShopElements {
      * @param array $row масив данных по товару
      */
     function getStore($product = array()) {
+
+        if(is_array($this->warehouse)) {
+            return;
+        }
+
+        $this->warehouse = [];
+
         $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['warehouses']);
 
         $where['enabled'] = "='1'";

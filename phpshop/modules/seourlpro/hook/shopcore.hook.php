@@ -47,17 +47,10 @@ function toLatin_hook($str) {
  */
 
 function CID_Product_seourlpro_hook($obj, $row, $rout) {
-    global $seourl_option;
 
     $catalog_name = $obj->PHPShopCategory->getName();
     $seo_name = $obj->PHPShopCategory->getParam('cat_seo_name');
     $obj->seo_name = $seo_name;
-
-
-    // Настройки модуля
-    include_once(dirname(__FILE__) . '/mod_option.hook.php');
-    $PHPShopSeourlOption = new PHPShopSeourlOption();
-    $seourl_option = $PHPShopSeourlOption->getArray();
 
     // Проверка уникальности SEO ссылки
     if ($rout == 'START') {
@@ -228,9 +221,7 @@ function catalog_content_hook($obj, $data) {
 function seoPaginatorFeatures($obj)
 {
     // Настройки модуля
-    include_once(dirname(__FILE__) . '/mod_option.hook.php');
-    $PHPShopSeourlOption = new PHPShopSeourlOption();
-    $seourl_option = $PHPShopSeourlOption->getArray();
+    $seourl_option = $GLOBALS['PHPShopSeoPro']->getSettings();
 
     $page = $obj->PHPShopNav->getPage();
 

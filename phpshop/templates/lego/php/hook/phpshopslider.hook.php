@@ -1,25 +1,25 @@
 <?php
 
 function template_slider_hook($obj, $row, $rout) {
-    static $i;
+
     if ($rout == 'END') {
+        if(is_null($obj->index)) {
+            $obj->index = 0;
+        }
 
         // Активный слайдер
-        if (empty($i)) {
+        if ($obj->index === 0) {
             $obj->set('slideActive', 'active');
             $obj->set('slideIndicator', '<li data-target="#carousel-example-generic" data-slide-to="0" class="active"></li>', true);
         } else {
             $obj->set('slideActive', '');
-            $obj->set('slideIndicator', '<li data-target="#carousel-example-generic" data-slide-to="' . $i . '"></li>', true);
+            $obj->set('slideIndicator', '<li data-target="#carousel-example-generic" data-slide-to="' . $obj->index . '"></li>', true);
         }
 
-        $i++;
+        $obj->index++;
 
     }
 }
 
-$addHandler = array
-    (
-    'index' => 'template_slider_hook',
-);
+$addHandler = array('index' => 'template_slider_hook');
 ?>

@@ -189,7 +189,7 @@ class PHPShopOrder extends PHPShopCore {
      * Сообщение об ошибке, пустая корзина
      */
     function error() {
-        $message = $this->message($this->lang('bad_cart_1'), $this->lang('bad_order_mesage_2'));
+        $message = '<div class="phpshop-empty-cart">' . $this->message($this->lang('bad_cart_1'), $this->lang('bad_order_mesage_2')) . '</div>';
         $message .= "<script language='JavaScript'>
 document.getElementById('num').innerHTML = '0';
 document.getElementById('sum').innerHTML = '0';
@@ -222,7 +222,7 @@ document.getElementById('order').style.display = 'none';
      */
     function payment() {
         PHPShopObj::loadClass('payment');
-        
+
         $where['name']='!=""';
 
         // Мультибаза
@@ -238,11 +238,18 @@ document.getElementById('order').style.display = 'none';
             foreach ($Payment as $val) {
                 if (!empty($val['enabled']) OR $val['path'] == 'modules') {
                     $this->value[$val['id']] = array($val['name'], $val['id'], false);
-                    if ($val['icon'])
-                        $img = "&nbsp;<img src='{$val['icon']}' title='{$val['name']}' height='30'/>&nbsp;";
+                    $this->set('paymentIcon', '');
+                    if(!empty($val['icon'])) {
+                        $this->set('paymentIcon', $val['icon']);
+                    }
+                    $this->set('paymentId', $val['id']);
+                    $this->set('paymentId', $val['id']);
+                    $this->set('paymentTitle', $val['name']);
+
+                    if (PHPShopParser::checkFile('order/payment.tpl'))
+                        $disp .= ParseTemplateReturn('order/payment.tpl');
                     else
-                        $img = "";
-                    $disp .= PHPShopText::div(PHPShopText::setInput("radio", "order_metod", $val['id'], "none", false, false, false, false, $img . $val['name'], 'payment' . $val['id']), "left", false, false, "paymOneEl");
+                        $disp .= ParseTemplateReturn('phpshop/lib/templates/order/payment.tpl', true);
                 }
                 // формируем набор классов для яваскрипт функции для вывода доп. полей юр. данный в оформление
                 // если для данного типа оплаты они требуются 

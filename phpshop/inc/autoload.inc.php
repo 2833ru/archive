@@ -82,6 +82,8 @@ $PHPShopGbookElement->init('miniGbook');
 // Слайдер
 $PHPShopSliderElement = new PHPShopSliderElement();
 $PHPShopSliderElement->init('imageSlider');
+$PHPShopSliderElement = new PHPShopSliderElement();
+$PHPShopSliderElement->init('imageSliderMobile');
 
 // Баннер
 $PHPShopBannerElement = new PHPShopBannerElement();
@@ -121,6 +123,8 @@ if(PHPShopString::is_mobile()){
   unset($GLOBALS['SysValue']['other']['rightMenu']); 
   unset($GLOBALS['SysValue']['other']['imageSlider']);
   unset($GLOBALS['SysValue']['other']['banersDisp']);
+} else {
+    unset($GLOBALS['SysValue']['other']['imageSliderMobile']);
 }
 
 // RSS грабер новостей

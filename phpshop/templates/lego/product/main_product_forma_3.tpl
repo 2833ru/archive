@@ -1,5 +1,5 @@
 
-<div class="col-md-4 col-xs-6 col-sm-4 product-block-wrapper-fix">
+<div class="col-md-4 col-sm-4 col-xs-12 product-block-wrapper-fix">
     <div class="product-block-top">
         <a class="product-img" href="/shop/UID_@productUid@.html"  title="@productName@"><img data-src="@productImg@" src="@productImg@" alt="@productName@" class="swiper-lazy"></a>
 		  <span class="sale-icon-content ">

@@ -273,12 +273,12 @@ class PHPShopBase {
 
         if (is_array($this->LicenseParse) and strstr($this->LicenseParse['License']['HardwareLocked'], 'Showcase')) {
 
-            if (getenv('SERVER_NAME') == $this->LicenseParse['License']['DomenLocked']) {
+            if (getenv('SERVER_NAME') == $this->LicenseParse['License']['DomenLocked'] or 'www.' . getenv('SERVER_NAME') == $this->LicenseParse['License']['DomenLocked']) {
                 define("HostMain", true);
             } else {
                 $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['servers']);
                 $PHPShopOrm->debug = false;
-                $data = $PHPShopOrm->select(array('id,name,company'), array('enabled' => "='1'", 'host' => '="' . str_replace('www.', '', $_SERVER['HTTP_HOST']) . '"'), false, array('limit' => 1));
+                $data = $PHPShopOrm->select(array('id,name,company,logo'), array('enabled' => "='1'", 'host' => '="' . str_replace('www.', '', $_SERVER['HTTP_HOST']) . '"'), false, array('limit' => 1));
 
                 if (is_array($data)) {
                     define("HostID", intval($data['id']));
@@ -290,6 +290,9 @@ class PHPShopBase {
 
                         if (!empty($data['name']))
                             $PHPShopSystem->setParam('name', $data['name']);
+
+                        if (!empty($data['logo']))
+                            $PHPShopSystem->setParam('logo', $data['logo']);
                     }
                 }
             }

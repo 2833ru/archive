@@ -1,5 +1,6 @@
 <?php
 
+
 $_classPath = "../../../";
 include_once($_classPath . "class/obj.class.php");
 include_once($_classPath . "modules/avito/xml/AbstractAvitoXml.php");
@@ -15,6 +16,8 @@ PHPShopObj::loadClass("security");
 PHPShopObj::loadClass("modules");
 PHPShopObj::loadClass("file");
 PHPShopObj::loadClass("promotions");
+PHPShopObj::loadClass("parser");
+PHPShopObj::loadClass("lang");
 
 /**
  * XML прайс Авито "Бытовая электроника"

@@ -1,23 +1,6 @@
 <?php
 
-/**
- * Настройка модуля
- */
-function pickpoin_option() {
-    $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['pickpoint']['pickpoint_system']);
-    return $PHPShopOrm->select();
-}
-
-/**
- * Поиск доставки по имени
- */
-function search_pickpoin_delivery($city, $xid) {
-
-    $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['delivery']);
-    $data = $PHPShopOrm->select(array('*'), array('city' => " REGEXP '" . $city . "'", 'id' => '=' . $xid, 'is_folder' => "!='1'"), false, array('limit' => 1));
-    if (is_array($data))
-        return $data;
-}
+include_once dirname(__DIR__) . '/class/PickPoint.php';
 
 /**
  * Хук
@@ -27,27 +10,19 @@ function pickpoin_delivery_hook($obj, $data) {
     $_RESULT = $data[0];
     $xid = $data[1];
 
-    $option = pickpoin_option();
+    $PickPoint = new PickPoint();
 
-    // ИД доставки pickpoin
-    $pickpoin_delivery = search_pickpoin_delivery($option['city'], $xid);
+    if ((int) $xid === (int) $PickPoint->getPickpointDeliveryId()) {
+        $hook['dellist']=$_RESULT['dellist'];
+        $hook['hook']='PickPoint.open(pickpoint_phpshop);';
+        $hook['delivery'] = $_RESULT['delivery'];
+        $hook['total'] = $_RESULT['total'];
+        $hook['adresList'] = $_RESULT['adresList'];
+        $hook['success'] = 1;
 
-    if (is_numeric($pickpoin_delivery['id']))
-        if ($xid == $pickpoin_delivery['id']) {
-
-            $hook['dellist']=$_RESULT['dellist'];
-            $hook['hook']='PickPoint.open(pickpoint_phpshop);';
-            $hook['delivery'] = $_RESULT['delivery'];
-            $hook['total'] = $_RESULT['total'];
-            $hook['adresList'] = $_RESULT['adresList'];
-            $hook['success'] = 1;
-
-            return $hook;
-        }
+        return $hook;
+    }
 }
 
-$addHandler = array
-    (
-    'delivery' => 'pickpoin_delivery_hook'
-);
+$addHandler = array('delivery' => 'pickpoin_delivery_hook');
 ?>

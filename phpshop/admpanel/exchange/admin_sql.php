@@ -172,9 +172,6 @@ function actionStart() {
     unset($baseArray['phpshop_system']);
     unset($baseArray['phpshop_users']);
     unset($baseArray['phpshop_valuta']);
-    unset($baseArray['phpshop_citylist_country']);
-    unset($baseArray['phpshop_citylist_region']);
-    unset($baseArray['phpshop_citylist_city']);
     unset($baseArray['phpshop_modules_key']);
 
 
@@ -219,6 +216,9 @@ TRUNCATE ' . $GLOBALS['SysValue']['base']['foto'] . ';', '');
     $query_value[] = array('Уменьшить время генерации меню каталогов', "UPDATE phpshop_categories SET phpshop_categories.vid = '0' WHERE phpshop_categories.parent_to IN (select * from ( SELECT phpshop_categories.id
  FROM phpshop_categories WHERE phpshop_categories.parent_to='0')t );
  UPDATE phpshop_categories SET vid='1' where parent_to !='0';");
+    $query_value[] = array('Очистить базу городов', 'TRUNCATE ' . $GLOBALS['SysValue']['base']['citylist_country'].';
+TRUNCATE ' . $GLOBALS['SysValue']['base']['citylist_region'].';
+TRUNCATE ' . $GLOBALS['SysValue']['base']['citylist_city'].';', '');
 
 
 

@@ -1,9 +1,9 @@
 <?php
 
 /**
- * Библиотека менеджера MySQL через XML
+ * Библиотека менеджера MySQL через XML и JSON
  * @author PHPShop Software
- * @version 1.4
+ * @version 2.0
  * @package PHPShopClass
  */
 class PHPShopBaseXml {
@@ -13,8 +13,9 @@ class PHPShopBaseXml {
     var $xml_header = '<?xml version="1.0" encoding="windows-1251"?><phpshop>';
     var $xml_footer = '</phpshop>';
     var $true_method = array('select');
-    var $true_from = array('table_name', 'table_name2', 'table_name3','categories','orders','products');
+    var $true_from = array('table_name', 'table_name2', 'table_name3', 'categories', 'orders', 'products', 'categories', 'shopusers');
     var $debug = false;
+    var $error = false;
 
     function __construct() {
         global $PHPShopBase;
@@ -34,22 +35,24 @@ class PHPShopBaseXml {
                 if (method_exists($this, $this->xml['method']))
                     call_user_func(array($this, $this->xml['method']));
                 else
-                    echo 'Non method';
-            }
-            else
-                echo 'False method';
+                    $this->error('Non method');
+            } else
+                $this->error('False method');
 
             $this->compile();
-        }
-        else
-            exit('Login error!');
+        } else
+            $this->error('Login error!');
+    }
+
+    function error($text) {
+        exit($text);
     }
 
     function compile() {
         if (is_array($this->data)) {
             $result = $this->xml_header;
             foreach ($this->data as $row) {
-                $result.='
+                $result .= '
 <row>';
                 if (is_array($row))
                     foreach ($row as $key => $val) {
@@ -60,17 +63,17 @@ class PHPShopBaseXml {
                         }
 
                         if (preg_match("(\<(/?[^\>]+)\>)", $val) or strstr($val, '&'))
-                            $result.='
+                            $result .= '
 <' . $key . '><![CDATA[' . trim($val) . ']]></' . $key . '>';
                         else
-                            $result.='
+                            $result .= '
 <' . $key . '>' . trim($this->is_serialize($val)) . '</' . $key . '>';
                     }
-                $result.='
+                $result .= '
 </row>';
             }
 
-            $result.=$this->xml_footer;
+            $result .= $this->xml_footer;
             echo $result;
         }
     }
@@ -135,9 +138,8 @@ class PHPShopBaseXml {
                 $this->xml['order'] = array('order' => $db[0]['order']);
             if (!empty($db[0]['limit']))
                 $this->xml['limit'] = array('limit' => $db[0]['limit']);
-        }
-        else
-            exit('Non xml');
+        } else
+            $this->error('Non xml');
     }
 
     function admin() {
@@ -151,28 +153,26 @@ class PHPShopBaseXml {
         if (is_array($array)) {
             foreach ($array as $key => $val) {
                 if (is_array($val)) {
-                    $result.='<subrow>';
+                    $result .= '<subrow>';
                     foreach ($val as $k => $v) {
                         if (is_array($v)) {
-                            $result.='<subrow>';
+                            $result .= '<subrow>';
                             foreach ($v as $ks => $vs)
-                                $result.='
+                                $result .= '
 <subrow_' . $ks . '_' . $k . '>' . $vs . '</subrow_' . $ks . '_' . $k . '>';
-                            $result.='</subrow>';
-                        }
-                        else
-                            $result.='
+                            $result .= '</subrow>';
+                        } else
+                            $result .= '
 <' . $k . '>' . $v . '</' . $k . '>';
                     }
-                    $result.='</subrow>';
+                    $result .= '</subrow>';
                 } else {
-                    $result.='
+                    $result .= '
 <' . $key . '>' . $val . '</' . $key . '>';
                 }
             }
             return $result;
-        }
-        else
+        } else
             return $str;
     }
 
@@ -192,35 +192,38 @@ class PHPShopBaseXml {
     function select() {
         $PHPShopOrm = new PHPShopOrm($this->PHPShopBase->getParam('base.' . $this->xml['from']));
         $PHPShopOrm->debug = $this->debug;
+        $PHPShopOrm->mysql_error = false;
         $PHPShopOrm->Option['where'] = $this->where_delim;
         $this->data = $PHPShopOrm->select($this->xml['vars'], $this->xml['where'], $this->xml['order'], $this->xml['limit']);
+        $this->error = mysqli_error($PHPShopOrm->link_db);
     }
 
     function update() {
-
-        // Массив данных для обновления
-        $vars = readDatabase($this->sql, "vars", false);
+        $vars = $this->xml['vars'];
         $PHPShopOrm = new PHPShopOrm($this->PHPShopBase->getParam('base.' . $this->xml['from']));
         $PHPShopOrm->debug = $this->debug;
+        $PHPShopOrm->mysql_error = false;
         $PHPShopOrm->Option['where'] = $this->where_delim;
         $this->data = $PHPShopOrm->update($this->clean($vars[0]), $this->xml['where'], '');
+        $this->error = mysqli_error($PHPShopOrm->link_db);
     }
 
     function delete() {
         $PHPShopOrm = new PHPShopOrm($this->PHPShopBase->getParam('base.' . $this->xml['from']));
         $PHPShopOrm->debug = $this->debug;
+        $PHPShopOrm->mysql_error = false;
         $PHPShopOrm->Option['where'] = $this->where_delim;
         $this->data = $PHPShopOrm->delete($this->xml['where']);
+        $this->error = mysqli_error($PHPShopOrm->link_db);
     }
 
     function insert() {
-
-        // Массив данных для вставки
-        $vars = readDatabase($this->sql, "vars", false);
-
+        $vars = $this->xml['vars'];
         $PHPShopOrm = new PHPShopOrm($this->PHPShopBase->getParam('base.' . $this->xml['from']));
         $PHPShopOrm->debug = $this->debug;
+        $PHPShopOrm->mysql_error = false;
         $this->data = $PHPShopOrm->insert($vars[0], $prefix = '');
+        $this->error = mysqli_error($PHPShopOrm->link_db);
     }
 
     function __call($name, $arguments) {

@@ -81,7 +81,7 @@ else
 if (isset($_GET['cat']) or isset($_GET['sub'])) {
 
     if (!empty($_GET['cat']) or $_GET['sub'] == 'csv' or isset($_GET['sub'])) {
-        $where['category'] = "=" . intval($_GET['cat']);
+        $where['category'] = "=" . intval($_GET['cat']) . ' OR dop_cat LIKE \'%#' . intval($_GET['cat']) . '#%\' ';
     }
 
     if ($_GET['sub'] === 'csv') {
@@ -129,16 +129,15 @@ if (is_array($_GET['where'])) {
             if (is_array($v)) {
                 $vendor = null;
                 foreach ($v as $kk => $vv) {
-                    if ($kk == 0 and !empty($vv))
-                        $vendor.="  LIKE '%" . PHPShopSecurity::TotalClean($vv) . "%'";
+                    if ($kk == 0 and ! empty($vv))
+                        $vendor .= "  LIKE '%" . PHPShopSecurity::TotalClean($vv) . "%'";
                     elseif (!empty($vv))
-                        $vendor.=" and " . PHPShopSecurity::TotalClean($k) . " LIKE '%" . PHPShopSecurity::TotalClean($vv) . "%'";
+                        $vendor .= " and " . PHPShopSecurity::TotalClean($k) . " LIKE '%" . PHPShopSecurity::TotalClean($vv) . "%'";
                 }
 
                 if (!empty($vendor))
                     $where[PHPShopSecurity::TotalClean($k)] = $vendor;
-            }
-            else
+            } else
                 $where[PHPShopSecurity::TotalClean($k)] = " " . $core . " '" . PHPShopSecurity::TotalClean($v) . "'";
         }
     }
@@ -170,10 +169,9 @@ $PHPShopOrm->debug = false;
 // Быстрый поиск
 if ($_GET['from'] == 'header') {
     $where['parent_enabled'] = "='0'";
-    $where['parent_enabled'].= " and (name " . $where['name'] . " or uid " . $where['name'] . " or id " . $where['name'] . ")";
+    $where['parent_enabled'] .= " and (name " . $where['name'] . " or uid " . $where['name'] . " or id " . $where['name'] . ")";
     unset($where['name']);
-} 
-elseif($_GET['from'] != 'search') {
+} elseif ($_GET['from'] != 'search') {
 
     // Убираем подтипы
     $where['parent_enabled'] = "='0'";
@@ -195,13 +193,17 @@ if ($PHPShopSystem->ifSerilizeParam('admoption.rule_enabled', 1)) {
         $categoryIds[] = $category['id'];
     }
 
-    if(count($categoryIds) > 0 && !isset($where['category'])) {
+    if (count($categoryIds) > 0 && !isset($where['category'])) {
         $where['category'] = sprintf(' IN (%s)', implode(',', $categoryIds));
     }
 }
 
 // Поиск на странице JSON
 if (!empty($_GET['search']['value'])) {
+
+    if (isset($_GET['cat']))
+        $where['category'] = "=" . intval($_GET['cat']);
+
     $where['parent_enabled'] .= " and (name LIKE '%" . PHPShopString::utf8_win1251(PHPShopSecurity::TotalClean($_GET['search']['value'])) . "%' or uid LIKE '%" . PHPShopString::utf8_win1251(PHPShopSecurity::TotalClean($_GET['search']['value'])) . "%')";
 }
 

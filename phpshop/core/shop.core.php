@@ -190,7 +190,7 @@ class PHPShopShop extends PHPShopShopCore {
             foreach ($pages as $val) {
                 if ($val) {
                     $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['page']);
-                    $data = $PHPShopOrm->select(array('name'), array('link' => "='" . $val . "'"));
+                    $data = $PHPShopOrm->select(array('name'), array('link' => "='" . $val . "'", 'enabled' => '="1"'));
 
                     if (is_array($data)) {
                         $this->set('pageLink', $val);

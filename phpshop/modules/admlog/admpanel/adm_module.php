@@ -23,10 +23,10 @@ function actionStart() {
     $Tab1=$PHPShopGUI->setField("Откат изменений", $PHPShopGUI->setRadio("enabled_new", 1, "Вкл.", $data['enabled']) . $PHPShopGUI->setRadio("enabled_new", 0, "Выкл.", $data['enabled']));
 
     // Содержание закладки 2
-    $Tab2 = $PHPShopGUI->setPay();
+    $Tab2 = $PHPShopGUI->setPay(false, true);
 
     // Вывод формы закладки
-    $PHPShopGUI->setTab(array("Основное", $Tab1,true), array("О Модуле", $Tab2),array("Журнал событий", 0,'?path=modules.dir.admlog'));
+    $PHPShopGUI->setTab(array("О Модуле", $Tab2),array("Журнал событий", 0,'?path=modules.dir.admlog'));
 
     // Вывод кнопок сохранить и выход в футер
     $ContentFooter =

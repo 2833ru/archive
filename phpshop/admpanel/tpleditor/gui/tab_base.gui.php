@@ -242,9 +242,8 @@ function tab_base($data) {
         if (stristr($_SESSION['lang'], "utf"))
             $promo = __($promo);
 
-        $PHPShopGUI->addTab(array('Персональный дизайн', $promo, true));
-
-        $PHPShopGUI->setTab(array('Бесплатные шаблоны', $title_default . $img_list_default, true));
+        //$PHPShopGUI->addTab(array('Персональный дизайн', $promo, true));
+        $PHPShopGUI->setTab(array('Доступные шаблоны', $title_default . $img_list_default, true));
     } else
         $disp = $PHPShopGUI->setAlert('Ошибка связи с сервером ' . $skin_base_path, $type = 'warning');
 

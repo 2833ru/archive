@@ -616,6 +616,7 @@ class PHPShopUsers extends PHPShopCore {
      * вывод товаров вишлиста
      */
     function action_wishlist() {
+        global $PHPShopSystem;
 
         // Перехват модуля
         if ($this->setHook(__CLASS__, __FUNCTION__, false, 'START'))
@@ -644,6 +645,7 @@ class PHPShopUsers extends PHPShopCore {
                 header("Location: ./wishlist.html");
                 die();
             }
+
             foreach ($wishlist as $key => $value) {
 
                 // Данные по товару
@@ -658,13 +660,32 @@ class PHPShopUsers extends PHPShopCore {
 
                     $this->set('prodId', $key);
                     $this->set('prodName', $objProduct->getParam("name"));
-                    $this->set('prodPic', $objProduct->getParam("pic_small"));
+
+                    if (empty($objProduct->getParam("pic_small") == ""))
+                        $this->set('prodPic', $objProduct->getParam("pic_big"));
+                    else
+                        $this->set('prodPic', $objProduct->getParam("pic_small"));
 
                     // Проверка подтипа
-                    if ($objProduct->getParam("parent") == "")
+                    if ($value > 1){
+        
+                        // Данные по родителю
+                        $objProductParent = new PHPShopProduct($value);
+                        $this->set('prodUid', $value);
+                        
+                        if($this->get('prodPic') == "")
+                           $this->set('prodPic', $objProductParent->getParam("pic_small"));  
+                        
                         $this->set('wishlistCartHide', null);
-                    else
+                    }
+                    elseif($objProduct->getParam("parent") != ""){
                         $this->set('wishlistCartHide', 'hide');
+                    }
+                    else {
+                        $this->set('prodUid', $key);
+                        $this->set('wishlistCartHide', null);
+                    }
+
 
                     // цена
                     $price = PHPShopProductFunction::GetPriceValuta($objProduct->objRow['id'], array($objProduct->objRow['price'], $objProduct->objRow['price2'], $objProduct->objRow['price3'], $objProduct->objRow['price4'], $objProduct->objRow['price5']), $objProduct->objRow['baseinputvaluta']);
@@ -1112,7 +1133,7 @@ class PHPShopUsers extends PHPShopCore {
 
     /**
      * Экшен форма регистрации нового пользователя
-     * Результат заполнения формы обработывается в action_add_user()
+     * Результат заполнения формы обрабатывается в action_add_user()
      */
     function action_register() {
 

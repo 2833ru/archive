@@ -64,7 +64,8 @@ function ListPage_seourl_hook($obj, $row, $rout) {
 
 
     // Настройки модуля из кеша
-    if ($_SESSION['Memory']['PHPShopSeourlOption']['seo_page_enabled'] != 2)
+    $seourl_option = $GLOBALS['PHPShopSeoPro']->getSettings();
+    if ($seourl_option['seo_page_enabled'] != 2)
         return false;
 
     // Проверка уникальности SEO ссылки
@@ -112,7 +113,8 @@ function ListCategory_seourl_hook($obj, $dataArray, $rout) {
         $dis = null;
 
         // Настройки модуля из кеша
-        if ($_SESSION['Memory']['PHPShopSeourlOption']['seo_page_enabled'] != 2)
+        $seourl_option = $GLOBALS['PHPShopSeoPro']->getSettings();
+        if ($seourl_option['seo_page_enabled'] != 2)
             return false;
 
         $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['page_categories']);
@@ -189,8 +191,10 @@ function navigation_seourl($obj, $name) {
     
     $PHPShopSeoPageCategoryArray = new PHPShopSeoPageCategoryArray();
 
+    $seourl_option = $GLOBALS['PHPShopSeoPro']->getSettings();
+
     // Настройки модуля из кеша
-    if ($_SESSION['Memory']['PHPShopSeourlOption']['seo_page_enabled'] != 2)
+    if ($seourl_option['seo_page_enabled'] != 2)
         return false;
 
     // Шаблоны разделителя навигации
@@ -238,7 +242,8 @@ function navigation_seourl($obj, $name) {
 function displayPage($obj, $link) {
 
     // Настройки модуля из кеша
-    if ($_SESSION['Memory']['PHPShopSeourlOption']['seo_page_enabled'] != 2)
+    $seourl_option = $GLOBALS['PHPShopSeoPro']->getSettings();
+    if ($seourl_option['seo_page_enabled'] != 2)
         return false;
 
     // Безопасность

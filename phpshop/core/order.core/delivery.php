@@ -11,6 +11,13 @@ function delivery($obj, $deliveryID, $sum = 0) {
 
     $pred = $br = $my = $alldone = $waytodo = $disp = null;
 
+    if(is_null($GLOBALS['SysValue']['templates']['delivery']) or
+        !is_file(dirname(dirname(__DIR__)) . '/templates/' . $_SESSION['skin'] . '/' . $GLOBALS['SysValue']['templates']['delivery'])) {
+        $template = dirname(dirname(__DIR__)) . '/lib/templates/order/delivery.tpl';
+    } else {
+        $template = dirname(dirname(__DIR__)) . '/templates/' . $_SESSION['skin'] . '/' . $GLOBALS['SysValue']['templates']['delivery'];
+    }
+
     // Мультибаза
     if (defined("HostID")) {
         $servers= " and servers REGEXP 'i" . HostID . "i'";
@@ -35,7 +42,6 @@ function delivery($obj, $deliveryID, $sum = 0) {
         $isfolder = $row['is_folder'];
         $comment = $row['comment'];
         $PID = $row['PID'];
-        $sqlvariants = "select * from " . $table . " where (enabled='1' and PID='" . $row['PID'] . "') ".$servers." order by num,city";
 
         if ($isfolder) { //Если прислали папку, то варианты будут потомки папки
             $sqlvariants = "select * from " . $table . " where (enabled='1' and PID='" . $deliveryID . "') ".$servers." order by num,city";
@@ -55,11 +61,9 @@ function delivery($obj, $deliveryID, $sum = 0) {
     }
     
     $resultvariants = mysqli_query($link_db, $sqlvariants); // Принимаем варианты
-    $varamount = mysqli_num_rows($resultvariants);
 
     if ($PID !== false) { //Если есть предки, формируем навигацию
         $pred = '';
-        $ii = 0;
         $num = 0;
         while ($PIDpr != 0) {//Делаем пока не дойдем до самого верхнего уровня
             $num++;
@@ -111,31 +115,40 @@ function delivery($obj, $deliveryID, $sum = 0) {
     $chkdone = 0; //По дефолту умолчательная доставка не указана
     while ($row = mysqli_fetch_array($resultvariants)) {
 
+        PHPShopParser::set('deliveryActive', '');
+        PHPShopParser::set('deliveryChecked', '');
+        PHPShopParser::set('deliveryIcon', '');
+        PHPShopParser::set('deliveryMaxSum', '');
+
+
         if (!empty($deliveryID)) {//Если присылали идентификатор
             if ($row['id'] == $deliveryID) {
-                $chk = "checked";
-                $active = "active";
+                PHPShopParser::set('deliveryActive', 'active');
+                PHPShopParser::set('deliveryChecked', 'checked');
             } else {
-                $chk = $active = "";
-
                 if ($isfolder) { //Если присланный идентификатор папка и работает стартовый файл
                     if ($row['flag'] == 1) { //На случай доставки по умолчанию
-                        $chk = "checked";
-                        $active = "active";
+                        PHPShopParser::set('deliveryActive', 'active');
+                        PHPShopParser::set('deliveryChecked', 'checked');
                         $chkdone = $row['id']; //Если выводится умолчательная доставка, то пометить что выбор завершен
-                    } else {
-                        $chk = $active = "";
                     }
                 }
             }
         } elseif ($engineinc) {//Если НЕ присылали идентификатор, но производится стартовый запуск
             if ($row['flag'] == 1) { //На случай доставки по умолчанию
-                $chk = "checked";
-                $active = "active";
+                PHPShopParser::set('deliveryActive', 'active');
+                PHPShopParser::set('deliveryChecked', 'checked');
                 $chkdone = $row['id']; //Если выводится умолчательная доставка, то пометить что выбор завершен
-            } else {
-                $chk = $active = "";
             }
+        }
+
+
+        if (((int) $deliveryID > 0 && (int) $row['id'] === $deliveryID) || ($isfolder && (int) $row['flag'] === 1)) {
+            PHPShopParser::set('deliveryActive', 'active');
+            PHPShopParser::set('deliveryChecked', 'checked');
+        }
+        if($isfolder && (int) $row['flag'] === 1) {
+          //  $chkdone = $row['id']; //Если выводится доставка по умолчанию, то пометить что выбор завершен
         }
 
         // Получаем количество соседей у вышестоящего.
@@ -143,22 +156,22 @@ function delivery($obj, $deliveryID, $sum = 0) {
         $resultpot = mysqli_query($link_db, $sqlpot);
         $pot = mysqli_num_rows($resultpot);
 
-        $city = $row['city'];
         if ((empty($row['is_folder'])) || ($pot)) {
 
-            if ($row['icon'])
-                $img = "&nbsp;<img src='{$row['icon']}' title='$city' height='30'>&nbsp;";
-            else
-                $img = "";
+            PHPShopParser::set('deliveryId', $row['id']);
+            PHPShopParser::set('deliveryPayment', $row['payment']);
+            PHPShopParser::set('deliveryIcon', $row['icon']);
+            PHPShopParser::set('deliveryTitle', $row['city']);
 
             // Проверка максимальной суммы
             if (!empty($row['sum_max']) and !empty($sum) and $row['sum_max'] <= $sum) {
-                $disp .= '<span class="delivOneEl '.$active.'"><label><input type="radio"  value="' . $row['id'] . '" ' . $chk . '  name="dostavka_metod" id="dostavka_metod" data-option="' . $row['payment'] . '" disabled="disabled"> <span class="deliveryName" data-toggle="tooltip" data-placement="top" title="' . __('Превышена максимальная сумма заказа') . '">' . $img . $city . '</span></span></label>';
-            } else {
-                $disp .= '<span class="delivOneEl '.$active.'"><label><input type="radio" value="' . $row['id'] . '" ' . $chk . '  name="dostavka_metod" id="dostavka_metod" data-option="' . $row['payment'] . '"> <span class="deliveryName" >' . $img . $city . '</span></span></label>';
-                $varamount++;
-                $curid = $row['id'];
+                PHPShopParser::set('deliveryMaxSum',  __('Превышена максимальная сумма заказа'));
             }
+
+            $varamount++;
+            $curid = $row['id'];
+
+            $disp .= ParseTemplateReturn($template, true);
         }
     }
 

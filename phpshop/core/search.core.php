@@ -273,7 +273,14 @@ class PHPShopSearch extends PHPShopShopCore {
         $arg = func_get_args();
         $this->PHPShopModules->setHookHandler(__CLASS__, __FUNCTION__, $this, $arg);
 
-        $PHPShopOrm->insert(array('name_new' => $name, 'num_new' => $num, 'datas_new' => time(), 'cat_new' => $cat, 'dir_new' => $_SERVER['HTTP_REFERER']));
+        $PHPShopOrm->insert([
+            'name_new'  => $name,
+            'num_new'   => $num,
+            'datas_new' => time(),
+            'cat_new'   => $cat,
+            'dir_new'   => $_SERVER['HTTP_REFERER'],
+            'ip_new'    => $_SERVER['REMOTE_ADDR']
+        ]);
     }
 
     /**

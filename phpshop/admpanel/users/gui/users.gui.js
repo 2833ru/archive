@@ -75,7 +75,10 @@ $(document).ready(function() {
 
     // Автозаполнение дополнительных полей
     $('.autofill input:checkbox').attr('checked', 'checked');
-    $('.autofill input[name=module_rul_1]').attr('checked', false);
+    $('.autofill input[name=modules_rul_4]').attr('checked', false);
+    $('.autofill input[name=api_rul_1]').attr('checked', false);
+    $('.autofill input[name=api_rul_2]').attr('checked', false);
+    $('.autofill input[name=api_rul_3]').attr('checked', false);
 
     // Выбор всех элементов через checkbox
     $("#select_rules_view").on('click', function() {

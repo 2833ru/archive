@@ -1,8 +1,8 @@
 <tr>
     <td class="visible-lg">            
-        <a href="/shop/UID_@prodId@.html"><img class="template-wishlist-list" src="@prodPic@" alt="@prodName@"  title="@prodName@"></a>
+        <a href="/shop/UID_@prodUid@.html"><img class="template-wishlist-list" src="@prodPic@" alt="@prodName@"  title="@prodName@"></a>
     </td>
-    <td ><a href="/shop/UID_@prodId@.html" class="wishlist-item">@prodName@</a></td>
+    <td ><a href="/shop/UID_@prodUid@.html" class="wishlist-item">@prodName@</a></td>
     <td >            
         <div class="price">
             @prodPrice@ <span class="rubznak">@productValutaName@</span>

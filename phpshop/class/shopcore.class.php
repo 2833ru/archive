@@ -68,7 +68,11 @@ class PHPShopShopCore extends PHPShopCore {
      */
     var $price_min = 0;
     var $price_max = 0;
+
+    // Кешируемые данные
     var $previewSorts;
+    var $sortCategories;
+    var $warehouse;
 
     /**
      * Конструктор
@@ -84,7 +88,7 @@ class PHPShopShopCore extends PHPShopCore {
 
         PHPShopObj::loadClass('product');
         parent::__construct();
-
+       
         // Валюта товара
         $this->dengi = $this->PHPShopSystem->getParam('dengi');
         $this->currency = $this->currency();
@@ -413,7 +417,7 @@ class PHPShopShopCore extends PHPShopCore {
 
         // Всего страниц
         $this->PHPShopOrm->comment = __CLASS__ . '.' . __FUNCTION__;
-        $result = $this->PHPShopOrm->query("select COUNT('id') as count from " . $this->objBase . ' where ' . $SQL);
+        $result = $this->PHPShopOrm->query("select COUNT('id') as count, (price_n - price) as discount from " . $this->objBase . ' where ' . $SQL);
         $row = mysqli_fetch_array($result);
         $this->num_page = $row['count'];
 
@@ -623,6 +627,13 @@ class PHPShopShopCore extends PHPShopCore {
      * @param array $row масив данных по товару
      */
     function getStore($product = array()) {
+
+        if(is_array($this->warehouse)) {
+            return;
+        }
+
+        $this->warehouse = [];
+
         $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['warehouses']);
 
         $where['enabled'] = "='1'";
@@ -1146,9 +1157,13 @@ function product_grid($dataArray, $cell = 2, $template = false) {
 }
 
 public function getPreviewSorts($products, $currentProduct) {
-    $sortCategoryOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['sort_categories']);
-    $sortCategories = $sortCategoryOrm->getList(array('id', 'name'), array('show_preview' => '="1"'));
-    if (\count($sortCategories) === 0) {
+
+    if(is_null($this->sortCategories)) {
+        $sortCategoryOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['sort_categories']);
+        $this->sortCategories = $sortCategoryOrm->getList(array('id', 'name'), array('show_preview' => '="1"'));
+    }
+
+    if (\count($this->sortCategories) === 0) {
         return null;
     }
 
@@ -1180,7 +1195,7 @@ public function getPreviewSorts($products, $currentProduct) {
 
     $vendorArray = unserialize($currentProduct['vendor_array']);
     $html = '';
-    foreach ($sortCategories as $sortCategory) {
+    foreach ($this->sortCategories as $sortCategory) {
         if (isset($vendorArray[$sortCategory['id']])) {
             foreach ($vendorArray[$sortCategory['id']] as $value) {
                 $titles = array();

@@ -169,6 +169,9 @@ function actionUpdate() {
 // Ёкшен входа
 function actionEnter() {
     global $PHPShopOrm, $PHPShopModules;
+    
+    $_POST['log'] = trim($_POST['log']);
+    $_POST['pas'] = trim($_POST['pas']);
 
     $hasher = new PasswordHash(8, false);
     $data = $PHPShopOrm->select(array('*'), array('enabled' => "='1'"), false, array('limit' => 30));

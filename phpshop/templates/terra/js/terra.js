@@ -7,7 +7,9 @@ function searchOpen() {
         $('.header-search-form').trigger("reset");
     });
 }
+ /*
 $(document).ajaxStop(function () {
+   
     $('.newitems-list .product-col').matchHeight();
     $('.template-product-list .product-col').matchHeight();
     $('.caption h4').matchHeight();
@@ -21,7 +23,7 @@ $(document).ajaxStop(function () {
     $('.nowbuy-list .product-col').matchHeight();
     $('.recomend_products .product-block').matchHeight();
 })
-
+*/
 // -------------------- Slick slider (brands) --------------------
 
 $(window).load(function () {

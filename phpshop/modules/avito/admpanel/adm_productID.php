@@ -11,6 +11,7 @@ function addAvitoProductTab($data) {
     $tab .= $PHPShopGUI->setField('Состояние товара', $PHPShopGUI->setSelect('condition_avito_new', Avito::getConditions($data['condition_avito']),300,true), 1, 'Тег <condition>');
     $tab .= $PHPShopGUI->setField('Вариант платного размещения', $PHPShopGUI->setSelect('listing_fee_avito_new', Avito::getListingFee($data['listing_fee_avito']),300,true), 1, 'Тег <ListingFee>');
     $tab .= $PHPShopGUI->setField('Платная услуга', $PHPShopGUI->setSelect('ad_status_avito_new', Avito::getAdStatuses($data['ad_status_avito']),300), 1, 'Тег <AdStatus>');
+    $tab .= $PHPShopGUI->setField('Вид объявления', $PHPShopGUI->setSelect('ad_type_avito_new', Avito::getAdTypes($data['ad_type_avito']),300), 1, 'Тег <AdType>');
 
     $PHPShopGUI->addTab(array("Авито", $tab, true));
 }

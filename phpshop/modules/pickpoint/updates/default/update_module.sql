@@ -1,0 +1,17 @@
+ALTER TABLE `phpshop_modules_pickpoint_system` ADD `ikn` varchar(64) NOT NULL default '';
+ALTER TABLE `phpshop_modules_pickpoint_system` ADD `login` varchar(64) NOT NULL default '';
+ALTER TABLE `phpshop_modules_pickpoint_system` ADD `password` varchar(64) NOT NULL default '';
+ALTER TABLE `phpshop_modules_pickpoint_system` ADD `city_from` varchar(64) NOT NULL default '';
+ALTER TABLE `phpshop_modules_pickpoint_system` ADD `region_from` varchar(64) NOT NULL default '';
+ALTER TABLE `phpshop_modules_pickpoint_system` ADD `length` varchar(64) NOT NULL default '';
+ALTER TABLE `phpshop_modules_pickpoint_system` ADD `weight` varchar(64) NOT NULL default '';
+ALTER TABLE `phpshop_modules_pickpoint_system` ADD `width` varchar(64) NOT NULL default '';
+ALTER TABLE `phpshop_modules_pickpoint_system` ADD `height` varchar(64) NOT NULL default '';
+ALTER TABLE `phpshop_modules_pickpoint_system` ADD `status` int(11) default 0;
+ALTER TABLE `phpshop_modules_pickpoint_system` ADD `fee` int(11) default 0;
+ALTER TABLE `phpshop_modules_pickpoint_system` ADD `fee_type` enum('1','2') DEFAULT '1';
+ALTER TABLE `phpshop_modules_pickpoint_system` ADD `session_id` varchar(255) default '';
+ALTER TABLE `phpshop_modules_pickpoint_system` ADD `session_expire` int(11) default NULL;
+ALTER TABLE `phpshop_modules_pickpoint_system` ADD `version` varchar(64) DEFAULT '1.5';
+ALTER TABLE `phpshop_modules_pickpoint_system` CHANGE `city` `delivery_id` varchar(64) default '';
+ALTER TABLE `phpshop_orders` ADD `pickpoint_data` text default '';

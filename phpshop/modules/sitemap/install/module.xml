@@ -2,7 +2,7 @@
 <module>
     <version>1.8</version>
     <name>Sitemap</name>
-    <faqlink>http://faq.phpshop.ru/page/sitemap.html</faqlink>
+    <faqlink>https://docs.phpshop.ru/moduli/seo/sitemap</faqlink>
     <description>Модуль генерации карты сайта. Учитываются SEO ссылки.</description>
     <category>seo</category>
     <adminmenu>

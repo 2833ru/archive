@@ -104,7 +104,7 @@ function updateDiscount($data) {
  * Списывание со склада
  */
 function updateStore($data) {
-    global $PHPShopSystem, $PHPShopBase, $_classPath, $PHPShopOrderStatusArray;
+    global $PHPShopSystem, $PHPShopBase, $_classPath, $PHPShopOrderStatusArray,$PHPShopModules;
 
     // Статусы заказов
     $GetOrderStatusArray = $PHPShopOrderStatusArray->getArray();
@@ -215,6 +215,9 @@ function updateStore($data) {
                                 break;
                         }
 
+                        // Перехват модуля
+                        $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, array($product_row));
+
                         // Обновляем данные
                         $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['products']);
                         $PHPShopOrm->debug = false;
@@ -282,7 +285,7 @@ function actionStart() {
     else
         $currency = $PHPShopOrder->default_valuta_iso;
 
-    $PHPShopGUI->setActionPanel(__("Заказ") . ' &#8470; ' . $data['uid'] . ' <span class="hidden-xs hidden-md">/ ' . PHPShopDate::dataV($data['datas']) . $update_date . ' / ' . __("Итого") . ': ' . $PHPShopOrder->getTotal(false, ' ') . $currency . '</span>', array('Сделать копию', 'Все заказы пользователя', 'Напоминание',  '|', 'Удалить'), array('Сохранить', 'Сохранить и закрыть'), false);
+    $PHPShopGUI->setActionPanel(__("Заказ") . ' &#8470; ' . $data['uid'] . ' <span class="hidden-xs hidden-md">/ ' . PHPShopDate::dataV($data['datas']) . $update_date . ' / ' . __("Итого") . ': ' . $PHPShopOrder->getTotal(false, ' ') . $currency . '</span>', array('Сделать копию', 'Все заказы пользователя', 'Напоминание', '|', 'Удалить'), array('Сохранить', 'Сохранить и закрыть'), false);
 
     // Нет данных
     if (!is_array($data)) {
@@ -715,6 +718,9 @@ function actionCartUpdate() {
 
             // Обновление цены и кол-ва
             default:
+                
+                $_POST['selectAction']='productUpdate';
+                
                 // Имя товара
                 if (!empty($_POST['name_value']))
                     $order['Cart']['cart'][$productID]['name'] = $_POST['name_value'];
@@ -773,7 +779,7 @@ function actionCartUpdate() {
         $PHPShopCart->clean();
 
         // Перехват модуля
-        $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $_POST);
+        $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, array('old'=>$data,'new'=>$update,'title'=>$_POST['selectAction']));
 
         $action = $PHPShopOrm->update($update, array('id' => '=' . $orderID));
 
@@ -794,13 +800,13 @@ function actionReminder() {
 
     // Данные по пользователю
     $PHPShopUser = new PHPShopUser($data['user']);
-    
+
     // Данные по корзине 
     $GLOBALS['PHPShopOrder'] = new PHPShopOrderFunction($data['id'], $data);
     $PHPShopCart = new PHPShopCart($order['Cart']['cart']);
-    
-    $currency=$PHPShopSystem->getDefaultValutaCode(true);
-    $rate=1;
+
+    $currency = $PHPShopSystem->getDefaultValutaCode(true);
+    $rate = 1;
 
     PHPShopParser::set('sum', $order['Cart']['sum']);
     PHPShopParser::set('cart', $PHPShopCart->display('mailcartforma', array('currency' => $currency, 'rate' => $rate)));
@@ -813,15 +819,15 @@ function actionReminder() {
     PHPShopParser::set('mail', $PHPShopUser->getParam("mail"));
     PHPShopParser::set('company', $PHPShopSystem->getParam('name'));
     PHPShopParser::set('user_name', $PHPShopUser->getParam("name"));
-    PHPShopParser::set('serverShop',PHPShopString::check_idna($_SERVER['SERVER_NAME']));
-    PHPShopParser::set('serverPath',PHPShopString::check_idna($_SERVER['SERVER_NAME']));
-    PHPShopParser::set('shopName',$PHPShopSystem->getValue('company'));
-    PHPShopParser::set('adminMail',$PHPShopSystem->getEmail());
-    PHPShopParser::set('telNum',$PHPShopSystem->getValue('tel'));
-    PHPShopParser::set('logo',$PHPShopSystem->getLogo());
+    PHPShopParser::set('serverShop', PHPShopString::check_idna($_SERVER['SERVER_NAME']));
+    PHPShopParser::set('serverPath', PHPShopString::check_idna($_SERVER['SERVER_NAME']));
+    PHPShopParser::set('shopName', $PHPShopSystem->getValue('company'));
+    PHPShopParser::set('adminMail', $PHPShopSystem->getEmail());
+    PHPShopParser::set('telNum', $PHPShopSystem->getValue('tel'));
+    PHPShopParser::set('logo', $PHPShopSystem->getLogo());
 
     // Заголовок письма покупателю
-    $title =  __('Уведомление об неоплаченном заказе') .' №'. $data['uid'] ;
+    $title = __('Уведомление об неоплаченном заказе') . ' №' . $data['uid'];
 
     new PHPShopMail($PHPShopUser->getParam("mail"), $PHPShopSystem->getEmail(), $title, PHPShopParser::file('tpl/reminder.mail.tpl', true), true);
     return array('success' => true);
@@ -843,7 +849,7 @@ function mailcartforma($val, $option) {
     $val['price'] *= $option['rate'];
     $val['price'] = number_format($val['price'], $PHPShopOrder->format, '.', '');
 
-    $dis = '<img width="50" src="http://'.$_SERVER['SERVER_NAME'].$val['pic_small'].'" align="left" alt=""> '.$val['uid'] . "  " . $val['name'] . " (" . $val['num'] . " " . $val['ed_izm'] . " * " . $val['price'] . ") -- " . ($val['price'] * $val['num']) . " " . $option['currency'] . " <br>
+    $dis = '<img width="50" src="http://' . $_SERVER['SERVER_NAME'] . $val['pic_small'] . '" align="left" alt=""> ' . $val['uid'] . "  " . $val['name'] . " (" . $val['num'] . " " . $val['ed_izm'] . " * " . $val['price'] . ") -- " . ($val['price'] * $val['num']) . " " . $option['currency'] . " <br>
 ";
     return $dis;
 }

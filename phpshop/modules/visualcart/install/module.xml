@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="windows-1251"?>
 <module>
-    <version>2.0</version>
+    <version>2.2</version>
     <name>Visual Cart</name>
     <faqlink>https://docs.phpshop.ru/moduli/prodazhi/visual-cart</faqlink>
     <description>Модуль управляемой мини-корзины, сохранение корзины в базе.</description>
@@ -11,6 +11,10 @@
         <podmenu>
             <podmenu_name>Незавершенные заказы</podmenu_name>
             <podmenu_action>dir.visualcart</podmenu_action>
+        </podmenu>
+        <podmenu>
+            <podmenu_name>Журнал корзины</podmenu_name>
+            <podmenu_action>dir.visualcart.log</podmenu_action>
         </podmenu>
     </adminmenu>
 </module>

@@ -22,13 +22,13 @@ function userorderpaymentlink_mod_yandexmoney_hook($obj, $PHPShopOrderFunction) 
 
             // Платежная форма
             $payment_forma = PHPShopText::setInput('hidden', 'receiver', trim($option['merchant_id']), false, 10);
-            $payment_forma.= PHPShopText::setInput('hidden', 'formcomment', $PHPShopSystem->getParam('name') . ': Заказ ' . $PHPShopOrderFunction->objRow['uid'], false, 10);
-            $payment_forma.= PHPShopText::setInput('hidden', 'short-dest', $PHPShopSystem->getParam('name') . ': Заказ ' . $PHPShopOrderFunction->objRow['uid'], false, 10);
+            $payment_forma.= PHPShopText::setInput('hidden', 'formcomment', PHPShopString::win_utf8($PHPShopSystem->getParam('name') . ': Заказ ') . $PHPShopOrderFunction->objRow['uid'], false, 10);
+            $payment_forma.= PHPShopText::setInput('hidden', 'short-dest', PHPShopString::win_utf8($PHPShopSystem->getParam('name') . ': Заказ ') . $PHPShopOrderFunction->objRow['uid'], false, 10);
             $payment_forma.=PHPShopText::setInput('hidden', 'writable-targets', "false", false, 10);
             $payment_forma.=PHPShopText::setInput('hidden', 'comment-needed', "false", false, 10);
             $payment_forma.=PHPShopText::setInput('hidden', 'label', $inv_id, false, 10);
             $payment_forma.=PHPShopText::setInput('hidden', 'quickpay-form', 'shop');
-            $payment_forma.=PHPShopText::setInput('hidden', 'targets', $PHPShopSystem->getParam('name') . ': Заказ ' . $PHPShopOrderFunction->objRow['uid'], false, 10);
+            $payment_forma.=PHPShopText::setInput('hidden', 'targets', PHPShopString::win_utf8($PHPShopSystem->getParam('name') . ': Заказ ') . $PHPShopOrderFunction->objRow['uid'], false, 10);
             $payment_forma.=PHPShopText::setInput('hidden', 'sum', $out_summ, false, 10);
             $payment_forma.=PHPShopText::setInput('submit', 'send', $option['title'], $float = "none", 250);
 

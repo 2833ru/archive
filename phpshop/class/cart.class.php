@@ -20,7 +20,6 @@ class PHPShopCart {
      * Режим проверки остатков на складе
      */
     var $store_check = true;
-
     var $PHPShopModules;
 
     /**
@@ -55,7 +54,7 @@ class PHPShopCart {
         if ($import_cart)
             $this->_CART = $import_cart;
         else {
-            if(!is_array($_SESSION['cart'])) {
+            if (!is_array($_SESSION['cart'])) {
                 $_SESSION['cart'] = array();
             }
             $this->_CART = &$_SESSION['cart'];
@@ -127,16 +126,32 @@ class PHPShopCart {
             // Учет свойств товара
             if (!empty($_REQUEST['addname']))
                 $cart['name'] = $cart['name'] . '-' . $_REQUEST['addname'];
+            
+            // Журнал
+            $this->log = $cart;
 
-            if (!empty($cart['num']))
+            // Успешное добавление
+            if (!empty($cart['num'])) {
                 $this->_CART[$xid] = $cart;
 
-            // сообщение для вывода во всплывающее окно
-            $this->message = __("Вы успешно добавили") . " <a href='" . $GLOBALS['SysValue']['dir']['dir'] . "/shop/UID_$objID.html'>$name</a> 
+                // сообщение для вывода во всплывающее окно
+                $this->message = __("Вы успешно добавили") . " <a href='" . $GLOBALS['SysValue']['dir']['dir'] . "/shop/UID_$objID.html'>$name</a> 
             " . __("в вашу") . " <a href='" . $GLOBALS['SysValue']['dir']['dir'] . "/order/'>" . __("корзину") . "</a>";
 
-            return true;
+                $this->log['status'] = true;
+            }
+            // Товара нет в наличии
+            else {
+
+                // сообщение для вывода во всплывающее окно
+                $this->message = __("Ошибка добавления") . " <a href='" . $GLOBALS['SysValue']['dir']['dir'] . "/shop/UID_$objID.html'>$name</a> 
+            " . __("в вашу") . " " . __("корзину") . ", ".__('товар отсутствует на складе');
+
+                $this->log['status'] = false;
+            }
         }
+        
+        return true;
     }
 
     /**
@@ -291,14 +306,14 @@ class PHPShopCart {
             foreach ($this->_CART as $key => $val) {
                 $product = new PHPShopProduct($val['id']);
                 $name = PHPShopSecurity::CleanStr($product->getParam("name"));
-                if(!empty($name)) {
+                if (!empty($name)) {
                     $this->_CART[$key]['price'] = $this->getCartProductPrice($product);
                     $this->_CART[$key]['price_n'] = $this->getCartProductPrice($product, 'price_n');
                     $this->_CART[$key]['total'] = $PHPShopOrder->ReturnSumma($this->_CART[$key]['price'] * $val['num'], 0);
 
                     if ($this->store_check) {
                         if ($this->_CART[$key]['num'] > PHPShopSecurity::TotalClean($product->getParam("items"), 1)) {
-                            if(PHPShopSecurity::TotalClean($product->getParam("items"), 1) > 0) {
+                            if (PHPShopSecurity::TotalClean($product->getParam("items"), 1) > 0) {
                                 $this->_CART[$key]['num'] = PHPShopSecurity::TotalClean($product->getParam("items"), 1);
                             } else {
                                 unset($this->_CART[$key]);
@@ -346,8 +361,7 @@ class PHPShopCart {
      * @param string $column
      * @return format
      */
-    public function getCartProductPrice($product, $column = 'price')
-    {
+    public function getCartProductPrice($product, $column = 'price') {
         // Перехват модуля
         $hook = $this->setHook(__CLASS__, __FUNCTION__, array('product' => $product, 'column' => $column));
         if ($hook)
@@ -366,9 +380,10 @@ class PHPShopCart {
     }
 
     public function setHook($class_name, $function_name, $data = false, $rout = false) {
-        if(!empty($this->PHPShopModules))
+        if (!empty($this->PHPShopModules))
             return $this->PHPShopModules->setHookHandler($class_name, $function_name, array(&$this), $data, $rout);
     }
+
 }
 
 ?>

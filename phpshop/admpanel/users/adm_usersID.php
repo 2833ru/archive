@@ -46,11 +46,11 @@ function actionStart() {
             $PHPShopGUI->setField("E-mail", $PHPShopGUI->setInput('email.required.6', "mail_new", $data['mail'])) .
             $PHPShopGUI->setField("Пароль", $PHPShopGUI->setInput("password.required.6", "password_new", hidePassword($data['password']))) .
             $PHPShopGUI->setField("Подтверждение пароля", $PHPShopGUI->setInput("password.required.6", "password2_new", hidePassword($data['password'])) . '<br>' . $PHPShopGUI->setInput("button", false, __("Сгенерировать пароль"), false, false, "$('input[name=password_new],input[name=password2_new]').val('P" . $pasgen . "');alert('Сгенерирован пароль: " . $pasgen . "');", "btn-sm") . '&nbsp;&nbsp;&nbsp;' . $PHPShopGUI->setCheckbox('changePassword', 1, '<span class="text-success">Сменить логин и пароль</span>', 0) . $PHPShopGUI->setCheckbox('sendPasswordEmail', 1, 'Оповестить по E-mail', 0)) .
-            $PHPShopGUI->setField("Статус", $PHPShopGUI->setRadio("enabled_new", 1, "Вкл.", $data['enabled']) . $PHPShopGUI->setRadio("enabled_new", 0, "Выкл.", $data['enabled']) . '&nbsp;&nbsp;')
+            $PHPShopGUI->setField("Статус", $PHPShopGUI->setRadio("enabled_new", 1, "Вкл.", $data['enabled']) . $PHPShopGUI->setRadio("enabled_new", 0, "Выкл.", $data['enabled']) . '&nbsp;&nbsp;')  
     );
 
     // Права
-    $Tab2 = $PHPShopGUI->loadLib('tab_rules', $data['status']);
+    $Tab2 = $PHPShopGUI->loadLib('tab_rules', $data);
 
     // Запрос модуля на закладку
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $data);
@@ -106,6 +106,7 @@ function actionUpdate() {
 
         $hasher = new PasswordHash(8, false);
         $_POST['password_new'] = $hasher->HashPassword($_POST['password_new']);
+        $_POST['token_new']=$hasher->HashPassword($_POST['password_new']);
     } else {
         unset($_POST['password_new']);
         unset($_POST['login_new']);
@@ -133,10 +134,12 @@ function actionUpdate() {
         "discount" => rules_zero($_POST[discount_rul_1]) . "-" . rules_zero($_POST[discount_rul_2]) . "-" . rules_zero($_POST[discount_rul_3]),
         "currency" => rules_zero($_POST[currency_rul_1]) . "-" . rules_zero($_POST[currency_rul_2]) . "-" . rules_zero($_POST[currency_rul_3]),
         "delivery" => rules_zero($_POST[delivery_rul_1]) . "-" . rules_zero($_POST[delivery_rul_2]) . "-" . rules_zero($_POST[delivery_rul_3]),
+        "citylist" => rules_zero($_POST[citylist_rul_1]) . "-" . rules_zero($_POST[citylist_rul_2]) . "-" . rules_zero($_POST[citylist_rul_3]),
         "servers" => rules_zero($_POST[servers_rul_1]) . "-" . rules_zero($_POST[servers_rul_2]) . "-" . rules_zero($_POST[servers_rul_3]),
         "rsschanels" => rules_zero($_POST[rss_rul_1]) . "-" . rules_zero($_POST[rss_rul_2]) . "-" . rules_zero($_POST[rss_rul_3]),
         "update" => rules_zero($_POST[update_rul_1]),
-        "modules" => rules_zero($_POST[modules_rul_1]) . "-" . rules_zero($_POST[modules_rul_2]) . "-" . rules_zero($_POST[modules_rul_3]) . "-" . rules_zero($_POST[modules_rul_4]) . "-" . rules_zero($_POST[modules_rul_5])
+        "modules" => rules_zero($_POST[modules_rul_1]) . "-" . rules_zero($_POST[modules_rul_2]) . "-" . rules_zero($_POST[modules_rul_3]) . "-" . rules_zero($_POST[modules_rul_4]) . "-" . rules_zero($_POST[modules_rul_5]),
+        "api" => rules_zero($_POST[api_rul_1]) . "-" . rules_zero($_POST[api_rul_2]) . "-" . rules_zero($_POST[api_rul_3]),
     );
     
     $_POST['status_new'] = serialize($statusUser);

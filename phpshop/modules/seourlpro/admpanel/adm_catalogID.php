@@ -28,10 +28,10 @@ function addSeoUrlPro($data) {
         if (empty($data['cat_seo_name'])) {
             PHPShopObj::loadClass("string");
             $data['cat_seo_name'] = PHPShopString::toLatin($data['name']);
-            $data['cat_seo_name'] = str_replace(array("_","+",'&#43;'),array("-","",""), $data['cat_seo_name']);
+            $data['cat_seo_name'] = str_replace(array("_","+",'&#43;','"'),array("-","","",""), $data['cat_seo_name']);
         }
         
-        $data['cat_seo_name'] = str_replace(array("+",'&#43;'),array("",""), $data['cat_seo_name']);
+        $data['cat_seo_name'] = str_replace(array("+",'&#43;','"'),array("","",""), $data['cat_seo_name']);
 
         // Добавление /cat/ для сложных ссылок
         $true_link = str_replace('cat/', '', $data['cat_seo_name']);
@@ -81,7 +81,7 @@ function checkSeoUrlPro($a) {
 // Проверка уникальности сео-ссылки
 function checkSeoUrlProName($data){
     $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['categories']);
-    $PHPShopOrm->sql='select id,name,cat_seo_name from '.$GLOBALS['SysValue']['base']['categories'].' where (name="'.$data['name_new'].'" or cat_seo_name="'.$data['cat_seo_name_new'].'") and id!='.$_POST['rowID'].' limit 1';
+    $PHPShopOrm->sql='select id,name,cat_seo_name from '.$GLOBALS['SysValue']['base']['categories'].' where (name="'.addslashes($data['name_new']).'" or cat_seo_name="'.$data['cat_seo_name_new'].'") and id!='.$_POST['rowID'].' limit 1';
     $result = $PHPShopOrm->select();
     
     if($result[0]['cat_seo_name'] == $data['cat_seo_name_new'])

@@ -85,6 +85,14 @@ class Avito
         return $result;
     }
 
+    public static function getAdTypes($currentAdType)
+    {
+        return [
+            [__('Товар приобретен на продажу'), 'Товар приобретен на продажу', $currentAdType],
+            [__('Товар от производителя'), 'Товар от производителя', $currentAdType]
+        ];
+    }
+
     /**
      * Название категории в Авито.
      * @param int $categoryId

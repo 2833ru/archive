@@ -5,6 +5,7 @@ $TitlePage = __('Новая заявка в техподдержку');
 function actionStart() {
     global $PHPShopGUI, $TitlePage, $PHPShopSystem;
 
+    $PHPShopGUI->addJSFiles('./js/jquery.waypoints.min.js', './support/gui/support.gui.js');
 
     $PHPShopGUI->action_button['Отправить сообщение'] = array(
         'name' => 'Отправить сообщение',
@@ -33,10 +34,10 @@ function actionStart() {
     $value[] = array('Платные услуги и консультации', 19);
     $value[] = array('Верстка макета дизайна', 20);
 
-    $Tab1 .=$PHPShopGUI->setField("E-mail", $PHPShopGUI->setInput('email.required.6', "email", $PHPShopSystem->getEmail(),null,400));
-    $Tab1 .=$PHPShopGUI->setField("Имя", $PHPShopGUI->setInput('text.required.4', "name", null,null,400));
-    $Tab1 .=$PHPShopGUI->setField("Приоритет", $PHPShopGUI->setSelect('priority', array(array('Низкий', 3),array('Средний', 2),array('Высокий', 1)), 400));
-    $Tab1 .=$PHPShopGUI->setField("Категория", $PHPShopGUI->setSelect('category', $value, 400));
+    $Tab1 .= $PHPShopGUI->setField("E-mail", $PHPShopGUI->setInput('email.required.6', "email", $PHPShopSystem->getEmail(), null, 400));
+    $Tab1 .= $PHPShopGUI->setField("Имя", $PHPShopGUI->setInput('text.required.4', "name", null, null, 400));
+    $Tab1 .= $PHPShopGUI->setField("Приоритет", $PHPShopGUI->setSelect('priority', array(array('Низкий', 3), array('Средний', 2), array('Высокий', 1)), 400));
+    $Tab1 .= $PHPShopGUI->setField("Категория", $PHPShopGUI->setSelect('category', $value, 400));
     $Tab1 .= $PHPShopGUI->setField("Тема", $PHPShopGUI->setInput('text.required.10', "subject", null));
     $Tab1 .= $PHPShopGUI->setField('Сообщение', $PHPShopGUI->setTextarea('message.required.10', null, true, false, 300, false, __('Пожалуйста, опишите Вашу проблему. Для ускорения решения вопроса, сразу предоставьте пароли доступа от Админпанели (логин, пароль) сайта и FTP (имя сервера, логин, пароль)')));
     $Tab1 .= $PHPShopGUI->setField('Файл', $PHPShopGUI->setIcon(null, "attachment", false, array('load' => true, 'server' => true, 'url' => false, 'multi' => false, 'view' => false)));
@@ -62,12 +63,17 @@ function actionInsert() {
     $ch = curl_init();
 
     if (!empty($_POST['attachment'])) {
+
+        $fileAdd = fileAdd();
+        if (!empty($fileAdd))
+            $_POST['attachment'] = $fileAdd;
+
         $pathinfo = pathinfo($_POST['attachment']);
-        $_POST['message'].='
+        $_POST['message'] .= '
 
 <a href="http://' . $_SERVER['SERVER_NAME'] . $_POST['attachment'] . '" target="_blank"><span class="glyphicon glyphicon-paperclip"></span> ' . $pathinfo['basename'] . '</a>';
     }
-    
+
 
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
     curl_setopt($ch, CURLOPT_POST, true);
@@ -92,12 +98,12 @@ function fileAdd() {
     if (!empty($_FILES['file']['name'])) {
         $_FILES['file']['ext'] = PHPShopSecurity::getExt($_FILES['file']['name']);
         $_FILES['file']['name'] = PHPShopString::toLatin(str_replace('.' . $_FILES['file']['ext'], '', PHPShopString::utf8_win1251($_FILES['file']['name']))) . '.' . $_FILES['file']['ext'];
-       if (!empty($_FILES['file']['ext'])) {
+        if (!empty($_FILES['file']['ext'])) {
             if (move_uploaded_file($_FILES['file']['tmp_name'], $_SERVER['DOCUMENT_ROOT'] . $GLOBALS['dir']['dir'] . $path . $_FILES['file']['name'])) {
                 $file = $GLOBALS['dir']['dir'] . $path . $_FILES['file']['name'];
             }
-        }
-        else $file='Error_PHP_ext';
+        } else
+            $file = 'Error_PHP_ext';
     }
 
     if (empty($file))

@@ -159,6 +159,12 @@ class PHPShopPage extends PHPShopCore {
         else
             $title = $row['title'];
 
+        // OpenGraph
+        $this->set('ogTitle', $row['name']);
+        if (!empty($row['icon']))
+            $this->set('ogImage', $row['icon']);
+        $this->set('ogDescription', $row['description']);
+
         $this->title = $title;
         $this->description = $row['description'];
         $this->keywords = $row['keywords'];
@@ -272,16 +278,17 @@ class PHPShopPage extends PHPShopCore {
         $this->set('catalogId', $cat);
 
         // Мета
-        if($this->PHPShopCategory->getValue('title') != "")
-            $this->title =$this->PHPShopCategory->getValue('title');
-        else $this->title = $this->category_name . " - " . $this->PHPShopSystem->getValue("name");
-        
-        if($this->PHPShopCategory->getValue('description') != "")
-            $this->description =$this->PHPShopCategory->getValue('description');
-         
-        if($this->PHPShopCategory->getValue('keywords') != "")
-            $this->description =$this->PHPShopCategory->getValue('keywords');
-        
+        if ($this->PHPShopCategory->getValue('title') != "")
+            $this->title = $this->PHPShopCategory->getValue('title');
+        else
+            $this->title = $this->category_name . " - " . $this->PHPShopSystem->getValue("name");
+
+        if ($this->PHPShopCategory->getValue('description') != "")
+            $this->description = $this->PHPShopCategory->getValue('description');
+
+        if ($this->PHPShopCategory->getValue('keywords') != "")
+            $this->description = $this->PHPShopCategory->getValue('keywords');
+
         $this->lastmodified = $lastmodified;
 
         // Навигация хлебные крошки

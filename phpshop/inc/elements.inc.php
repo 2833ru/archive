@@ -680,7 +680,7 @@ class PHPShopPageCatalogElement extends PHPShopElements {
                 if (!$this->chekPages($row['id'])) {
                     $PHPShopOrm = new PHPShopOrm($this->getValue('base.page'));
                     $PHPShopOrm->debug = $this->debug;
-                    $dataPage = $PHPShopOrm->select(array('link', 'name'), array('category' => '=' . $row['id']), array('order' => 'num,name'), array("limit" => 100));
+                    $dataPage = $PHPShopOrm->select(array('link', 'name'), array('category' => '=' . $row['id'], 'enabled' => '="1"'), array('order' => 'num,name'), array("limit" => 100));
                     if (is_array($dataPage)) {
                         foreach ($dataPage as $rowPage) {
                             $dis_page .= PHPShopText::li($rowPage['name'], '/page/' . $rowPage['link'] . '.html', null);
@@ -1256,22 +1256,26 @@ class PHPShopSliderElement extends PHPShopElements {
      * Вывод изображений в слайдер
      * @return string
      */
-    function index() {
+    function index($isMobile = false) {
         $dis = null;
 
         // Перехват модуля
         $this->setHook(__CLASS__, __FUNCTION__, false, 'START');
 
         // Выполнение только на главной странице
-        if ($this->disp_only_index) {
-            if ($this->PHPShopNav->index())
-                $view = true;
-            else
-                $view = false;
-        } else
-            $view = true;
+        $view = true;
+        if ($this->disp_only_index && $this->PHPShopNav->index() === false) {
+            $view = false;
+        }
 
-        $where['enabled'] = '="1"';
+        $where = [
+            'enabled' => '="1"',
+            'mobile' => '="0"'
+        ];
+
+        if($isMobile) {
+            $where['mobile'] = '="1"';
+        }
 
         // Мультибаза
         if (defined("HostID"))
@@ -1311,6 +1315,9 @@ class PHPShopSliderElement extends PHPShopElements {
         }
     }
 
+    public function imageSliderMobile() {
+        return $this->index(true);
+    }
 }
 
 /**

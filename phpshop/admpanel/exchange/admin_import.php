@@ -378,16 +378,24 @@ function csv_update($data) {
                 if (!empty($row['pic_small']))
                     $row['pic_small'] = '/UserFiles/Image/' . $row['pic_small'];
             }
+            
 
             // Дополнительные изображения
             if (!empty($_POST['export_imgdelim']) and strstr($row['pic_big'], $_POST['export_imgdelim'])) {
                 $data_img = explode($_POST['export_imgdelim'], $row['pic_big']);
             } else
                 $data_img[] = $row['pic_big'];
-
+            
             if (is_array($data_img)) {
-                foreach ($data_img as $k => $img) {
+                
+                // Получение ID товара по артикулу
+                if (empty($row['id']) and ! empty($row['uid'])) {
+                    $PHPShopOrmProd = new PHPShopOrm($GLOBALS['SysValue']['base']['products']);
+                    $data_prod = $PHPShopOrmProd->getOne(array('id'), array('uid' => '="' . $row['uid'] . '"'));
+                    $row['id'] = $data_prod['id'];
+                }
 
+                foreach ($data_img as $k => $img) {
                     if (!empty($img)) {
 
                         // Главное изображение
@@ -401,9 +409,10 @@ function csv_update($data) {
                         // Полный путь к изображениям
                         if (isset($_POST['export_imgpath']))
                             $img = '/UserFiles/Image/' . $img;
-
+                        
                         // Проверка существования изображения
                         $PHPShopOrmImg = new PHPShopOrm($GLOBALS['SysValue']['base']['foto']);
+                        $PHPShopOrmImg->debug=false;
                         $check = $PHPShopOrmImg->select(array('name'), array('name' => '="' . $img . '"', 'parent' => '=' . intval($row['id'])), false, array('limit' => 1));
 
                         // Создаем новую

@@ -4,7 +4,7 @@ $TitlePage = __("Доставка");
 PHPShopObj::loadClass('delivery');
 
 function actionStart() {
-    global $PHPShopInterface, $PHPShopSystem;
+    global $PHPShopInterface;
 
     $PHPShopCategoryArray = new PHPShopDeliveryArray(array('is_folder' => "='1'"));
     $CategoryArray = $PHPShopCategoryArray->getArray();
@@ -12,10 +12,15 @@ function actionStart() {
     if (!empty($CategoryArray[$_GET['cat']]['name']))
         $catname = " / " . $CategoryArray[$_GET['cat']]['name'];
 
+    $PHPShopInterface->action_select['Города и регионы'] = [
+        'name'   => 'Города и регионы',
+        'locale' => true,
+        'url'    => '?path=citylist'
+    ];
 
-    $PHPShopInterface->setActionPanel(__("Доставка" . $catname), array('Удалить выбранные'), array('Добавить'));
+    $PHPShopInterface->setActionPanel(__("Доставка" . $catname), array('Города и регионы', 'Удалить выбранные'), array('Добавить'));
     $PHPShopInterface->setCaption(
-            array(null, "2%"), array("Иконка", "5%", array('sort' => 'none')), array("Название", "35%"), array("Цена ", "12%"), array("Бесплатно ", "10%", array('tooltip' => 'Бесплатно свыше')), array("", "7%"), array("Статус" . "", "7%", array('align' => 'right'))
+            array(null, "2%"), array("Иконка", "7%", array('sort' => 'none')), array("Название", "35%"), array("Цена ", "12%"), array("Бесплатно ", "10%", array('tooltip' => 'Бесплатно свыше')), array("", "7%"), array("Статус" . "", "7%", array('align' => 'right'))
     );
 
     $PHPShopInterface->addJSFiles('./js/jquery.treegrid.js', './delivery/gui/delivery.gui.js');
@@ -38,9 +43,13 @@ function actionStart() {
                 $icon = '<img src="' . $row['icon'] . '" onerror="imgerror(this)" class="media-object" lowsrc="./images/no_photo.gif">';
             else
                 $icon = '<img class="media-object" src="./images/no_photo.gif">';
+            
+            if($row['is_mod'] == 2)
+                $readonly='readonly';
+            else $readonly=null;
 
             $PHPShopInterface->setRow(
-                    $row['id'], array('name' => $icon, 'link' => '?path=delivery&id=' . $row['id'], 'align' => 'left'), array('name' => $row['city'], 'link' => '?path=delivery&id=' . $row['id'], 'align' => 'left'), array('name' => $row['price'], 'editable' => 'price_new'), array('name' => $row['price_null'], 'align' => 'center', 'editable' => 'price_null_new'), array('action' => array('edit', 'delete', 'id' => $row['id']), 'align' => 'center'), array('status' => array('enable' => $row['enabled'], 'align' => 'right', 'caption' => array('Выкл', 'Вкл')))
+                    $row['id'], array('name' => $icon, 'link' => '?path=delivery&id=' . $row['id'], 'align' => 'left'), array('name' => $row['city'], 'link' => '?path=delivery&id=' . $row['id'], 'align' => 'left'), array('name' => $row['price'], 'editable' => 'price_new'), array('name' => $row['price_null'], 'align' => 'center', 'editable' => 'price_null_new','readonly'=>$readonly), array('action' => array('edit', 'delete', 'id' => $row['id']), 'align' => 'center'), array('status' => array('enable' => $row['enabled'], 'align' => 'right', 'caption' => array('Выкл', 'Вкл')))
             );
         }
 

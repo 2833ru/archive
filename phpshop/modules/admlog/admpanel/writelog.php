@@ -17,15 +17,14 @@ function setLog($data = false, $nameHandler = false) {
             $nameHandler = 'Удаление';
         else
             $nameHandler = 'Сохранение';
-    }
-    else
+    } else
         $TitlePage = 'Журнал событий';
 
     // Заголовок
     $titleSearch = array('name_new', 'title_new', 'login_new', 'link_new', 'info_new', 'order_num');
     foreach ($_POST as $key => $val) {
         if (in_array($key, $titleSearch)) {
-            $titleName = $_POST[$key];
+            $titleName = ' - > ' . $_POST[$key];
             break;
         }
     }
@@ -33,8 +32,7 @@ function setLog($data = false, $nameHandler = false) {
     if (strstr($_REQUEST['path'], '.')) {
         $file_array = explode(".", $_REQUEST['path']);
         $file = $file_array[0];
-    }
-    else
+    } else
         $file = $_REQUEST['path'];
 
     // Раскодирование для AJAX запроса с русскими символами
@@ -55,6 +53,17 @@ function setLog($data = false, $nameHandler = false) {
         }
     }
 
+    // Новые и старые данные для сравнения в отчете
+    if (isset($data['new']) and isset($data['old'])) {
+        $log = $data;
+
+        if (!empty($data['title']))
+            $titleName = ' -> '.$data['title'];
+    }
+    else {
+        $log['old'] = $data;
+        $log['new'] = $_REQUEST;
+    }
 
 
     $log = array(
@@ -62,8 +71,8 @@ function setLog($data = false, $nameHandler = false) {
         'user_new' => $_SESSION['logPHPSHOP'],
         'ip_new' => $_SERVER['REMOTE_ADDR'],
         'file_new' => $file,
-        'title_new' => PHPShopString::utf8_win1251($TitlePage . ' -> ' . $nameHandler . ' - > ' . $titleName),
-        'content_new' => serialize($_REQUEST)
+        'title_new' => PHPShopString::utf8_win1251($TitlePage . ' -> ' . $nameHandler . $titleName),
+        'content_new' => serialize($log)
     );
 
     $PHPShopOrm->insert($log);
@@ -75,6 +84,8 @@ $addHandler = array(
     'actionDelete' => 'setLog',
     'actionUpdate' => 'setLog',
     'actionInsert' => 'setLog',
-    'actionSave' => 'setLog'
+    'actionSave' => 'setLog',
+    'actionCartUpdate' => 'setLog',
+    'updateStore' => 'setLog',
 );
 ?>

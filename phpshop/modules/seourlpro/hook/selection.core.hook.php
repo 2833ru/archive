@@ -6,9 +6,7 @@
 function index_selection_hook($obj) {
 
     // Настройки модуля
-    include_once(dirname(__FILE__) . '/mod_option.hook.php');
-    $PHPShopSeourlOption = new PHPShopSeourlOption();
-    $seourl_option = $PHPShopSeourlOption->getArray();
+    $seourl_option = $GLOBALS['PHPShopSeoPro']->getSettings();;
 
     if ($seourl_option["seo_brands_enabled"] == 2) {
         header('Location: ' . $obj->getValue('dir.dir') . "/brand/", true, 301);
@@ -24,9 +22,7 @@ function v_hook($obj, $data, $rout) {
     if ($rout == "START") {
 
         // Настройки модуля
-        include_once(dirname(__FILE__) . '/mod_option.hook.php');
-        $PHPShopSeourlOption = new PHPShopSeourlOption();
-        $seourl_option = $PHPShopSeourlOption->getArray();
+        $seourl_option = $GLOBALS['PHPShopSeoPro']->getSettings();;
 
         if ($seourl_option["seo_brands_enabled"] == 2) {
 

@@ -45,9 +45,7 @@ function pageCatal_seourl_hook($obj, $data, $rout) {
     if ($rout == "START") {
 
         // Настройки модуля
-        include_once(dirname(__FILE__) . '/mod_option.hook.php');
-        $PHPShopSeourlOption = new PHPShopSeourlOption();
-        $seourl_option = $PHPShopSeourlOption->getArray();
+        $seourl_option = $GLOBALS['PHPShopSeoPro']->getSettings();
 
         if ($seourl_option["seo_page_enabled"] != 2)
             return false;

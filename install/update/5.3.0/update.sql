@@ -134,3 +134,7 @@ ALTER TABLE `phpshop_page_categories` ADD `title` varchar(255) DEFAULT '';
 ALTER TABLE `phpshop_page_categories` ADD `description` varchar(255) DEFAULT '';
 ALTER TABLE `phpshop_page_categories` ADD `keywords` text;
 ALTER TABLE `phpshop_photo_categories` ADD `count` tinyint(11) default 2;
+
+ALTER TABLE `phpshop_users` ADD `token` VARCHAR(64);
+ALTER TABLE `phpshop_slider` ADD `mobile` enum('0','1') default '0';
+ALTER TABLE `phpshop_search_jurnal` ADD `ip` VARCHAR(64);

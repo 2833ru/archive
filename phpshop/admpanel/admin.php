@@ -112,12 +112,26 @@ function modulesMenu() {
             $menu = "../modules/" . $path . "/install/module.xml";
             $menu_array = xml2array($menu, false, true);
             $db = $menu_array["adminmenu"];
-            
+
             if (!empty($menu_array['pro']) and empty($_SESSION['mod_pro']))
                 continue;
 
             if ($db['capability']) {
-                $dis .= '<li><a href="?path=modules&id=' . $path . '">' . __($db['title']) . '</a></li>';
+                
+                if (is_array($db['podmenu'])) {
+                    $dis .= '<li class="dropdown-submenu"><a href="?path=modules&id=' . $path . '">' . __($db['title']) . '</a>';
+                    $dis .= '<ul class="dropdown-menu">';
+                    
+                    if(!is_array($db['podmenu'][0]))
+                        $db_podmenu[0]=$db['podmenu'];
+                    else $db_podmenu=$db['podmenu'];
+                    
+                    foreach ($db_podmenu as $podmenu)
+                        $dis .= '<li><a href="?path=modules.' . $podmenu['podmenu_action'] . '">' . __($podmenu['podmenu_name']) . '</a></li>';
+
+                    $dis .= '</ul></li>';
+                }
+                else $dis .= '<li><a href="?path=modules&id=' . $path . '">' . __($db['title']) . '</a></li>';
             }
 
             // Notification
@@ -263,12 +277,7 @@ if (empty($adm_title)) {
                                     <li><a href="https://docs.phpshop.ru" target="_blank"><?php _e('Учебник'); ?></a></li>
                                     <li><a href="?path=support"><?php _e('Техподдержка'); ?></a></li>
                                     <li><a href="#" id="presentation-select"><?php _e('Обучение'); ?></a></li>
-                                    <li><a href="http://idea.phpshop.ru" target="_blank"><?php _e('Предложить идею'); ?></a></li>
-                                    <li class="divider"></li>
-                                    <li class="dropdown-header"><?php _e('Дополнительно'); ?></li>
-                                    <li><a href="https://www.phpshop.ru/page/design.html?from=<?php echo $_SERVER['SERVER_NAME'] ?>" target="_blank"><?php _e('Персональный дизайн'); ?></a></li>
                                     <li><a href="https://www.phpshop.ru/loads/files/setup.exe" target="_blank"><?php _e('Утилиты'); ?> EasyControl</a></li>
-                                    <li><a href="https://www.phpshop.ru/page/yandex-webmaster.html?from=<?php echo $_SERVER['SERVER_NAME'] ?>" target="_blank">SEO <?php _e('оптимизация'); ?></a></li>
                                     <li class="divider"></li>
                                     <li><a href="?path=update"><span class="glyphicon glyphicon-cloud-download"></span> <?php _e('Мастер обновления'); ?></a></li>
 

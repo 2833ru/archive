@@ -53,6 +53,10 @@ class PHPShopAnalitica {
         PHPShopParser::set('ogImage', $row['pic_small']);
         PHPShopParser::set('ogUrl', $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI']);
 
+        if (!empty($row['description']))
+            PHPShopParser::set('ogDescription', strip_tags($row['description']));
+
+
         if ($this->analitics or $this->ecommerce) {
             $this->code .= "
         <script>
@@ -266,6 +270,9 @@ class PHPShopAnalitica {
         PHPShopParser::set('ogTitle', $row['name']);
         PHPShopParser::set('ogImage', $row['pic_small']);
         PHPShopParser::set('ogUrl', $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI']);
+
+        if (!empty($row['description']))
+            PHPShopParser::set('ogDescription', strip_tags($row['description']));
 
         if ($this->analitics or $this->ecommerce) {
             $this->code .= "

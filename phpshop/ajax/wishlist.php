@@ -44,13 +44,13 @@ if (PHPShopSecurity::true_num($_SESSION['UsersId'])) {
     $PHPShopOrm->debug = false;
     $data = $PHPShopOrm->select(array('wishlist'), array('id' => "=" . intval($UsersId)), false, array("limit" => "1"));
     $wishlist = unserialize($data['wishlist']);
-    $wishlist[$product_id] = 1;
+    $wishlist[$product_id] = intval($_REQUEST['parent_id']);
     $count = count($wishlist);
     $wishlist = serialize($wishlist);
     $PHPShopOrm->update(array("wishlist" => $wishlist), array('id' => "=" . intval($UsersId)), '');
 } else {
 
-    $_SESSION['wishlist'][$product_id] = 1;
+    $_SESSION['wishlist'][$product_id] = intval($_REQUEST['parent_id']);
     $count = count($_SESSION['wishlist']);
 }
 

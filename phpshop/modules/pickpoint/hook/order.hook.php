@@ -10,14 +10,34 @@ function order_pickpoint_hook($obj, $row, $rout) {
 <script type=\"text/javascript\" src=\"//pickpoint.ru/select/postamat.js\"></script>
 <script>
 function pickpoint_phpshop(result){
-// устанавливаем в скрытое поле ID терминала
-document.getElementById('pickpoint_id').value=result['id'];
-// показываем пользователю название точки и адрес доствки
-document.getElementById('dop_info').value=result['name']+', '+result['address'];
+    $.ajax({
+        mimeType: 'text/html; charset='+locale.charset,
+        url: 'phpshop/modules/pickpoint/ajax/pickpoint.php',
+        type: 'post',
+        data: {
+            operation: 'calculate',
+            pvz: result.id
+        },
+        dataType: 'json',
+        success: function(json) {
+            if(json['success']) {
+                $('#pickpoint_sum').val(json['cost']);
+                $('#DosSumma').html(json['cost']);
+                $('#TotalSumma').html(Number(json['cost']) + Number($('#OrderSumma').val()));
+            } else {
+                console.log(json['error']);
+            }
+        }
+    });
+    // устанавливаем в скрытое поле ID терминала
+    document.getElementById('pickpoint_id').value=result['id'];
+    // показываем пользователю название точки и адрес доствки
+    document.getElementById('dop_info').value=result['name']+', '+result['address'];
 }
 
  $(document).ready(function() {
         $('<input type=\"hidden\" name=\"pickpoint_id\" id=\"pickpoint_id\">').insertAfter('#d');
+        $('<input type=\"hidden\" name=\"pickpoint_sum\" id=\"pickpoint_sum\">').insertAfter('#d');
     });   
 </script>";
         

@@ -66,6 +66,7 @@ abstract class AbstractAvitoXml
             'enabled' => '="1"',
             'parent_enabled' => '="0"',
             'export_avito' => '="1"',
+            'items' => ' > 0',
             'category' => ' IN (' . implode(',', array_keys($this->categories)) . ')'
         );
 
@@ -81,18 +82,20 @@ abstract class AbstractAvitoXml
                 $product['name'] = '<![CDATA[' . PHPShopString::win_utf8(trim(strip_tags($product['name_avito']))) . ']]>';
             }
 
-            if (empty($product['description']))
-                $product['description'] = $product['content'];
+            $product['description'] .= '<br/>' . $product['content'];
 
             if(!empty($this->Avito->options['additional_description'])) {
                 $product['description'] .= '<br/>' . $this->Avito->options['additional_description'];
+            }
+            if((int) $this->Avito->options['use_params'] === 1) {
+                $product['description'] .= '<br/>' . $this->sort_table($product);
             }
 
             $product['description'] = '<![CDATA[' . PHPShopString::win_utf8(trim(strip_tags($product['description'], '<p><br><strong><em><ul><ol><li>'))) . ']]>';
 
             $PHPShopOrm = new PHPShopOrm('phpshop_foto');
             $images = $PHPShopOrm->getList(array('*'), array('parent' => '=' . $product['id']), array('order' => 'num'));
-            if(!empty($product['pic_big'])) {
+            if(count($images) === 0) {
                 $images[] = array('name' => $product['pic_big']);
             }
 
@@ -120,6 +123,7 @@ abstract class AbstractAvitoXml
                 "condition" => PHPShopString::win_utf8($product['condition_avito']),
                 "status" => $product['ad_status_avito'],
                 "listing_fee" => $product['listing_fee_avito'],
+                "ad_type" => PHPShopString::win_utf8($product['ad_type_avito'])
             );
         }
 
@@ -200,6 +204,65 @@ abstract class AbstractAvitoXml
                     'type'     => $this->Avito->getAvitoType($category['type_avito']),
                     'subtype'  => $this->Avito->getAvitoSubType($category['subtype_avito'])
                 );
+            }
+        }
+    }
+
+    private function sort_table($product) {
+
+        $category = new PHPShopCategory((int) $product['category']);
+
+        $sort = $category->unserializeParam('sort');
+        $vendor_array = unserialize($product['vendor_array']);
+        $dis = $sortCat = $sortValue = null;
+        $arrayVendorValue = [];
+
+        if (is_array($sort))
+            foreach ($sort as $v) {
+                $sortCat .= (int) $v . ',';
+            }
+
+        if (!empty($sortCat)) {
+
+            // Массив имен характеристик
+            $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['sort_categories']);
+            $arrayVendor = array_column($PHPShopOrm->getList(['*'], ['id' => sprintf(' IN (%s 0)', $sortCat)], ['order' => 'num']), null, 'id');
+
+            if (is_array($vendor_array))
+                foreach ($vendor_array as $v) {
+                    foreach ($v as $value)
+                        if (is_numeric($value))
+                            $sortValue.= (int) $value . ',';
+                }
+
+            if (!empty($sortValue)) {
+
+                // Массив значений характеристик
+                $PHPShopOrm = new PHPShopOrm();
+                $result = $PHPShopOrm->query("select * from " . $GLOBALS['SysValue']['base']['sort'] . " where id IN ( $sortValue 0) order by num");
+                while (@$row = mysqli_fetch_array($result)) {
+                    $arrayVendorValue[$row['category']]['name'][$row['id']] = $row['name'];
+                    $arrayVendorValue[$row['category']]['id'][] = $row['id'];
+                }
+
+                if (is_array($arrayVendor))
+                    foreach ($arrayVendor as $idCategory => $value) {
+
+                        if (!empty($arrayVendorValue[$idCategory]['name'])) {
+                            if (!empty($value['name'])) {
+                                $arr = array();
+                                foreach ($arrayVendorValue[$idCategory]['id'] as $valueId) {
+                                    $arr[] = $arrayVendorValue[$idCategory]['name'][(int)$valueId];
+                                }
+
+                                $sortValueName = implode(', ', $arr);
+
+                                $dis.=PHPShopText::li($value['name'] . ': ' . $sortValueName, null, '');
+                            }
+                        }
+                    }
+
+                return PHPShopText::ul($dis, '');
             }
         }
     }

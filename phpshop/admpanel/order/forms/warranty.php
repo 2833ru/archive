@@ -8,6 +8,7 @@ $PHPShopBase = new PHPShopBase($_classPath . "inc/config.ini");
 $PHPShopBase->chekAdmin();
 
 $PHPShopSystem = new PHPShopSystem();
+$PHPShopBase->checkMultibase("../../../../");
 $LoadItems['System'] = $PHPShopSystem->getArray();
 $PHPShopLang = new PHPShopLang(array('locale'=>$_SESSION['lang'],'path'=>'admin'));
 

@@ -23,14 +23,12 @@ function send_to_order_mod_yandexmoney_hook($obj, $value, $rout) {
 
             // Платежная форма
             $payment_forma = PHPShopText::setInput('hidden', 'receiver', trim($option['merchant_id']), false, 10);
-            $payment_forma.= PHPShopText::setInput('hidden', 'formcomment', $PHPShopSystem->getParam('name') . ': Заказ ' . $value['ouid'], false, 10);
-            $payment_forma.= PHPShopText::setInput('hidden', 'short-dest', $PHPShopSystem->getParam('name') . ': Заказ ' . $value['ouid'], false, 10);
+            $payment_forma.= PHPShopText::setInput('hidden', 'formcomment', PHPShopString::win_utf8($PHPShopSystem->getParam('name') . ': Заказ ') . $value['ouid'], false, 10);
+            $payment_forma.= PHPShopText::setInput('hidden', 'short-dest', PHPShopString::win_utf8($PHPShopSystem->getParam('name') . ': Заказ ') . $value['ouid'], false, 10);
             // Тип оплаты
             $v[]=array('Оплата со счета в Яндекс.Деньгах','PC',false);
             $v[]=array('Оплата с банковской карты','AC',false);
-            //$v[]=array('Оплата по коду через терминал','GP',false);
-            //$v[]=array('Оплата со счета мобильного телефона','MC',false);
-            $v[]=array('Оплата со счета в Webmoney','WM',false);
+
             $payment_forma.=PHPShopText::select('paymentType', $v, 250, 'left').' ';
             
             $payment_forma.=PHPShopText::setInput('hidden', 'writable-targets', "false", false, 10);
@@ -38,7 +36,7 @@ function send_to_order_mod_yandexmoney_hook($obj, $value, $rout) {
             $payment_forma.=PHPShopText::setInput('hidden', 'comment-needed', "false", false, 10);
             $payment_forma.=PHPShopText::setInput('hidden', 'label', $inv_id, false, 10);
             $payment_forma.=PHPShopText::setInput('hidden', 'quickpay-form', 'shop');
-            $payment_forma.=PHPShopText::setInput('hidden', 'targets', $PHPShopSystem->getParam('name') . ': Заказ ' . $value['ouid'], false, 10);
+            $payment_forma.=PHPShopText::setInput('hidden', 'targets', PHPShopString::win_utf8($PHPShopSystem->getParam('name') . ': Заказ ') . $value['ouid'], false, 10);
             $payment_forma.=PHPShopText::setInput('hidden', 'sum', $out_summ, false, 10);
             $payment_forma.=PHPShopText::setInput('submit', 'send', $option['title'], $float = "left; margin-left:10px;", 250);
             $payment_forma.=PHPShopText::setInput('hidden', 'cms_name', 'phpshop', false, 10);

@@ -1796,11 +1796,11 @@ class PHPShopGUI {
                </tr>
                </table>';
 
-        if (empty($db['reformal']))
-            $db['reformal'] = $path;
+        //if (empty($db['reformal']))
+          //  $db['reformal'] = $path;
 
         // Reformal
-        $CODE .= $this->setButton('Есть идея развития модуля ' . $db['name'], 'question-sign', 'idea', "http://idea.phpshop.ru/proj/?ia=" . $db['reformal']);
+        //$CODE .= $this->setButton('Есть идея развития модуля ' . $db['name'], 'question-sign', 'idea', "http://idea.phpshop.ru/proj/?ia=" . $db['reformal']);
 
         if (!$pay)
             return $CODE;
@@ -2095,6 +2095,11 @@ class PHPShopInterface extends PHPShopGUI {
                     if (empty($val['class'])) {
                         $val['class'] = null;
                     }
+                    
+                    // readonly
+                    if (empty($val['readonly'])) {
+                        $val['readonly'] = null;
+                    }
 
                     // align
                     if (empty($val['align'])) {
@@ -2110,7 +2115,7 @@ class PHPShopInterface extends PHPShopGUI {
 
                     // editable
                     if (!empty($val['editable'])) {
-                        $row = '<input style="width:100%' . $val['color'] . '" data-id="' . $id . '" class="editable input-hidden form-control input-sm" data-edit="' . $val['editable'] . '" value="' . $row . '"><span class="hide">' . $row . '</span>';
+                        $row = '<input style="width:100%' . $val['color'] . '" data-id="' . $id . '" class="editable input-hidden form-control input-sm '.$val['class'].'" data-edit="' . $val['editable'] . '" value="' . $row . '" '.$val['readonly'].'><span class="hide">' . $row . '</span>';
                     }
 
                     // order

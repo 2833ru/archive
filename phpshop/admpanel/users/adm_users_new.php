@@ -92,7 +92,8 @@ function actionInsert() {
         "servers" => rules_zero($_POST[servers_rul_1]) . "-" . rules_zero($_POST[servers_rul_2]) . "-" . rules_zero($_POST[servers_rul_3]),
         "rsschanels" => rules_zero($_POST[rss_rul_1]) . "-" . rules_zero($_POST[rss_rul_2]) . "-" . rules_zero($_POST[rss_rul_3]),
         "update" => rules_zero($_POST[update_rul_1]),
-        "modules" => rules_zero($_POST[modules_rul_1]) . "-" . rules_zero($_POST[modules_rul_2]). "-" . rules_zero($_POST[modules_rul_3]) . "-" . rules_zero($_POST[modules_rul_4]). "-" . rules_zero($_POST[modules_rul_5])
+        "modules" => rules_zero($_POST[modules_rul_1]) . "-" . rules_zero($_POST[modules_rul_2]). "-" . rules_zero($_POST[modules_rul_3]) . "-" . rules_zero($_POST[modules_rul_4]). "-" . rules_zero($_POST[modules_rul_5]),
+         "api" => rules_zero($_POST[api_rul_1]) . "-" . rules_zero($_POST[api_rul_2]) . "-" . rules_zero($_POST[api_rul_3]),
     );
 
 
@@ -100,6 +101,7 @@ function actionInsert() {
 
     $hasher = new PasswordHash(8, false);
     $_POST['password_new'] = $hasher->HashPassword($_POST['password_new']);
+    $_POST['token_new']=$hasher->HashPassword($_POST['password_new']);
 
     // Оповещение пользователя
     if (!empty($_POST['sendPasswordEmail'])) {

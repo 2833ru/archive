@@ -110,8 +110,7 @@ class PHPShopCore {
             $this->PHPShopOrm->cache = $this->cache;
         }
         $this->SysValue = &$GLOBALS['SysValue'];
-
-
+        
         $this->PHPShopSystem = $PHPShopSystem;
         $this->num_row = $this->PHPShopSystem->getParam('num_row');
         $this->PHPShopNav = $PHPShopNav;
@@ -245,7 +244,7 @@ class PHPShopCore {
             // Некоторые сервера требуют обзательных заголовков 200
             //header("HTTP/1.1 200");
             //header("Status: 200");
-            @header("Cache-Control: no-cache, must-revalidate");
+            @header("Cache-Control: no-store, no-cache, must-revalidate, post-check=0, pre-check=0");
             @header("Pragma: no-cache");
 
             if (!empty($this->lastmodified)) {
@@ -341,7 +340,7 @@ class PHPShopCore {
         $this->PHPShopOrm->comment = __CLASS__ . '.' . __FUNCTION__;
 
         if (!empty($sql)) {
-            $this->PHPShopOrm->sql = 'select * from ' . $this->objBase . ' where ' . $sql . ' limit ' . $option['limit'];
+            $this->PHPShopOrm->sql = 'select *, (price_n - price) as discount from ' . $this->objBase . ' where ' . $sql . ' limit ' . $option['limit'];
         }
 
         return $this->PHPShopOrm->select($select, $where, $order, $option, $class_name, $function_name);

@@ -24,6 +24,9 @@ function actionUpdate() {
     if (empty($_POST['nowbuy_new']))
         $_POST['nowbuy_new'] = 0;
 
+    if (empty($_POST['referal_new']))
+        $_POST['referal_new'] = 0;
+
     // Настройки витрины
     $PHPShopModules->updateOption($_GET['id'], $_POST['servers']);
 
@@ -47,8 +50,8 @@ function actionStart() {
     $Tab1 = $PHPShopGUI->setField('Заголовок блока', $PHPShopGUI->setInputText(false, 'title_new', $data['title'],300),1,'Для вывода слева или справа');
     $Tab1.=$PHPShopGUI->setField('Память корзины', $PHPShopGUI->setCheckbox('memory_new', 1, 'Хранить незаконченные корзины в базе', $data['memory']));
     $Tab1.=$PHPShopGUI->setField('Сейчас покупают', $PHPShopGUI->setCheckbox('nowbuy_new', 1, 'Вывод случайного товара из последних заказов', $data['nowbuy']));
+    $Tab1.=$PHPShopGUI->setField('Источник', $PHPShopGUI->setCheckbox('referal_new', 1, 'Добавлять источник перехода в комментарий менеджеру', $data['referal']));
     $Tab1.=$PHPShopGUI->setField('Место вывода', $PHPShopGUI->setSelect('enabled_new', $e_value, 150,true));
-    //$Tab1.=$PHPShopGUI->setField('Ширина иконки товара', $PHPShopGUI->setInputText(false, 'pic_width_new', $data['pic_width'], 150, 'px'));
 
     $info = '<p>Для произвольной вставки элемента следует выбрать парамет вывода "Корзина" и в ручном режиме вставить переменную
         <kbd>@visualcart@</kbd> в свой шаблон. Или через панель управления создайте текстовый блок, переключитесь в режим исходного кода (Система - Настройка - Режимы - Визуальный редактор),
@@ -62,7 +65,7 @@ function actionStart() {
     $Tab3 = $PHPShopGUI->setPay($serial = false, false, $data['version'], true);
 
     // Вывод формы закладки
-    $PHPShopGUI->setTab(array("Основное", $Tab1, true), array("Инструкция", $Tab2), array("О Модуле", $Tab3), array("Незавершенные заказы", null, '?path=modules.dir.visualcart'));
+    $PHPShopGUI->setTab(array("Основное", $Tab1, true), array("Инструкция", $Tab2), array("О Модуле", $Tab3), array("Незавершенные заказы", null, '?path=modules.dir.visualcart'), array("Журнал добавления в корзину", null, '?path=modules.dir.visualcart.log'));
 
     // Вывод кнопок сохранить и выход в футер
     $ContentFooter =

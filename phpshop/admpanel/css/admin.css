@@ -99,6 +99,7 @@ html{
 
 .dropdown-menu{
     font-size: 13px;
+    min-width: 200px;
 }
 
 .elfinder-modal-content{

@@ -43,6 +43,12 @@ class Editor {
         var ace_theme = '".$PHPShopSystem->getSerilizeParam('admoption.ace_theme')."';
         $(function(){
         tinymce.init({ 
+        image_class_list: [
+         {title: 'Responsive', value: 'img-responsive'},
+         {title: 'Rounded', value: 'img-rounded img-responsive'},
+         {title: 'Thumbnail', value: 'img-thumbnail img-responsive'},
+         {title: 'None', value: ''},
+         ],
         selector:'textarea[name=".$this->InstanceName."]',
         menubar: false,
         branding: false,

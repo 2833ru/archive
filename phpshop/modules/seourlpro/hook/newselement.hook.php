@@ -22,9 +22,7 @@ function index_newselement_seourl_hook($obj, $dt, $rout) {
         if (!empty($view)) {
 
             // Настройки модуля
-            include_once(dirname(__FILE__) . '/mod_option.hook.php');
-            $PHPShopSeourlOption = new PHPShopSeourlOption();
-            $seourl_option = $PHPShopSeourlOption->getArray();
+            $seourl_option = $GLOBALS['PHPShopSeoPro']->getSettings();
 
             if ($seourl_option["seo_news_enabled"] != 2)
                 return false;

@@ -1,5 +1,7 @@
 <?php
 
+include_once dirname(__DIR__) . '/lib/mobiledetect/Mobile_Detect.php';
+
 /**
  * Библиотека форматирования строк
  * @author PHPShop Software
@@ -266,13 +268,10 @@ class PHPShopString {
      * Определение мобильного трафика
      * @return boolean
      */
-    function is_mobile() {
-        $iphone = strpos($_SERVER['HTTP_USER_AGENT'], "iPhone");
-        $android = strpos($_SERVER['HTTP_USER_AGENT'], "Android");
-        $mobile = strpos($_SERVER['HTTP_USER_AGENT'], "Mobile");
- 
-        if ($android || $iphone || $mobile === true)
-            return true;
+    static function is_mobile() {
+        $detect = new Mobile_Detect();
+
+        return $detect->isMobile();
     }
 
 }

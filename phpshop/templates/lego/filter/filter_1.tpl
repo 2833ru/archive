@@ -57,6 +57,9 @@
                         <label class="btn btn-sm btn-sort " >
                             <input type="radio" name="s" value="2&f=1"> {Дешевые}
                         </label>
+                        <label class="btn btn-sm btn-sort " >
+                            <input type="radio" name="s" value="4&f=2"> {По размеру скидки}
+                        </label>
                     </div>
                 </div>
             </div>

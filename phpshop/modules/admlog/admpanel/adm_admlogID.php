@@ -53,9 +53,17 @@ function actionUpdate() {
     header('Location: ?path='.$_GET['path']);
 }
 
+function unserializeArray(&$value) {
+    $value = unserialize($value);
+}
+
 // Начальная функция загрузки
 function actionStart() {
-    global $PHPShopGUI, $PHPShopOrm, $TitlePage, $PHPShopSystem;
+    global $PHPShopGUI, $PHPShopOrm, $PHPShopModules;
+    
+    // Настройки модуля
+    $PHPShopOrmOption = new $PHPShopOrm($PHPShopModules->getParam("base.admlog.admlog_system"));
+    $option = $PHPShopOrmOption->getOne();
 
 
     $PHPShopGUI->action_button['Восстановить данные'] = array(
@@ -71,9 +79,8 @@ function actionStart() {
     $data = $PHPShopOrm->select(array('*'), array('id' => '=' . intval($_GET['id'])));
     $contentTemp = unserialize($data['content']);
     
-    if($data['file'] != 'modules')
-        $button=array('Восстановить данные');
-    else $button=null;
+    array_walk_recursive($contentTemp, 'unserializeArray');
+    
     
     $PHPShopGUI->setActionPanel(__('Запись журнала изменений от').' '.PHPShopDate::dataV($data['date'], true), false, $button);
 
@@ -82,27 +89,14 @@ function actionStart() {
     $Tab1.=$PHPShopGUI->setField("Пользователь:", $PHPShopGUI->setInput("text", "name_new", $data['user']));
     $Tab1.=$PHPShopGUI->setField("Действие:", $PHPShopGUI->setInput("text", "name_new", $data['title']));
 
-    // Основное содержание
-    $titleSearch = array('content_new', 'description_new');
-    if (is_array($contentTemp))
-        foreach ($contentTemp as $key => $val) {
-            if (in_array($key, $titleSearch) and !empty($contentTemp[$key])) {
-                $contentMain = $contentTemp[$key];
-                break;
-            }
-        }
-
-
-    // Редактор 1
-    $PHPShopGUI->setEditor($PHPShopSystem->getSerilizeParam("admoption.editor"));
-    $oFCKeditor = new Editor('content_temp');
-    $oFCKeditor->Height = '280';
-    $oFCKeditor->Value = $contentMain;
-
-    $Tab2 = $oFCKeditor->AddGUI();
+    // Отладка
+    ob_start();
+    $PHPShopOrm->trace($contentTemp);
+    $Tab3 = ob_get_clean();
+     
 
     // Вывод формы закладки
-    $PHPShopGUI->setTab(array("Основное", $Tab1, true), array("Содержание", $Tab2));
+    $PHPShopGUI->setTab(array("Данные", $Tab3));
 
     $ContentFooter.=$PHPShopGUI->setInput("hidden", "rowID", $data['id'], "right", 70, "", "but") .
             $PHPShopGUI->setInput("submit", "saveID", "Откатить", "right", 70, "", "but", "actionUpdate.modules.edit");

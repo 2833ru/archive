@@ -221,10 +221,10 @@ class PHPShopYml {
     function getImages($product_row) {
 
         $xml = null;
-        if(isset($_GET['getall'])) {
+        if (isset($_GET['getall'])) {
             $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['foto']);
             $data = $PHPShopOrm->select(array('*'), array('parent' => '=' . $product_row['id']), false, array('limit' => 10000));
-            
+
             if (is_array($data))
                 foreach ($data as $row) {
 
@@ -300,6 +300,11 @@ class PHPShopYml {
 
         $result = $PHPShopOrm->query("select * from " . $GLOBALS['SysValue']['base']['products'] . " where $where enabled='1' and parent_enabled='0' $wherePrice");
         while ($row = mysqli_fetch_array($result)) {
+
+            // Пропуск неопределенных товаров
+            if (in_array($row['category'], array(1000001, 1000004, 0)))
+                continue;
+
             $id = $row['id'];
             $name = trim(strip_tags($row['name']));
             $category = $row['category'];

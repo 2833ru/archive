@@ -24,6 +24,7 @@ function actionStart() {
     $Tab1 .= $PHPShopGUI->setField('ФИО менеджера', $PHPShopGUI->setInputText( false, 'manager_new', $data['manager'], 500));
     $Tab1 .= $PHPShopGUI->setField('Телефон менеджера', $PHPShopGUI->setInputText( false, 'phone_new', $data['phone'], 500));
     $Tab1 .= $PHPShopGUI->setField('Дополнение к описанию', $PHPShopGUI->setTextarea( 'additional_description_new', $data['additional_description'], true, 500));
+    $Tab1 .= $PHPShopGUI->setField('Добавить характеристики', $PHPShopGUI->setCheckbox("use_params_new", 1, "Добавить характеристики в конец объявления", $data["use_params"]));
 
     // Инструкция
     $Tab2 = $PHPShopGUI->loadLib('tab_info', $data,'../modules/'.$_GET['id'].'/admpanel/');
@@ -51,6 +52,10 @@ function actionUpdate() {
 
     $PHPShopOrm->debug = false;
     $_POST['region_data_new']=1;
+
+    if (empty($_POST["use_params_new"]))
+        $_POST["use_params_new"] = 0;
+
     $action = $PHPShopOrm->update($_POST);
     header('Location: ?path=modules&id='.$_GET['id']);
     return $action;

@@ -28,7 +28,7 @@ function addYandexcartDelivery($data) {
     $Tab3.=$PHPShopGUI->setField("—ообщение товар под заказ",$PHPShopGUI->setTextarea('yandex_mail_outstock_new',$data['yandex_mail_outstock'],true, false, '100px').$PHPShopGUI->setHelp('ѕеременные: <code>@dataFrom@</code> - расчетна€ дата доставки от, <code>@dataTo@</code> - рассчетна€ дата доставки до'));
 
     if(empty($data['is_folder']))
-    $PHPShopGUI->addTab(array("яндекс.«аказ", $Tab3, true));
+    $PHPShopGUI->addTab(array("яндекс", $Tab3, true));
 }
 
 $addHandler = array(

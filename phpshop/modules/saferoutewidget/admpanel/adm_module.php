@@ -19,7 +19,9 @@ function actionBaseUpdate() {
 // Функция обновления
 function actionUpdate() {
     global $PHPShopModules;
-
+    
+    // Настройки витрины
+    $PHPShopModules->updateOption($_GET['id'], $_POST['servers']);
 
     // Доставки
     if (isset($_POST['delivery_id_new'])) {

@@ -24,7 +24,7 @@ PHPShopObj::loadClass("lang");
 
 $PHPShopBase = new PHPShopBase($_classPath . "inc/config.ini");
 $PHPShopSystem = new PHPShopSystem();
-
+$PHPShopBase->checkMultibase("../../../");
 $PHPShopLang = new PHPShopLang(array('locale'=>$_SESSION['lang'],'path'=>'admin'));
 
 /**

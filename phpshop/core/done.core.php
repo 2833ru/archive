@@ -538,7 +538,7 @@ function mailcartforma($val, $option) {
     $val['price']*=$option['rate'];
     $val['price'] = number_format($val['price'], $PHPShopOrder->format, '.', '');
 
-    $dis = '<img width="50" src="http://'.$_SERVER['SERVER_NAME'].$val['pic_small'].'" align="left" alt="">'.$val['uid'] . "  " . $val['name'] . " (" . $val['num'] . " " . $val['ed_izm'] . " * " . $val['price'] . ") -- " . ($val['price'] * $val['num']) . " " . $option['currency'] . " <br>
+    $dis = '<p><img style="max-width:50px;max-height:50px" src="http://'.$_SERVER['SERVER_NAME'].$val['pic_small'].'" align="left" alt="">'.$val['uid'] . "  " . $val['name'] . " (" . $val['num'] . " " . $val['ed_izm'] . " * " . $val['price'] . ") -- " . ($val['price'] * $val['num']) . " " . $option['currency'] . "</p>
 ";
     return $dis;
 }

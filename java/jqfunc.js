@@ -95,7 +95,7 @@ function commentList(xid, comand, page, cid) {
                 } else {
                     document.getElementById('message').value = "";
                     if (json['status'] == "error") {
-                        mesHtml =locale.commentList.mesHtml;
+                        mesHtml = locale.commentList.mesHtml;
                         mesSimple = locale.commentList.mesHtml;
 
                         showAlertMessage(mesHtml);
@@ -145,8 +145,7 @@ function showAlertMessage(message, danger) {
         if (danger === true)
             danger = 'danger';
         $('.success-notification').find('.alert').addClass('alert-' + danger);
-    }
-    else {
+    } else {
         $('.success-notification').find('.alert').removeClass('alert-danger');
         $('.success-notification').find('.alert').removeClass('alert-info');
     }
@@ -161,11 +160,10 @@ function showAlertMessage(message, danger) {
         $(innerBox).html(message);
         $(messageBox).fadeIn('slow');
 
-        setTimeout(function() {
+        setTimeout(function () {
             $(messageBox).delay(500).fadeOut(1000);
         }, 5000);
-    }
-    else
+    } else
         alert(message);
 }
 
@@ -176,14 +174,17 @@ function IsEmail(email) {
 }
 
 // добавление товара в вишлист
-function addToWishList(product_id) {
+function addToWishList(product_id, parent_id = 0) {
+
+    if (parent_id === undefined)
+        parent_id = '';
 
     $.ajax({
         url: ROOT_PATH + '/phpshop/ajax/wishlist.php',
         type: 'post',
-        data: 'product_id=' + product_id,
+        data: 'product_id=' + product_id + '&parent_id=' + parent_id,
         dataType: 'json',
-        success: function(json) {
+        success: function (json) {
             if (json['success']) {
                 showAlertMessage(json['message']);
                 $(".wishlistcount").html(json['count']);
@@ -197,9 +198,9 @@ function UpdateDeliveryJq(xid, param, stop_hook) {
 
     var sum = $("#OrderSumma").val();
     var wsum = $("#WeightSumma").html();
-    
-    if(param === undefined)
-        param='';
+
+    if (param === undefined)
+        param = '';
 
     $("form[name='forma_order'] input[name=dostavka_metod]").attr('disabled', true);
     $(this).html(waitText);
@@ -209,7 +210,7 @@ function UpdateDeliveryJq(xid, param, stop_hook) {
         type: 'post',
         data: 'type=json&xid=' + xid + '&sum=' + sum + '&wsum=' + wsum + param,
         dataType: 'json',
-        success: function(json) {
+        success: function (json) {
             if (json['success']) {
                 $("#DosSumma").html(json['delivery']);
                 $("#d").val(xid);
@@ -229,19 +230,19 @@ function UpdateDeliveryJq(xid, param, stop_hook) {
                 if (paymentStop !== undefined)
                     var payment_array = paymentStop.split(",");
 
-                $('.paymOneEl input[name="order_metod"]').each(function() {
+                $('.paymOneEl input[name="order_metod"]').each(function () {
                     $(this).attr('disabled', false);
                 });
 
                 if ($.isArray(payment_array)) {
-                    $.each(payment_array, function(index, value) {
+                    $.each(payment_array, function (index, value) {
                         $('.paymOneEl input[data-option="payment' + value + '"]').attr('disabled', true);
                         $('.paymOneEl input[data-option="payment' + value + '"]').attr('checked', false);
                     });
                 }
 
                 if ($("input#order_metod:checked").length == 0) {
-                    $('input#order_metod').each(function() {
+                    $('input#order_metod').each(function () {
                         if (!this.disabled) {
                             this.checked = true;
                             return false;
@@ -339,7 +340,7 @@ function OrderChekJq()
     var badReqName = 0;
     var badReqEmail = 0;
 //    $('form[name="forma_order"] input.req, form[name="forma_order"] select.req').each(function() {
-    $('form[name="forma_order"] .req').each(function() {
+    $('form[name="forma_order"] .req').each(function () {
 
 
         // проверяем валидность e-mail и имя пользователя
@@ -355,7 +356,7 @@ function OrderChekJq()
             if (badReq == 0) {
                 var destination = $(this).parent().offset().top;
                 var par = $(this);
-                jQuery("html:not(:animated),body:not(:animated)").animate({scrollTop: destination}, 800, function() {
+                jQuery("html:not(:animated),body:not(:animated)").animate({scrollTop: destination}, 800, function () {
                     par.focus();
                 });
             }
@@ -408,15 +409,15 @@ function wpiGenerateRandomNumber(limit) {
 
 }
 
-$(document).ready(function() {
+$(document).ready(function () {
 
     // DaData.ru токен
     if (typeof $('#body').attr('data-token') !== 'undefined' && $('#body').attr('data-token').length)
         var DADATA_TOKEN = $('#body').attr('data-token');
 
     // закрытие сообщения по клику на иконку крестика
-    $('#notification').on('click', 'img', function() {
-        $(this).parent().fadeOut('slow', function() {
+    $('#notification').on('click', 'img', function () {
+        $(this).parent().fadeOut('slow', function () {
             $(this).hide();
         });
     });
@@ -424,15 +425,15 @@ $(document).ready(function() {
 
     //*******************Авторизация, оформление заказа***************** 
     // логика генерации пароля при регистрации
-    $(".passGen").click(function() {
+    $(".passGen").click(function () {
         var str = wpiGenerateRandomNumber(8);
         $(this).closest('form').find("input[name='password_new'], input[name='password_new2']").val(str);
         showAlertMessage('Ваш сгенерированный пароль будет выслан на ваш email после регистрации');
     });
 
     // сбрасываем оплаты и юр данные при сбросе все формы
-    $('form').on('reset', function(e) {
-        setTimeout(function() {
+    $('form').on('reset', function (e) {
+        setTimeout(function () {
             $("#order_metod").change();
         });
     });
@@ -451,7 +452,7 @@ $(document).ready(function() {
 //    }).change();
 
     // Варианты оплат выводятся радиобоксами.
-    $("input#order_metod").change(function() {
+    $("input#order_metod").change(function () {
         var str = "";
         str = ".showYurDataForPaymentClass" + $("input#order_metod:checked").val();
         if (str != "" && $(str).html()) {
@@ -470,8 +471,7 @@ $(document).ready(function() {
                     onSelect: showSuggestionBank
                 });
             }
-        }
-        else {
+        } else {
             $("#showYurDataForPaymentLoad").html('');
         }
     });
@@ -480,9 +480,9 @@ $(document).ready(function() {
     ;
 
     // при изменении адреса, заполняем соотв. поля
-    $("#adres_id").change(function() {
+    $("#adres_id").change(function () {
         var str = "";
-        $(this).find("option:selected").each(function() {
+        $(this).find("option:selected").each(function () {
             str = $(this).val();
         });
         if (!str)
@@ -493,14 +493,14 @@ $(document).ready(function() {
         var obj = jQuery.parseJSON($("input:hidden.adresListJson").val());
         // обнуляем предыдущие данные
         //$(this).closest('form').find("input:text").val("");
-        $.each(obj, function(index, value) {
-            $.each(value, function(index2, value2) {
+        $.each(obj, function (index, value) {
+            $.each(value, function (index2, value2) {
                 $("input[name='" + index2 + "']").val("");
             });
         });
 
 
-        $.each(obj[str], function(index, value) {
+        $.each(obj[str], function (index, value) {
             if (value != "") {
                 name = "input[name='" + index + "']";
                 $(name).val(value);
@@ -510,7 +510,7 @@ $(document).ready(function() {
     }).change();
 
     // подбор городов из списка
-    $("form[name='forma_order']").on('change', 'select.citylist', function() {
+    $("form[name='forma_order']").on('change', 'select.citylist', function () {
         var par = $(this).attr("name");
         if (par == "city_new")
             return false;
@@ -533,7 +533,7 @@ $(document).ready(function() {
                 par: par
             },
             //dataType: 'xml',
-            success: function(data) {
+            success: function (data) {
                 $("#citylist .wait").remove();
                 $("form[name='forma_order'] select.citylist[name=country_new]").attr("disabled", false);
                 switch (par) {
@@ -552,7 +552,7 @@ $(document).ready(function() {
     });
 
     // выбор способа доставки
-    $("form[name='forma_order']").on('click', 'input[name=dostavka_metod]', function() {
+    $("form[name='forma_order']").on('click', 'input[name=dostavka_metod]', function () {
         $(this).next().after(waitText);
         UpdateDeliveryJq($(this).val());
     });
@@ -560,13 +560,13 @@ $(document).ready(function() {
 
 
     // при вводе Имени пользователя, автоматом прописываем его в адрес если он пуст
-    $("form[name='forma_order']").on('change', 'input[name=name_new]', function() {
+    $("form[name='forma_order']").on('change', 'input[name=name_new]', function () {
         if ($("form[name='forma_order'] input[name='fio_new']").val() == "")
             $("form[name='forma_order'] input[name='fio_new']").val($(this).val());
     });
 
     // отключаем класс особого выделения для обязательных полей при переходе на них
-    $('form[name="forma_order"]').on('keyup blur change', '.req', function() {
+    $('form[name="forma_order"]').on('keyup blur change', '.req', function () {
         if ($(this).val() != '')
             $(this).removeClass('reqActiv');
         else
@@ -575,7 +575,7 @@ $(document).ready(function() {
 
     //*******************Отзывы к товарам***************** 
     // Если не авторизован, при попытке ввести отзыв, выводим сообщение, что необходима авторизация.
-    $('textarea.commentTextarea').on('focus', function() {
+    $('textarea.commentTextarea').on('focus', function () {
         if ($('input#commentAuthFlag').val() == 0) {
             $(this).val("").attr('readonly', 'readonly');
             showAlertMessage(locale_def.commentAuthErrMess);
@@ -602,15 +602,15 @@ $(document).ready(function() {
     if (cart_lang[$('#num').text()] != 'undefined')
         $('#lang-cart').text('товар' + cart_lang[$('#num').text()]);
 
-    $(".button").click(function() {
-        setTimeout(function() {
+    $(".button").click(function () {
+        setTimeout(function () {
             if (cart_lang[$('#num').text()] != 'undefined')
                 $('#lang-cart').text('товар' + cart_lang[$('#num').text()]);
         }, 1000);
     });
 
     // Закрытие сообщения о корзине
-    $('#notification').on('close.bs.alert', function(e) {
+    $('#notification').on('close.bs.alert', function (e) {
         e.preventDefault();
         $('#notification').css('display', 'none');
     });

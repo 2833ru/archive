@@ -179,7 +179,7 @@ class PHPShopMap extends PHPShopCore {
      * @return int
      */
     function product() {
-        $data = $this->PHPShopOrm->select(array('COUNT(id) as total'));
+        $data = $this->PHPShopOrm->select(array('COUNT(id) as total'), array('enabled' => '="1"'));
         if (is_array($data))
             $total = $data['total'];
         else

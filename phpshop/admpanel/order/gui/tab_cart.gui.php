@@ -99,7 +99,7 @@ function tab_cart($data, $option = false) {
       <tr>
       <td>'.__('Доставка').':</td>
       <td class="text-right">
-      ' . $PHPShopOrder->getDeliverySumma() . $currency . '
+      ' . number_format($PHPShopOrder->getDeliverySumma(), $PHPShopOrder->format, '.', ' ') . $currency . '
       </td>
       </tr>';
     

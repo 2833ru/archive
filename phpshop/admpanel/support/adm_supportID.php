@@ -175,7 +175,7 @@ function actionStart() {
           <textarea class="form-control" name="message" id="message" placeholder="' . __('Введите текст') . '"></textarea>
           </p>
           <p>
-             <button class="btn btn-default pull-right send-message disabled" type="submit" data-name="' . $user . '"><span class="glyphicon glyphicon-send"></span> ' . __('Отправить сообщение') . '</button>
+             <button class="btn btn-default pull-right send-message disabled" type="submit"><span class="glyphicon glyphicon-send"></span> ' . __('Отправить сообщение') . '</button>
              <a id="attachment-disp" class="text-muted" href="#f"><span class="glyphicon glyphicon-paperclip"></span> ' . __('Прикрепить файл') . '</a>
              <a id="f"></a>
              <div id="attachment" class="hide" style="max-width:70%">
@@ -185,6 +185,7 @@ function actionStart() {
           </div>
           <input type="hidden" name="selectID" value="true">
           <input type="hidden" name="actionList[selectID]" value="actionReplies">
+          <input type="hidden" name="name" value="' . $user . '">
          </form>
       ';
 

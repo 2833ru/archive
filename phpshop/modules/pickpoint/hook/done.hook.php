@@ -1,52 +1,33 @@
 <?php
 
+include_once dirname(__DIR__) . '/class/PickPoint.php';
 
-/**
- * E-mail XML файла заказа
- */
-function mail_pickpoint_hook($obj,$row,$rout) {
+function send_to_order_pikpoint_hook($obj, $row, $rout)
+{
+    $PickPoint = new PickPoint();
 
-    if($rout == 'END' and !empty($_POST['pickpoint_id'])){
-        
-        $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['pickpoint']['pickpoint_system']);
-        $option=$PHPShopOrm->select();
-        
+    if((int) $_POST['d'] === (int) $PickPoint->getPickpointDeliveryId()) {
+        if(!empty($_POST['pickpoint_sum'])) {
+            if ($rout === 'START') {
+                $obj->delivery_mod = number_format($_POST['pickpoint_sum'], 0, '.', '');
+                $_POST['pickpoint_data_new'] = serialize([
+                    'pvz_id' => $_POST['pickpoint_id'],
+                    'sent'   => false
+                ]);
+            }
+            if ($rout === 'END' and $PickPoint->options['status'] == 0) {
+                $orm = new PHPShopOrm('phpshop_orders');
+                $order = $orm->getOne(['*'], ['uid' => "='" . $obj->ouid . "'"]);
 
-        $content_file='<?xml version="1.0" encoding="windows-1251"?>
-<documents>
-<document>
-<fio>'.$_POST['fio_new'].'</fio>
-<sms_phone>'.$_POST['tel_new'].'</sms_phone>
-<email>'.$_POST['mail'].'</email>
-<additional_phones/>
-<order_id>'.$_POST['ouid'].'</order_id>
-<summ_rub>'.$obj->get('total').'</summ_rub>
-<terminal_id>'.$_POST['pickpoint_id'].'</terminal_id>
-<type_service>'.$option['type_service'].'</type_service>
-<type_reception>'.$option['type_reception'].'</type_reception>
-<embed>'.$obj->PHPShopSystem->getName().'</embed>
-<size_x/> 
-<size_y/> 
-<size_z/> 
-</document>
-</documents>';
-
-        // Запись в файл
-        $file='files/price/'.$_POST['ouid'].'.xml';
-        @fwrite(fopen($file,"w+"), $content_file);
-        
-        // Отсылаем письмо администратору
-        new PHPShopMailFile($obj->PHPShopSystem->getParam('adminmail2'),$obj->PHPShopSystem->getParam('adminmail2'),'PickPoint N'.$_POST['ouid'],'PickPoint N'.$_POST['ouid'],'PickPoint_'.$_POST['ouid'].'.xml',$file);
-
-        // Удаляем файл
-        unlink($file);
+                if(is_array($order)) {
+                    $PickPoint->createOrder($order);
+                }
+            }
+        }
     }
-
 }
 
-$addHandler=array
-        (
-        'mail'=>'mail_pickpoint_hook'
-);
-
+$addHandler = [
+    'send_to_order' => 'send_to_order_pikpoint_hook'
+];
 ?>

@@ -37,6 +37,13 @@ function actionStart() {
         $work[] = array('Карта сайта', 'phpshop/modules/sitemap/cron/sitemap_generator.php');
         $work[] = array('Карта сайта SSL', 'phpshop/modules/sitemap/cron/sitemap_generator.php?ssl');
     }
+    
+    // Учет модуля SiteMap Pro
+    if (!empty($GLOBALS['SysValue']['base']['sitemappro']['sitemappro_system'])) {
+        $work[] = array("|");
+        $work[] = array('Большая карта сайта', 'phpshop/modules/sitemappro/cron/sitemap_generator.php');
+        $work[] = array('Большая карта сайта SSL', 'phpshop/modules/sitemappro/cron/sitemap_generator.php?ssl');
+    }
 
     // Загрузка CSV
     $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['exchanges']);

@@ -9,7 +9,7 @@ function addYandexcartSort($data) {
     
     $Tab3.= $PHPShopGUI->setField("≈диница измерени€", $PHPShopGUI->setInputText(null, 'yandex_param_unit_new', $data['yandex_param_unit'], 100));
 
-    $PHPShopGUI->addTab(array("яндекс.«аказ", $Tab3, true));
+    $PHPShopGUI->addTab(array("яндекс", $Tab3, true));
 }
 
 $addHandler = array(

@@ -61,7 +61,7 @@ function cdekwidgetOnChoose(result) {
     $('input[name="cdek_tariff"]').val(result.tarif);
 }
 
-function cdekwidgetStart(admin = false) {
+function cdekwidgetStart() {
     $('input[name="cdekSum"]').remove();
     $('input[name="cdekInfo"]').remove();
     $('input[name="cdek_pvz_id"]').remove();
@@ -78,7 +78,12 @@ function cdekwidgetStart(admin = false) {
 
     $("#makeyourchoise").val(null);
 
-    cdekwidgetWidget(admin);
+    var isIE = /*@cc_on!@*/false || !!document.documentMode;
+    if(isIE) {
+        $('#forpvz').html('<div class="alert alert-danger" role="alert">Пожалуйста, оформите заказ с помощью другого браузера. Выбор пункта выдачи заказов СДЭК может работать некорректно в браузере Internet Explorer.</div>');
+    } else {
+        cdekwidgetWidget();
+    }
 
     $("#cdekwidgetModal").modal("toggle");
 }

@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="windows-1251"?>
 <module>
-    <version>1.4</version>
+    <version>1.5</version>
     <name>PickPoint</name>
     <description>Модуль пунктов выдачи товара PickPoint</description>
     <faqlink>https://docs.phpshop.ru/moduli/dostavka/pickpoint</faqlink>
     <category>delivery</category>
+    <sign>1602673590</sign>
     <adminmenu>
         <title>PickPoint</title>
         <capability>true</capability>

@@ -6,7 +6,8 @@
 function index_news_seourl_hook($obj, $row, $rout) {
 
     // Настройки модуля из кеша
-    if ($_SESSION['Memory']['PHPShopSeourlOption']['seo_news_enabled'] != 2)
+    $seourl_option = $GLOBALS['PHPShopSeoPro']->getSettings();
+    if ($seourl_option['seo_news_enabled'] != 2)
         return false;
 
     if ($rout == "START") {
@@ -72,13 +73,9 @@ function ID_seourl_hook($obj, $row, $rout) {
 
     if ($rout == 'END') {
 
-        // Настройки модуля
-        include_once(dirname(__FILE__) . '/mod_option.hook.php');
-        $PHPShopSeourlOption = new PHPShopSeourlOption();
-        $seourl_option = $PHPShopSeourlOption->getArray();
-
         // Настройки модуля из кеша
-        if ($_SESSION['Memory']['PHPShopSeourlOption']['seo_news_enabled'] != 2)
+        $seourl_option = $GLOBALS['PHPShopSeoPro']->getSettings();
+        if ($seourl_option['seo_news_enabled'] != 2)
             return false;
 
         $url = $obj->PHPShopNav->getName(true);

@@ -549,11 +549,12 @@ CREATE TABLE phpshop_modules_oneclick_system (
   `write_order` enum('0','1') DEFAULT '0',
   `captcha` enum('0','1') DEFAULT '0',
   `status` int(11) DEFAULT '0',
-  `version` varchar(64) DEFAULT '1.1',
+  `version` varchar(64) DEFAULT '1.6',
+  `only_available` enum('0','1') default '0',
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
 
-INSERT INTO phpshop_modules_oneclick_system VALUES ('1', '0', 'Спасибо, Ваш заказ принят!', 'Наши менеджеры свяжутся с Вами для уточнения деталей.', '', '1', '0', '1', '1', '0', '1.5');
+INSERT INTO phpshop_modules_oneclick_system VALUES ('1', '0', 'Спасибо, Ваш заказ принят!', 'Наши менеджеры свяжутся с Вами для уточнения деталей.', '', '1', '0', '1', '1', '0', '1.6','0');
 DROP TABLE IF EXISTS `phpshop_modules_productday_system`;
 CREATE TABLE IF NOT EXISTS `phpshop_modules_productday_system` (
   `id` int(11) NOT NULL auto_increment,
@@ -690,6 +691,19 @@ CREATE TABLE phpshop_modules_visualcart_memory (
   `referal` text,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
+
+DROP TABLE IF EXISTS `phpshop_modules_visualcart_log`;
+CREATE TABLE `phpshop_modules_visualcart_log` (
+  `id` int(11) NOT NULL auto_increment,
+  `date` int(11) default '0',
+  `user` varchar(255) default '',
+  `ip` varchar(64) default '',
+  `status` enum('1','2') DEFAULT '1',
+  `content` varchar(64) default '',
+  `num` TINYINT(11) default '0',
+  `product_id` INT(11) default '0',
+  PRIMARY KEY  (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
 
 DROP TABLE IF EXISTS phpshop_modules_visualcart_system;
 CREATE TABLE phpshop_modules_visualcart_system (
@@ -1304,6 +1318,7 @@ CREATE TABLE phpshop_search_jurnal (
   `dir` varchar(255) DEFAULT '',
   `cat` tinyint(11) DEFAULT '0',
   `set` tinyint(2) DEFAULT '0',
+  `ip` VARCHAR(64),
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
 
@@ -1382,11 +1397,12 @@ CREATE TABLE phpshop_slider (
   `link` varchar(255) DEFAULT '',
   `alt` varchar(255) DEFAULT '',
   `servers` varchar(64) DEFAULT '',
+  `mobile` enum('0','1') default '0',
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
 
-INSERT INTO phpshop_slider VALUES ('13', '/UserFiles/Image/Trial/slider2.jpg', '1', '0', '', '', '');
-INSERT INTO phpshop_slider VALUES ('16', '/UserFiles/Image/Trial/slider1.jpg', '1', '0', '', '', '');
+INSERT INTO phpshop_slider VALUES ('13', '/UserFiles/Image/Trial/slider2.jpg', '1', '0', '', '', '', '0');
+INSERT INTO phpshop_slider VALUES ('16', '/UserFiles/Image/Trial/slider1.jpg', '1', '0', '', '', '', '0');
 DROP TABLE IF EXISTS phpshop_sort;
 CREATE TABLE phpshop_sort (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
@@ -1554,6 +1570,7 @@ CREATE TABLE phpshop_users (
   `enabled` enum('0','1') DEFAULT '1',
   `name` varchar(255) DEFAULT '',
   `hash` varchar(255) DEFAULT '',
+  `token` VARCHAR(64),
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
 

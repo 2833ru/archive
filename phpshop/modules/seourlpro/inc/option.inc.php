@@ -46,6 +46,7 @@ class PHPShopSeoPro {
     var $prod_pre_target = 'id/';
     var $cat_page_pre = 'page/CID_';
     var $true_dir = false;
+    var $settings;
 
     function __construct() {
 
@@ -253,7 +254,21 @@ class PHPShopSeoPro {
         echo $result;
     }
 
-}
+    public function getSettings()
+    {
+        if(is_array($this->settings)) {
+            return $this->settings;
+        }
 
-$GLOBALS['PHPShopSeoPro'] = new PHPShopSeoPro();
+        include_once(dirname(__DIR__) . '/hook/mod_option.hook.php');
+
+        $PHPShopSeourlOption = new PHPShopSeourlOption();
+        $this->settings = $PHPShopSeourlOption->getArray();
+
+        return $this->settings;
+    }
+}
+if(is_null($GLOBALS['PHPShopSeoPro'])) {
+    $GLOBALS['PHPShopSeoPro'] = new PHPShopSeoPro();
+}
 ?>

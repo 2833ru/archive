@@ -60,7 +60,7 @@ $_RESULT = array(
 );
 
 // Перехват модуля в начале функции
-$hook = $PHPShopModules->setHookHandler('cartload', 'cartload', false, array($_RESULT, $_REQUEST['xid']));
+$hook = $PHPShopModules->setHookHandler('cartload', 'cartload', false, array($_RESULT, $_REQUEST,$PHPShopCart));
 if(is_array($hook))
     $_RESULT = $hook;
 

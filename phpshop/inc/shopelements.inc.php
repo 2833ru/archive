@@ -16,8 +16,8 @@ class PHPShopBrandsElement extends PHPShopElements {
     public $debug = false;
 
     // Хранение брендов и значений к ним, что бы не делать лишних запросов при использовании в циклах.
-    private $brands = [];
-    private $brandValues = [];
+    private static $brands = [];
+    private static $brandValues = [];
 
     /**
      * Конструктор
@@ -37,7 +37,7 @@ class PHPShopBrandsElement extends PHPShopElements {
         if ($hook)
             return $hook;
 
-        foreach ($this->getBrandsValues() as $v) {
+        foreach (self::getBrandsValues() as $v) {
             if ($i % $this->limitOnLine == 0) {
                 $this->set('brandFirstClass', $this->firstClassName);
             } else {
@@ -51,7 +51,7 @@ class PHPShopBrandsElement extends PHPShopElements {
                     $this->set('brandIcon', $val['icon']);
             }
             $this->set('brandName', $v[0]['name']);
-            $this->set('brandPageLink', $this->getBrandLink($v));
+            $this->set('brandPageLink', PHPShopBrandsElement::getBrandLink($v));
             $this->set('brandsList', ParseTemplateReturn('brands/top_brands_one.tpl'), true);
 
             // Для мобильного меню
@@ -62,51 +62,50 @@ class PHPShopBrandsElement extends PHPShopElements {
             return ParseTemplateReturn('brands/top_brands_main.tpl');
     }
 
-    public function getCategoryBrands($categoryId)
+    public static function getCategoryBrands($categoryId)
     {
-        // Перехват модуля
-        $hook = $this->setHook(__CLASS__, __FUNCTION__, $categoryId, 'START');
-        if ($hook)
-            return $hook;
+        global $PHPShopShopCatalogElement;
 
-        $this->set('categoryBrandsList', null);
-        $category = new PHPShopCategory((int) $categoryId);
-        $categories = $category->getChildrenCategories(10, ['id', 'sort']);
-        $categories[] = $category->objRow;
+        PHPShopParser::set('categoryBrandsList', null);
 
-        $brands = $this->getBrands();
+        if(is_array($PHPShopShopCatalogElement->CategoryArray)) {
+            $category = $PHPShopShopCatalogElement->CategoryArray[(int) $categoryId];
+        } else {
+            $category = (new PHPShopCategory((int) $categoryId))->objRow;
+        }
+
+        $brands = self::getBrands();
         $categoryBrands = [];
-        foreach ($categories as $category) {
-            $sorts = unserialize($category['sort']);
-            if(is_array($sorts)) {
-                foreach ($sorts as $sort) {
-                    if(isset($brands[$sort])) {
-                        $categoryBrands[] = (int) $sort;
-                    }
+
+        $sorts = unserialize($category['sort']);
+        if(is_array($sorts)) {
+            foreach ($sorts as $sort) {
+                if(isset($brands[$sort])) {
+                    $categoryBrands[] = (int) $sort;
                 }
             }
         }
 
-        foreach ($this->getBrandsValues($categoryBrands) as $brandValues) {
-            $this->set('categoryBrandIcon', null);
+        foreach (self::getBrandsValues($categoryBrands) as $brandValues) {
+            PHPShopParser::set('categoryBrandIcon', null);
             foreach ($brandValues as $brandValue) {
                 if (!empty($brandValue['icon']))
-                    $this->set('categoryBrandIcon', $brandValue['icon']);
+                    PHPShopParser::set('categoryBrandIcon', $brandValue['icon']);
             }
-            $this->set('categoryBrandName', $brandValues[0]['name']);
-            $this->set('categoryBrandPageLink', $this->getBrandLink($brandValues));
-            $this->set('categoryBrandsList', ParseTemplateReturn('brands/category_brands_one.tpl'), true);
+            PHPShopParser::set('categoryBrandName', $brandValues[0]['name']);
+            PHPShopParser::set('categoryBrandPageLink', self::getBrandLink($brandValues));
+            PHPShopParser::set('categoryBrandsList', ParseTemplateReturn('brands/category_brands_one.tpl'), true);
         }
 
-        if(!empty($this->get('categoryBrandsList'))) {
+        if(!empty(PHPShopParser::get('categoryBrandsList'))) {
             return ParseTemplateReturn('brands/category_brands.tpl');
         }
     }
 
-    private function getBrands()
+    private static function getBrands()
     {
-        if(count($this->brands) > 0) {
-            return $this->brands;
+        if(count(self::$brands) > 0) {
+            return self::$brands;
         }
 
         // Мультибаза
@@ -118,23 +117,22 @@ class PHPShopBrandsElement extends PHPShopElements {
 
         // Массив имен характеристик
         $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['sort_categories']);
-        $this->brands = array_column($PHPShopOrm->getList(['*'], $where, ['order' => 'num']), null, 'id');
+        self::$brands = array_column($PHPShopOrm->getList(['*'], $where, ['order' => 'num']), null, 'id');
 
-        return $this->brands;
+        return self::$brands;
     }
 
-    private function getBrandsValues($categories = null)
+    private static function getBrandsValues($categories = null)
     {
-        if(count($this->brandValues) === 0) {
+        if(count(self::$brandValues) === 0) {
             $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['sort']);
-            $PHPShopOrm->debug = $this->debug;
             $PHPShopOrm->mysql_error = false;
 
-            $brands = array_keys($this->getBrands());
+            $brands = array_keys(self::getBrands());
             if (is_array($brands) && count($brands) > 0) {
                 $result = $PHPShopOrm->query('select * from ' . $GLOBALS['SysValue']['base']['sort'] . ' where category IN (' . implode(',', $brands) . ') order by num,name');
                 while ($row = mysqli_fetch_assoc($result)) {
-                    $this->brandValues[$row['name']][] = ['name' => $row['name'], 'id' => $row['id'], 'category' => $row['category'], 'icon' => $row['icon'], 'seo' => $row['sort_seo_name']];
+                    self::$brandValues[$row['name']][] = ['name' => $row['name'], 'id' => $row['id'], 'category' => $row['category'], 'icon' => $row['icon'], 'seo' => $row['sort_seo_name']];
                 }
             }
         }
@@ -142,7 +140,7 @@ class PHPShopBrandsElement extends PHPShopElements {
         // Значения для бренда категории
         if(is_array($categories)) {
             $result = [];
-            foreach ($this->brandValues as $brandName => $brandValue) {
+            foreach (self::$brandValues as $brandName => $brandValue) {
                 foreach ($brandValue as $value) {
                     if(in_array((int) $value['category'], $categories)) {
                         $result[$brandName][] = $value;
@@ -154,15 +152,18 @@ class PHPShopBrandsElement extends PHPShopElements {
         }
 
 
-        return $this->brandValues;
+        return self::$brandValues;
     }
 
-    private function getBrandLink($values)
+    private static function getBrandLink($values)
     {
         // Учет модуля SEOURLPRO
         if (!empty($GLOBALS['SysValue']['base']['seourlpro']['seourlpro_system'])) {
-            $PHPShopOrmSeo = new PHPShopOrm($GLOBALS['SysValue']['base']['seourlpro']['seourlpro_system']);
-            $seourlpro = $PHPShopOrmSeo->select();
+            if(is_null($GLOBALS['PHPShopSeoPro'])) {
+                include_once dirname(__DIR__) . '/modules/seourlpro/inc/option.inc.php';
+                $GLOBALS['PHPShopSeoPro'] = new PHPShopSeoPro();
+            }
+            $seourlpro = $GLOBALS['PHPShopSeoPro']->getSettings();;
         }
 
         $link = null;

@@ -69,14 +69,16 @@ class AddToTemplateOneclickElement extends PHPShopElements {
 }
 
 function uid_mod_oneclick_hook($obj, $row, $rout) {
-    if ($rout == 'MIDDLE') {
+    if ($rout === 'MIDDLE') {
         $AddToTemplateOneclickElement = new AddToTemplateOneclickElement();
-        $AddToTemplateOneclickElement->display();
+
+        if((int) $AddToTemplateOneclickElement->option['only_available'] === 1 && (int) $row['sklad'] === 1) {
+            $AddToTemplateOneclickElement->set('oneclick', '');
+        } else {
+            $AddToTemplateOneclickElement->display();
+        }
     }
 }
 
-$addHandler = array
-    (
-    'UID' => 'uid_mod_oneclick_hook'
-);
+$addHandler = array ('UID' => 'uid_mod_oneclick_hook');
 ?>

@@ -127,7 +127,7 @@ function actionStart() {
     $id = $PHPShopOrm->insert($data, '');
 
     // Перехват модуля
-    $PHPShopModules->setAdmHandler(__FILE_, _FUNCTION__, $id);
+    $PHPShopModules->setAdmHandler(__FILE_, _FUNCTION__, $data);
 
     header('Location: ?path=order&id=' . $id);
     return true;

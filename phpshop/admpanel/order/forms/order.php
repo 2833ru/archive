@@ -8,6 +8,8 @@ $PHPShopBase = new PHPShopBase($_classPath . "inc/config.ini");
 $PHPShopBase->chekAdmin();
 
 $PHPShopSystem = new PHPShopSystem();
+$PHPShopBase->checkMultibase("../../../../");
+
 $LoadItems['System'] = $PHPShopSystem->getArray();
 
 $PHPShopOrder = new PHPShopOrderFunction($_GET['orderID']);

@@ -178,7 +178,7 @@ function DispComment($id) {
         $SysValue['other']['commentName'] = $row['name'];
         $SysValue['other']['commentStarCount'] = $row['rate'];
         $SysValue['other']['commentContent'] = returnSmile($row['content']);
-        $SysValue['other']['avgRateWidth'] = avg_rate($id);
+        $SysValue['other']['avgRateWidth'] = avg_rate($row['rate']);
 
         // Подключаем шаблон
         if (is_file('../../' . $SysValue['dir']['templates'] . chr(47) . $_SESSION['skin'] . "/comment/main_comment_forma.tpl"))
@@ -197,8 +197,7 @@ function DispComment($id) {
     return $disp;
 }
 
-function avg_rate($id) {
-    global $SysValue,$link_db;
+function avg_rate($rate) {
 
     $oneStarWidth = 20; // ширина одной звёздочки
     $oneSpaceWidth = 0; // пробел между звёздочками
@@ -209,11 +208,8 @@ function avg_rate($id) {
     if (@$_SESSION['Memory']["rateForComment"]["oneSpaceWidth"])
         $oneSpaceWidth = $_SESSION['Memory']["rateForComment"]["oneSpaceWidth"];
 
-    $sql = "select rate, rate_count from " . $SysValue['base']['products'] . " WHERE id=" . intval($id) . " LIMIT 1";
-    $result = mysqli_query($link_db,$sql);
-    $row = mysqli_fetch_array($result);
     
-    return $oneStarWidth * $row['rate'] + $oneSpaceWidth * ceil($row['rate']);
+    return $oneStarWidth * $rate + $oneSpaceWidth * ceil($rate);
 }
 
 // Действия

@@ -7,7 +7,7 @@ function actionStart() {
 
     $PHPShopInterface->setActionPanel($TitlePage, $select_name, false);
     $PHPShopInterface->checkbox_action = false;
-    $PHPShopInterface->setCaption(array("Раздел", "65%"), array("Дата", "15%"), array("Имя", "10%"), array("IP", "10%",array('align' => 'right')));
+    $PHPShopInterface->setCaption(array("Раздел", "65%"), array("Дата", "15%"), array("Имя", "15%"), array("Раздел", "10%"), array("IP", "10%",array('align' => 'right')));
 
     $PHPShopModules = new PHPShopModules($_classPath . "modules/");
     $PHPShopOrm = new PHPShopOrm($PHPShopModules->getParam("base.admlog.admlog_log"));
@@ -19,7 +19,7 @@ function actionStart() {
         foreach ($data as $row) {
 
 
-            $PHPShopInterface->setRow(array('name' => $row['title'], 'link' => '?path=modules.dir.admlog&id=' . $row['id'], 'align' => 'left'), PHPShopDate::get($row['date'],true), $row['user'], $row['ip']);
+            $PHPShopInterface->setRow(array('name' => $row['title'], 'link' => '?path=modules.dir.admlog&id=' . $row['id'], 'align' => 'left'), PHPShopDate::get($row['date'],true), $row['user'], $row['file'], $row['ip']);
         }
 
 

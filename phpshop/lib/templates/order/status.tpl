@@ -131,7 +131,7 @@
             @message@
             <hr>
                 <p>            
-{¬ы можете проверить статус заказа, загрузить файлы, распечатать платежные документы, через}  <a href="http://@php echo $_SERVER[SERVER_NAME].$GLOBALS[SysValue][dir][dir]; php@/users/order.html?order_info=@ouid@#Order">{Ћичный кабинет}</a>
+{¬ы можете проверить статус заказа, загрузить файлы, распечатать платежные документы, через}  <a href="http://@serverPath@users/order.html?order_info=@ouid@#Order">{Ћичный кабинет}</a>
 </p>
 
 <br>

@@ -471,7 +471,7 @@ class ReadCsv1C extends PHPShopReadCsvNative {
             }
 
             // SEO
-            if ($this->seourlpro_enabled and $this->seo_update) {
+            if ($this->seourlpro_enabled and $this->seo_update and ($this->ObjSystem->getSerilizeParam("1c_option.update_name") == 1)) {
                 $sql .= "prod_seo_name='" . str_replace("_", "-", PHPShopString::toLatin($CsvToArray[1])) . "', ";
             }
 

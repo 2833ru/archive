@@ -72,7 +72,7 @@ function checkSeoUrlPro($a) {
 // Проверка уникальности сео-ссылки
 function checkSeoUrlProName($data){
     $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['categories']);
-    $PHPShopOrm->sql='select id,name,cat_seo_name from '.$GLOBALS['SysValue']['base']['categories'].' where (name="'.$data['name_new'].'" or cat_seo_name="'.$data['cat_seo_name_new'].'") limit 1';
+    $PHPShopOrm->sql='select id,name,cat_seo_name from '.$GLOBALS['SysValue']['base']['categories'].' where (name="'.addslashes($data['name_new']).'" or cat_seo_name="'.$data['cat_seo_name_new'].'") limit 1';
     $result = $PHPShopOrm->select();
     
     if($result[0]['cat_seo_name'] == $data['cat_seo_name_new'])

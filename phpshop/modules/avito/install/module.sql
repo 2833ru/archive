@@ -5,11 +5,12 @@ CREATE TABLE `phpshop_modules_avito_system` (
   `manager` varchar(255),
   `phone` varchar(64),
   `additional_description` text default null,
-  `version` varchar(64) default '1.2',
+  `use_params` enum('0','1') NOT NULL default '0',
+  `version` varchar(64) default '1.3',
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
 
-INSERT INTO `phpshop_modules_avito_system` VALUES (1,'', '', '', '', '1.2');
+INSERT INTO `phpshop_modules_avito_system` VALUES (1,'', '', '', '', '0', '1.3');
 
 DROP TABLE IF EXISTS `phpshop_modules_avito_category_types`;
 CREATE TABLE `phpshop_modules_avito_xml_prices` (
@@ -234,6 +235,7 @@ ALTER TABLE `phpshop_products` ADD `export_avito` enum('0','1') DEFAULT '0';
 ALTER TABLE `phpshop_products` ADD `name_avito` varchar(255) DEFAULT '';
 ALTER TABLE `phpshop_products` ADD `listing_fee_avito` varchar(64) DEFAULT 'Package';
 ALTER TABLE `phpshop_products` ADD `ad_status_avito` varchar(64) DEFAULT 'Free';
+ALTER TABLE `phpshop_products` ADD `ad_type_avito` varchar(64) DEFAULT 'Товар приобретен на продажу';
 ALTER TABLE `phpshop_categories` ADD `category_avito` int(11) DEFAULT NULL;
 ALTER TABLE `phpshop_categories` ADD `type_avito` int(11) DEFAULT NULL;
 ALTER TABLE `phpshop_categories` ADD `subtype_avito` int(11) DEFAULT NULL;

@@ -9,13 +9,14 @@ CREATE TABLE IF NOT EXISTS `phpshop_modules_oneclick_system` (
   `display` enum('0','1') default '0',
   `write_order` enum('0','1') default '0',
   `captcha` enum('0','1') default '0',
+  `only_available` enum('0','1') default '0',
   `status` int(11) default '0',
-  `version` varchar(64) DEFAULT '1.1',
+  `version` varchar(64) DEFAULT '1.6',
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
 
 
-INSERT INTO `phpshop_modules_oneclick_system` VALUES (1,'0','Спасибо, Ваш заказ принят!','Наши менеджеры свяжутся с Вами для уточнения деталей.','','1','0','0','1','0','1.5');
+INSERT INTO `phpshop_modules_oneclick_system` VALUES (1,'0','Спасибо, Ваш заказ принят!','Наши менеджеры свяжутся с Вами для уточнения деталей.','','1','0','0','1', '0', '0','1.6');
 
 DROP TABLE IF EXISTS `phpshop_modules_oneclick_jurnal`;
 CREATE TABLE `phpshop_modules_oneclick_jurnal` (

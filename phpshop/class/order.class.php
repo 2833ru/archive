@@ -511,7 +511,7 @@ class PHPShopOrderFunction extends PHPShopObj {
             PHPShopParser::set('account', '//' . $_SERVER['SERVER_NAME'] . 'phpshop/forms/account/forma.html?orderId=' . $this->objID . '&tip=2&datas=' . $this->getParam('datas'));
             PHPShopParser::set('bonus', $this->getParam('bonus_plus'));
 
-            $title = __('Cтатус заказа') . ' ' . $this->getParam('uid') . ' ' . __('изменен');
+            $title = __('Cтатус заказа') . ' ' . $this->getParam('uid') . ' ' . __('поменялся на') . ' ' .$this->getStatus();
 
             $message = $PHPShopOrderStatusArray->getParam($this->getParam('statusi') . '.mail_message');
 
@@ -520,6 +520,31 @@ class PHPShopOrderFunction extends PHPShopObj {
 
             PHPShopParser::set('message', preg_replace_callback("/@([a-zA-Z0-9_]+)@/", 'PHPShopParser::SysValueReturn', $message));
             $PHPShopMail = new PHPShopMail($this->getMail(), $PHPShopSystem->getValue('adminmail2'), $title, '', true, true);
+
+            // Если заказ с витрины
+            if((int) $this->getParam('servers') > 0) {
+                $orm = new PHPShopOrm($GLOBALS['SysValue']['base']['servers']);
+                $showcaseData = $orm->getOne(['*'], ['id' => sprintf("='%s'", (int) $this->getParam('servers'))]);
+
+                if(is_array($showcaseData)) {
+                    PHPShopParser::set('serverPath', $showcaseData['host'] . "/" . $GLOBALS['SysValue']['dir']['dir']);
+
+                    if (!empty($showcaseData['name']))
+                        PHPShopParser::set('shopName', $showcaseData['name']);
+                    if (!empty($showcaseData['logo']))
+                        PHPShopParser::set('logo', $showcaseData['logo']);
+                    if (!empty($showcaseData['company']))
+                        PHPShopParser::set('org_name', $showcaseData['company']);
+                    if (!empty($showcaseData['adres']))
+                        PHPShopParser::set('org_adres', $showcaseData['adres']);
+                    if (!empty($showcaseData['tel']))
+                        PHPShopParser::set('telNum', $showcaseData['tel']);
+                    if (!empty($showcaseData['adminmail']))
+                        PHPShopParser::set('adminMail', $showcaseData['adminmail']);
+
+                    $PHPShopMail->mail->setFrom($PHPShopMail->from, $showcaseData['name']);
+                }
+            }
             $content = PHPShopParser::file('../lib/templates/order/status.tpl', true);
             if (!empty($content)) {
                 $PHPShopMail->sendMailNow($content);

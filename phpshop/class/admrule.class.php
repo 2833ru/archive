@@ -41,7 +41,8 @@ class PHPShopAdminRule {
             'tpleditor' => 'system',
             'metrica'=>'report',
             'support'=>'report',
-            'promotions'=>'system'
+            'promotions'=>'system',
+            'citylist'=>'delivery'
         );
     }
 

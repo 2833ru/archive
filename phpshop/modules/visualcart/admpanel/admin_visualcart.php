@@ -50,7 +50,7 @@ function actionStart() {
 
     $PHPShopInterface->checkbox_action = false;
     $PHPShopInterface->setActionPanel($TitlePage, $select_name, array('Выгрузить'));
-    $PHPShopInterface->setCaption(array("Пользователь", "25%"), array("Дата", "15%"), array("Товары", "25%"), array("Реферал", "25%"));
+    $PHPShopInterface->setCaption(array("Пользователь", "25%"), array("Дата", "15%"), array("Товары", "25%"), array("Реферал", "25%",array('align'=>'right')));
 
     // SQL
     $PHPShopOrm = new PHPShopOrm($PHPShopModules->getParam("base.visualcart.visualcart_memory"));
