@@ -1688,6 +1688,7 @@ $(document).ready(function () {
         }
     });
 
+     // Настройки https://previews.customer.envatousercontent.com/files/263390663/tns_options_example.html
     if ($('#productSlider').length > 0) {
         if ($('.heroSlide img').attr('src').indexOf('no_photo.png') + 1) {
             var src = $('.heroSlide img').attr('src');

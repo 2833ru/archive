@@ -132,7 +132,7 @@ function query_filter($obj) {
     } else
         while ($q < $p) {
 
-            $sql = "select * from " . $SysValue['base']['products'] . " where  $string ($sort) $prewords $sortV $multibase and enabled='1' and parent_enabled='0' order by num desc, items desc LIMIT $num_ot, $num_row";
+            $sql = "select * from " . $SysValue['base']['products'] . " where  $string ($sort) $prewords $sortV $multibase and enabled='1' and parent_enabled='0' order by name LIKE '$wrd' desc, content LIKE '$wrd' desc, description LIKE '$wrd' desc, num desc, items desc LIMIT $num_ot, $num_row";
             $q++;
             $num_ot = $num_ot + $num_row;
         }

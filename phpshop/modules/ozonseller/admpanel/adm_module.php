@@ -356,7 +356,8 @@ function actionStart() {
 function actionCategorySearch() {
 
     $PHPShopOrm = new PHPShopOrm('phpshop_modules_ozonseller_categories');
-    $data = $PHPShopOrm->getList(['*'], ['name' => " LIKE '%" . PHPShopString::utf8_win1251($_POST['words']) . "%'", 'parent_to' => '!=0']);
+    $PHPShopOrm->debug = false;
+    $data = $PHPShopOrm->getList(['*'], ['name' => " LIKE '%" . $_POST['words'] . "%'", 'parent_to' => '!=0']);
     if (is_array($data)) {
         foreach ($data as $row) {
 
@@ -366,7 +367,7 @@ function actionCategorySearch() {
             if ($child)
                 continue;
 
-            $result .= '<a href=\'#\' class=\'select-search\' data-id=\'' . $row['id'] . '\'  data-name=\'' . PHPShopString::utf8_win1251($row['name']) . '\'    >' . $parent . ' &rarr; ' . $row['name'] . '</a><br>';
+            $result .= '<a href=\'#\' class=\'select-search\' data-id=\'' . $row['id'] . '\'  data-name=\'' . $row['name'] . '\'    >' . $parent . ' &rarr; ' . $row['name'] . '</a><br>';
         }
         $result .= '<button type="button" class="close pull-right" aria-label="Close"><span aria-hidden="true">&times;</span></button>';
 

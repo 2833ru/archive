@@ -37,11 +37,11 @@ class Payment extends PHPShopPaymentResult {
 
         // Проверка номера заказа.
         $this->orderNumber = $_REQUEST['orderNumber'];
-        if(strstr($this->orderNumber, "#")){
-            $orderUidArr = explode ("#", $this->orderNumber);
+        if (strstr($this->orderNumber, "#")) {
+            $orderUidArr = explode("#", $this->orderNumber);
             $this->orderNumber = $orderUidArr[0];
         }
-        if(!PHPShopSecurity::true_order($this->orderNumber)) {
+        if (!PHPShopSecurity::true_order($this->orderNumber)) {
             return;
         }
 
@@ -66,7 +66,7 @@ class Payment extends PHPShopPaymentResult {
         // Не доверяем полученному уведомлению и делаем повторный запрос в Альфабанк.
         $paid = $this->isOrderPaid($this->orderNumber, $_REQUEST['mdOrder']);
 
-        if($paid) {
+        if ($paid) {
             $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['orders']);
             $PHPShopOrm->debug = false;
             $row = $PHPShopOrm->getOne(array('*'), array('uid' => "='" . $this->orderNumber . "'"));
@@ -86,8 +86,7 @@ class Payment extends PHPShopPaymentResult {
         exit();
     }
 
-    private function isOrderPaid($orderNumber, $merchantId)
-    {
+    private function isOrderPaid($orderNumber, $merchantId) {
         // Настройки модуля
         $PHPShopAlfabankArray = new PHPShopAlfabankArray();
         $conf = $PHPShopAlfabankArray->getArray();
@@ -100,32 +99,32 @@ class Payment extends PHPShopPaymentResult {
         );
 
         // Режим разработки и боевой режим
-        if($conf["dev_mode"] == 1)
-            $url ='https://web.rbsuat.com/ab/rest/getOrderStatusExtended.do';
+        if ($conf["dev_mode"] == "0")
+            $url = str_replace('register.do','getOrderStatusExtended.do',$conf["api_url"]);
         else
-            $url ='https://pay.alfabank.ru/payment/rest/getOrderStatusExtended.do';
+            $url = str_replace('register.do','getOrderStatusExtended.do',$conf["dev_mode"]);
 
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url . "?" . http_build_query($params)); // set url to post to
-        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);// allow redirects
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1); // allow redirects
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1); // return into a variable
         $r = json_decode(curl_exec($ch), true); // run the whole process
         curl_close($ch);
 
-        if(isset($r['ErrorCode'])) {
+        if (isset($r['ErrorCode'])) {
             $r['errorMessage'] = PHPShopString::utf8_win1251($r['errorMessage']);
             $PHPShopAlfabankArray->log($r, $orderNumber, 'Ошибка проведения платежа', 'Запрос состояния заказа');
-        }elseif($r['orderStatus'] != 2){
+        } elseif ($r['orderStatus'] != 2) {
             $code_description = PHPShopString::utf8_win1251($r['actionCodeDescription']);
             $PHPShopAlfabankArray->log($r, $orderNumber, $code_description, 'Запрос состояния заказа');
-        }else{
+        } else {
             $PHPShopAlfabankArray->log($r, $orderNumber, 'Платеж проведен', 'Запрос состояния заказа');
         }
 
         return (int) $r['orderStatus'] === 2;
     }
+
 }
 
 new Payment();
-
 ?>

@@ -153,7 +153,7 @@ class PHPShopGUI {
         if (empty($option['view']))
             $dis = '
      <div class="row">
-        <div class="col-md-2 btn-file"><a href="#" class="link-thumbnail">' . $icon . '</a>' . $drag . '</div>';
+        <div class="col-md-2 col-xs-2 btn-file"><a href="#" class="link-thumbnail">' . $icon . '</a>' . $drag . '</div>';
         else
             $dis = '
      <div class="row">
@@ -161,7 +161,7 @@ class PHPShopGUI {
 
         if (empty($option['view']))
             $dis .= '
-        <div class="col-md-8">
+        <div class="col-md-8 col-xs-8">
           <p><span class="remove glyphicon glyphicon-remove-sign ' . $icon_hide . '" data-return="' . $id . '" data-toggle="tooltip" data-placement="top" title="' . $this->__('Удалить эту запись') . '"></span> ' . $name . '</p><input type="hidden" name="' . $id . '" value="' . $data . '">
             <div class="btn-group btn-group-sm" role="group" aria-label="...">
               ' . $add . '
@@ -1588,6 +1588,7 @@ class PHPShopGUI {
                     $val[2] = "selected";
                 elseif ($val[2] != "selected")
                     $val[2] = null;
+         
 
                 if (is_array($val[1])) {
                     $CODE .= '<optgroup label="' . $val[0] . '">';

@@ -112,20 +112,22 @@ $key_name = array(
     'url' => 'URL',
     'path' => 'Путь каталога',
     'length' => 'Длина',
-    'width' =>'Ширина',
+    'width' => 'Ширина',
     'height' => 'Высота',
     'moysklad_product_id' => 'МойСклад Id',
-    'price_purch' => 'Закупочная цена'
+    'price_purch' => 'Закупочная цена',
+    'files' => 'Файлы',
+    'external_code' => 'Внешний код'
 );
 
 if ($GLOBALS['PHPShopBase']->codBase == 'utf-8')
     unset($key_name);
 
 // Стоп лист
-$key_stop = array('password', 'wishlist', 'sort', 'yml_bid_array', 'vendor', 'files', 'vid', 'name_rambler', 'skin', 'skin_enabled', 'secure_groups', 'icon_description', 'title_enabled', 'title_shablon', 'descrip_shablon', 'descrip_enabled', 'productsgroup_check', 'productsgroup_product', 'keywords_enabled', 'keywords_shablon', 'rate_count');
+$key_stop = array('password', 'wishlist', 'sort', 'yml_bid_array', 'vendor', 'vid', 'name_rambler', 'skin', 'skin_enabled', 'secure_groups', 'icon_description', 'title_enabled', 'title_shablon', 'descrip_shablon', 'descrip_enabled', 'productsgroup_check', 'productsgroup_product', 'keywords_enabled', 'keywords_shablon', 'rate_count');
 
-if(empty($subpath[2]))
-    $subpath[2]=null;
+if (empty($subpath[2]))
+    $subpath[2] = null;
 
 switch ($subpath[2]) {
     case 'catalog':
@@ -240,7 +242,7 @@ function serializeSelect($str, $cat) {
                             $array_line_value .= $data_v[$a_v]['name'] . ',';
                         }
                     }
-                    
+
                     if ($sortdelim == ';') {
 
                         // Создаем новую колонку
@@ -258,11 +260,11 @@ function serializeSelect($str, $cat) {
             else
                 $csv_line .= $array_line;
         }
-    } 
-        
-    if(empty($csv_line))
+    }
+
+    if (empty($csv_line))
         $csv_line = '""' . $delim;
-    
+
     return $csv_line;
 }
 
@@ -308,7 +310,7 @@ function actionSave() {
             $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['shopusers']);
             break;
         case 'order':
-            PHPShopObj::loadClass(array('order','user'));
+            PHPShopObj::loadClass(array('order', 'user'));
             $PHPShopOrderStatusArray = new PHPShopOrderStatusArray();
             $PHPShopUserStatusArray = new PHPShopUserStatusArray();
             $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['orders']);
@@ -316,9 +318,9 @@ function actionSave() {
         default: $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['products']);
             break;
     }
-    
-    if(empty($_POST['export_gzip']))
-        $_POST['export_gzip']=null;
+
+    if (empty($_POST['export_gzip']))
+        $_POST['export_gzip'] = null;
 
     $PHPShopOrm->debug = false;
     $PHPShopOrm->mysql_error = false;
@@ -348,10 +350,10 @@ function actionSave() {
 
     // Память выбранных полей
     if (is_array($_POST['pattern_cols'])) {
-        
-        if(!empty($_COOKIE['check_memory'])){
-        $memory = json_decode($_COOKIE['check_memory'], true);
-        unset($memory[$_GET['path']]);
+
+        if (!empty($_COOKIE['check_memory'])) {
+            $memory = json_decode($_COOKIE['check_memory'], true);
+            unset($memory[$_GET['path']]);
         }
         foreach ($_POST['pattern_cols'] as $k => $v) {
             $memory[$_GET['path']][$v] = 1;
@@ -470,10 +472,24 @@ function actionSave() {
                         $csv_line .= '"';
                         if (is_array($order['Cart']['cart']))
                             foreach ($order['Cart']['cart'] as $k => $v) {
-                                $csv_line .= '[' . $v['uid'].' '.$v['name'] . '(' . $v['num'] . '*' . $v['price'] . ')]';
+                                $csv_line .= '[' . $v['uid'] . ' ' . $v['name'] . '(' . $v['num'] . '*' . $v['price'] . ')]';
                             }
                         $csv_line .= '[' . __('Доставка') . '(' . $order['Cart']['dostavka'] . ')]';
                         $csv_line .= '"' . $delim;
+                    }
+
+                    // Файлы
+                    elseif ($cols_name == 'files') {
+                        $files = unserialize($row['files']);
+                        if (is_array($files)) {
+                            $csv_line .= '"';
+                            $file_line = null;
+                            foreach ($files as $file) {
+                                $file_line .= $file['path'] . ',';
+                            }
+                            $file_line = substr($file_line, 0, strlen($file_line) - 1);
+                            $csv_line .=$file_line. '"' . $delim;
+                        }
                     }
 
                     // Email в заказе
@@ -597,18 +613,18 @@ function actionSave() {
 // Стартовый вид
 function actionStart() {
     global $PHPShopGUI, $PHPShopModules, $TitlePage, $PHPShopOrm, $key_name, $subpath, $key_base, $key_stop;
-    
+
     // Выбрать настройку
     if (!empty($_GET['exchanges'])) {
 
         $PHPShopOrmExchanges = new PHPShopOrm($GLOBALS['SysValue']['base']['exchanges']);
         $data_exchanges = $PHPShopOrmExchanges->select(array('*'), array('id' => '=' . intval($_GET['exchanges'])), false, array("limit" => 1));
-        
+
 
         if (is_array($data_exchanges)) {
             $_POST = unserialize($data_exchanges['option']);
-            
-            $exchanges_name = ": ". $data_exchanges['name'];
+
+            $exchanges_name = ": " . $data_exchanges['name'];
 
             $memory[$_GET['path']]['export_sortdelim'] = @$_POST['export_sortdelim'];
             $memory[$_GET['path']]['export_sortsdelim'] = @$_POST['export_sortsdelim'];
@@ -619,7 +635,7 @@ function actionStart() {
             $memory[$_GET['path']]['export_delim'] = @$_POST['export_delim'];
             $memory[$_GET['path']]['export_imgproc'] = @$_POST['export_imgproc'];
             $memory[$_GET['path']]['export_code'] = @$_POST['export_code'];
-            
+
             $export_sortdelim = @$memory[$_GET['path']]['export_sortdelim'];
             $export_sortsdelim = @$memory[$_GET['path']]['export_sortsdelim'];
             $export_imgvalue = @$memory[$_GET['path']]['export_imgdelim'];
@@ -729,7 +745,7 @@ function actionStart() {
         </tr>
    </table>';
 
-    $PHPShopGUI->setActionPanel($TitlePage.$exchanges_name, false, array('Экспорт'));
+    $PHPShopGUI->setActionPanel($TitlePage . $exchanges_name, false, array('Экспорт'));
 
     $delim_value[] = array(__('Точка с запятой'), ';', @$memory[$_GET['path']]['export_delim']);
     $delim_value[] = array(__('Запятая'), ',', @$memory[$_GET['path']]['export_delim']);
@@ -761,12 +777,13 @@ function actionStart() {
     $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['exchanges']);
     $data = $PHPShopOrm->select(array('*'), array('type' => '="export"'), array('order' => 'id DESC'), array("limit" => "1000"));
     $exchanges_value[] = array(__('Создать новую настройку'), 'new');
-    if (is_array($data)){
+    if (is_array($data)) {
         foreach ($data as $row) {
-            $exchanges_value[] = array($row['name'], $row['id'],$_REQUEST['exchanges']);
+            $exchanges_value[] = array($row['name'], $row['id'], $_REQUEST['exchanges']);
             $exchanges_remove_value[] = array($row['name'], $row['id']);
         }
-    }else $exchanges_remove_value=null;
+    } else
+        $exchanges_remove_value = null;
 
     $Tab3 = $PHPShopGUI->setField('Выбрать настройку', $PHPShopGUI->setSelect('exchanges', $exchanges_value, 300, false));
     $Tab3 .= $PHPShopGUI->setField('Сохранить настройку', $PHPShopGUI->setInputArg(array('type' => 'text', 'placeholder' => 'Имя настройки', 'size' => '300', 'name' => 'exchanges_new', 'class' => 'vendor_add')));

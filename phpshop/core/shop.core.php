@@ -149,7 +149,7 @@ class PHPShopShop extends PHPShopShopCore {
             if (is_array($files)) {
                 $this->set('productFiles', '');
                 foreach ($files as $cfile) {
-                    $this->set('productFiles', '<p><span class="glyphicon glyphicon-paperclip"></span> ', true);
+                    $this->set('productFiles', '<p><span class="glyphicon glyphicon-paperclip fas fa-paperclip"></span> ', true);
                     $this->set('productFiles', PHPShopText::a($cfile['path'], urldecode($cfile['name']), urldecode($cfile['name']), false, false, '_blank'), true);
                     $this->set('productFiles', '</p>', true);
                 }
@@ -870,6 +870,8 @@ function CID_Product($category = null, $mode = false) {
     $group = null;
 
     $data = $this->select($search_where, $where, $group);
+    $data['max'] = intval($data['max']);
+    $data['min'] = intval($data['min']);
 
     // Проверка промоакций
     $promotion = (new PHPShopPromotions())->promotion_get_discount(['category' => $this->category]);

@@ -20,12 +20,12 @@ function actionDelete() {
     if($data_product['pic_big'] == $data_img['name']){
         
         $PHPShopOrm->clean();
-        $data_img = $PHPShopOrm->getOne(['name'],['parent'=>'='.$data_product['id']]);
+        $data = $PHPShopOrm->getOne(['name'],['parent'=>'='.$data_product['id']]);
         
-        $pic_small = str_replace(array('.jpg', '.png','.JPG', '.PNG'), array('s.jpg', 's.png','s.jpg', 's.png'), $data_img['name']);
+        $pic_small = str_replace(array('.jpg', '.png','.JPG', '.PNG'), array('s.jpg', 's.png','s.jpg', 's.png'), $data['name']);
         $PHPShopOrmProduct->clean();
         
-        $PHPShopOrmProduct->update(['pic_small_new'=>$pic_small,'pic_big_new'=>$data_img['name']],['id'=>'='.$data_product['id']]);
+        $PHPShopOrmProduct->update(['pic_small_new'=>(string)$pic_small,'pic_big_new'=>(string)$data['name']],['id'=>'='.$data_product['id']]);
     }
     
     return array('success' => $action);

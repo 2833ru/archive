@@ -8,16 +8,9 @@ function success_mod_alfanank_hook($obj, $value) {
         $mrh_ouid = explode("-", $_REQUEST['uid']);
         $obj->inv_id = $mrh_ouid[0] . $mrh_ouid[1];
 
-        $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['payment']);
-        $data = $PHPShopOrm->select(array('uid'), array('uid' => '="' . $obj->inv_id . '"'), false, array('limit' => 1));
-        if (is_array($data)) {
+        $obj->message();
 
-            $obj->message();
-
-            return true;
-        } else {
-            $obj->error();
-        }
+        return true;
     }
 }
 

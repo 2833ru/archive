@@ -5,7 +5,12 @@ session_start();
 // Включение
 $enabled = false;
 
-$_classPath = "../../../";
+if (empty($_SERVER['DOCUMENT_ROOT'])) {
+    $_classPath = realpath(dirname(__FILE__)) . "/../../../";
+    $enabled = true;
+} else
+    $_classPath = "../../../";
+
 include($_classPath . "class/obj.class.php");
 PHPShopObj::loadClass("base");
 PHPShopObj::loadClass("system");

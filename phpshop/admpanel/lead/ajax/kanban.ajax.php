@@ -115,8 +115,8 @@ if (is_array($data))
                 $user_link = null;
                 if (empty($row['fio']))
                     $type = __('Событие') . ' ' . $row['id'];
-                else
-                    $type = $row['fio'];
+                //else
+                   // $type = $row['fio'];
                 $pref = 'c_';
                 $ico = 'glyphicon-bookmark';
                 
@@ -148,6 +148,7 @@ if (is_array($data))
         $info = '<div class="text-muted">' . $datas . '<span class="glyphicon ' . $ico . ' pull-right" style="color:' . $status_array[$row['statusi']]['color'] . '"></span></div>' .
                 PHPShopString::win_utf8($type) .
                 '<div>' . $row['tel'] . '</div>' .
+                '<div>' . PHPShopString::win_utf8($row['fio']) . '</div>' .
                 '<div>' . @$row['mail'] . '</div>' .
                 $sum;
 

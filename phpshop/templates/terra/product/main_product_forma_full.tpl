@@ -109,6 +109,10 @@
                     <ul class="nav nav-tabs">
                         <li class="active"><a data-toggle="tab" href="#proddesc">{Описание}</a></li>
                         <li><a data-toggle="tab" href="#prodrev">{Отзывы}</a></li>
+                        @productFilesStart@
+                        <li><a data-toggle="tab" href="#prodfile">{Файлы}</a></li>
+                        @productFilesEnd@
+                        <li class="@php __hide('pagetemaDisp'); php@"><a data-toggle="tab" href="#prodpage">{Статьи}</a></li>
                     </ul>
 
                     <div class="tab-content">
@@ -143,6 +147,16 @@
                                     commentList('@productUid@', 'list');
                                 });
                             </script>
+                        </div>
+                         <div id="prodfile" class="tab-pane fade">
+                            <div class="content" itemprop="description">
+                                @productFiles@
+                            </div>
+                        </div>
+                         <div id="prodpage" class="tab-pane fade">
+                            <div class="content" itemprop="description">
+                                @pagetemaDisp@
+                            </div>
                         </div>
                     </div>
 

@@ -650,6 +650,8 @@ function actionOption() {
         $memory['catalog.option']['status'] = 1;
         $memory['catalog.option']['label'] = 1;
         $memory['catalog.option']['sort'] = 0;
+        $memory['catalog.option']['price_n'] = 0;
+        $memory['catalog.option']['price_purch'] = 0;
     }
 
     $message = '<p class="text-muted">' . __('Вы можете изменить перечень полей в таблице отображения товаров в категориях') . '.</p>';
@@ -664,10 +666,12 @@ function actionOption() {
             $PHPShopInterface->setCheckbox('price3', 1, 'Цена 3', $memory['catalog.option']['price3']) . '<br>' .
             $PHPShopInterface->setCheckbox('price4', 1, 'Цена 4', $memory['catalog.option']['price4']) .
             $PHPShopInterface->setCheckbox('price5', 1, 'Цена 5', $memory['catalog.option']['price5']) .
+            $PHPShopInterface->setCheckbox('price_n', 1, 'Старая цена', $memory['catalog.option']['price_n']) .
+            $PHPShopInterface->setCheckbox('price_purch', 1, 'Закупочная цена', $memory['catalog.option']['price_purch']) .
             $PHPShopInterface->setCheckbox('status', 1, 'Статус', $memory['catalog.option']['status']) .
-            $PHPShopInterface->setCheckbox('item', 1, 'Количество', $memory['catalog.option']['item']) .
+            $PHPShopInterface->setCheckbox('item', 1, 'Кол-во', $memory['catalog.option']['item']) .'<br>' .
             $PHPShopInterface->setCheckbox('menu', 1, 'Экшен меню', $memory['catalog.option']['menu']) .
-            $PHPShopInterface->setCheckbox('num', 1, 'Сортировка', $memory['catalog.option']['num']) . '<br>' .
+            $PHPShopInterface->setCheckbox('num', 1, 'Сортировка', $memory['catalog.option']['num']) . 
             $PHPShopInterface->setCheckbox('label', 1, 'Лейблы статусов', $memory['catalog.option']['label']) .
             $PHPShopInterface->setCheckbox('sort', 1, 'Характеристики', $memory['catalog.option']['sort']);
 

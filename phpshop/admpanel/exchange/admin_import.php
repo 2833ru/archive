@@ -87,14 +87,15 @@ $key_name = array(
     'height' => 'Высота',
     'moysklad_product_id' => 'МойСклад Id',
     'bonus' => 'Бонус',
-    'price_purch' => 'Закупочная цена'
+    'price_purch' => 'Закупочная цена',
+    'files' => 'Файлы'
 );
 
 if ($GLOBALS['PHPShopBase']->codBase == 'utf-8')
     unset($key_name);
 
 // Стоп лист
-$key_stop = array('password', 'wishlist', 'sort', 'yml_bid_array', 'status', 'files', 'datas', 'price_search', 'vid', 'name_rambler', 'servers', 'skin', 'skin_enabled', 'secure_groups', 'icon_description', 'title_enabled', 'title_shablon', 'descrip_shablon', 'descrip_enabled', 'productsgroup_check', 'productsgroup_product', 'keywords_enabled', 'keywords_shablon', 'rate_count', 'sort_cache', 'sort_cache_created_at', 'parent_title', 'menu', 'order_by', 'order_to', 'org_ras', 'org_bank', 'org_kor', 'org_bik', 'org_city', 'admin', 'org_fakt_adres');
+$key_stop = array('password', 'wishlist', 'sort', 'yml_bid_array', 'status', 'datas', 'price_search', 'vid', 'name_rambler', 'servers', 'skin', 'skin_enabled', 'secure_groups', 'icon_description', 'title_enabled', 'title_shablon', 'descrip_shablon', 'descrip_enabled', 'productsgroup_check', 'productsgroup_product', 'keywords_enabled', 'keywords_shablon', 'rate_count', 'sort_cache', 'sort_cache_created_at', 'parent_title', 'menu', 'order_by', 'order_to', 'org_ras', 'org_bank', 'org_kor', 'org_bik', 'org_city', 'admin', 'org_fakt_adres');
 
 if (empty($subpath[2]))
     $subpath[2] = null;
@@ -468,6 +469,24 @@ function csv_update($data) {
                 $row['data_adres'] = serialize($tel);
             }
 
+            // Файлы
+            if (!empty($row['files'])) {
+
+                if (strstr($row['files'], ",")) {
+                    $files_array = explode(",", $row['files']);
+                } else
+                    $files_array[] = $row['files'];
+
+                if (is_array($files_array)) {
+                    foreach ($files_array as $file) {
+                        $name = pathinfo($file);
+                        $files[] = ['name' => $name['basename'], 'path' => $file];
+                    }
+
+                    $row['files'] = serialize($files);
+                }
+            }
+
             // Путь каталога
             if (isset($row['path'])) {
                 if (empty($row['category'])) {
@@ -570,14 +589,17 @@ function csv_update($data) {
                 $uniq = $PHPShopBase->getNumRows('products', "where uid = '" . $row['uid'] . "'");
             } else
                 $uniq = 0;
-            
-            
+
+
 
             if (!empty($data_img) and is_array($data_img)) {
 
                 // Очистка начальных данных
                 unset($row['pic_big']);
-                unset($row['pic_small']);
+
+                // Если выключена обработка фото
+                if (isset($_POST['export_imgproc']))
+                    unset($row['pic_small']);
 
                 // Получение ID товара по артикулу при обновлении
                 if ($_POST['export_action'] == 'update' and empty($row['id']) and ! empty($row['uid'])) {
@@ -585,9 +607,9 @@ function csv_update($data) {
                     $data_prod = $PHPShopOrmProd->getOne(array('id'), array('uid' => '="' . $row['uid'] . '"'));
                     $row['id'] = $data_prod['id'];
                 }
-                
+
                 // Очистка изображений при проверки уникальности
-                if($_POST['export_action'] == 'insert' and !empty($uniq)){
+                if ($_POST['export_action'] == 'insert' and ! empty($uniq)) {
                     unset($data_img);
                 }
 

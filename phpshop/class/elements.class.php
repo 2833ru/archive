@@ -423,7 +423,7 @@ class PHPShopElements {
 
             // Преобразование webp -> jpg для iOS < 14
             if (PHPShopSecurity::getExt($image) == 'webp') {
-                if (defined('isMobil') and defined('isIOS') and isIOS < 14) {
+                if (defined('isMobil') and defined('isIOS')) {
 
                     if (!class_exists('PHPThumb'))
                         include_once($_classPath . 'lib/thumb/phpthumb.php');

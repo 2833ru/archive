@@ -568,7 +568,7 @@ class PHPShopUsers extends PHPShopCore {
             //if (strlen($_POST['name_new']) < 3)
             //  $this->error[] = $this->lang('error_name');
 
-            if (count($this->error) == 0) {
+            if (is_array($this->error) and count($this->error) == 0) {
 
                 if (!empty($_POST['sendmail_new']))
                     $update['sendmail_new'] = 0;
@@ -630,7 +630,7 @@ class PHPShopUsers extends PHPShopCore {
         if ($this->setHook(__CLASS__, __FUNCTION__))
             return true;
 
-        if (PHPShopSecurity::true_email($_POST['login'])) {
+        if (PHPShopSecurity::true_email($_POST['login']) and strpos($_SERVER["HTTP_REFERER"], $_SERVER['SERVER_NAME'])) {
             $this->PHPShopOrm->clean();
             $data = $this->PHPShopOrm->select(array('*'), array('login' => '="' . $_POST['login'] . '"'), false, array('limit' => 1));
             if (is_array($data)) {

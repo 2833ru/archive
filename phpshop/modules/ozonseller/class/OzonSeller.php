@@ -352,11 +352,9 @@ class OzonSeller {
                     }
                 }
 
-
-
-                if (empty($product['enabled']))
+                if (empty($product['enabled']) or $product['items'] < 0)
                     $product['items'] = 0;
-
+                
                 $params['stocks'][] = [
                     'offer_id' => $info['offer_id'],
                     'product_id' => $info['product_id'],

@@ -6,6 +6,7 @@ function tab_info($data) {
     $Info = '<p>
       <h4>Настройки параметров размещения в Яндекс.Маркет по модели ADV</h4>
         <ol>
+        <li>Зарегистрироваться в <a href="https://partner.market.yandex.ru/welcome/partners/?promocode=MARKET_2960295" target="_blank">Яндекс Маркет для продавцов</a> и указать при регистрации промокод <kbd>MARKET_2960295</kbd> для получения бонусов.</li>
         <li>В поле "Прайс-лист" указать адрес YML файла: <code>http://' . $_SERVER['SERVER_NAME'] .$GLOBALS['SysValue']['dir']['dir']. '/yml/</code>
         </ol>
         <h5>Настройка модуля</h5>

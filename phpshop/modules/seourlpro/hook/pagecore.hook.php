@@ -53,8 +53,8 @@ function index_seourl_hook($obj, $row, $rout) {
         }
     }
 
-    if ($rout == 'END' and $row['category'] != 1000)
-        navigation_seourl($obj, $row['name'],['url'=>'/page/','name'=>__('Блог')]);
+    //if ($rout == 'END' and $row['category'] != 1000)
+        //navigation_seourl($obj, $row['name'],['url'=>'/page/','name'=>__('Блог')]);
 }
 
 /**

@@ -72,9 +72,7 @@ class PHPShopCoreElement extends PHPShopElements {
 
                 if (!empty($showcaseData['currency'])) {
 
-                    if (empty($_SESSION['valuta']))
-                        $_SESSION['valuta'] = $showcaseData['currency'];
-
+                    $_SESSION['valuta'] = $showcaseData['currency'];
                     $lang = $showcaseData['lang'];
                 }
 
@@ -1159,7 +1157,7 @@ class PHPShopSkinElement extends PHPShopElements {
             $this->set('leftMenuName', __("Сменить дизайн"));
 
             // Подключаем шаблон
-            $dis = $this->parseTemplate($this->getValue('templates.left_menu'));
+            $dis = $this->parseTemplate($this->getValue('templates.right_menu'));
         }
         return $dis;
     }
@@ -1695,7 +1693,7 @@ class PHPShopPhotoElement extends PHPShopElements {
 
         $PHPShopOrm = new PHPShopOrm($this->getValue('base.photo_categories'));
         $PHPShopOrm->debug = $this->debug;
-        $data = $PHPShopOrm->select(array('*'), array('enabled' => "='1'", "page" => " LIKE '%$url%'"), array('order' => 'num'), array("limit" => 1000));
+        $data = $PHPShopOrm->select(array('*'), array('enabled' => "='1'", "page" => " LIKE '%$url'"), array('order' => 'num'), array("limit" => 1000));
 
         if (is_array($data))
             foreach ($data as $row) {

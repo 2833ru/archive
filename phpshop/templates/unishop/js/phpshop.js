@@ -815,16 +815,6 @@ $(document).ready(function () {
         commentList($(this).attr('data-uid'), 'list');
     });
 
-    // убираем пустые закладки подробного описания
-    if ($('#files').html() != 'Нет файлов')
-        $('#filesTab').addClass('show');
-
-    if ($('#vendorenabled').html() != '')
-        $('#settingsTab').addClass('show');
-
-    if ($('#pages').html() != '')
-        $('#pagesTab').addClass('show');
-
     /*
      if ($('#vendorActionButton').val() == 'Применить') {
      $('#sorttable').addClass('show');

@@ -1419,9 +1419,10 @@ $(document).ready(function () {
       window.location.href = $(this).attr('href');
     });
 
+/*
     $(window).resize(function () {
         //mainNavMenuFix();
-    })
+    })*/
 
 // CAPTCHA
 $('body').on('click', '[data-toggle="modal"]', function () {

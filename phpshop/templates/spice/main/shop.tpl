@@ -300,7 +300,7 @@
 
                 <div class="col-xs-12 @php __hide('now_buying','orderContent','empty'); php@">
                     <h4 class="heading">@now_buying@</h4>
-                    <div class="row template-product-list">                
+                    <div class="row ">                
                         @nowBuy@
                     </div>
                 </div>

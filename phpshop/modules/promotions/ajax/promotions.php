@@ -356,14 +356,20 @@ if ($_REQUEST['promocode'] != '*') {
 $PHPShopCart = new PHPShopCart();
 
 $promoSum = 0;
+
 foreach ($PHPShopCart->getArray() as $product) {
-    // Сумма
+    
+    // Сумма в промокоде
     if (!empty($product['promo_sum'])) {
         $promoSum += $product['num'] * number_format($product['price'] - $product['promo_sum'] / $product['num'], $PHPShopOrder->format, '.', '');
     }
-    // Процент от суммы
+    // Процент от суммы в промокоде
     else if (!empty($product['promo_percent'])) {
         $promoSum += $product['num'] * number_format($product['price'] - ($product['price'] * $product['promo_percent'] / 100), $PHPShopOrder->format, '.', '');
+    }
+    // Учавствует в промоакции
+    elseif(!empty($product['promo_price'])) {
+        $promoSum += $product['price'];
     }
 }
 
@@ -376,13 +382,13 @@ if ($promoSum > 0)
 else
     $total = $totalsummainput;
 
-// Итого товары без акции, применяем скидку статуса пользователя\суммы заказа
+$total = $totalsummainput;
+
+// Итого товары без промоакции, применяем скидку статуса пользователя\суммы заказа
 $total += (float) $PHPShopOrder->returnSumma($PHPShopCart->getSumWithoutPromo(true), $PHPShopOrder->ChekDiscount($totalsumma), '', (float) $delivery);
 
 // Итого с учетом бонусов
 $total -= (float) (new PHPShopBonus((int) $_SESSION['UsersId']))->getUserBonus($total);
-
-
 
 // Процент
 if (strstr($discountAll, '%')) {

@@ -165,6 +165,8 @@ function getTableCaption() {
         ["Цена 3", "10%", ['view' => (int) $memory['catalog.option']['price3']]],
         ["Цена 4", "10%", ['view' => (int) $memory['catalog.option']['price4']]],
         ["Цена 5", "10%", ['view' => (int) $memory['catalog.option']['price5']]],
+        ["Ст. цена", "10%", ['view' => (int) $memory['catalog.option']['price_n']]],
+        ["Зак. цена", "10%", ['view' => (int) $memory['catalog.option']['price_purch']]],
         ["Кол-во", "10%", ['view' => (int) $memory['catalog.option']['item']]],
         [@$dataWarehouse[0]['name'], "10%", ['view' => (int) $memory['catalog.option']['items1']]],
         [@$dataWarehouse[1]['name'], "10%", ['view' => (int) $memory['catalog.option']['items2']]],

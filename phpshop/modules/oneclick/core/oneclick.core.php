@@ -271,6 +271,41 @@ class PHPShopOneclick extends PHPShopCore {
             $PHPShopWebhooks->init();
         }
 
+        // Telegram
+        $chat_id_telegram = $this->PHPShopSystem->getSerilizeParam('admoption.telegram_admin');
+        if (!empty($chat_id_telegram) and $this->PHPShopSystem->ifSerilizeParam('admoption.telegram_order', 1)) {
+            
+            PHPShopObj::loadClass('bot');
+
+            $bot = new PHPShopTelegramBot();
+            $link = '(' . $bot->protocol . $_SERVER['SERVER_NAME'] . '/phpshop/admpanel/admin.php?path=order&id=' . $orderId . ')';
+
+            $msg = $this->lang('mail_title_adm') . $insert['uid_new'] . " - " . $product->getName() . " [" . $insert['sum_new'] . " " . $this->PHPShopSystem->getDefaultValutaCode(true) . ']' . $link;
+
+            $bot->send($chat_id_telegram, PHPShopString::win_utf8($msg));
+        }
+
+        // VK
+        $chat_id_vk = $this->PHPShopSystem->getSerilizeParam('admoption.vk_admin');
+        if (!empty($chat_id_vk) and $this->PHPShopSystem->ifSerilizeParam('admoption.vk_order', 1)) {
+            
+            PHPShopObj::loadClass('bot');
+
+            $bot = new PHPShopVKBot();
+            $link = $bot->protocol . $_SERVER['SERVER_NAME'] . '/phpshop/admpanel/admin.php?path=order&id=' . $orderId;
+
+            $buttons[][] = array(
+                'action' => array(
+                    'type' => 'open_link',
+                    'link' => $link,
+                    'label' => PHPShopString::win_utf8($insert['sum_new'] . " " . $this->PHPShopSystem->getDefaultValutaCode(true))
+                )
+            );
+
+            $msg = $this->lang('mail_title_adm') . $insert['uid_new'] . " - " . $product->getName() . " [" . $insert['sum_new'] . " " . $this->PHPShopSystem->getDefaultValutaCode(true) . ']';
+            $bot->send($chat_id_vk, PHPShopString::win_utf8($msg), array('buttons' => $buttons, 'one_time' => false, 'inline' => true));
+        }
+
         return $insert['uid_new'];
     }
 

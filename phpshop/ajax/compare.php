@@ -23,8 +23,11 @@ $PHPShopModules = new PHPShopModules($_classPath . "modules/");
 // Получаем запрос.
 $xid = intval($_REQUEST['xid']);
 
-//Получаем входящее количество товаров для сравнения
-$compar = count($_SESSION['compare']);
+// Получаем входящее количество товаров для сравнения
+if (is_array($_SESSION['compare']))
+    $compar = count($_SESSION['compare']);
+else
+    $compar = 0;
 
 $PHPShopLang = new PHPShopLang(array('locale' => $_SESSION['lang'], 'path' => 'shop'));
 

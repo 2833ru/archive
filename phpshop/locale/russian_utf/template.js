@@ -34,6 +34,7 @@ var locale = {
 		pickup_address: "адрес выбранного ПВЗ",
 		pickup_phone_number: "телефон выбранного ПВЗ",
 		pickup: "ПВЗ",
+	    country: "Россия"
 	}
     
 };

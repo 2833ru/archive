@@ -147,7 +147,7 @@ class PHPShopCompare extends PHPShopCore {
         }
 
         // Вывод управляющего интерфейса
-        $disp = '<table class="table table-bordered table-responsive">' . $dis . '</table>';
+        $disp = '<table class="table table-bordered ">' . $dis . '</table>';
 
         // Выбор каталога для показа
         if (!$COMCID) { //Если не указан каталог
@@ -179,7 +179,7 @@ class PHPShopCompare extends PHPShopCore {
 
         // Сравение
         if (!empty($_SESSION['compare']))
-            if (($COMCID && (count($goods[$catid]) > 1) && (count($goods[$catid]) <= $limit)) ||
+            if (($COMCID && (is_array($goods[$catid]) and count($goods[$catid]) > 1) && (is_array($goods[$catid]) and count($goods[$catid]) <= $limit)) ||
                     ((($COMCID == "ALL") && (count($_SESSION['compare']) > 1) && (count($_SESSION['compare']) <= $limit)))) { //Если выбран каталог сравнения
                 if ($COMCID == "ALL") {
                     $comparing = __('все категории');

@@ -221,6 +221,7 @@ function actionAdvanceSearch() {
     $searchforma = $PHPShopInterface->setField('Название товара', $PHPShopInterface->setInputArg(array('type' => 'text', 'name' => 'where[name]', 'placeholder' => '', 'class' => 'pull-left', 'value' => $query['where']['name'])));
     $searchforma .= $PHPShopInterface->setField('Артикул', $PHPShopInterface->setInputArg(array('type' => 'text', 'name' => 'where[uid]', 'placeholder' => '', 'class' => 'pull-left', 'value' => $query['where']['uid'])));
     $searchforma .= $PHPShopInterface->setField('ID', $PHPShopInterface->setInputArg(array('type' => 'text', 'name' => 'where[id]', 'placeholder' => '1005', 'class' => 'pull-left', 'value' => $query['where']['id'])));
+    $searchforma .= $PHPShopInterface->setField('Внешний код', $PHPShopInterface->setInputArg(array('type' => 'text', 'name' => 'where[external_code]', 'placeholder' => '', 'class' => 'pull-left', 'value' => $query['external_code'])));
     $searchforma .= $PHPShopInterface->setField('Подтип', $PHPShopInterface->setInputArg(array('type' => 'text', 'name' => 'parent', 'placeholder' => '52', 'class' => 'pull-left', 'value' => $query['parent'])));
     $searchforma .= $PHPShopInterface->setField('Характеристика', $PHPShopInterface->setInputArg(array('type' => 'text', 'name' => 'sort', 'placeholder' => 'Характеристика:Значение', 'class' => 'pull-left', 'value' => $query['sort'])));
     $searchforma .= $PHPShopInterface->setField('Категория', viewCatalog('where[category]', $query['where']['category']));

@@ -1,5 +1,5 @@
 $().ready(function () {
-    
+
     // Остановить автоматизацмю
     $(".success-notification .close").on('click', function (event) {
         event.preventDefault();
@@ -9,7 +9,7 @@ $().ready(function () {
             buttonFail: locale.cancel,
             message: $('#locale_ozon_stop_export').val()
         }).done(function () {
-            
+
             var data = [];
             data.push({name: 'stop', value: 1});
 
@@ -92,7 +92,7 @@ $().ready(function () {
         })
     });
 
-// Поиск пользователя
+    // Поиск категории
     $(".search_ozoncategory").on('input', function () {
 
         var words = $(this).val();
@@ -130,13 +130,13 @@ $().ready(function () {
         }
     });
 
-    // Закрыть поиск пользователя
+    // Закрыть поиск категории
     $('body').on('click', '.close', function (event) {
         event.preventDefault();
         $('[data-toggle="popover"]').popover('hide');
     });
 
-    // Выбор в поиске пользователя
+    // Выбор в поиске категорию
     $('body').on('click', '.select-search', function (event) {
         event.preventDefault();
 
@@ -151,8 +151,8 @@ $().ready(function () {
         "template": '<div class="popover" role="tooltip" style="max-width:600px"><div class="arrow"></div><div class="popover-content"></div></div>'
 
     });
-    
-        // Выбрать все категории
+
+    // Выбрать все категории
     $("body").on('change', "#categories_all", function () {
         if (this.checked)
             $('[name="categories[]"]').selectpicker('selectAll');

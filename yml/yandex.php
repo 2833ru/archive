@@ -241,7 +241,7 @@ class PHPShopYml {
         $xml = null;
         if (isset($_GET['getall']) or isset($_GET['allimage'])) {
             $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['foto']);
-            $data = $PHPShopOrm->select(array('*'), array('parent' => '=' . $product_row['id']), array('order' => 'num,id'), array('limit' => 10000));
+            $data = $PHPShopOrm->select(array('*'), array('parent' => '=' . $product_row['id']), array('order' => 'num,id'), array('limit' => 20));
 
             if (is_array($data))
                 foreach ($data as $row) {

@@ -528,6 +528,10 @@ function actionUpdate() {
         if (isset($_POST['editID'])) {
             if (!empty($_POST['files_new']) and is_array($_POST['files_new'])) {
                 foreach ($_POST['files_new'] as $k => $files)
+                    
+                    if(empty($files['name']))
+                        $files['name']=pathinfo($files['path'])['basename'];
+                        
                     $files_new[] = @array_map("urldecode", $files);
 
                 $_POST['files_new'] = serialize($files_new);

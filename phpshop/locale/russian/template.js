@@ -1,6 +1,6 @@
 // Locale
 var locale = {
-	charset: "windows-1251",
+    charset: "windows-1251",
     commentList: {
         mesHtml: "Функция добавления комментария возможна только для авторизованных пользователей.\n<a href='/users/?from=true'>Авторизуйтесь или пройдите регистрацию</a>.",
         mesSimple: "Функция добавления комментария возможна только для авторизованных пользователей.\nАвторизуйтесь или пройдите регистрацию.",
@@ -19,21 +19,22 @@ var locale = {
     hide: "Скрыть",
     close: "Закрыть",
     FlipClock: {
-        years:"лет",
-        months:"месяцев",
-        days:"дней",
-        hours:"часов",
-        minutes:"минут",
-        seconds:"секунд"
+        years: "лет",
+        months: "месяцев",
+        days: "дней",
+        hours: "часов",
+        minutes: "минут",
+        seconds: "секунд"
     },
-	cdek: {
+    cdek: {
         express_delivery: "Курьерская доставка",
-		pickup_code: "Код выбранного ПВЗ",
-		city: "город",
-		pickup_address: "адрес выбранного ПВЗ",
-		pickup_phone_number: "телефон выбранного ПВЗ",
-		pickup: "ПВЗ",
-	}
+        pickup_code: "Код выбранного ПВЗ",
+        city: "город",
+        pickup_address: "адрес выбранного ПВЗ",
+        pickup_phone_number: "телефон выбранного ПВЗ",
+        pickup: "ПВЗ",
+        country: "Россия"
+    }
 };
 
 $().ready(function () {

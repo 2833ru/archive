@@ -292,8 +292,8 @@ $().ready(function () {
     // Переход на страницу из списка
     $("#dropdown_action  .url").on('click', function (event) {
         event.preventDefault();
-        var url = $(this).closest('.data-row').find('.page-url > a').html();
-        window.open('../../page/' + url + '.html');
+        var url = $(this).closest('.data-row').find('.text-muted').html();
+        window.open(url);
     });
 
 

@@ -4,9 +4,8 @@
  * Обмен по CommerceML
  * @package PHPShopExchange
  * @author PHPShop Software
- * @version 1.8
+ * @version 1.9
  */
-
 class CommerceMLLoader {
 
     private static $session_name = "CommerceMLLoader";
@@ -422,7 +421,7 @@ class CommerceMLLoader {
                     if (isset($item->Описание)) {
                         $content = (string) $item->Описание;
                     } else
-                        $content = null;
+                        $content = $description;
 
                     // Свойства
                     $properties = [];
@@ -563,8 +562,12 @@ class CommerceMLLoader {
                         $p = explode("#", (string) $item->Ид[0]);
                         (string) $item->Ид[0] = $p[1];
 
-                        // Список подтипов
-                        $parent_array[$p[0]]['ids'] .= $p[1] . ',';
+                        // Список подтипов у главного товара
+                        if (!empty((string) $item->Артикул[0]))
+                            $parent_array[$p[0]]['ids'] .= (string) $item->Артикул[0] . ',';
+                        else
+                            $parent_array[$p[0]]['ids'] .= $p[1] . ',';
+
 
                         // Цена и склад главного товара
                         if (empty($parent_array[$p[0]]['price'])) {
@@ -633,20 +636,17 @@ class CommerceMLLoader {
                       }
                       } */
 
-                    // Поле артикул
-                    /*
-                    if ($this->exchange_key == 'code') {
-                        if (!empty((string) $item->Код[0]))
-                            $uid = (string) $item->Код[0];
+                    // Артикул для подтипа
+                    if ($parent_enabled == 1) {
+
+                        if (!empty((string) $item->Артикул[0]))
+                            $uid = (string) $item->Артикул[0];
                         else
                             $uid = (string) $item->Ид[0];
-                    }
-                    else if ($this->exchange_key == 'external')
-                        $uid = (string) $item->Ид[0];
-                    else
-                        $uid = (string) $item->Артикул[0];*/
+                    } else
+                        $uid = null;
 
-                    $this->product_array[(string) $item->Ид[0]] = array(null, (string) $item->Наименование[0], null, $image, null, $image_count, $warehouse, (string) $item->Цены->Цена[0]->ЦенаЗаЕдиницу[0], (string) $item->Цены->Цена[1]->ЦенаЗаЕдиницу[0], (string) $item->Цены->Цена[2]->ЦенаЗаЕдиницу[0], (string) $item->Цены->Цена[3]->ЦенаЗаЕдиницу[0], (string) $item->Цены->Цена[4]->ЦенаЗаЕдиницу[0], "", "", (string) $item->Цены->Цена[0]->Валюта[0], null, $parent_name, (string) $item->Ид[0], $parent_enabled);
+                    $this->product_array[(string) $item->Ид[0]] = array($uid, (string) $item->Наименование[0], null, $image, null, $image_count, $warehouse, (string) $item->Цены->Цена[0]->ЦенаЗаЕдиницу[0], (string) $item->Цены->Цена[1]->ЦенаЗаЕдиницу[0], (string) $item->Цены->Цена[2]->ЦенаЗаЕдиницу[0], (string) $item->Цены->Цена[3]->ЦенаЗаЕдиницу[0], (string) $item->Цены->Цена[4]->ЦенаЗаЕдиницу[0], "", "", (string) $item->Цены->Цена[0]->Валюта[0], null, $parent_name, (string) $item->Ид[0], $parent_enabled);
                 }
 
                 // Запись в файл

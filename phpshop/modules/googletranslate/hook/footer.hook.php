@@ -26,16 +26,17 @@ function googletranslate_footer_hook() {
     if (is_array($langs)) {
         $dis = '<div class="language">';
         foreach ($langs as $lang)
-            $dis .= '<img src="/phpshop/modules/googletranslate/lib/images/lang/lang__' . $lang . '.png" alt="' . $lang . '" data-google-lang="' . $lang . '" class="language__img">';
+            $dis .= '<img src="phpshop/modules/googletranslate/lib/images/lang/lang__' . $lang . '.png" alt="' . $lang . '" data-google-lang="' . $lang . '" class="language__img" width="22">';
 
         $dis .= '</div>
-    <link rel="stylesheet" href="/phpshop/modules/googletranslate/lib/css/style.css">
+    <link rel="stylesheet" href="phpshop/modules/googletranslate/lib/css/style.css">
     <script>var domain="'.$domain.'";</script>
-    <script src="/phpshop/modules/googletranslate/lib/js/google-translate.js"></script>
+    <script src="phpshop/modules/googletranslate/lib/js/google-translate.js"></script>
     <script src="//translate.google.com/translate_a/element.js?cb=TranslateInit"></script>';
-        echo $dis;
+
+        $GLOBALS['SysValue']['other']['editor'].=$dis;
     }
 }
 
-$addHandler = array('footer' => 'googletranslate_footer_hook');
+$addHandler = array('miniCart' => 'googletranslate_footer_hook');
 ?>

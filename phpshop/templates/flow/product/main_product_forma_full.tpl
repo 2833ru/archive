@@ -241,6 +241,14 @@
                 </div>
             </div>
             @productFilesEnd@
+            
+            <div class="mt-3 @php __hide('pagetemaDisp'); php@">
+                <h4>{Статьи}</h4>
+
+                <div class="pr-lg-4">
+                    @pagetemaDisp@
+                </div>
+            </div>
 
         </div>
 

@@ -189,14 +189,16 @@ function actionStart() {
     $Tab_info .= $PHPShopGUI->setField("Размещение", $tree_select);
 
     // Сетка
-    $num_row_area = $PHPShopGUI->setRadio('num_row_new', 1, 1, $data['num_row'], false, false, false, false);
-    $num_row_area .= $PHPShopGUI->setRadio('num_row_new', 2, 2, $data['num_row'], false, false, false, false);
-    $num_row_area .= $PHPShopGUI->setRadio('num_row_new', 3, 3, $data['num_row'], false, false, false, false);
-    $num_row_area .= $PHPShopGUI->setRadio('num_row_new', 4, 4, $data['num_row'], false, false, false, false);
-    $num_row_area .= $PHPShopGUI->setRadio('num_row_new', 5, 5, $data['num_row'], false, false, false, false);
-    $num_row_area .= $PHPShopGUI->setRadio('num_row_new', 6, 6, $data['num_row'], false, false, false, false);
-    $Tab_info .= $PHPShopGUI->setField("Товарная сетка в каталоге", $num_row_area, 1, 'Сетки 5 и 6 поддерживаются не всеми шаблонами');
+    $num_row_adm_value[] = array('1', 1, $data['num_row']);
+    $num_row_adm_value[] = array('2', 2, $data['num_row']);
+    $num_row_adm_value[] = array('3', 3, $data['num_row']);
+    $num_row_adm_value[] = array('4', 4, $data['num_row']);
+    $num_row_adm_value[] = array('5', 5, $data['num_row']);
+    $num_row_adm_value[] = array('6', 6, $data['num_row']);
 
+
+    $Tab_info .= $PHPShopGUI->setField("Товарная сетка в каталоге", $PHPShopGUI->setSelect('num_row_new', $num_row_adm_value, 50), 1, 'Товаров в длину 
+	  для каталогов по умолчанию. Сетки 5 и 6 поддерживаются не всеми шаблонами');
 
     $vid = $PHPShopGUI->setCheckbox('vid_new', 1, 'Не выводить внутренние подкаталоги в меню', $data['vid']) . '<br>';
     $vid .= $PHPShopGUI->setCheckbox('skin_enabled_new', 1, 'Скрыть каталог', $data['skin_enabled']) . '<br>';
@@ -205,7 +207,7 @@ function actionStart() {
     $Tab_info .= $PHPShopGUI->setField("Опции вывода", $vid);
 
     // Товаров на странице
-    $Tab_info .= $PHPShopGUI->setLine() . $PHPShopGUI->setField("Товаров на странице", $PHPShopGUI->setInputText(false, 'num_cow_new', $data['num_cow'], '100', __('шт.')), 'left');
+    $Tab_info .= $PHPShopGUI->setLine() . $PHPShopGUI->setField("Товаров на странице", $PHPShopGUI->setInputText(false, 'num_cow_new', $data['num_cow'], '100', __('шт.')));
 
     // Тип сортировки
     $order_by_value[] = array(__('по имени'), 1, $data['order_by']);
@@ -213,8 +215,9 @@ function actionStart() {
     $order_by_value[] = array(__('по складу'), 3, $data['order_by']);
     $order_to_value[] = array(__('возрастанию'), 1, $data['order_to']);
     $order_to_value[] = array(__('убыванию'), 2, $data['order_to']);
+
     $Tab_info .= $PHPShopGUI->setField("Сортировка", $PHPShopGUI->setInputText(null, "num_new", $data['num'], 100, false, 'left') . '&nbsp' .
-            $PHPShopGUI->setSelect('order_by_new', $order_by_value, 120) . $PHPShopGUI->setSelect('order_to_new', $order_to_value, 120), 'left');
+            $PHPShopGUI->setSelect('order_by_new', $order_by_value, 120) . $PHPShopGUI->setSelect('order_to_new', $order_to_value, 120). '<br>' . $PHPShopGUI->setCheckbox('order_set', 1, 'Применить сейчас ко всем каталогам', 0));
 
     // Дополнительные каталоги
     $Tab_info .= $PHPShopGUI->setField('Дополнительные каталоги', $tree_select_dop, 1, 'Подкаталоги одновременно выводятся в нескольких каталогах.');
@@ -363,7 +366,8 @@ function actionUpdate() {
             }
 
         $_POST['secure_groups_new'] = $secure;
-    }
+    } else
+        unset($_POST['secure_groups_new']);
 
     // Мультибаза
     $_POST['servers_new'] = "";
@@ -387,6 +391,12 @@ function actionUpdate() {
     if (!empty($_POST['reset_cache'])) {
         $_POST['sort_cache_new'] = '';
         $_POST['sort_cache_created_at_new'] = 0;
+    }
+    
+    // Смена сортровки у всех
+    if (!empty($_POST['order_set'])) {
+        $PHPShopOrmCat = new PHPShopOrm($GLOBALS['SysValue']['base']['categories']);
+        $PHPShopOrmCat->update(array('order_by_new' => $_POST['order_by_new'],'order_to_new' => $_POST['order_to_new']));
     }
 
     // Перехват модуля

@@ -124,7 +124,7 @@ if (is_array($orders))
         $order['Cart']['num'] = $qty;
         $order['Cart']['sum'] = $sum;
         $order['Cart']['weight'] = $weight;
-        $order['Cart']['dostavka'] = intval($order_info['total_price']['amount']/100-$sum);
+        $order['Cart']['dostavka'] = intval($order_info['total_price']['amount'] / 100 - $sum);
 
         $order['Person']['ouid'] = '';
         $order['Person']['data'] = time();
@@ -149,9 +149,9 @@ if (is_array($orders))
         $insert['orders_new'] = serialize($order);
         $insert['fio_new'] = $name;
         $insert['tel_new'] = $phone;
-        $insert['city_new'] = PHPShopString::utf8_win1251($order_info['delivery']['address'].' '.$order_info['delivery']['type'], true);
+        $insert['city_new'] = PHPShopString::utf8_win1251($order_info['delivery']['address'] . ' ' . $order_info['delivery']['type'], true);
         $insert['statusi_new'] = $VkSeller->status;
-        $insert['status_new'] = serialize(array("maneger" => __('VK заказ &#8470;' . $posting_number).', '.$pay));
+        $insert['status_new'] = serialize(array("maneger" => __('VK заказ &#8470;' . $posting_number) . ', ' . $pay));
         $insert['sum_new'] = $order['Cart']['sum'];
         $insert['vkseller_order_data_new'] = $posting_number;
 
@@ -164,6 +164,29 @@ if (is_array($orders))
             $PHPShopOrderFunction = new PHPShopOrderFunction($orderId);
             $PHPShopOrderFunction->changeStatus($insert['statusi_new'], 0);
         }
+
+        // Telegram
+        $chat_id_telegram = $PHPShopSystem->getSerilizeParam('admoption.telegram_admin');
+        if (!empty($chat_id_telegram) and $PHPShopSystem->ifSerilizeParam('admoption.telegram_order', 1)) {
+
+            PHPShopObj::loadClass('bot');
+
+            $bot = new PHPShopTelegramBot();
+            $msg = $PHPShopBase->SysValue['lang']['mail_title_adm'] . $posting_number . " - " . $product->getName() . " [" . $insert['sum_new'] . " " . $PHPShopOrderFunction->default_valuta_name . ']';
+            $bot->send($chat_id_telegram, PHPShopString::win_utf8($msg));
+        }
+
+        // VK
+        $chat_id_vk = $PHPShopSystem->getSerilizeParam('admoption.vk_admin');
+        if (!empty($chat_id_vk) and $PHPShopSystem->ifSerilizeParam('admoption.vk_order', 1)) {
+
+            PHPShopObj::loadClass('bot');
+
+            $bot = new PHPShopVKBot();
+            $msg = $PHPShopBase->SysValue['lang']['mail_title_adm'] . $posting_number . " - " . $product->getName() . " [" . $insert['sum_new'] . " " . $PHPShopOrderFunction->default_valuta_name . ']';
+            $bot->send($chat_id_vk, PHPShopString::win_utf8($msg));
+        }
+
 
         $count++;
     }

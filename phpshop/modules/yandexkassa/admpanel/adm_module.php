@@ -71,6 +71,8 @@ function actionStart() {
                 <p>Шаблон вывода информации о платёжной системе после офрмления: <code>phpshop/modules/yandexkassa/templates/payment_forma.tpl</code><br>
                 Шаблон сообщения об успешной оплате: <code>phpshop/modules/yandexkassa/templates/success_forma.tpl</code><br>
                 Шаблон сообщения об успешной оплате: <code>phpshop/modules/yandexkassa/templates/fail_forma.tpl</code></p>
+                <h4>Настройка хостинга</h4>
+                Для приема уведомлений о платежах от ЮKassa на хостинге должна быть включена функция <kbd>allow_url_fopen</kbd> в настройках PHP.
     ';
 
     $Tab2 = $PHPShopGUI->setInfo($info);

@@ -1,7 +1,7 @@
 <!-- Hero Section -->
 <div class="container space-top-1 space-top-sm-1" itemscope itemtype="http://schema.org/Product" style="max-width: 1200px;">
     <meta itemprop="image" content="@productImgBigFoto@">
-     <div itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating">
+    <div itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating">
         <meta itemprop="ratingValue" content="@productRatingValue@">
         <meta itemprop="ratingCount" content="@productRatingCount@">
     </div>
@@ -27,7 +27,7 @@
                         @productHeroSlider@
                     </div>
                     <!-- End Main Slider -->
- 
+
                     <!-- Slider Nav -->
                     <div class="row row-center position-absolute bottom-0 right-0 left-0 px-4 py-3">
                         <div id="heroSliderNav" class="js-slick-carousel slick slick-gutters-1 slick-equal-height slick-transform-off max-w-28rem mx-auto"
@@ -56,8 +56,8 @@
         <!-- Product Description -->
         <div class="col-lg-5 col-md-5">
             <div class="mb-5 mb-0">
-	        @productArt@
-	    </div>    
+                @productArt@
+            </div>    
             <!-- Rating -->
             <div class="d-flex align-items-center small mb-5">
                 <div class="rating mr-2">
@@ -88,7 +88,7 @@
                 <div class="media-body text-body small">
                     <a class="text-primary addToCompareList" data-uid="@productUid@" href="#">{В сравнение}</a>
                 </div>
-                
+
             </div>
             <!-- Конец блока Сравнить -->
 
@@ -162,7 +162,7 @@
             <div class="mb-2 @elementCartOptionHide@">
                 <button type="button" class="btn btn-block btn-primary  transition-3d-hover addToCartFull" data-num="1" data-uid="@productUid@">@flowProductSale@</button>
             </div>
-           
+
             <!-- Модуль Купить в 1 клик -->
             @oneclick@          
 
@@ -170,13 +170,13 @@
             <div class="mb-4 @php __hide('vkseller_link'); php@">
                 <a class="btn btn-block btn-soft-success  transition-3d-hover" href="@vkseller_link@" target="_blank">Купить в ВКонтакте</a>
             </div>
-            
+
             <!-- Модуль Ozonseller -->
             <div class="mb-4 @php __hide('ozonseller_link'); php@">
                 <a class="btn btn-block btn-soft-success transition-3d-hover" href="@ozonseller_link@" target="_blank">Купить в OZON</a>
             </div>
-            
-             <!-- Модуль Wbseller -->
+
+            <!-- Модуль Wbseller -->
             <div class="mb-4 @php __hide('wbseller_link'); php@">
                 <a class="btn btn-block btn-soft-success  transition-3d-hover" href="@wbseller_link@" target="_blank">Купить в Wildberries</a>
             </div>
@@ -193,7 +193,7 @@
     <div class="row">
         <div class="col-md-7 mb-6 ">
             <div class="@php __hide('productDes'); php@">
-	            <h4>{Описание}</h4>
+                <h4>{Описание}</h4>
                 <div class="pr-lg-4 small mb-3">
                     @productDes@
                 </div>
@@ -234,49 +234,58 @@
             </div>
             @productFilesEnd@
 
+            <div class="mt-3 @php __hide('pagetemaDisp'); php@">
+                <h4>{Статьи}</h4>
+
+                <div class="pr-lg-4">
+                    @pagetemaDisp@
+                </div>
+            </div>
+
+
         </div>
         <!-- End Product Description Section -->
-        
-		</div>
-    
-		<div class="w-lg-100 border-top space-2 mx-lg-auto @php __hide('productlist_list'); php@">
-			<div class="mb-3 mb-sm-5">
-				<h4>{Похожие товары}</h4> 
-			</div>
-		<!-- Slick Carousel -->
-        <div class="js-slick-carousel slick slick-gutters-3 slick-equal-height z-index-2 mx-md-auto mb-5 mb-md-9" data-hs-slick-carousel-options='{
-               "slidesToShow": 6,
-				"slidesToScroll": 3,
-	           "dots": true,
-               "dotsClass": "slick-pagination",
-               "responsive": [{
-                 "breakpoint": 1200,
-                   "settings": {
-                     "slidesToShow": 5
-                   }
-                 }, {
-                 "breakpoint": 992,
-                 "settings": {
-                   "slidesToShow": 4
-                   }
-                 }, {
-                 "breakpoint": 768,
-                 "settings": {
-                   "slidesToShow": 3
-                   }
-                 }, {
-                 "breakpoint": 554,
-                 "settings": {
-                   "slidesToShow": 2,
-	               "slidesToScroll": 2
 
-                 }
-               }]
+    </div>
+
+    <div class="w-lg-100 border-top space-2 mx-lg-auto @php __hide('productlist_list'); php@">
+        <div class="mb-3 mb-sm-5">
+            <h4>{Похожие товары}</h4> 
+        </div>
+        <!-- Slick Carousel -->
+        <div class="js-slick-carousel slick slick-gutters-3 slick-equal-height z-index-2 mx-md-auto mb-5 mb-md-9" data-hs-slick-carousel-options='{
+             "slidesToShow": 6,
+             "slidesToScroll": 3,
+             "dots": true,
+             "dotsClass": "slick-pagination",
+             "responsive": [{
+             "breakpoint": 1200,
+             "settings": {
+             "slidesToShow": 5
+             }
+             }, {
+             "breakpoint": 992,
+             "settings": {
+             "slidesToShow": 4
+             }
+             }, {
+             "breakpoint": 768,
+             "settings": {
+             "slidesToShow": 3
+             }
+             }, {
+             "breakpoint": 554,
+             "settings": {
+             "slidesToShow": 2,
+             "slidesToScroll": 2
+
+             }
+             }]
              }'>
 
-		@productlist_list@
+            @productlist_list@
         </div>
         <!-- End Slick Carousel -->
-        
+
     </div>
 </div>

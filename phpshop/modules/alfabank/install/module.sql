@@ -26,4 +26,4 @@ CREATE TABLE IF NOT EXISTS `phpshop_modules_alfabank_log` (
 INSERT INTO `phpshop_payment_systems` (`id`, `name`, `path`, `enabled`, `num`, `message`, `message_header`, `yur_data_flag`, `icon`) VALUES
 (10021, 'Оплата банковской картой (Альфабанк)', 'modules', '0', 0, '<p>Ваш заказ оплачен!</p>', 'Спасибо', '', '/UserFiles/Image/Payments/visa.png');
 
-INSERT INTO `phpshop_modules_alfabank_system` VALUES (1, '', '', 0, 0, 0, 'Заказ находится на ручной проверке.','https://pay.alfabank.ru/payment/rest/register.do','1.3');
+INSERT INTO `phpshop_modules_alfabank_system` VALUES (1, '', '', 0, 0, 0, 'Заказ находится на ручной проверке.','https://pay.alfabank.ru/payment/rest/register.do','1.4');

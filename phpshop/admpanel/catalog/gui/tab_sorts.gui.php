@@ -33,7 +33,7 @@ function tab_sorts_val($n, $sort) {
     $result = mysqli_query($link_db,$sql);
     while ($row = mysqli_fetch_array($result)) {
         $id = $row['id'];
-        $name = substr($row['name'], 0, 35);
+        $name = substr($row['name'], 0, 100);
         $sel = "";
         
         if (is_array($sort))

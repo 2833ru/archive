@@ -35,13 +35,16 @@ $PHPShopModules->doLoad();
 foreach ($GLOBALS['SysValue']['autoload'] as $val)
     if (is_file($val))
         include_once($val);
-    
+
 // Мобильные устройства
 $mobil = new Mobile_Detect();
 if ($mobil->isMobile() or $mobil->isTablet()) {
     define("isMobil", true);
-    define("isIOS", $mobil->version('iPad', $mobil::VERSION_TYPE_FLOAT) . $mobil->version('iPhone', $mobil::VERSION_TYPE_FLOAT));
-}   
+    
+    $isIOS = intval($mobil->version('iPad', $mobil::VERSION_TYPE_FLOAT) . $mobil->version('iPhone', $mobil::VERSION_TYPE_FLOAT));
+    if (!empty($isIOS) and $isIOS < 14)
+        define("isIOS", $isIOS);
+}
 
 // JS настройки
 $PHPShopCoreElement->init('setjs');

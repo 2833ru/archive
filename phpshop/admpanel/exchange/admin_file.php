@@ -2,7 +2,6 @@
 
 $TitlePage = __("Проверка изображений");
 
-
 // Стартовый вид
 function actionStart() {
     global $PHPShopInterface, $PHPShopGUI, $TitlePage, $PHPShopModules, $PHPShopSystem;
@@ -10,16 +9,16 @@ function actionStart() {
     // Исходное изображение
     $image_source = $PHPShopSystem->ifSerilizeParam('admoption.image_save_source');
     $PHPShopInterface->addJSFiles('./exchange/gui/exchange.gui.js');
-    
-     $PHPShopInterface->action_select['Удалить изображения'] = array(
+
+    $PHPShopInterface->action_select['Удалить изображения'] = array(
         'name' => 'Удалить изображения',
         'action' => 'image-clean',
         'class' => 'disabled'
     );
-    
+
     $PHPShopInterface->setActionPanel($TitlePage, array('Удалить изображения'), false);
 
-    $PHPShopInterface->setCaption(array(null, "3%"),array("Иконка", "5%", array('sort' => 'none')), array("Название товара", "35%"), array("Вывод", "10%", array('align' => 'center')), array("", "10%"),array("Отсутствующие файлы", "35%", array('align' => 'right', array('sort' => 'none'))));
+    $PHPShopInterface->setCaption(array(null, "3%"), array("Иконка", "5%", array('sort' => 'none')), array("Название товара", "35%"), array("Вывод", "10%", array('align' => 'center')), array("", "10%"), array("Отсутствующие файлы", "35%", array('align' => 'right', array('sort' => 'none'))));
 
     if (empty($_GET['limit']))
         $_GET['limit'] = '0,10000';
@@ -42,17 +41,30 @@ function actionStart() {
                 continue;
 
             $row['pic_big'] = $row['img'];
-            $row['pic_small'] = str_replace(array('.jpg', '.png','.JPG', '.PNG'), array('s.jpg', 's.png','s.jpg', 's.png'), $row['img']);
-            $row['pic_source'] = str_replace(array('.jpg', '.png','.JPG', '.PNG'), array('_big.jpg', '_big.png','_big.jpg', '_big.png'), $row['img']);
+            $row['pic_small'] = str_replace(array('.jpg', '.png', '.JPG', '.PNG'), array('s.jpg', 's.png', 's.jpg', 's.png'), $row['img']);
+            $row['pic_source'] = str_replace(array('.jpg', '.png', '.JPG', '.PNG'), array('_big.jpg', '_big.png', '_big.jpg', '_big.png'), $row['img']);
 
-            if (!file_exists('../..' . $row['pic_small']) and !strstr($row['pic_small'],'http'))
+            if (!file_exists('../..' . $row['pic_small']) and ! strstr($row['pic_small'], 'http'))
                 $error[] = $row['pic_small'];
 
-            if (!file_exists('../..' . $row['pic_big']) and !strstr($row['pic_big'],'http'))
+            if (!file_exists('../..' . $row['pic_big']) and ! strstr($row['pic_big'], 'http'))
                 $error[] = $row['pic_big'];
 
-            if (!empty($image_source) and !file_exists('../..' . $row['pic_source']) and !strstr($row['pic_source'],'http'))
+            if (!empty($image_source) and ! file_exists('../..' . $row['pic_source']) and ! strstr($row['pic_source'], 'http'))
                 $error[] = $row['pic_source'];
+
+            // Проверка по ссылке
+            if (!empty($row['pic_big']) and strstr($row['pic_big'], 'http')) {
+                $file_headers = @get_headers($row['pic_big']);
+                if ($file_headers[0] == 'HTTP/1.1 404 Not Found') {
+                    $error[] = $row['pic_big'];
+                }
+            }
+
+            // Проверка расширения
+            if (!empty($row['pic_big']) and !in_array(pathinfo($row['pic_big'])['extension'], array('gif','jpg', 'jpeg','png', 'webp','GIF', 'JPG','JPEG', 'PNG','WEBP'))) {
+                $error[] = $row['pic_big'];
+            }
 
             if (!empty($error) and is_array($error)) {
                 $file = null;
@@ -75,14 +87,14 @@ function actionStart() {
                 $enabled = '<span class="text-muted glyphicon glyphicon-eye-close" data-toggle="tooltip" data-placement="top" title="Скрыто"></span>';
                 $enabled_css = 'text-muted';
             } else {
-                $enabled =  $enabled_css = null;
+                $enabled = $enabled_css = null;
             }
 
             // YML
             if (!empty($row['yml']))
                 $uid .= '<span class="label label-success" title="Вывод в Яндекс.Маркете">Я</span>';
 
-            $PHPShopInterface->setRow($row['img_id'], array('name' => $icon, 'link' => '?path=product&return=' . $_GET['path'] . '&id=' . $row['id']), array('name' => $row['name'], 'link' => '?path=product&return=' . $_GET['path'] . '&id=' . $row['id'], 'addon' => $uid,'class'=>$enabled_css), array('name' => $enabled, 'align' => 'center'), array('action' => array('delete', 'id' => $row['img_id']), 'align' => 'center'),array('name' => $file, 'align' => 'right'));
+            $PHPShopInterface->setRow($row['img_id'], array('name' => $icon, 'link' => '?path=product&return=' . $_GET['path'] . '&id=' . $row['id']), array('name' => $row['name'], 'link' => '?path=product&return=' . $_GET['path'] . '&id=' . $row['id'], 'addon' => $uid, 'class' => $enabled_css), array('name' => $enabled, 'align' => 'center'), array('action' => array('delete', 'id' => $row['img_id']), 'align' => 'center'), array('name' => $file, 'align' => 'right'));
 
             unset($error);
         }
@@ -105,7 +117,6 @@ function actionStart() {
     $PHPShopInterface->Compile(2);
     return true;
 }
-
 
 // Обработка событий
 $PHPShopGUI->getAction();

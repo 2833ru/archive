@@ -48,7 +48,7 @@
                             <div class="">
                                 <div class="prodRatioHolder">
                                     <div id="productSlider" class="slider" data-elem="touchnswipe" data-options="appendControls:false; appendControlHolder:false">
-                                        <div class="slideHolder" data-elem="slides" data-options="preloaderUrl:@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@/images/zoomloader.gif;">
+                                        <div class="slideHolder" data-elem="slides" data-options="slideOptions:{ scaleMode:smart };preloaderUrl:@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@/images/zoomloader.gif;">
                                             @productSliderSlides@
                                         </div>
                                         <div data-elem="thumbs" class="thumbs" data-options="initShow:true; onCss:{top:0%; position:absolute; display:block; autoAlpha:1}; offCss:{top:100%; position:absolute; display:block; autoAlpha:1.0; }; visibility:fullscreen; preloaderUrl:@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@/images/zoomloader.gif;"> </div>
@@ -155,6 +155,21 @@
                         <div class="panel-body" id="files">@productFiles@</div>
                     </div>
                 </div>
+                
+                 <div class="panel @php __hide('pagetemaDisp'); php@" id="pagesTab">
+                    <div class="panel-heading">
+                        <div class="panel-title">
+                            <a class="accordion-toggle collapsed" data-toggle="collapse" data-parent="#product-page"
+                               href="#collapseSix" aria-expanded="false">
+                                {Статьи}
+                            </a>
+                        </div>
+                    </div>
+                    <div id="collapseSix" class="panel-collapse collapse">
+                        <div class="panel-body" id="pages">@pagetemaDisp@</div>
+                    </div>
+                </div>
+                
             </div>
         </div>
         <div class="col-md-5 col-lg-6" >

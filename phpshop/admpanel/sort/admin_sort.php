@@ -64,7 +64,7 @@ function actionStart() {
     $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['sort_categories']);
     //$PHPShopOrm->Option['where'] = ' or ';
     $PHPShopOrm->debug = false;
-    $data = $PHPShopOrm->select(array('*'), $where, array('order' => 'num, id desc'), array('limit' => 1000));
+    $data = $PHPShopOrm->select(array('*'), $where, array('order' => 'num, id desc'), array('limit' => 3000));
     if (is_array($data))
         foreach ($data as $row) {
 

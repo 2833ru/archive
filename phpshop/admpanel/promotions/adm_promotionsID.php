@@ -154,7 +154,7 @@ function actionStart() {
         if (is_array($status_array) && in_array($value['id'], $status_array))
             $sel = 'selected';
         else
-            $sel = false;
+            $sel = null;
         $value_user_status[] = array($value['name'], $value['id'], $sel);
     }
 

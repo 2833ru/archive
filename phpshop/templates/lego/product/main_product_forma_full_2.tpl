@@ -40,7 +40,7 @@
                             <div class="">
                                 <div class="prodRatioHolder">
                                     <div id="productSlider" class="slider" data-elem="touchnswipe" data-options="appendControls:true; appendControlHolder:true">
-                                        <div class="slideHolder" data-elem="slides" data-options="preloaderUrl:@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@/images/zoomloader.gif;">
+                                        <div class="slideHolder" data-elem="slides" data-options="slideOptions:{ scaleMode:smart };preloaderUrl:@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@/images/zoomloader.gif;">
                                             @productSliderSlides@
                                         </div>
                                         <div data-elem="thumbs" class="thumbs" data-options="initShow:true; onCss:{top:0%; position:absolute; display:block; autoAlpha:1}; offCss:{top:100%; position:absolute; display:block; autoAlpha:1.0; }; visibility:fullscreen; preloaderUrl:@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@/images/zoomloader.gif;"> </div>

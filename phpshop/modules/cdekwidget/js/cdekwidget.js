@@ -6,7 +6,7 @@ function cdekwidgetWidget() {
 
     var country = 'all';
     if(Number(PHPShopCDEKOptions.russiaOnly) === 1) {
-        country = 'Россия';
+        country = locale.cdek.country;
     }
 
     new ISDEKWidjet({

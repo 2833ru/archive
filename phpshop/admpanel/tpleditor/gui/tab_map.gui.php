@@ -27,6 +27,9 @@ function tab_map() {
     global $PHPShopGUI, $MapValue;
 
     $map_name = array(
+        'mazia' => 5,
+        'fashion' => 5,
+        'auto' => 5,
         'flow' => 5,
         'unit' => 5,
         'lego' => 5,

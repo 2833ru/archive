@@ -50,7 +50,7 @@ function actionStart() {
     
     $dev = array(
         array(__('Ничего не выбрано'), 0, $data['dev_mode']),
-        array('alfa.rbsuat.com', 'https://alfa.rbsuat.com/ab/rest/register.do', $data['dev_mode']),
+        array('alfa.rbsuat.com', 'https://alfa.rbsuat.com/payment/rest/register.do', $data['dev_mode']),
         array('tws.egopay.ru', 'https://tws.egopay.ru/api/ab/rest/register.do', $data['dev_mode']),
     );
     

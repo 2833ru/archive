@@ -163,10 +163,12 @@
             <!-- Nav tabs -->
             <ul class="nav nav-tabs" role="tablist">
                 <li role="presentation" class="active hidden-xs"><a href="#home" aria-controls="home" role="tab" data-toggle="tab">{Описание}</a></li>
-                <li role="presentation" class="hide hidden-xs" id="settingsTab"><a href="#settings" aria-controls="settings" role="tab" data-toggle="tab">{Характеристики}</a></li>
+                <li role="presentation" class="hidden-xs @php __hide('vendorDisp'); php@" id="settingsTab"><a href="#settings" aria-controls="settings" role="tab" data-toggle="tab">{Характеристики}</a></li>
                 <li role="presentation" class="hidden-xs"><a href="#messages" id="commentLoad" data-uid="@productUid@" aria-controls="messages" role="tab" data-toggle="tab">{Отзывы}</a></li>
-                <li role="presentation" id="filesTab" class="hide hidden-xs"><a href="#files" aria-controls="files" role="tab" data-toggle="tab">{Файлы}</a></li>
-                <li role="presentation" id="pagesTab" class="hide hidden-xs"><a href="#pages" aria-controls="pages" role="tab" data-toggle="tab">{Статьи}</a></li>
+                @productFilesStart@
+                <li role="presentation" id="filesTab" class="hidden-xs"><a href="#files" aria-controls="files" role="tab" data-toggle="tab">{Файлы}</a></li>
+                @productFilesEnd@
+                <li role="presentation" id="pagesTab" class="hidden-xs @php __hide('pagetemaDisp'); php@"><a href="#pages" aria-controls="pages" role="tab" data-toggle="tab">{Статьи}</a></li>
             </ul>
             <!-- Tab panes -->
             <div class="tab-content">

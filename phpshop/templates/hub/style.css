@@ -4746,3 +4746,10 @@ width: 20%;
 .filter-item-hide{
    color: #ddd;
 }
+
+@media (max-width: 767px) {
+    .modal-nowBuy{
+        left: 10px;
+        width:95%;
+    }
+}

@@ -38,6 +38,7 @@ function userorderpaymentlink_mod_alfabank_hook($obj, $PHPShopOrderFunction) {
 
         if (!empty($order_pref))
             $orderNum = $uid . '#' . $order_pref;
+        else $orderNum = $uid;
 
         $order = $PHPShopOrderFunction->unserializeParam('orders');
 
@@ -137,7 +138,7 @@ function userorderpaymentlink_mod_alfabank_hook($obj, $PHPShopOrderFunction) {
         }
 
         $array = array(
-            "customerDetails" => array("email" => $_POST["mail"]),
+            "customerDetails" => array("email" => $_SESSION['UsersMail']),
             "cartItems" => array("items" => $aItem));
 
         $orderBundle = json_encode($array);
@@ -148,17 +149,18 @@ function userorderpaymentlink_mod_alfabank_hook($obj, $PHPShopOrderFunction) {
             "password" => $option["password"],
             "orderNumber" => $orderNum,
             "amount" => $total,
-            "returnUrl" => 'http://' . $_SERVER['HTTP_HOST'] . '/success/?uid=' . $uid . '&payment=alfabank',
-            "failUrl" => 'http://' . $_SERVER['HTTP_HOST'] . '/fail/?uid=' . $uid . '&payment=alfabank',
+            "returnUrl" => 'https://' . $_SERVER['HTTP_HOST'] . '/success/?uid=' . $uid . '&payment=alfabank',
+            "failUrl" => 'https://' . $_SERVER['HTTP_HOST'] . '/fail/?uid=' . $uid . '&payment=alfabank',
             "orderBundle" => $orderBundle,
             "taxSystem" => intval($option["taxationSystem"])
         );
 
         // Режим разработки и боевой режим
-        if ($option["dev_mode"] == 0)
+        if ($option["dev_mode"] == "0")
             $url = $option["api_url"];
         else
             $url = $option["dev_mode"];
+        
 
         $rbsCurl = curl_init();
         curl_setopt_array($rbsCurl, array(
@@ -171,6 +173,9 @@ function userorderpaymentlink_mod_alfabank_hook($obj, $PHPShopOrderFunction) {
         $result = json_decode(curl_exec($rbsCurl), true);
 
         $result['orderBundle'] = $array;
+        unset($params['orderBundle']);
+        $result['params'] = $params;
+        $result['url'] = $url;
 
         curl_close($rbsCurl);
 

@@ -91,7 +91,7 @@ class PHPShopDone extends PHPShopCore {
         $last = $row['uid'];
         $all_num = explode("-", $last);
         $ferst_num = $all_num[0];
-        $order_num = $ferst_num + 1;
+        $order_num = (int)$ferst_num + 1;
 
         if (empty($_SESSION['order_prefix']))
             $_SESSION['order_prefix'] = substr(rand(1000, 99999), 0, $this->format);

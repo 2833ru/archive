@@ -5,7 +5,12 @@ session_start();
 // Включение
 $enabled = false;
 
-$_classPath = "../../../";
+if (empty($_SERVER['DOCUMENT_ROOT'])) {
+    $_classPath = realpath(dirname(__FILE__)) . "/../../../";
+    $enabled = true;
+} else
+    $_classPath = "../../../";
+
 include($_classPath . "class/obj.class.php");
 PHPShopObj::loadClass("base");
 PHPShopObj::loadClass("system");
@@ -69,6 +74,9 @@ if (is_array($data)) {
         if (empty($prod['barcode_wb']))
             $prod['barcode_wb'] = $prod['uid'];
 
+        if($prod['items'] < 0)
+            $prod['items']=0;
+        
         $stocks[] = [
             'barcode_wb' => (string) $prod['barcode_wb'],
             'uid' => (string) PHPShopString::win_utf8($prod['uid']),

@@ -708,3 +708,11 @@ width: auto;
   max-width: 100%;
   height: auto;
 }
+
+@media (max-width: 767px) {
+    .modal-nowBuy{
+        left: 10px;
+        width:95%;
+        bottom: 10px;
+    }
+}

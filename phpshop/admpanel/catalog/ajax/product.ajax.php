@@ -84,7 +84,7 @@ if (isset($_GET['cat']) or isset($_GET['sub'])) {
     }
 
     if ($_GET['sub'] === 'csv') {
-        $where['category'] = "='0'";
+        $where['category'] = "='0' or category='1000002'";
     }
 
     // Ќаправление сортировки из настроек каталога
@@ -388,6 +388,18 @@ if (is_array($data))
                 'sort' => 'price5',
                 'editable' => 'price5_new',
                 'view' => intval($memory['catalog.option']['price5'])
+            ),
+            array(
+                'name' => $row['price_n'],
+                'sort' => 'price_n',
+                'editable' => 'price_n_new',
+                'view' => intval($memory['catalog.option']['price_n'])
+            ),
+            array(
+                'name' => $row['price_purch'],
+                'sort' => 'price_purch',
+                'editable' => 'price_purch_new',
+                'view' => intval($memory['catalog.option']['price_purch'])
             ),
             array(
                 'name' => $row['items'],

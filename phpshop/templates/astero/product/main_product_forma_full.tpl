@@ -149,7 +149,7 @@
     <!-- Product Description Ends -->
 
     <!-- Additional Information Starts -->
-    <div class="product-info-box ">
+    <div class="product-info-box @php __hide('vendorDisp'); php@">
         <h4 class="heading">{Характеристики}</h4>
         <div class="content panel-smart">
             @vendorDisp@
@@ -199,16 +199,18 @@
     <!-- Reviews Information Ends -->
 
     <!-- Files Information Starts -->
-    <div class="product-info-box empty-check">
+    @productFilesStart@
+    <div class="product-info-box">
         <h4 class="heading">{Файлы}</h4>
         <div class="content panel-smart">
             @productFiles@
         </div>
     </div>
+    @productFilesEnd@
     <!-- Files Information Ends -->
 
     <!-- Articles Information Starts -->
-    <div class="product-info-box empty-check">
+    <div class="product-info-box @php __hide('pagetemaDisp'); php@">
         <h4 class="heading">{Статьи}</h4>
         <div class="content panel-smart">
             @pagetemaDisp@

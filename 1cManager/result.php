@@ -4,7 +4,7 @@
  * Автономная синхронизация номенклатуры из 1С и CML
  * @package PHPShopExchange
  * @author PHPShop Software
- * @version 3.6
+ * @version 3.7
  */
 // Авторизация
 include_once("login.php");
@@ -872,14 +872,7 @@ class ReadCsv1C extends PHPShopReadCsvNative {
             if ($this->ObjSystem->getSerilizeParam("1c_option.update_price") == 1 and ! empty($CsvToArray[7]))
                 $sql .= "price='" . $CsvToArray[7] . "', "; // цена 1
 
-
-
-
-                
-// Склад
-
-            if ($this->ObjSystem->getSerilizeParam("1c_option.update_item") == 1) {
-
+            if ($this->ObjSystem->getSerilizeParam("1c_option.update_item") == 1) { // Склад
                 // Многоскладовость
                 if (strstr($CsvToArray[6], '/')) {
                     $sql .= $this->getWarehouse($CsvToArray[6]);
@@ -887,16 +880,6 @@ class ReadCsv1C extends PHPShopReadCsvNative {
                 } else
                     $sql .= "items='" . $CsvToArray[6] . "', ";
             }
-
-            $sql .= "
-            sklad='" . $sklad . "',
-            p_enabled='" . $p_enabled . "',
-            enabled='" . $enabled . "',
-            uid='" . $CsvToArray[0] . "',
-            yml='1',
-            datas='" . time() . "',
-            vendor='" . $vendor . "',
-            vendor_array='" . $vendor_array . "',";
 
             if (!empty($CsvToArray[3]))
                 $sql .= "pic_small='" . $this->ImagePlus($CsvToArray[3]) . "_1s." . $this->ImageSrc . "',
@@ -920,13 +903,24 @@ class ReadCsv1C extends PHPShopReadCsvNative {
                     }
                 }
 
-
                 if (strstr($CsvToArray[16], "@")) {
                     $parent_array = explode("@", $CsvToArray[16]);
                     $sql .= "parent='" . $parent_array[0] . "', parent2='" . $parent_array[1] . "',";
                 } elseif ($CsvToArray[16] != "1")
                     $sql .= "parent='" . $CsvToArray[16] . "', ";
             }
+
+
+            $sql .= "
+            sklad='" . $sklad . "',
+            p_enabled='" . $p_enabled . "',
+            enabled='" . $enabled . "',
+            uid='" . $CsvToArray[0] . "',
+            yml='1',
+            datas='" . time() . "',
+            vendor='" . $vendor . "',
+            vendor_array='" . $vendor_array . "',";
+
 
             // SEO
             if ($this->seourlpro_enabled) {
