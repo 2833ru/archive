@@ -84,7 +84,7 @@ function tab_dialog() {
                     continue;
             }
 
-            $row['name'] = substr($row['name'], 0, 20);
+            $row['name'] = mb_substr($row['name'], 0, 20,$GLOBALS['PHPShopLang']->charset);
 
             if (!empty($count))
                 $badge = '<span class="badge pull-right" id="badge-' . $row['chat_id'] . '">' . $count . '</span>';

@@ -66,7 +66,6 @@
                         <li>Оформить <a href="https://www.phpshop.ru/order/?from=@server@#buy">заказ на покупку</a> постоянной лицензии PHPShop.</li>
                         <li>Оформить <a href="https://www.phpshop.ru/order/?from=@server@#showcase">заказ на покупку</a> лицензии для дополнительных витрин PHPShop.</li>
                         <li>Оформить <a href="https://www.phpshop.ru/order/?from=@server@#rent">заказ на аренду</a> лицензии PHPShop на своем хостинге</li>
-                        <li>Оформить <a href="https://www.phpshop.ru/order/?from=@server@#credit">заказ на рассрочку</a> постоянной лицензии PHPShop <span class="label label-success">New</span></li>
                         <li>Продлить <a href="https://www.phpshop.ru/order/?from=@server@">техническую поддержку</a> и получить новую лицензию для PHPShop.</li>
                         </li>
                     </ol>

@@ -1,6 +1,6 @@
 <?php
 
-$TitlePage = __('Диалог') . ' №' . $_GET['id'];
+$TitlePage = __('Диалог') . ' #' . $_GET['id'];
 $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['dialog']);
 PHPShopObj::loadClass('bot');
 

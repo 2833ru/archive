@@ -23,7 +23,7 @@ class PHPShopPartner extends PHPShopCore {
     }
 
     /**
-     * Настройка 
+     * Настройка
      */
     function system() {
         $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['partner']['partner_system']);
@@ -148,7 +148,8 @@ class PHPShopPartner extends PHPShopCore {
             if (is_array($row)) {
 
                 // Данные пользователя
-                $this->set('userName', $row['login']);
+                $this->set('userName', $row['name']);
+                $this->set('userMail', $row['login']);
                 $this->set('userPassword', base64_decode($row['password']));
 
                 if ($row['money'] > 0)
@@ -164,12 +165,48 @@ class PHPShopPartner extends PHPShopCore {
                 $Tab4 = ParseTemplateReturn($GLOBALS['SysValue']['templates']['partner']['partner_forma_enter'], true);
             }
 
+            /*
+             * Рейтинг
+             */
+            $PHPShopOrm = new PHPShopOrm();
+
+            // Интрвал
+            $stat_start = time() - 60 * 60 * 24 * $this->data['stat_day'];
+
+            $PHPShopOrm->sql = "SELECT a.partner_id, sum(a.sum) as total, count(a.id) as num, a.date, b.login, b.name FROM " . $GLOBALS['SysValue']['base']['partner']['partner_log'] . " AS a JOIN " . $GLOBALS['SysValue']['base']['partner']['partner_users'] . " AS b ON a.partner_id = b.id where a.date > " . $stat_start . " and a.enabled = '1' group by a.partner_id order by total desc limit 10";
+            $data = $PHPShopOrm->select();
+
+            $PHPShopTableRating = new PHPShopFrontInterface();
+            $PHPShopTableRating->checkbox_action = false;
+            $PHPShopTableRating->setCaption(array("Партнер", '20%'), array("Продаж", "20%"), array("Сумма (" . $this->PHPShopSystem->getDefaultValutaCode() . ')', "20%"));
+
+            $stat = 0;
+            if (is_array($data))
+                foreach ($data as $row) {
+
+                    if (empty($row['num']))
+                        continue;
+
+                    if (!empty($row['name']))
+                        $name = $row['name'];
+                    else {
+                        $name = '*****' . substr($row['login'], 5, strlen($row['login']));
+                    }
+
+                    $PHPShopTableRating->setRow($name, $row['num'], $row['total']);
+                    $stat++;
+                }
 
             // Форма закладок навигации
             $PHPShopFrontGUI = new PHPShopFrontInterface();
             $TabName = explode("|", $GLOBALS['SysValue']['lang']['partner_menu']);
+            
+            if (!empty($stat)){
+                $Tab5 = $PHPShopTableRating->frontCompile('table table-striped');
+            }
+            else $TabName[4] = null;
 
-            $Forma = $PHPShopFrontGUI->getContent($PHPShopFrontGUI->setTab(array($TabName[0], $Tab4, true), array($TabName[1], $Tab3, true), array($TabName[2], $Tab1, true), array($TabName[3], $Tab2, true)));
+            $Forma = $PHPShopFrontGUI->getContent($PHPShopFrontGUI->setTab(array($TabName[0], $Tab4, true), array($TabName[1], $Tab3, true), array($TabName[2], $Tab1, true), array($TabName[3], $Tab2, true), array($TabName[4], $Tab5, true)));
 
 
             // Подключаем шаблон
@@ -312,6 +349,7 @@ class PHPShopPartner extends PHPShopCore {
         $login = PHPShopSecurity::TotalClean($_POST['login'], 3);
         $password = PHPShopSecurity::TotalClean($_POST['password'], 2);
         $content = PHPShopSecurity::TotalClean($_POST['content'], 2);
+        $name = PHPShopSecurity::TotalClean($_POST['name']);
 
         if (PHPShopSecurity::true_email($login)) {
 
@@ -320,7 +358,8 @@ class PHPShopPartner extends PHPShopCore {
 
             $update_var = array(
                 'mail_new' => $login,
-                'content_new' => $content
+                'content_new' => $content,
+                'name_new' => $name
             );
 
             if (!empty($password))
@@ -368,6 +407,7 @@ class PHPShopPartner extends PHPShopCore {
 
         $login = $_POST['login'];
         $password = $_POST['password'];
+        $name = PHPShopSecurity::TotalClean($_POST['name']);
 
         if ($this->security()) {
             if (PHPShopSecurity::true_email($login) and PHPShopSecurity::true_passw($password)) {
@@ -377,7 +417,7 @@ class PHPShopPartner extends PHPShopCore {
 
                     $PHPShopOrm = new PHPShopOrm($this->objBase);
                     $PHPShopOrm->debug = $this->debug;
-                    $_SESSION['partnerId'] = $PHPShopOrm->insert(array('date' => date("d-m-y"), 'login' => $login, 'password' => base64_encode($password), 'enabled' => '1'), '');
+                    $_SESSION['partnerId'] = $PHPShopOrm->insert(array('date' => date("d-m-y"), 'login' => $login, 'password' => base64_encode($password), 'enabled' => '1', 'name' => $name), '');
 
                     $_SESSION['partnerName'] = $login;
 

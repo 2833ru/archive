@@ -5,7 +5,7 @@ function actionStart() {
 
     $PHPShopInterface->checkbox_action = false;
     $PHPShopInterface->setActionPanel($TitlePage, $select_name, false);
-    $PHPShopInterface->setCaption(array("№", "10%"), array("Дата", "15%"), array("Партнер ID", "10%"), array("Реферал", "30%"), array("Статус", "10%"), array("", "10%"), array("Сумма", "10%", array('align' => 'right')));
+    $PHPShopInterface->setCaption(array("№", "10%"), array("Дата", "15%"), array("Партнер ID", "10%"), array("Реферал", "30%"), array("Статус", "10%"), array("Сумма", "10%", array('align' => 'right')));
 
     // Знак рубля
     if ($PHPShopSystem->getDefaultValutaIso() == 'RUB' or $PHPShopSystem->getDefaultValutaIso() == 'RUR')
@@ -30,7 +30,7 @@ function actionStart() {
             else
                 $row['enabled'] = 'В обработке';
 
-            $PHPShopInterface->setRow(array('name' => $row['order_uid'], 'link' => '?path=order&id=' . $row['order_id'] . '&return=modules.dir.partner.log'), PHPShopDate::dataV($row['date'], true), array('name' => $row['partner_id'], 'link' => '?path=modules.dir.partner&id=' . $row['partner_id'] . '&return=modules.dir.partner'), PHPShopSecurity::TotalClean($row['path'], 2), $row['enabled'], array('action' => array('edit', '|', 'delete', 'id' => $row['id']), 'align' => 'center'), $row['sum'] . ' ' . $currency);
+            $PHPShopInterface->setRow(array('name' => $row['order_uid'], 'link' => '?path=order&id=' . $row['order_id'] . '&return=modules.dir.partner.log'), PHPShopDate::dataV($row['date'], true), array('name' => $row['partner_id'], 'link' => '?path=modules.dir.partner&id=' . $row['partner_id'] . '&return=modules.dir.partner'), PHPShopSecurity::TotalClean($row['path'], 2), $row['enabled'],  $row['sum'] . ' ' . $currency);
         }
 
     $PHPShopInterface->Compile();

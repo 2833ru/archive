@@ -23,6 +23,7 @@ function addAvitoProductTab($data) {
     }
 
     $tab .= 
+        $PHPShopGUI->setField("Производитель:", $PHPShopGUI->setInput('text', 'tiers[brand]', isset($tiers['brand']) ? $tiers['brand'] : null)) .
         $PHPShopGUI->setField("Диаметр дюймы:", $PHPShopGUI->setInput('text', 'tiers[diameter]', isset($tiers['diameter']) ? $tiers['diameter'] : null)) .
         $PHPShopGUI->setField("Ширина обода, дюймов:", $PHPShopGUI->setInput('text', 'tiers[rim-width]', isset($tiers['rim-width']) ? $tiers['rim-width'] : null)) .
         $PHPShopGUI->setField("Количество отверстий под болты:", $PHPShopGUI->setInput('text', 'tiers[rim-bolts]', isset($tiers['rim-bolts']) ? $tiers['rim-bolts'] : null)) .

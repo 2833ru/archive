@@ -108,12 +108,14 @@ function actionStart() {
                 }
                 $data[$key] = $value;
             }
+            
         // Ѕиблиотека пользователей дл€ расчета скидки
         $PHPShopUser = new PHPShopUser($user_row['id'], $user_row);
-        if ($discount = $PHPShopUser->getDiscount())
+        
+        $discount = $PHPShopUser->getDiscount();
+        if ($order['Person']['discount'] < $discount)
             $order['Person']['discount'] = $discount;
-        else
-            $order['Person']['discount'] = 0;
+        
         $data['orders'] = serialize($order);
     }
 

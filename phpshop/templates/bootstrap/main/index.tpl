@@ -222,7 +222,7 @@
                             @imageSlider@
                         <!-- Slider Section Ends -->
 
-
+                    @sortselection@
 
                     <div class="page-header">
                         <h1>@mainContentTitle@</h1>

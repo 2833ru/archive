@@ -14,7 +14,7 @@ function actionUpdate() {
     }
     $sql = "update phpshop_modules_retailcrm_system set value='" . serialize($post) . "' where code='options'";
     $action = $PHPShopOrm->query($sql);
-    header('Location: ?path=modules&install=check');
+    header('Location: ?path=modules&id=' . $_GET['id']);
     return $action;
 }
 
@@ -77,9 +77,9 @@ function actionStart() {
         }
 
         $deliveryOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['delivery']);
-        $delivery = $deliveryOrm->select(array('*'), array('is_folder' => "='0'"));
+        $delivery = $deliveryOrm->select(array('*'), array('is_folder' => "=''"));
         $deliveryOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['delivery']);
-        $pdelivery = $deliveryOrm->select(array('*'), array('is_folder' => "='1'"));
+        $pdelivery = $deliveryOrm->select(array('*'), array('is_folder' => "=''"));
 
         $parents = array();
         foreach ($pdelivery as $parent) {

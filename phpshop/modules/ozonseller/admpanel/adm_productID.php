@@ -63,9 +63,10 @@ function addOzonsellerProductTab($data) {
         }
 
     if (!empty($error))
-        $tab .= $PHPShopGUI->setField('Ошибки', $PHPShopGUI->setText($error));
+        $tab .= $PHPShopGUI->setField('Ошибки', $PHPShopGUI->setText($error,"left", false, false));
 
     $tab .= $PHPShopGUI->setField('Цена OZON', $PHPShopGUI->setInputText(null, 'price_ozon_new', $data['price_ozon'], 150, $valuta_def_name), 2);
+    $tab .= $PHPShopGUI->setField("Штрихкод", $PHPShopGUI->setInputText(null, 'barcode_ozon_new', $data['barcode_ozon'], 300));
 
 
     $PHPShopGUI->addTab(array("OZON", $tab, true));
@@ -77,6 +78,7 @@ function OzonsellerUpdate($data) {
     if (!isset($_POST['export_ozon_new']) and isset($_POST['content_new'])) {
         $_POST['export_ozon_new'] = 0;
         $_POST['export_ozon_task_id_new'] = 0;
+        $_POST['export_ozon_task_status_new'] = '';
     }
 }
 

@@ -404,7 +404,7 @@ function actionSave() {
  * @return bool
  */
 function actionUpdate() {
-    global $PHPShopModules, $PHPShopOrm;
+    global $PHPShopModules, $PHPShopOrm,$PHPShopSystem;
 
     // Данные по заказу
     $PHPShopOrm->debug = false;
@@ -452,18 +452,23 @@ function actionUpdate() {
                     $sum += $val['num'] * $val['price'];
             }
 
+        // Скидка
+        if (!$PHPShopSystem->ifSerilizeParam('admoption.auto_discount_disabled')) {
+        $discount = $PHPShopOrder->ChekDiscount($sum);
+        if ($order['Person']['discount'] > $discount)
+            $discount = $order['Person']['discount'];
+        }
+
+        $order['Person']['discount'] = $discount;
+
+        // Итого товары по акции
+        $order['Cart']['sum'] = $PHPShopOrder->returnSumma($sum_promo);
+
         // Итого товары по акции
         $order['Cart']['sum'] = $PHPShopOrder->returnSumma($sum_promo);
 
         // Итого товары без акции
         $order['Cart']['sum'] += $PHPShopOrder->returnSumma($sum, $order['Person']['discount']);
-
-        // Скидка
-        $discount = $PHPShopOrder->ChekDiscount($sum);
-        if ($order['Person']['discount'] > $discount)
-            $discount = $order['Person']['discount'];
-
-        $order['Person']['discount'] = $discount;
 
         // Сериализация данных заказа
         $_POST['orders_new'] = serialize($order);
@@ -572,7 +577,7 @@ function actionValueEdit() {
  * Экшен обновления корзины из модального окна
  */
 function actionCartUpdate() {
-    global $PHPShopModules, $PHPShopOrm;
+    global $PHPShopModules, $PHPShopOrm,$PHPShopSystem;
 
     // ИД заказа
     $orderID = intval($_REQUEST['id']);
@@ -681,6 +686,15 @@ function actionCartUpdate() {
                     $sum += $val['num'] * $val['price'];
             }
 
+        // Скидка
+        if (!$PHPShopSystem->ifSerilizeParam('admoption.auto_discount_disabled')) {
+            $discount = $PHPShopOrder->ChekDiscount($sum);
+            if ($order['Person']['discount'] > $discount)
+                $discount = $order['Person']['discount'];
+
+            $order['Person']['discount'] = $discount;
+        }
+
         // Итого товары по акции
         $order['Cart']['sum'] = $PHPShopOrder->returnSumma($sum_promo);
 
@@ -689,6 +703,9 @@ function actionCartUpdate() {
 
         $order['Cart']['num'] = $PHPShopCart->getNum();
         $order['Cart']['weight'] = $PHPShopCart->getWeight();
+
+        if (empty($order['Cart']['num']))
+            $order['Person']['discount'] = 0;
 
         if (empty($order['Cart']['delivery_free'])) {
             if (isset($deliveryCost)) {

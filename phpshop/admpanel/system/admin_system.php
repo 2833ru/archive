@@ -283,7 +283,6 @@ function actionStart() {
 
     $price = $PHPShopGUI->setField("Валюта по умолчанию", $PHPShopGUI->setSelect('dengi_new', $dengi_value)) .
             $PHPShopGUI->setField("Валюта в заказе", $PHPShopGUI->setSelect('kurs_new', $kurs_value)) .
-            //$PHPShopGUI->setField("Валюта для безнала", $PHPShopGUI->setSelect('kurs_beznal_new', $kurs_beznal_value)) .
             $PHPShopGUI->setField("Накрутка цены", $PHPShopGUI->setInputText(false, 'percent_new', $data['percent'], 100, '%')) .
             $PHPShopGUI->setField("НДС", $PHPShopGUI->setCheckbox('nds_enabled_new', 1, 'Учитывать НДС в счете', $data['nds_enabled'])) .
             $PHPShopGUI->setField("Значение НДС", $PHPShopGUI->setInputText(false, 'nds_new', $data['nds'], 100, '%')) .
@@ -296,7 +295,8 @@ function actionStart() {
     $price .= $PHPShopGUI->setField("Округление цен", $PHPShopGUI->setInputText(false, 'option[price_znak]', intval($option['price_znak']), 50), 1, 'Количество знаков после запятой в цене') .
             $PHPShopGUI->setField("Минимальная сумма заказа", $PHPShopGUI->setInputText(false, 'option[cart_minimum]', intval($option['cart_minimum']), 100)) .
             $PHPShopGUI->setField("Мультивалютные цены", $PHPShopGUI->setCheckbox('option[multi_currency_search]', 1, 'Сортировка по цене среди мультивалютных товаров', $option['multi_currency_search']), false, __('Автоматизируется через модуль Задачи')) .
-            $PHPShopGUI->setField("Подтипы", $PHPShopGUI->setCheckbox('option[parent_price_enabled]', 1, 'Отключить автоматический расчет минимальной цены главного товара', $option['parent_price_enabled']));
+            $PHPShopGUI->setField("Подтипы", $PHPShopGUI->setCheckbox('option[parent_price_enabled]', 1, 'Отключить автоматический расчет минимальной цены главного товара', $option['parent_price_enabled'])).
+            $PHPShopGUI->setField("Скидки", $PHPShopGUI->setCheckbox('option[auto_discount_disabled]', 1, 'Отключить автоматический расчет максимальной скидки при редактировании заказа', $option['auto_discount_disabled']));
 
     $PHPShopGUI->_CODE .= $PHPShopGUI->setCollapse('Настройка цен', $price);
 
@@ -381,7 +381,7 @@ function actionUpdate() {
     unset($option['support_notice']);
 
     // Корректировка пустых значений
-    $PHPShopOrm->updateZeroVars('option.user_calendar', 'option.cloud_enabled', 'option.digital_product_enabled', 'option.parent_price_enabled', 'option.user_skin', 'option.user_mail_activate', 'option.user_mail_activate_pre', 'option.user_price_activate', 'option.mail_smtp_enabled', 'option.mail_smtp_debug', 'option.multi_currency_search', 'option.mail_smtp_auth', 'option.sklad_enabled', 'option.rule_enabled', 'option.catlist_enabled', 'option.filter_cache_enabled', 'option.filter_products_count', 'option.chat_enabled', 'option.new_enabled', 'option.sklad_sum_enabled','option.user_servers_control','option.user_phone_mask_enabled','option.user_items_activate','option.ajax_scroll','option.ajax_scroll_paginator','option.fast_view');
+    $PHPShopOrm->updateZeroVars('option.user_calendar', 'option.cloud_enabled', 'option.digital_product_enabled', 'option.parent_price_enabled', 'option.user_skin', 'option.user_mail_activate', 'option.user_mail_activate_pre', 'option.user_price_activate', 'option.mail_smtp_enabled', 'option.mail_smtp_debug', 'option.multi_currency_search', 'option.mail_smtp_auth', 'option.sklad_enabled', 'option.rule_enabled', 'option.catlist_enabled', 'option.filter_cache_enabled', 'option.filter_products_count', 'option.chat_enabled', 'option.new_enabled', 'option.sklad_sum_enabled','option.user_servers_control','option.user_phone_mask_enabled','option.user_items_activate','option.ajax_scroll','option.ajax_scroll_paginator','option.fast_view','option.auto_discount_disabled');
 
     if (is_array($_POST['option']))
         foreach ($_POST['option'] as $key => $val)

@@ -1,8 +1,9 @@
 <?php
+
 /**
  * Библиотека работы с Ozon Seller API
  * @author PHPShop Software
- * @version 1.0
+ * @version 1.1
  * @package PHPShopModules
  * @todo https://docs.ozon.ru/api/seller/#tag/Environment
  */
@@ -245,22 +246,32 @@ class OzonSeller {
                     $arrayVendorValue[$row['category']]['id'][] = $row['id'];
                 }
 
-                //print_r($arrayVendor);
+                // Название товара
+                $list[] = [
+                    'id' =>4180,
+                    'values' => [0=>['value'=>PHPShopString::win_utf8($product['name'])]],
+                ];
+                
+                // Описание
+                $list[] = [
+                    'id' =>4191,
+                    'values' => [0=>['value'=>PHPShopString::win_utf8(strip_tags($product['description'],'<br><ul><li>'))]],
+                ];
 
                 if (is_array($arrayVendor))
                     foreach ($arrayVendor as $idCategory => $value) {
-                        $values = [];
 
+                        /*
                         if (strstr($value['name'], 'Название')) {
                             $values[] = [
                                 'value' => PHPShopString::win_utf8($product['name']),
                             ];
-                        }
+                        }*/
 
                         if (!empty($arrayVendorValue[$idCategory]['name'])) {
                             if (!empty($value['name'])) {
-
-
+                                
+                                $values = [];
 
                                 $arr = [];
                                 foreach ($arrayVendorValue[$idCategory]['id'] as $valueId) {
@@ -366,13 +377,12 @@ class OzonSeller {
 
     public function sendProducts($products = [], $params = []) {
 
-
         if (is_array($products)) {
             foreach ($products as $prod) {
 
                 // price columns
                 $price = $prod['price'];
- 
+
                 if (!empty($prod['price_ozon'])) {
                     $price = $prod['price_ozon'];
                 } elseif (!empty($prod['price' . (int) $this->price])) {
@@ -389,7 +399,7 @@ class OzonSeller {
 
                 $params['items'][] = [
                     "attributes" => $this->getAttributes($prod)['attributes'],
-                    "barcode" => $prod['uid'],
+                    "barcode" => $prod['barcode_ozon'],
                     "category_id" => $this->getAttributes($prod)['category'],
                     "color_image" => "",
                     "complex_attributes" => [],
@@ -416,6 +426,7 @@ class OzonSeller {
 
             // Лог JSON
             //$this->log_json(json_encode($params), 0, 'sendProducts');
+            
             // Журнал
             $log['params'] = $params;
             $log['result'] = $result;

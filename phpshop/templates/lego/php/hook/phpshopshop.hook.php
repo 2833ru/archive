@@ -403,7 +403,7 @@ function template_image_gallery($obj, $array) {
     $obj->set('productSliderSlides', $slides);
     $obj->set('productSliderThumbs', $thumbs);
     $obj->set('productSliderControls', $controls);
-    $obj->set('productSliderOneImage', sprintf('<img class="one-image-slider" data-src="%s" alt="%s" title="%s"/>', !empty($array['pic_big']) ? $array['pic_big'] : $data[0]['name'], $productTitle, $productTitle));
+    $obj->set('productSliderOneImage', sprintf('<img class="one-image-slider" src="%s" alt="%s" title="%s"/>', !empty($array['pic_big']) ? $array['pic_big'] : $data[0]['name'], $productTitle, $productTitle));
 
     return true;
 }

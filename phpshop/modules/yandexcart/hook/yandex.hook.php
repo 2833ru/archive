@@ -169,13 +169,16 @@ function setProducts_yandexcart_hook($obj, $data) {
         $add.='<market-sku>' . $data['val']['market_sku'] . '</market-sku>';
 
     // shop-sku, count, cpa
-    if (isset($obj->yandex_module_options['model']) && $obj->yandex_module_options['model'] === 'DBS') {
-        $add .= '<count>' . $data['val']['items'] . '</count>';
+    if ($obj->yandex_module_options['model'] === 'FBS') {
         $add.='<shop-sku>' . $data['val']['id'] . '</shop-sku>';
         if((int) $data['val']['cpa'] !== 2) {
             $add.= '<cpa>' . $data['val']['cpa'] . '</cpa>';
         }
     }
+    
+    if($obj->yandex_module_options['model'] === 'FBS' or $obj->yandex_module_options['model'] === 'DBS')
+       $add .= '<count>' . $data['val']['items'] . '</count>';
+    
 
     // Компания, которая произвела товар
     if (!empty($data['val']['manufacturer']))

@@ -109,12 +109,12 @@ function actionStart() {
     global $PHPShopGUI, $TitlePage, $PHPShopSystem, $selectModalBody;
 
     $PHPShopGUI->addJSFiles('./js/jquery.waypoints.min.js', './js/jquery.treegrid.js', './tpleditor/gui/tpleditor.gui.js', './tpleditor/gui/ace/ace.js', './js/bootstrap-tour.min.js');
-    
+
     if ($GLOBALS['PHPShopBase']->codBase == 'utf-8')
         $PHPShopGUI->addJSFiles('./tpleditor/gui/tour_utf.gui.js');
     else
         $PHPShopGUI->addJSFiles('./tpleditor/gui/tour.gui.js');
-    
+
     $ace = false;
 
     if (empty($_GET['option']) or $_GET['option'] == 'lite') {
@@ -186,9 +186,9 @@ function actionStart() {
             $content = null;
         }
     }
-    
-    if(empty($_GET['mod']))
-        $_GET['mod']=true;
+
+    if (empty($_GET['mod']))
+        $_GET['mod'] = true;
 
     switch ($_GET['mod']) {
         case 'html':
@@ -431,13 +431,14 @@ function actionLoad() {
                 // Попытка изменить атрибуты
                 @chmod($_classPath . "templates", 0775);
 
-                // Библиотека ZIP
-                include($_classPath . "lib/zip/pclzip.lib.php");
-                $archive = new PclZip($zip);
-                if ($archive->extract(PCLZIP_OPT_PATH, $_classPath . "templates/")) {
+                $archive = new ZipArchive;
+                $archive->open($zip);
+
+                if ($archive->extractTo($_classPath . "templates/")) {
 
                     unlink($zip);
-
+                    $archive->close();
+                    
                     // Выключаем таймер
                     $time = explode(' ', microtime());
                     $seconds = ($time[1] + $time[0] - $start_time);

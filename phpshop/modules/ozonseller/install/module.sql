@@ -8,11 +8,12 @@ CREATE TABLE IF NOT EXISTS `phpshop_modules_ozonseller_system` (
 `fee` int(11) NOT NULL,
 `password` varchar(64),
 `fee_type` enum('1','2') NOT NULL default '1',
+`warehouse` varchar(64) default 'Основной',
 `version` varchar(64) DEFAULT '1.0',
 PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
 
-INSERT INTO `phpshop_modules_ozonseller_system` VALUES (1, '', '', '',1,0,'','1','1.0');
+INSERT INTO `phpshop_modules_ozonseller_system` VALUES (1, '', '', '',1,0,'','1','Основной','1.1');
 
 CREATE TABLE IF NOT EXISTS `phpshop_modules_ozonseller_log` (
 `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -39,3 +40,4 @@ ALTER TABLE `phpshop_products` ADD `export_ozon` enum('0','1') DEFAULT '0';
 ALTER TABLE `phpshop_products` ADD `export_ozon_task_id` int(11) DEFAULT 0;
 ALTER TABLE `phpshop_products` ADD `price_ozon` float DEFAULT '0';
 ALTER TABLE `phpshop_products` ADD `export_ozon_task_status` varchar(64) default '';
+ALTER TABLE `phpshop_products` ADD `barcode_ozon` varchar(255) DEFAULT '';

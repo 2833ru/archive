@@ -29,7 +29,7 @@ function actionStart() {
     // Интструкция
     $info='<h4>Регистрация в АТОЛ Онлайн</h4>
         <ol>
-        <li>Зарегистрироваться на сервисе <a href="https://online.atol.ru/?from=phpshop" target="_blank">АТОЛ Онлайн</a>.
+        <li>Зарегистрироваться на сервисе <a href="https://online.atol.ru/lk/Account/Register?partnerUid=deb4b494-75b2-423e-9af0-6b32df3c67a3" target="_blank">АТОЛ Онлайн</a>.
         <li>Пройти процедуру регистрации кассы по официальной инструкции <a href="http://www.phpshop.ru/UserFiles/File/atol.pdf" target="_blank">Atol.pdf</a>
         <li>Добавить новый магазин <b>'.$_SERVER['SERVER_NAME'].'</b> в список подключенных магазинов к кассе и получить параметры доступа к кассе.
         </ol>

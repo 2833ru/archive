@@ -4,6 +4,9 @@
         <input type="email"  placeholder="E-mail" name="login" value="@php echo $_POST['login']; php@" class="form-control" required="" >
     </div>
     <div class="form-group">
+        <input type="text"  placeholder="{Имя}" name="name" value="@php echo $_POST['name']; php@" class="form-control" required="" >
+    </div>
+    <div class="form-group">
         <input placeholder="{Пароль}" type="password" name="password"  class="form-control"  required="" >
     </div>
     <div>

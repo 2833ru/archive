@@ -11,7 +11,6 @@ function actionBaseUpdate() {
     $new_version = $PHPShopModules->getUpdate($option['version']);
     $PHPShopOrm->clean();
     $action = $PHPShopOrm->update(array('version_new' => $new_version));
-    return $action;
 }
 
 // Функция обновления
@@ -56,15 +55,17 @@ function actionStart() {
     $Tab1 = $PHPShopGUI->setField('Логика учета', $PHPShopGUI->setCheckbox('enabled_new', 1, 'Учет рефералов партнеров', $data['enabled']));
     
     $Tab1.=$PHPShopGUI->setField('Начисление партнерам', $PHPShopGUI->setInputText('%', 'percent_new', $data['percent'], '150', 'от заказа'));
+    $Tab1.=$PHPShopGUI->setField('Хранение cookies', $PHPShopGUI->setInputText(null, 'cookies_day_new', $data['cookies_day'], '150', 'дней'));
+    $Tab1.=$PHPShopGUI->setField('Рейтинг', $PHPShopGUI->setInputText(null, 'stat_day_new', $data['stat_day'], '150', 'дней'));
     $Tab1.=$PHPShopGUI->setField('Статус заказа выплаты',getStatus($data['order_status']));
     $Info = 'Страница входа в партнерский раздел находится по адресу: <a href="../../partner/" target="_blank">http://' . $_SERVER['SERVER_NAME'] . '/partner/</a>. Необходимо на своем сайте добавить эту ссылку для пользователей.
-        <p>
-Правила регистрации в партнерской программе доступны по ссылке
+        <p>Правила регистрации в партнерской программе доступны по ссылке
         <a href="../../rulepartner/" target="_blank">http://' . $_SERVER['SERVER_NAME'] . '/rulepartner/</a>.
      <p>
      Шаблоны оформления находятся в папке <code>/phpshop/modules/partner/templates/</code><br>
      Языковой файл по адресу <code>/phpshop/modules/partner/inc/config.ini</code> в блоке <kbd>[lang]</kbd>
      </p>
+     <p>Для обновления статусов заказов из <kbd>CSV</kbd> файла по <kbd>URL</kbd> с учетом начисления вознаграждения нужно использовать файл обработчик для модуля "Задачи" по адресу: <code>phpshop/modules/partner/cron/status.php</code></p>
      ';
 
     // Редактор 
@@ -76,13 +77,13 @@ function actionStart() {
     $Tab4=$PHPShopGUI->setInfo($Info);
 
     // Содержание закладки 2
-    $Tab2 = $PHPShopGUI->setPay($data['serial'], false, $data['version'], false);
+    $Tab2 = $PHPShopGUI->setPay($data['serial'], false, $data['version'], true);
 
     $Tab3 = $oFCKeditor->AddGUI();
 
 
     // Вывод формы закладки
-    $PHPShopGUI->setTab(array("Описание", $Tab1,true), array("Текст правила участия", $Tab3), array("Инструкция", $Tab4), array("О Модуле", $Tab2));
+    $PHPShopGUI->setTab(array("Настройки", $Tab1,true), array("Текст правила участия", $Tab3), array("Инструкция", $Tab4), array("О Модуле", $Tab2));
 
     // Вывод кнопок сохранить и выход в футер
     $ContentFooter =
@@ -97,7 +98,7 @@ function actionStart() {
 $PHPShopGUI->getAction();
 
 // Вывод формы при старте
-$PHPShopGUI->setLoader($_POST['saveID'], 'actionStart');
+$PHPShopGUI->setLoader($_POST['editID'], 'actionStart');
 ?>
 
 

@@ -325,7 +325,7 @@ function actionStart() {
 
     $tree = '<table class="table table-hover">
         <tr class="treegrid-all">
-           <td><a href="?path=modules" class="treegrid-parent" data-parent="treegrid-all">' . __('Все модули') . '</a> <span class="label label-primary pull-right">103</span></td>
+           <td><a href="?path=modules" class="treegrid-parent" data-parent="treegrid-all">' . __('Все модули') . '</a> <span class="label label-primary pull-right">104</span></td>
 	</tr>
         <tr class="treegrid-template">
            <td><a href="?path=modules&cat=pro" class="treegrid-parent" data-parent="treegrid-template">' . __('Pro') . '</a> <span class="label label-primary pull-right">12</span></td>
@@ -358,7 +358,7 @@ function actionStart() {
            <td><a href="?path=modules&cat=yandex" class="treegrid-parent" data-parent="treegrid-yandex">' . __('Яндекс') . '</a> <span class="label label-primary pull-right">4</span></td>
 	</tr>
         <tr class="treegrid-sale">
-           <td><a href="?path=modules&cat=sale" class="treegrid-parent" data-parent="treegrid-sale5">' . __('Продажи') . '</a> <span class="label label-primary pull-right">17</span></td>
+           <td><a href="?path=modules&cat=sale" class="treegrid-parent" data-parent="treegrid-sale5">' . __('Продажи') . '</a> <span class="label label-primary pull-right">18</span></td>
 	</tr>
         <tr class="treegrid-develop">
            <td><a href="?path=modules&cat=develop" class="treegrid-parent" data-parent="treegrid-develop">' . __('Разработчикам') . '</a> <span class="label label-primary pull-right">15</span></td>

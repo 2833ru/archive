@@ -32,7 +32,7 @@ a, .btn, button {transition:all 0.3s}
 
 .navbar.no-margin {border:none}
 
-a:hover, a:focus{opacity:0.6; 
+a:focus{opacity:0.6; 
                  text-decoration:none!important;
 }
 

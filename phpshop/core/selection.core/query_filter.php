@@ -3,10 +3,10 @@
 /**
  * Cортировка товаров по бренду
  * @author PHPShop Software
- * @version 1.4
+ * @version 1.5
  * @package PHPShopCoreFunction
  * @param obj $obj объект класса
- * @return mixed
+ * @return mixeС
  */
 function query_filter($obj) {
     global $SysValue;
@@ -33,23 +33,40 @@ function query_filter($obj) {
     $num_row = $obj->num_row;
     $num_ot = 0;
     $q = 0;
-    $sort =  $sortQuery = null;
+    $sort = $sortQuery = null;
 
+    // Логика поиска
+    $filter_logic = (int) $obj->PHPShopSystem->getSerilizeParam('admoption.filter_logic');
+    if (empty($filter_logic))
+        $filter_sort = 'and';
+    else
+        $filter_sort = 'or';
 
     // Сортировка по характеристикам
     if (is_array($v)) {
-        $sort.= ' and (';
+        $sort .= ' and (';
         foreach ($v as $key => $value) {
 
+            // Множественный отбор [][]
+            if (is_array($value)) {
+                foreach ($value as $v) {
+                    if (PHPShopSecurity::true_num($key) and PHPShopSecurity::true_num($v)) {
+                        $hash = $key . "-" . $v;
+                        $sort .= " vendor REGEXP 'i" . $hash . "i' " . $filter_sort;
+                        $sortQuery .= "&v[$key][]=$value";
+                    }
+                }
+            }
+
             // Обычный отбор []
-            if (PHPShopSecurity::true_num($key) and PHPShopSecurity::true_num($value)) {
+            elseif (PHPShopSecurity::true_num($key) and PHPShopSecurity::true_num($value)) {
                 $hash = $key . "-" . $value;
-                $sort.=" vendor REGEXP 'i" . $hash . "i' or";
+                $sort .= " vendor REGEXP 'i" . $hash . "i' ".$filter_sort;
                 $sortQuery .= "&v[$key]=$value";
             }
         }
-        $sort = substr($sort, 0, strlen($sort) - 2);
-        $sort.=")";
+        $sort = substr($sort, 0, strlen($sort) - strlen($filter_sort));
+        $sort .= ")";
     }
 
 
@@ -79,8 +96,7 @@ function query_filter($obj) {
     // Все страницы
     if ($p == "all") {
         $sql = "select * from " . $SysValue['base']['products'] . " where enabled='1' and parent_enabled='0' $sort  $string";
-    }
-    else
+    } else
         while ($q < $p) {
 
             $sql = "select * from " . $SysValue['base']['products'] . " where enabled='1' and parent_enabled='0' $sort  $string LIMIT $num_ot, $num_row";
@@ -93,7 +109,6 @@ function query_filter($obj) {
         'sortV' => $sort
     );
 
-    // Возвращаем SQL запрос
     return $sql;
 }
 

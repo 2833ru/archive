@@ -1867,7 +1867,7 @@ $(document).ready(function () {
             if (parent_img != "") {
 
                 $(".bx-pager img").each(function (index, el) {
-                    if ($(this).attr('src') == parent_img) {
+                    if ($(this).attr('src') == parent_img || $(this).attr('src') == parent_img.split('.jpg').join('s.jpg') ) {
                         slider.goToSlide(index);
                     }
 

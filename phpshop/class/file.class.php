@@ -66,7 +66,15 @@ class PHPShopFile {
      * @return bool
      */
     static function readCsv($file, $function, $delim = ';') {
-        $fp = @fopen($file, "r");
+
+        $opts = array(
+            "ssl" => array(
+                "verify_peer" => false,
+                "verify_peer_name" => false,
+            ),
+        );
+
+        $fp = @fopen($file, "r", false, stream_context_create($opts));
         if ($fp) {
             while (($data = @fgetcsv($fp, 0, $delim)) !== FALSE) {
                 call_user_func($function, $data);
@@ -101,7 +109,7 @@ class PHPShopFile {
     static function readCsvGenerators($file, $function, $delim = ';', $limit = array(0, 500)) {
 
         foreach (self::getLines($file, $delim) as $n => $line) {
-             if ($n==0 or ($limit[0] <= $n and $n < $limit[1]))
+            if ($n == 0 or ( $limit[0] <= $n and $n < $limit[1]))
                 call_user_func($function, $line);
             else
                 continue;

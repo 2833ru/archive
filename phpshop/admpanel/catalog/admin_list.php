@@ -50,7 +50,7 @@ function actionStart() {
 
 
     $PHPShopInterface->_CODE .= '   
-    <div class="row">
+    <div class="row intro-row">
        <div class="col-md-3 col-xs-6 col-panel">
           <div class="panel panel-default">
              <div class="panel-heading"><span class="glyphicon glyphicon-eye-open"></span> ' . __('Видимые каталоги') . '</div>
@@ -86,7 +86,7 @@ function actionStart() {
    </div>';
     
         $PHPShopInterface->_CODE .= '   
-    <div class="row">
+    <div class="row intro-row">
        <div class="col-md-3 col-xs-6 col-panel">
           <div class="panel panel-default">
              <div class="panel-heading"><span class="glyphicon glyphicon-thumbs-up"></span> ' . __('Акционные товары') . '</div>

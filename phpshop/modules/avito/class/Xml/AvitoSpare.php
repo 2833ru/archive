@@ -29,6 +29,9 @@ class AvitoSpare extends BaseAvitoXml implements AvitoPriceInterface
         $xml .= sprintf('<Price>%s</Price>', $product['price']);
         $xml .= sprintf('<Condition>%s</Condition>', $product['condition']);
         $xml .= sprintf('<OEM>%s</OEM>', $product['oem']);
+        if(isset($tier['brand']) && !empty($tier['brand'])) {
+            $xml .= sprintf('<Brand>%s</Brand>', PHPShopString::win_utf8($tier['brand']));
+        }
         if(isset($tier['diameter']) && !empty($tier['diameter'])) {
             $xml .= sprintf('<RimDiameter>%s</RimDiameter>', $tier['diameter']);
         }
@@ -45,7 +48,7 @@ class AvitoSpare extends BaseAvitoXml implements AvitoPriceInterface
             $xml .= sprintf('<TireSectionWidth>%s</TireSectionWidth>', $tier['tire-section-width']);
         }
         if(isset($tier['tire-aspect-ratio']) && !empty($tier['tire-aspect-ratio'])) {
-            $xml .= sprintf('<TireAspectRatio>%s</TireAspectRatio>', $tier['tire-aspect-ratio']);
+            $xml .= sprintf('<TireAspectRatio>%s</TireAspectRatio>', PHPShopString::win_utf8($tier['tire-aspect-ratio']));
         }
         if(isset($tier['rim-width']) && !empty($tier['rim-width'])) {
             $xml .= sprintf('<RimWidth>%s</RimWidth>', $tier['rim-width']);

@@ -5,10 +5,16 @@
             <span class="btn btn-default"> @userMoney@</span>
         </div>
     </div>
+     <div class="form-group">
+        <label class="col-xs-12 col-sm-2 control-label">{Èìÿ}</label>
+        <div class="col-xs-8 col-md-4">
+            <input type="text" class="form-control" name="name" value="@userName@" required="">
+        </div>
+    </div>
     <div class="form-group">
         <label class="col-xs-12 col-sm-2 control-label">Email</label>
         <div class="col-xs-8 col-md-4">
-            <input type="email" class="form-control" name="login" value="@userName@" required="">
+            <input type="email" class="form-control" name="login" value="@userMail@" required="">
         </div>
     </div>
     <div class="form-group">

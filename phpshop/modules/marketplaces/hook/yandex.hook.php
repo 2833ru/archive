@@ -196,7 +196,7 @@ function setProducts_marketplaces_hook($obj, $data) {
     }
 
     if (Marketplaces::isAliexpress()) {
-        $add .= '<count>' . $data['val']['items'] . '</count>';
+        $add .= '<quantity>' . $data['val']['items'] . '</quantity>';
         if(!empty($data['val']['uid'])) {
             $add .= '<sku_code>' . $data['val']['uid'] . '</sku_code>';
         }

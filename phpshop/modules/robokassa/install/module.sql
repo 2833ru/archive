@@ -1,5 +1,3 @@
-
-
 DROP TABLE IF EXISTS `phpshop_modules_robokassa_system`;
 CREATE TABLE IF NOT EXISTS `phpshop_modules_robokassa_system` (
   `id` int(11) NOT NULL auto_increment,
@@ -9,15 +7,15 @@ CREATE TABLE IF NOT EXISTS `phpshop_modules_robokassa_system` (
   `merchant_login` varchar(64) NOT NULL default '',
   `merchant_key` varchar(64) NOT NULL default '',
   `merchant_skey` varchar(64) NOT NULL default '',
-  `version` varchar(64) DEFAULT '1.2',
+  `dev_mode` enum ('0','1') default '0',
+  `version` varchar(64) DEFAULT '1.3',
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
 
-
-INSERT INTO `phpshop_modules_robokassa_system` VALUES (1,0,'Оплатить заказ','Заказ находится на ручной проверке.','','','','1.2');
+INSERT INTO `phpshop_modules_robokassa_system` (`id`, `status`, `title`, `title_sub`, `merchant_login`, `merchant_key`, `merchant_skey`, `version`, `dev_mode`) VALUES (1, 0, 'Оплатить заказ', 'Заказ находится на ручной проверке.', 'phpshop-test', 'GVLmxkec34f90GSdraZ0', 'eBQ8rxUXwbg6Al361uKE', '1.3', '1');
 
 INSERT INTO `phpshop_payment_systems` (`id`, `name`, `path`, `enabled`, `num`, `message`, `message_header`, `yur_data_flag`, `icon`) VALUES
-(10020, 'Visa, Mastercard, Yandex, Webmoney (Robokassa)', 'modules', '0', 0, '<p>Ваш заказ оплачен!</p>', 'Спасибо', '', '/UserFiles/Image/Payments/visa.png');
+(10020, 'Visa, Mastercard, МИР, ЯPay (Robokassa)', 'modules', '0', 0, '<p>Ваш заказ оплачен!</p>', 'Спасибо', '', '/UserFiles/Image/Payments/visa.png');
 
 CREATE TABLE IF NOT EXISTS `phpshop_modules_robokassa_log` (
   `id` int(11) NOT NULL AUTO_INCREMENT,

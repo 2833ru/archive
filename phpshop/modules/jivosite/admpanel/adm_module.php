@@ -34,6 +34,8 @@ function actionUpdate() {
             curl_setopt($curl, CURLOPT_URL, $path);
             curl_setopt($curl, CURLOPT_RETURNTRANSFER,true);
             curl_setopt($curl, CURLOPT_POST, true);
+            curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+            curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
             curl_setopt($curl, CURLOPT_POSTFIELDS, $content);
             $responce = curl_exec($curl);
             curl_close($curl);

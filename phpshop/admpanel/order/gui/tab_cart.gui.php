@@ -129,7 +129,7 @@ function tab_cart($data, $option = false) {
     $total .= '<tr>
       <td>' . __('Скидка') . ':</td>
       <td class="text-right">
-      ' . $PERSON['discount'] . '%
+      ' . (int)$PERSON['discount'] . ' %
       </td>
       </tr>
       <tr>

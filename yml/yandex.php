@@ -3,9 +3,9 @@
 /**
  * Файл выгрузки для Яндекс Маркет
  * @author PHPShop Software
- * @version 3.4
+ * @version 3.5
  * @package PHPShopXML
- * @example ?marketplace=retailcrm [bool] Выгрузка для RetailCRM
+ * @example ?retailcrm [bool] Выгрузка для RetailCRM
  * @example ?marketplace=cdek [bool] Выгрузка для СДЭК (упрощенный тип YML с использованием count)
  * @example ?marketplace=aliexpress [bool] Выгрузка для AliExpress (товары отмеченные для AliExpress)
  * @example ?marketplace=sbermarket [bool] Выгрузка для СберМаркет (товары отмеченные для СберМаркет)
@@ -537,10 +537,10 @@ class PHPShopYml {
             "picture" => htmlspecialchars($row['pic_big']),
             "price" => $price,
             "oldprice" => $oldprice,
-            "weight" => $parent_array['weight'],
-            "length" => $parent_array['length'],
-            "width" => $parent_array['width'],
-            "height" => $parent_array['height'],
+            "weight" => $row['weight'],
+            "length" => $row['length'],
+            "width" => $row['width'],
+            "height" => $row['height'],
             "p_enabled" => $parent_array['p_enabled'],
             "yml_bid_array" => $parent_array['yml_bid_array'],
             "uid" => $uid,
@@ -761,7 +761,7 @@ function setProducts() {
 
         $retailQuantity = '';
         if (isset($_GET['retailcrm'])) {
-            $retailQuantity = sprintf('quantity="%s"', $val['items']);
+            $retailQuantity = sprintf(' quantity="%s"', $val['items']);
         }
 
         $xml = '

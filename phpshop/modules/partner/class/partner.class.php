@@ -1,8 +1,5 @@
 <?php
 
-if (!defined("OBJENABLED"))
-    exit(header('Location: /?error=OBJENABLED'));
-
 class PHPShopPartnerOrder {
 
     var $option = null;
@@ -46,19 +43,22 @@ class PHPShopPartnerOrder {
      * Начисляем бонус партнеру
      */
     function addBonus($orderId, $money) {
-        
-        $PHPShopOrm = new PHPShopOrm($this->objBase);
-        $data = $PHPShopOrm->getOne(array('partner_id'),array('order_id'=>'='.$orderId,'enabled'=>"='0'"));
-        $partner = $data['partner_id'];
-        
-        $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['partner']['partner_users']);
-        $PHPShopOrm->debug = $this->debug;
-        $data = $PHPShopOrm->getOne(array('money'),array('id'=>'='.$partner));
-        
-        $bonus=$money*$this->option['percent']/100;
 
-        // Обновляем баланс партнера
-        $PHPShopOrm->update(array('money_new' => intval($bonus+$data['money'])), array('id' => '="' . $partner . '"'));
+        $PHPShopOrm = new PHPShopOrm($this->objBase);
+        $data = $PHPShopOrm->getOne(array('partner_id'), array('order_id' => '=' . $orderId, 'enabled' => "='0'"));
+        $partner = $data['partner_id'];
+
+
+        if (!empty($partner)) {
+            $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['partner']['partner_users']);
+            $PHPShopOrm->debug = $this->debug;
+            $data = $PHPShopOrm->getOne(array('money'), array('id' => '=' . $partner));
+
+            $bonus = $money * $this->option['percent'] / 100;
+
+            // Обновляем баланс партнера
+            $PHPShopOrm->update(array('money_new' => intval($bonus + $data['money'])), array('id' => '="' . $partner . '"'));
+        }
     }
 
     /**
@@ -80,9 +80,9 @@ class PHPShopPartnerOrder {
      * Запись ID партнера
      */
     function setPartner($partner) {
-        $_SESSION['partner_id'] =$partner;
+        $_SESSION['partner_id'] = $partner;
         $_SESSION['partner_path'] = $_SERVER["HTTP_REFERER"];
-        setcookie("ps_partner", $partner, time() + 60 * 60 * 24 * 90, "/", $_SERVER['SERVER_NAME'], 0);
+        setcookie("ps_partner", $partner, time() + 60 * 60 * 24 * $this->option['cookies_day'], "/", $_SERVER['SERVER_NAME'], 0);
     }
 
 }

@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="windows-1251"?>
 <module>
     <version>1.2</version>
-    <name>Ozon Rocket</name>
-    <description>Виджет расчета доставки Ozon Rocket</description>
+    <name>OZON Rocket</name>
+    <description>Виджет расчета доставки OZON Rocket</description>
     <category>delivery</category>
     <sign>1649154724</sign>
     <status>Hit</status>
     <faqlink>https://docs.phpshop.ru/moduli/dostavka/ozon-rocket</faqlink>
     <adminmenu>
-        <title>Ozon Rocket</title>
+        <title>OZON Rocket</title>
         <capability>true</capability>
         <podmenu>
             <podmenu_name>Журнал операций</podmenu_name>

@@ -161,7 +161,8 @@ function actionStart() {
     $Tab3= $PHPShopGUI->setCollapse('Настройка цен',
         $PHPShopGUI->setField('Колонка цен OZON', $PHPShopGUI->setSelect('price_new', $PHPShopGUI->setSelectValue($data['price'], 5), 100)) .
         $PHPShopGUI->setField('Наценка', $PHPShopGUI->setInputText($status_pre, 'fee_new', $data['fee'], 100, '%')).
-        $PHPShopGUI->setField('Действие', $PHPShopGUI->setRadio("fee_type_new", 1, "Понижение", $data['fee_type']) . $PHPShopGUI->setRadio("fee_type_new", 2, "Повышение", $data['fee_type'])) 
+        $PHPShopGUI->setField('Действие', $PHPShopGUI->setRadio("fee_type_new", 1, "Понижение", $data['fee_type']) . $PHPShopGUI->setRadio("fee_type_new", 2, "Повышение", $data['fee_type'])).
+        $PHPShopGUI->setField("Название склада OZON", $PHPShopGUI->setInputText(null, 'warehouse_new', $data['warehouse'], 300))
             );
 
     $Tab2 = $PHPShopGUI->setInfo($info);

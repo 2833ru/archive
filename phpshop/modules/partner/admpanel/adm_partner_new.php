@@ -18,8 +18,9 @@ function actionStart() {
     else
         $currency = $PHPShopSystem->getDefaultValutaCode();
 
-    $PHPShopGUI->field_col = 1;
-    $Tab1 = $PHPShopGUI->setField('Баланс', $PHPShopGUI->setInputText(false, 'money_new', 0, 100,$currency));
+    $PHPShopGUI->field_col = 2;
+    $Tab1 = $PHPShopGUI->setField('Имя', $PHPShopGUI->setInputText(false, 'name_new', $data['name'], 400));
+    $Tab1 .= $PHPShopGUI->setField('Баланс', $PHPShopGUI->setInputText(false, 'money_new', 0, 100,$currency));
     $Tab1 .= $PHPShopGUI->setField('Логин', $PHPShopGUI->setInputText(false, 'login_new', $data['login'], 400));
     $Tab1 .= $PHPShopGUI->setField('Пароль', $PHPShopGUI->setInputText(false, 'password_new', base64_decode($data['password']), 400));
     $Tab1 .= $PHPShopGUI->setField('Статус', $PHPShopGUI->setCheckbox('enabled_new', 1, 'Активирован', 1));

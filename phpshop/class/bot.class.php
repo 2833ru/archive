@@ -98,7 +98,7 @@ class PHPShopBot {
 
             $message['from']['first_name'] = PHPShopString::win_utf8($message['chat']['first_name']);
             $message['text'] = strip_tags($message['text']);
-            $msg = 'Сообщение в диалогах от ' . $message['chat']['first_name'];
+            $msg = __('Сообщение в диалогах от ') . $message['chat']['first_name'];
 
             if ($this->PHPShopSystem->ifSerilizeParam('admoption.telegram_dialog')) {
                 $PHPShopBot = new PHPShopTelegramBot();

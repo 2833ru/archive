@@ -233,7 +233,7 @@ function sort_encode($sort, $category) {
                                 $cat_set = $row_3['category'];
                             }
                             // Нет, создать новый набор
-                            else {
+                            elseif(!empty($cat_name)) {
 
                                 // Создание набора характеристик
                                 $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['sort_categories']);
@@ -244,7 +244,7 @@ function sort_encode($sort, $category) {
                             $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['sort_categories']);
                             $PHPShopOrm->debug = $debug;
 
-                            if (!empty($sort_name))
+                            if (!empty($sort_name) and !empty($cat_set))
                                 if ($parent = $PHPShopOrm->insert(array('name_new' => $sort_name, 'category_new' => $cat_set), '_new', __FUNCTION__, __LINE__)) {
 
                                     // Создаем новое значение характеристики
@@ -444,10 +444,11 @@ function csv_update($data) {
 
             // Разделитель для изображений
             if (empty($_POST['export_imgdelim'])) {
-                $imgdelim = [',', ';', '#', ' '];
+                $imgdelim = [' ',',', ';', '#'];
                 foreach ($imgdelim as $delim) {
-                    if (strstr($row['pic_big'], $delim))
+                    if (strstr($row['pic_big'], $delim)){
                         $_POST['export_imgdelim'] = $delim;
+                    }
                 }
             }
 

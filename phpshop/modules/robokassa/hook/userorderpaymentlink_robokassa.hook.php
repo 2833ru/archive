@@ -23,8 +23,8 @@ function userorderpaymentlink_mod_robokassa_hook($obj, $PHPShopOrderFunction) {
             // Платежная форма
             $payment_forma .= PHPShopText::setInput('hidden', 'MrchLogin', trim($option['merchant_login']), false, 10);
             $payment_forma .= PHPShopText::setInput('hidden', 'OutSum', $out_summ, false, 10);
-            $payment_forma.=PHPShopText::setInput('hidden', 'InvId', $inv_id, false, 10);
-            $payment_forma.=PHPShopText::setInput('hidden', 'Desc', $PHPShopOrderFunction->objRow['uid'], false, 10);
+            $payment_forma .= PHPShopText::setInput('hidden', 'InvId', $inv_id, false, 10);
+            $payment_forma .= PHPShopText::setInput('hidden', 'Desc', $PHPShopOrderFunction->objRow['uid'], false, 10);
 
             // ОФД
             $order = $PHPShopOrderFunction->unserializeParam('orders');
@@ -52,8 +52,8 @@ function userorderpaymentlink_mod_robokassa_hook($obj, $PHPShopOrderFunction) {
             if (is_array($order['Cart']['cart'])) {
 
                 foreach ($order['Cart']['cart'] as $product) {
-                    if((float) $order['Person']['discount'] > 0 && empty($product['promo_price']))
-                        $price = $product['price']  - ($product['price']  * (float) $order['Person']['discount'] / 100);
+                    if ((float) $order['Person']['discount'] > 0 && empty($product['promo_price']))
+                        $price = $product['price'] - ($product['price'] * (float) $order['Person']['discount'] / 100);
                     else
                         $price = $product['price'];
 
@@ -87,10 +87,14 @@ function userorderpaymentlink_mod_robokassa_hook($obj, $PHPShopOrderFunction) {
             // Подпись
             $crc = md5(trim($option['merchant_login']) . ':' . $out_summ . ':' . $inv_id . ':' . $Receipt . ':' . trim($option['merchant_key']));
 
-            $payment_forma.=PHPShopText::setInput('hidden', 'Receipt', $Receipt, false, 10);
-            $payment_forma.=PHPShopText::setInput('hidden', 'SignatureValue', $crc, false, 10);
-            $payment_forma.=PHPShopText::setInput('hidden', 'Encoding', 'utf-8', false, 10);
-            $payment_forma.=PHPShopText::setInput('submit', 'send', $option['title'], false, 250);
+            $payment_forma .= PHPShopText::setInput('hidden', 'Receipt', $Receipt, false, 10);
+            $payment_forma .= PHPShopText::setInput('hidden', 'SignatureValue', $crc, false, 10);
+            $payment_forma .= PHPShopText::setInput('hidden', 'Encoding', 'utf-8', false, 10);
+
+            if ($option['dev_mode'] == 1)
+                $payment_forma .= PHPShopText::setInput('hidden', 'IsTest', '1', false, 10);
+
+            $payment_forma .= PHPShopText::setInput('submit', 'send', $option['title'], false, 250);
 
             // Данные в лог
             $PHPShopRobokassaArray->log(array('action' => 'user', 'MrchLogin' => trim($option['merchant_login']), 'sum' => $out_summ, 'Email' => $_POST['mail'], 'orderNumber' => $inv_id, 'Receipt' => $Receipt), $inv_id, 'форма готова к отправке', 'данные формы для отправки на оплату');

@@ -13,20 +13,23 @@ function actionBaseUpdate() {
     $new_version = $PHPShopModules->getUpdate($option['version']);
     $PHPShopOrm->clean();
     $action = $PHPShopOrm->update(array('version_new' => $new_version));
-    header('Location: ?path=modules&id='.$_GET['id']);
+    header('Location: ?path=modules&id=' . $_GET['id']);
     return $action;
 }
 
 // Функция обновления
 function actionUpdate() {
-    global $PHPShopOrm,$PHPShopModules;
-    
+    global $PHPShopOrm, $PHPShopModules;
+
     // Настройки витрины
     $PHPShopModules->updateOption($_GET['id'], $_POST['servers']);
 
+    if (empty($_POST["dev_mode_new"]))
+        $_POST["dev_mode_new"] = 0;
+
     $PHPShopOrm->debug = false;
     $action = $PHPShopOrm->update($_POST);
-    header('Location: ?path=modules&id='.$_GET['id']);
+    header('Location: ?path=modules&id=' . $_GET['id']);
     return $action;
 }
 
@@ -36,10 +39,11 @@ function actionStart() {
     // Выборка
     $data = $PHPShopOrm->select();
 
-    $Tab1 = $PHPShopGUI->setField('Ссылка на оплату', $PHPShopGUI->setInputText(false, 'title_new', $data['title'],300));
-    $Tab1.=$PHPShopGUI->setField('Идентификатор магазина', $PHPShopGUI->setInputText(false, 'merchant_login_new', $data['merchant_login'], 300));
-    $Tab1.=$PHPShopGUI->setField('Пароль #1', $PHPShopGUI->setInputText(false, 'merchant_key_new', $data['merchant_key'], 300));
-    $Tab1.=$PHPShopGUI->setField('Пароль #2', $PHPShopGUI->setInputText(false, 'merchant_skey_new', $data['merchant_skey'], 300));
+    $Tab1 = $PHPShopGUI->setField('Ссылка на оплату', $PHPShopGUI->setInputText(false, 'title_new', $data['title'], 300));
+    $Tab1 .= $PHPShopGUI->setField('Идентификатор магазина', $PHPShopGUI->setInputText(false, 'merchant_login_new', $data['merchant_login'], 300));
+    $Tab1 .= $PHPShopGUI->setField('Пароль #1', $PHPShopGUI->setInputText(false, 'merchant_key_new', $data['merchant_key'], 300));
+    $Tab1 .= $PHPShopGUI->setField('Пароль #2', $PHPShopGUI->setInputText(false, 'merchant_skey_new', $data['merchant_skey'], 300));
+    $Tab1 .= $PHPShopGUI->setField('Режим разработки', $PHPShopGUI->setCheckbox("dev_mode_new", 1, "Отправка данных на тестовую среду", $data["dev_mode"]));
 
     // Доступые статусы заказов
     $PHPShopOrderStatusArray = new PHPShopOrderStatusArray();
@@ -50,17 +54,17 @@ function actionStart() {
             $order_status_value[] = array($order_status['name'], $order_status['id'], $data['status']);
 
     // Статус заказа
-    $Tab1.= $PHPShopGUI->setField('Оплата при статусе', $PHPShopGUI->setSelect('status_new', $order_status_value, 300));
-    $Tab1.= $PHPShopGUI->setField('Сообщение предварительной проверки', $PHPShopGUI->setTextarea('title_sub_new', $data['title_sub']));
-    
+    $Tab1 .= $PHPShopGUI->setField('Оплата при статусе', $PHPShopGUI->setSelect('status_new', $order_status_value, 300));
+    $Tab1 .= $PHPShopGUI->setField('Сообщение предварительной проверки', $PHPShopGUI->setTextarea('title_sub_new', $data['title_sub']));
+
     $info = '<h4>Настройка Robokassa</h4>
        <ol>
         <li>Зарегистрироваться в <a href="https://partner.robokassa.ru/Reg/Register?PromoCode=01phpshop&culture=ru" target="_blank">Robokassa.ru</a>
-        <li>Result Url: <code>http://'.$_SERVER['SERVER_NAME'].'/phpshop/modules/robokassa/payment/result.php</code>
+        <li>Result Url: <code>http://' . $_SERVER['SERVER_NAME'] . '/phpshop/modules/robokassa/payment/result.php</code>
         <li>Метод отсылки данных по Result Url: POST
-        <li>Success Url: <code>http://'.$_SERVER['SERVER_NAME'].'/success/</code>
+        <li>Success Url: <code>http://' . $_SERVER['SERVER_NAME'] . '/success/</code>
         <li>Метод отсылки данных по Success Url: POST
-        <li>Fail Url: <code>http://'.$_SERVER['SERVER_NAME'].'/fail/</code>
+        <li>Fail Url: <code>http://' . $_SERVER['SERVER_NAME'] . '/fail/</code>
         <li>Метод отсылки данных по Fail Url: POST
         </ol>
         
@@ -85,11 +89,10 @@ function actionStart() {
     $Tab2 = $PHPShopGUI->setInfo($info);
 
     // Вывод формы закладки
-    $PHPShopGUI->setTab(array("Основное", $Tab1, true), array("Инструкция", $Tab2), array("О Модуле", $PHPShopGUI->setPay(false, false, $data['version'], false)));
+    $PHPShopGUI->setTab(array("Основное", $Tab1, true), array("Инструкция", $Tab2), array("О Модуле", $PHPShopGUI->setPay(false, false, $data['version'], true)));
 
     // Вывод кнопок сохранить и выход в футер
-    $ContentFooter =
-            $PHPShopGUI->setInput("hidden", "rowID", $data['id']) .
+    $ContentFooter = $PHPShopGUI->setInput("hidden", "rowID", $data['id']) .
             $PHPShopGUI->setInput("submit", "saveID", "Применить", "right", 80, "", "but", "actionUpdate.modules.edit");
 
     $PHPShopGUI->setFooter($ContentFooter);

@@ -33,7 +33,7 @@ function setProducts_ozonseller_hook($obj, $data) {
         }
 
         $data['xml'] = str_replace('<price>' . $data['val']['price'] . '</price>', '<price>' . $price . '</price>', $data['xml']);
-        $add .= '<outlets><outlet instock="' . $data['val']['items'] . '" warehouse_name="'.PHPShopString::win_utf8('основной',true).'"></outlet></outlets>';
+        $add .= '<outlets><outlet instock="' . $data['val']['items'] . '" warehouse_name="'.$obj->ozon_options['warehouse'].'"></outlet></outlets>';
 
         if (!empty($add))
             $data['xml'] = str_replace('</offer>', $add . '</offer>', $data['xml']);

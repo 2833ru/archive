@@ -7,7 +7,7 @@ $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['warehouses']);
 function actionStart() {
     global $PHPShopGUI, $PHPShopOrm, $PHPShopModules;
 
-    $PHPShopGUI->field_col = 2;
+    $PHPShopGUI->field_col = 3;
 
     // Выборка
     $data = $PHPShopOrm->select(array('*'), array('id' => '=' . intval($_GET['id'])));

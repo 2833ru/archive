@@ -369,14 +369,15 @@ CREATE TABLE IF NOT EXISTS `phpshop_modules` (
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
 
 INSERT INTO `phpshop_modules` (`path`, `name`, `date`, `servers`) VALUES
-('returncall', 'Return Call', 1620997787, ''),
-('visualcart', 'Visual Cart', 1620997787, ''),
-('productday', 'Товар дня', 1620997787, ''),
-('sticker', 'Sticker', 1620997787, ''),
-('hit', 'Хиты', 1620997787, ''),
-('oneclick', 'One Click', 1620997787, ''),
-('seourlpro', 'SeoUrl Pro', 1620997787, ''),
-('yandexkassa', 'ЮKassa', 1620997787, '');
+('returncall', 'Return Call', 1652271542, ''),
+('visualcart', 'Visual Cart', 1652271542, ''),
+('productday', 'Товар дня', 1652271542, ''),
+('sticker', 'Sticker', 1652271542, ''),
+('hit', 'Хиты', 1652271542, ''),
+('oneclick', 'One Click', 1652271542, ''),
+('seourlpro', 'SeoUrl Pro', 1652271542, ''),
+('mandarinhosted', 'MandarinPay', 1652271542, ''),
+('robokassa', 'Robokassa', 1652271542, '');
 
 DROP TABLE IF EXISTS `phpshop_modules_hit_system`;
 CREATE TABLE IF NOT EXISTS `phpshop_modules_hit_system` (
@@ -580,33 +581,75 @@ CREATE TABLE IF NOT EXISTS `phpshop_modules_visualcart_system` (
 
 INSERT INTO `phpshop_modules_visualcart_system` VALUES (1, '0', '1', 'Корзина', 50,'1','1','0','2.5','10','10');
 
-DROP TABLE IF EXISTS `phpshop_modules_yandexkassa_log`;
-CREATE TABLE IF NOT EXISTS `phpshop_modules_yandexkassa_log` (
+
+DROP TABLE IF EXISTS `phpshop_payment_systems`;
+CREATE TABLE IF NOT EXISTS `phpshop_payment_systems` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) DEFAULT '',
+  `path` varchar(255) DEFAULT '',
+  `enabled` enum('0','1') DEFAULT '1',
+  `num` tinyint(11) DEFAULT '0',
+  `message` text,
+  `message_header` text,
+  `yur_data_flag` enum('0','1') DEFAULT '0',
+  `icon` varchar(255) DEFAULT '',
+  `color` varchar(64) DEFAULT '#000000',
+  `servers` varchar(64) DEFAULT '',
+  `company` int(11) DEFAULT '0',
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
+
+INSERT INTO `phpshop_payment_systems` (`id`, `name`, `path`, `enabled`, `num`, `message`, `message_header`, `yur_data_flag`, `icon`, `color`, `servers`, `company`) VALUES
+(1, 'Оплата при получении', 'message', '1', 0, '<h3>Благодарим Вас за заказ!</h3>\n<p>В ближайшее время с Вами свяжется наш менеджер для уточнения деталей.</p>', '', '0', '/UserFiles/Image/trial/purse.png', '#000000', '', 0);
+
+
+DROP TABLE IF EXISTS `phpshop_modules_robokassa_system`;
+CREATE TABLE IF NOT EXISTS `phpshop_modules_robokassa_system` (
+  `id` int(11) NOT NULL auto_increment,
+  `status` int(11) NOT NULL,
+  `title` text NOT NULL,
+  `title_sub` text NOT NULL,
+  `merchant_login` varchar(64) NOT NULL default '',
+  `merchant_key` varchar(64) NOT NULL default '',
+  `merchant_skey` varchar(64) NOT NULL default '',
+  `dev_mode` enum ('0','1') default '0',
+  `version` varchar(64) DEFAULT '1.3',
+  PRIMARY KEY  (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
+
+INSERT INTO `phpshop_modules_robokassa_system` (`id`, `status`, `title`, `title_sub`, `merchant_login`, `merchant_key`, `merchant_skey`, `version`, `dev_mode`) VALUES (1, 0, 'Оплатить заказ', 'Заказ находится на ручной проверке.', 'phpshop-test', 'GVLmxkec34f90GSdraZ0', 'eBQ8rxUXwbg6Al361uKE', '1.3', '1');
+
+INSERT INTO `phpshop_payment_systems` (`id`, `name`, `path`, `enabled`, `num`, `message`, `message_header`, `yur_data_flag`, `icon`) VALUES
+(10020, 'Visa, Mastercard, МИР, ЯPay (Robokassa)', 'modules', '0', 0, '<p>Ваш заказ оплачен!</p>', 'Спасибо', '', '/UserFiles/Image/trial/credit.png');
+
+CREATE TABLE IF NOT EXISTS `phpshop_modules_robokassa_log` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `date` int(11) NOT NULL,
   `message` text NOT NULL,
   `order_id` int(11) NOT NULL,
   `status` varchar(255) NOT NULL,
-  `yandex_id` varchar(255) DEFAULT NULL,
-  `status_code` varchar(255) DEFAULT NULL,
   `type` varchar(64) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
+) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
 
-DROP TABLE IF EXISTS `phpshop_modules_yandexkassa_system`;
-CREATE TABLE IF NOT EXISTS `phpshop_modules_yandexkassa_system` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+DROP TABLE IF EXISTS `phpshop_modules_mandarinhosted_system`;
+CREATE TABLE IF NOT EXISTS `phpshop_modules_mandarinhosted_system` (
+  `id` int(11) NOT NULL auto_increment,
+  `merchant_key` varchar(64) NOT NULL default '',
+  `merchant_skey` varchar(64) NOT NULL default '',
   `status` int(11) NOT NULL,
   `title` text NOT NULL,
-  `title_end` text NOT NULL,
-  `shop_id` varchar(64) NOT NULL DEFAULT '',
-  `api_key` varchar(255) NOT NULL DEFAULT '',
-  `version` varchar(64) NOT NULL DEFAULT '1.6',
-  PRIMARY KEY (`id`)
+  `title_sub` text NOT NULL,
+  `version` FLOAT(2) DEFAULT '1.1' NOT NULL,
+  PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
 
-INSERT INTO `phpshop_modules_yandexkassa_system` (`id`, `status`, `title`, `title_end`, `shop_id`, `api_key`, `version`) VALUES
-(1, 0, 'Оплатить сейчас', 'Оплатите пожалуйста свой заказ', '665601', 'test_IBkYJDzgL1-gaz04YTHNxQekxtaGz6z-7_40u0rRlYs', '1.6');
+
+INSERT INTO `phpshop_modules_mandarinhosted_system` VALUES (1,'777','phpshop-test',0,'','','1.1');
+
+INSERT INTO `phpshop_payment_systems` (`id`, `name`, `path`, `enabled`, `num`, `message`, `message_header`, `yur_data_flag`, `icon`) VALUES
+(10027, 'Visa, Mastercard, МИР (MandarinPay)', 'modules', '0', 0, '<p>Ваш заказ оплачен!</p>', 'Спасибо', '', '/UserFiles/Image/trial/credit.png');
+
 
 DROP TABLE IF EXISTS `phpshop_news`;
 CREATE TABLE IF NOT EXISTS `phpshop_news` (
@@ -811,26 +854,6 @@ CREATE TABLE IF NOT EXISTS `phpshop_payment` (
   KEY `order` (`uid`)
 ) ;
 
-DROP TABLE IF EXISTS `phpshop_payment_systems`;
-CREATE TABLE IF NOT EXISTS `phpshop_payment_systems` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) DEFAULT '',
-  `path` varchar(255) DEFAULT '',
-  `enabled` enum('0','1') DEFAULT '1',
-  `num` tinyint(11) DEFAULT '0',
-  `message` text,
-  `message_header` text,
-  `yur_data_flag` enum('0','1') DEFAULT '0',
-  `icon` varchar(255) DEFAULT '',
-  `color` varchar(64) DEFAULT '#000000',
-  `servers` varchar(64) DEFAULT '',
-  `company` int(11) DEFAULT '0',
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
-
-INSERT INTO `phpshop_payment_systems` (`id`, `name`, `path`, `enabled`, `num`, `message`, `message_header`, `yur_data_flag`, `icon`, `color`, `servers`, `company`) VALUES
-(1, 'Оплата при получении', 'message', '1', 0, '<h3>Благодарим Вас за заказ!</h3>\n<p>В ближайшее время с Вами свяжется наш менеджер для уточнения деталей.</p>', '', '0', '/UserFiles/Image/trial/purse.png', '#000000', '', 0),
-(10004, 'ЮKassa', 'modules', '1', 0, '', '', '0', '/UserFiles/Image/trial/credit.png', '#000000', '', 0);
 
 DROP TABLE IF EXISTS `phpshop_photo`;
 CREATE TABLE IF NOT EXISTS `phpshop_photo` (

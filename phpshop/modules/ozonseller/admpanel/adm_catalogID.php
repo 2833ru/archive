@@ -96,7 +96,8 @@ function addOzonsellerTab($data) {
                     $help = null;
 
                 if (empty($sort_ozon_value['dictionary_id']) and strstr($name, 'Название')) {
-                    $sort_ozon_value['description'] = __('Будет заполнено автоматически из имени товара.');
+                    continue;
+                    //$sort_ozon_value['description'] = __('Будет заполнено автоматически из имени товара.');
                 }
 
                 $Tab2 .= $PHPShopGUI->setField($name, $PHPShopGUI->setSelect('attribute_ozonseller[' . $sort_ozon_value['id'] . ']', $sort_select_value, '100%') . $PHPShopGUI->setHelp(PHPShopString::utf8_win1251($sort_ozon_value['description']) . '<br>' . $help,false,false),1, null, null,'control-label', false);

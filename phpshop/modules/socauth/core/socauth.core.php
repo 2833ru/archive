@@ -272,7 +272,7 @@ class PHPShopSocauth extends PHPShopCore {
 
             return $regMass;
         } else {
-            $this->error = ParseTemplateReturn($GLOBALS['SysValue']['templates']['socauth']['socauth_vkontakte_auth_fail'], true);
+            $this->error = __(ParseTemplateReturn($GLOBALS['SysValue']['templates']['socauth']['socauth_vkontakte_auth_fail'], true));
             return false;
         }
     }

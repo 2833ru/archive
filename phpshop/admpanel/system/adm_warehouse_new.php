@@ -7,7 +7,7 @@ $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['warehouses']);
 function actionStart() {
     global $PHPShopGUI, $TitlePage, $PHPShopModules;
 
-    $PHPShopGUI->field_col = 2;
+    $PHPShopGUI->field_col = 3;
     $PHPShopGUI->setActionPanel($TitlePage, false, array('Сохранить и закрыть'));
 
     // Выборка

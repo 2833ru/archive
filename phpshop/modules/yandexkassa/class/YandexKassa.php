@@ -4,7 +4,7 @@ class YandexKassa {
 
     const YANDEX_KASSA_PAYMENT_ID = 10004;
 
-    private $apiUrl = 'https://payment.yandex.net/api/v3/payments';
+    private $apiUrl = 'https://api.yookassa.ru/v3/payments';
 
     /** @var array */
     public $options;

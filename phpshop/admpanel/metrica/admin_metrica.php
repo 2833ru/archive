@@ -142,7 +142,7 @@ function actionStart() {
                </div>
           </div>
        </div>
-       <div class="col-md-2 col-xs-6">
+       <div class="col-md-2 col-xs-6 col-panel">
           <div class="panel panel-default">
              <div class="panel-heading"><span class="glyphicon glyphicon-user"></span> ' . __('Посетители') . '</div>
                 <div class="panel-body text-right panel-intro">
@@ -150,7 +150,7 @@ function actionStart() {
                </div>
           </div>
        </div>
-       <div class="col-md-2 col-xs-6">
+       <div class="col-md-2 col-xs-6 col-panel">
           <div class="panel panel-default">
              <div class="panel-heading"><span class="glyphicon glyphicon-eye-open"></span> ' . __('Просмотры') . '</div>
                 <div class="panel-body text-right panel-intro">
@@ -158,7 +158,7 @@ function actionStart() {
                </div>
           </div>
        </div>
-       <div class="col-md-2 col-xs-6">
+       <div class="col-md-2 col-xs-6 col-panel">
           <div class="panel panel-default">
              <div class="panel-heading"><span class="glyphicon glyphicon-bell"></span> ' . __('Новые') . '<span class="pull-right text-muted">%</span></div>
                 <div class="panel-body text-right panel-intro">
@@ -166,7 +166,7 @@ function actionStart() {
                </div>
           </div>
        </div>
-       <div class="col-md-2 hidden-xs hidden-sm">
+       <div class="col-md-2 hidden-xs hidden-sm col-panel">
           <div class="panel panel-default">
              <div class="panel-heading"><span class="glyphicon glyphicon-thumbs-down"></span> ' . __('Отказы') . '<span class="pull-right text-muted">%</span></div>
                 <div class="panel-body text-right panel-intro">
@@ -174,7 +174,7 @@ function actionStart() {
                </div>
           </div>
        </div>
-       <div class="col-md-2 hidden-xs hidden-sm">
+       <div class="col-md-2 hidden-xs hidden-sm col-panel">
           <div class="panel panel-default">
              <div class="panel-heading"><span class="glyphicon glyphicon-hourglass"></span> ' . __('Время') . '<span class="pull-right text-muted">'.__('мин').'</span></div>
                 <div class="panel-body text-right panel-intro">
@@ -183,7 +183,6 @@ function actionStart() {
           </div>
        </div>
 </div>
-
 
 <div class="row intro-row">
        <div class="hidden-xs hidden-sm col-md-6">
@@ -268,7 +267,7 @@ function actionStart() {
             $PHPShopInterface->setRow(__('Нет данных..'), array('name' => '?', 'align' => 'right'));
 
 
-        $PHPShopGUI->_CODE.='<div class="col-md-6 col-xs-12">
+        $PHPShopGUI->_CODE.='<div class="col-md-6 col-xs-12 col-panel">
      <div class="panel panel-default">
              <div class="panel-heading"><span class="glyphicon glyphicon-thumbs-up"></span> ' . __('Популярные страницы') . ' <a class="pull-right" href="?path=metrica.popular">' . __('Показать больше') . '</a></div>
                    <table class="table table-hover intro-list">' . $PHPShopInterface->getContent() . '</table>
@@ -355,7 +354,7 @@ function actionStart() {
           </div>
 
        </div>
-       <div class="col-md-6 hidden-xs hidden-sm">
+       <div class="col-md-6 hidden-xs hidden-sm col-panel">
           <div class="panel panel-default">
              <div class="panel-heading"><span class="glyphicon glyphicon-equalizer"></span> ' . __('Посещаемость') . ' 
              <span class="pull-right hidden-xs">
@@ -503,7 +502,7 @@ function actionStart() {
             $PHPShopInterface->setRow(__('Нет данных..'), array('name' => '?', 'align' => 'right'));
 
         $PHPShopGUI->_CODE.='
-   <div class="col-md-6 col-xs-12">
+   <div class="col-md-6 col-xs-12 col-panel">
         <div class="panel panel-default">
              <div class="panel-heading"><span class="glyphicon glyphicon-search"></span> ' . __('Последняя поисковая фраза') . ' <a class="pull-right" href="?path=metrica.search_phrases">' . __('Показать больше') . '</a></div>
                    <table class="table table-hover intro-list">' . $PHPShopInterface->getContent() . '</table>

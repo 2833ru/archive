@@ -27,7 +27,7 @@ function addOzonRocketTab($data) {
         $PHPShopGUI->addJSFiles('../modules/ozonrocket/admpanel/gui/script.gui.js', '../modules/ozonrocket/js/ozonrocket.js');
 
         $Tab1 = $OzonRocketWidget->buildInfoTable($data);
-        $PHPShopGUI->addTab(array("Ozon Rocket", $Tab1, false, 107));
+        $PHPShopGUI->addTab(array("OZON Rocket", $Tab1, false, 107));
     }
 }
 

@@ -21,11 +21,17 @@
             <div class="">@brandUidDescription@</div>
         </div>
         <div class=" d-flex align-items-start justify-content-between flex-wrap">
-            <div class="col-6">
+            <div class="col-xs-12 col-md-5">
+                 <div class="sale-icon-content">
+                        @specIcon@
+                        @newtipIcon@
+                        @giftIcon@
+                        @hitIcon@
+                        @promotionsIcon@
+                 </div>
                 <div id="fotoload">
                     @productFotoList@
-
-                </div> 
+                </div>
             </div>
             <div class="col-6">
                 <div class="airSticky">
