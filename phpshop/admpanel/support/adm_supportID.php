@@ -75,7 +75,7 @@ function actionStart() {
             $files = explode("#", $f);
             if (!empty($f))
                 if (in_array(PHPShopSecurity::getExt($files[1]), array('gif', 'png', 'jpg', 'jpeg'))) {
-                    $flist .= '<div class="col-xs-6 col-md-2">
+                    $flist .= '<div class="col-xs-6 col-md-6">
                              <a href="https://help.phpshop.ru/download_attachment.php?att_id=' . $files[0] . '&track=' . $dataArrayTrack[0]['trackid'] . '" class="thumbnail" target="_blank" title="' . $files[1] . '"><img src="https://help.phpshop.ru/download_attachment.php?att_id=' . $files[0] . '&track=' . $dataArrayTrack[0]['trackid'] . '" alt="' . $files[1] . '" ></a></div>';
                 } else {
                     $flist .= '<div class="col-xs-6 col-md-6"><a title="' . $files[1] . '" target="_blank" href="https://help.phpshop.ru/download_attachment.php?att_id=' . $files[0] . '&track=' . $dataArrayTrack[0]['trackid'] . '"><span class="glyphicon glyphicon-paperclip"></span> ' . $files[1] . '</a></div>';
@@ -131,7 +131,7 @@ function actionStart() {
                     if (!empty($f)) {
 
                         if (in_array(PHPShopSecurity::getExt($files[1]), array('gif', 'png', 'jpg', 'jpeg'))) {
-                            $flist .= '<div class="col-xs-6 col-md-2">
+                            $flist .= '<div class="col-xs-6 col-md-6">
                              <a href="https://help.phpshop.ru/download_attachment.php?att_id=' . $files[0] . '&track=' . $dataArrayTrack[0]['trackid'] . '" class="thumbnail" target="_blank" title="' . $files[1] . '"><img src="https://help.phpshop.ru/download_attachment.php?att_id=' . $files[0] . '&track=' . $dataArrayTrack[0]['trackid'] . '" alt="' . $files[1] . '" ></a></div>';
                         } else {
                             $flist .= '<div class="col-xs-6 col-md-6"><a title="' . $files[1] . '" target="_blank" href="https://help.phpshop.ru/download_attachment.php?att_id=' . $files[0] . '&track=' . $dataArrayTrack[0]['trackid'] . '"><span class="glyphicon glyphicon-paperclip"></span> ' . $files[1] . '</a></div>';
@@ -168,23 +168,24 @@ function actionStart() {
     $PHPShopGUI->_CODE = '
 
           ' . $message . '
-
+          <form method="post" enctype="multipart/form-data" name="product_edit" id="product_edit" class="form-horizontal" role="form" data-toggle="validator">
           <a id="m"></a>
           <div class="' . $status_off . '">
           <p>
-          <textarea class="form-control" name="message" 
           <textarea class="form-control" name="message" id="message" placeholder="' . __('Введите текст') . '"></textarea>
           </p>
           <p>
-             <button class="btn btn-default pull-right send-message disabled" type="button" data-name="' . $user . '"><span class="glyphicon glyphicon-send"></span> ' . __('Отправить сообщение') . '</button>
+             <button class="btn btn-default pull-right send-message disabled" type="submit" data-name="' . $user . '"><span class="glyphicon glyphicon-send"></span> ' . __('Отправить сообщение') . '</button>
              <a id="attachment-disp" class="text-muted" href="#f"><span class="glyphicon glyphicon-paperclip"></span> ' . __('Прикрепить файл') . '</a>
              <a id="f"></a>
              <div id="attachment" class="hide" style="max-width:70%">
-             ' . $PHPShopGUI->setIcon(null, "attachment", false, array('load' => false, 'server' => true, 'url' => false, 'multi' => false, 'view' => false)) . '
+             ' . $PHPShopGUI->setIcon(null, "attachment", false, array('load' => true, 'server' => true, 'url' => false, 'multi' => false, 'view' => false)) . '
              </div>
           </p>
           </div>
-     
+          <input type="hidden" name="selectID" value="true">
+          <input type="hidden" name="actionList[selectID]" value="actionReplies">
+         </form>
       ';
 
 
@@ -225,6 +226,11 @@ function actionReplies() {
     $ch = curl_init();
 
     if (!empty($_POST['attachment'])) {
+        
+        $fileAdd=fileAdd();
+        if(!empty($fileAdd))
+            $_POST['attachment'] = $fileAdd;
+        
         $pathinfo = pathinfo($_POST['attachment']);
         $_POST['message'] .= '
 
@@ -240,11 +246,37 @@ function actionReplies() {
     curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
     $res = curl_exec($ch);
     curl_close($ch);
-    return array("success" => true);
+    //return array("success" => true);
+    header('Location: ?path=support&id='.$_GET['id'].'#f');
 }
 
 function set_kbd($var) {
     return '<kbd>' . $var[0] . '</kbd>';
+}
+
+// Добавление файла
+function fileAdd() {
+    global $PHPShopSystem;
+
+    // Папка сохранения
+    $path = $GLOBALS['SysValue']['dir']['dir'] . '/UserFiles/Image/' . $PHPShopSystem->getSerilizeParam('admoption.image_result_path');
+
+    // Копируем от пользователя
+    if (!empty($_FILES['file']['name'])) {
+        $_FILES['file']['ext'] = PHPShopSecurity::getExt($_FILES['file']['name']);
+        $_FILES['file']['name'] = PHPShopString::toLatin(str_replace('.' . $_FILES['file']['ext'], '', PHPShopString::utf8_win1251($_FILES['file']['name']))) . '.' . $_FILES['file']['ext'];
+       if (!empty($_FILES['file']['ext'])) {
+            if (move_uploaded_file($_FILES['file']['tmp_name'], $_SERVER['DOCUMENT_ROOT'] . $GLOBALS['dir']['dir'] . $path . $_FILES['file']['name'])) {
+                $file = $GLOBALS['dir']['dir'] . $path . $_FILES['file']['name'];
+            }
+        }
+        else $file='Error_PHP_ext';
+    }
+
+    if (empty($file))
+        $file = '';
+
+    return $file;
 }
 
 // Обработка событий

@@ -526,6 +526,16 @@ border-collapse: separate;}
                             @org_name@, &nbsp;{ИНН}&nbsp;@org_inn@, {КПП}&nbsp;@org_kpp@,  {Юр. адрес}:&nbsp;@org_ur_adres@, {Почтовый адрес}:&nbsp;@org_adres@        </div>
                     </td>
                 </tr>
+                <tr>
+                    <td style="width: 30mm;">
+                        <div style=" padding-left:2px;">{Покупатель}:    </div>
+                    </td>
+                    <td>
+                        <div style="font-weight:bold;  padding-left:2px;">
+                            @buyer_data@
+                        </div>
+                    </td>
+                </tr>
 
             </table>
 <br>

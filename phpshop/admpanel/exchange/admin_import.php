@@ -80,7 +80,12 @@ $key_name = array(
     'org_kpp' => 'КПП',
     'org_yur_adres' => 'Юридический адрес',
     'dop_info' => 'Комментарий пользоватея',
-    'tracking' => 'Код отслеживания'
+    'tracking' => 'Код отслеживания',
+    'path' => 'Путь каталога',
+    'length' => 'Длина',
+    'width' =>'Ширина',
+    'height' => 'Высота',
+    'moysklad_product_id' => 'МойСклад Id'
 );
 
 if ($GLOBALS['PHPShopBase']->codBase == 'utf-8')
@@ -97,7 +102,7 @@ switch ($subpath[2]) {
     case 'user':
         $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['shopusers']);
         $key_base = array('id', 'login');
-        array_push($key_stop, 'tel_code', 'adres', 'inn', 'kpp', 'company', 'tel','mail');
+        array_push($key_stop, 'tel_code', 'adres', 'inn', 'kpp', 'company', 'tel', 'mail');
         break;
     case 'order':
         PHPShopObj::loadClass('order');
@@ -242,7 +247,6 @@ function csv_update($data) {
             $data[$k] = PHPShopString::utf8_win1251($v);
     }
 
-
     require_once $_SERVER['DOCUMENT_ROOT'] . $GLOBALS['SysValue']['dir']['dir'] . '/phpshop/lib/thumb/phpthumb.php';
     $width_kratko = $PHPShopSystem->getSerilizeParam('admoption.width_kratko');
     $img_tw = $PHPShopSystem->getSerilizeParam('admoption.img_tw');
@@ -276,7 +280,6 @@ function csv_update($data) {
         }
         // Значения
         else {
-
             // Простановка полей
             foreach ($csv_load_option as $k => $cols_name) {
 
@@ -319,7 +322,7 @@ function csv_update($data) {
                 }
                 // Остальные
                 else
-                    $row[$cols_name] = $data[$k];
+                    $row[strtolower($cols_name)] = $data[$k];
             }
 
             // Телефон пользователя
@@ -327,6 +330,24 @@ function csv_update($data) {
                 $tel['main'] = 0;
                 $tel['list'][0]['tel_new'] = $row['data_adres'];
                 $row['data_adres'] = serialize($tel);
+            }
+
+            // Путь каталога
+            if (isset($row['path'])) {
+                if (empty($row['category'])) {
+                    $search = $row['path'];
+                    $category = new PHPShopCategory(0);
+                    $category->getChildrenCategories(100, ['id', 'parent_to', 'name'], false, $search);
+
+                    while (count($category->search) != $category->found) {
+                        $PHPShopOrmCat = new PHPShopOrm($GLOBALS['SysValue']['base']['categories']);
+                        $PHPShopOrmCat->debug=false;
+                        $category->search_id = $PHPShopOrmCat->insert(array('name_new' => $category->search[$category->found], 'parent_to_new' => $category->search_id));
+                        $category->found++;
+                    }
+
+                    $row['category'] = $category->search_id;
+                }
             }
 
             // Коррекция флага подтипа
@@ -548,7 +569,7 @@ function csv_update($data) {
 
 // Функция обновления
 function actionSave() {
-    global $PHPShopGUI, $PHPShopSystem, $key_name, $key_name, $result_message, $csv_load_count,$subpath;
+    global $PHPShopGUI, $PHPShopSystem, $key_name, $key_name, $result_message, $csv_load_count, $subpath;
 
     // Выбрать настройку
     if ($_POST['exchanges'] != 'new') {
@@ -574,10 +595,10 @@ function actionSave() {
         foreach ($_POST['exchanges_remove'] as $v)
             $data = $PHPShopOrm->delete(array('id' => '=' . intval($v)));
     }
-    
+
     // Раздел из памяти настроек
-    if(!empty($_POST['subpath']))
-        $subpath[2]=$_POST['subpath'];
+    if (!empty($_POST['subpath']))
+        $subpath[2] = $_POST['subpath'];
 
     switch ($subpath[2]) {
         case 'catalog':
@@ -642,7 +663,7 @@ function actionSave() {
                 } else
                     $csv_file = 'https://docs.google.com/spreadsheets/d/' . $id . '/export?format=csv&' . $path['fragment'];
 
-                $csv_file_name = 'Google Таблиц '.$_POST['exchanges_new'].$exchanges_name;
+                $csv_file_name = 'Google Таблиц ' . $_POST['exchanges_new'] . $exchanges_name;
                 $_POST['export_code'] = 'utf';
                 $delim = ',';
             }
@@ -701,7 +722,14 @@ function actionStart() {
     $PHPShopOrm->clean();
     $data = $PHPShopOrm->select(array('*'), false, false, array('limit' => 1));
     $select_value[] = array('Не выбрано', false, false);
+
     if (is_array($data)) {
+
+        // Путь каталога
+        if (empty($subpath[2])) {
+            $data['path'] = null;
+        }
+
         foreach ($data as $key => $val) {
 
             if (!empty($key_name[$key]))
@@ -724,7 +752,7 @@ function actionStart() {
             }
 
             if (!in_array($key, $key_stop))
-            $select_value[] = array(ucfirst($name), ucfirst($name), false, $help);
+                $select_value[] = array(ucfirst($name), ucfirst($name), false, $help);
         }
     } else
         $list = '<span class="text-warning hidden-xs">' . __('Недостаточно данных для создания карты полей. Создайте одну запись в нужном разделе в ручном режиме для начала работы') . '.</span>';
@@ -738,6 +766,7 @@ function actionStart() {
     if (empty($subpath[2])) {
         $class = false;
         $TitlePage .= ' ' . __('товаров');
+        $data['path'] = null;
     }
 
     // Каталоги

@@ -166,9 +166,9 @@ function actionStart() {
     // Вывод кнопок сохранить и выход в футер
     $ContentFooter =
             $PHPShopGUI->setInput("hidden", "rowID", $data['id'], "right", 70, "", "but") .
-            $PHPShopGUI->setInput("button", "delID", "Удалить", "right", 70, "", "but", "actionDelete.modules.edit") .
-            $PHPShopGUI->setInput("submit", "editID", "Сохранить", "right", 70, "", "but", "actionUpdate.modules.edit") .
-            $PHPShopGUI->setInput("submit", "saveID", "Применить", "right", 80, "", "but", "actionSave.modules.edit");
+            $PHPShopGUI->setInput("button", "delID", "Удалить", "right", 70, "", "but", "actionDelete.system.edit") .
+            $PHPShopGUI->setInput("submit", "editID", "Сохранить", "right", 70, "", "but", "actionUpdate.system.edit") .
+            $PHPShopGUI->setInput("submit", "saveID", "Применить", "right", 80, "", "but", "actionSave.system.edit");
 
     $PHPShopGUI->setFooter($ContentFooter);
     return true;

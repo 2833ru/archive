@@ -33,8 +33,7 @@ if ($PHPShopSystem->ifSerilizeParam('admoption.dadata_enabled')) {
     $DADATA_TOKEN = $PHPShopSystem->getSerilizeParam('admoption.dadata_token');
     if (empty($DADATA_TOKEN))
         $DADATA_TOKEN = 'b13e0b4fd092a269e229887e265c62aba36a92e5';
-}
-else
+} else
     $DADATA_TOKEN = null;
 
 // Редактор GUI
@@ -63,11 +62,9 @@ if (strpos($_GET['path'], '.')) {
             header('Location: ?path=' . $subpath[0] . '&cat=' . $subpath[1]);
         else
             header('Location: ?path=' . $subpath[0] . '&id=' . $subpath[1]);
-    }
-    else
+    } else
         $loader_file = $subpath[0] . '/admin_' . $subpath[1] . '.php';
-}
-else
+} else
     $subpath = array($_GET['path'], $_GET['path']);
 
 if (!empty($_GET['path'])) {
@@ -113,9 +110,14 @@ function modulesMenu() {
         foreach ($data as $row) {
             $path = $row['path'];
             $menu = "../modules/" . $path . "/install/module.xml";
-            $db = xml2array($menu, "adminmenu", true);
+            $menu_array = xml2array($menu, false, true);
+            $db = $menu_array["adminmenu"];
+            
+            if (!empty($menu_array['pro']) and empty($_SESSION['mod_pro']))
+                continue;
+
             if ($db['capability']) {
-                $dis.='<li><a href="?path=modules&id=' . $path . '">' . __($db['title']) . '</a></li>';
+                $dis .= '<li><a href="?path=modules&id=' . $path . '">' . __($db['title']) . '</a></li>';
             }
 
             // Notification
@@ -156,7 +158,7 @@ if (!file_exists('./css/bootstrap-theme-' . $theme . '.css'))
 $version = null;
 $adm_title = $adm_brand = $PHPShopSystem->getSerilizeParam('admoption.adm_title');
 foreach (str_split($GLOBALS['SysValue']['upload']['version']) as $w)
-    $version.=$w . '.';
+    $version .= $w . '.';
 $brand = 'PHPShop ' . substr($version, 0, 3);
 if (empty($adm_title)) {
     $adm_title = 'PHPShop';
@@ -220,7 +222,7 @@ if (empty($adm_title)) {
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><?php _e('Модули'); ?> <span class="caret"></span></a>
                                 <ul class="dropdown-menu" role="menu" id="modules-menu">
                                     <li class="dropdown-header"><?php _e('Установленные модули'); ?></li>
-<?php echo $modulesMenu; ?>
+                                    <?php echo $modulesMenu; ?>
                                     <li class="divider"></li>
                                     <li><a href="?path=modules"><span class="glyphicon glyphicon-tasks"></span> <?php _e('Управление модулями'); ?></a></li>
 
@@ -340,7 +342,7 @@ if (empty($adm_title)) {
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><?php _e('Пользователи'); ?> <span class="caret"></span></a>
                                 <ul class="dropdown-menu" role="menu">
                                     <li><a href="?path=shopusers"><?php _e('Покупатели'); ?><span class="dropdown-header"><?php _e('Список зарегистрированных покупателей магазина'); ?></span></a></li>
-      
+
                                     <li class="dropdown-submenu">
                                         <a href="?path=shopusers.status"><?php _e('Статусы и скидки'); ?><span class="dropdown-header"><?php _e('Управление статусами и скидками пользователей магазина'); ?></span></a>
                                         <ul class="dropdown-menu">
@@ -381,13 +383,13 @@ if (empty($adm_title)) {
                             </li>
                         </ul>
                         <?php
-                        // Быстрый поиск
+// Быстрый поиск
                         switch ($PHPShopSystem->getSerilizeParam('admoption.search_enabled')) {
                             case 1:
                                 $search_class = 'hidden';
                                 $search_id = $search_name = $search_placeholder = $search_action = $search_value = null;
                                 break;
-                            
+
                             case 2:
                                 $search_class = 'hidden-xs search-product';
                                 $search_placeholder = __('Искать в заказах...');
@@ -418,7 +420,7 @@ if (empty($adm_title)) {
                             </div>
                         </form>
                         <?php
-                        // notification
+// notification
                         $i_notif = 0;
                         if (is_array($notificationList))
                             foreach ($notificationList as $notification) {
@@ -432,19 +434,19 @@ if (empty($adm_title)) {
                                 $i_notif++;
                             }
 
-                        // update
+// update
                         if (!empty($_SESSION['update_check']))
                             echo '<a class="navbar-btn btn btn-sm btn-info navbar-right hidden-xs" href="?path=update" data-toggle="tooltip" data-placement="bottom" title="' . __('Доступно обновление') . '">Update <span class="badge">' . intval($_SESSION['update_check']) . '</span></a>';
-                        
-                        // message
+
+// message
                         $messages = $PHPShopBase->getNumRows('messages', "where enabled='0'");
-                        if(!empty($messages) and empty($_SESSION['update_check']))
-                            echo '<a class="navbar-btn btn btn-sm btn-primary navbar-right hidden-xs" href="?path=shopusers.messages">'.__('Письма').' <span class="badge">' . intval($messages) . '</span></a>';
+                        if (!empty($messages) and empty($_SESSION['update_check']))
+                            echo '<a class="navbar-btn btn btn-sm btn-primary navbar-right hidden-xs" href="?path=shopusers.messages">' . __('Письма') . ' <span class="badge">' . intval($messages) . '</span></a>';
                         ?>
 
                         <a class="navbar-btn btn btn-sm btn-warning navbar-right hidden-xs hidden-sm hide" href="?path=order&where[statusi]=0"><?php _e('Заказы'); ?> <span class="badge" id="orders-check"><?php echo $PHPShopBase->getNumRows('orders', "where statusi='0'"); ?></span>
                         </a><audio id="play" src="images/message.mp3"></audio>
-                        
+
                     </div><!-- /.navbar-collapse -->
                 </div>
             </nav>
@@ -460,14 +462,11 @@ if (empty($adm_title)) {
                             call_user_func($loader_function);
                         else
                             _e('Функция ') . $loader_function . __('() не найдена в файле ') . $loader_file;
-                    }
-                    else
+                    } else
                         $PHPShopBase->Rule->BadUserFormaWindow();
-                }
-                else
+                } else
                     echo $interface;
-            }
-            else
+            } else
                 $PHPShopBase->Rule->BadUserFormaWindow();
             ?>
             <br>
@@ -489,28 +488,28 @@ if (empty($adm_title)) {
                     <div class="panel-heading "><span class="glyphicon glyphicon-film text-primary"></span> <b class="text-primary"><?php _e('Урок 1: Создание товара'); ?></b>
                         <a class="btn btn-primary btn-xs pull-right" href="?path=product&return=catalog&action=new&video"><span class="glyphicon glyphicon-play"></span> <?php _e('Старт'); ?></a></div>
                     <div class="panel-body ">
-<?php _e('Обучающий урок по созданию нового товара, заполнения полей и сохранения результата'); ?>.
+                        <?php _e('Обучающий урок по созданию нового товара, заполнения полей и сохранения результата'); ?>.
                     </div>
                 </div>
                 <div class="panel panel-default">
                     <div class="panel-heading"><span class="glyphicon glyphicon-film text-primary"></span> <b class="text-primary"><?php _e('Урок 2: Создание каталога'); ?></b>
                         <a class="btn btn-primary btn-xs pull-right" href="?path=catalog&action=new&video"><span class="glyphicon glyphicon-play"></span> <?php _e('Старт'); ?></a></div>
                     <div class="panel-body ">
-<?php _e('Обучающий урок по созданию нового каталога товара, заполнения полей и сохранения результата'); ?>.
+                        <?php _e('Обучающий урок по созданию нового каталога товара, заполнения полей и сохранения результата'); ?>.
                     </div>
                 </div>
                 <div class="panel panel-default">
                     <div class="panel-heading"><span class="glyphicon glyphicon-film text-primary"></span> <b class="text-primary"><?php _e('Урок 3: Редактор шаблонов'); ?></b>
                         <a class="btn btn-primary btn-xs pull-right" href="?path=tpleditor&name=bootstrap&file=/main/index.tpl&mod=html&video"><span class="glyphicon glyphicon-play"></span> <?php _e('Старт'); ?></a></div>
                     <div class="panel-body">
-<?php _e('Обучающий урок по редактированию шаблона дизайна, описание переменных шаблонизатора, управление редактором кода'); ?>.
+                        <?php _e('Обучающий урок по редактированию шаблона дизайна, описание переменных шаблонизатора, управление редактором кода'); ?>.
                     </div>
                 </div>
                 <div class="panel panel-default">
                     <div class="panel-heading"><span class="glyphicon glyphicon-film text-primary"></span> <b class="text-primary"><?php _e('Урок 4: Настройки'); ?></b><a class="btn btn-primary btn-xs pull-right" href="?path=system#1"><span class="glyphicon glyphicon-play"></span> <?php _e('Старт'); ?></a>
                     </div>
                     <div class="panel-body">
-<?php _e('Выбрать общий шаблон дизайна магазина можно в <a href="?path=system#1">Настройках дизайна</a>. Изменить цветовую тему оформления панели управления можно в  <a href="?path=system#4">Настройках управления</a>'); ?>.
+                        <?php _e('Выбрать общий шаблон дизайна магазина можно в <a href="?path=system#1">Настройках дизайна</a>. Изменить цветовую тему оформления панели управления можно в  <a href="?path=system#4">Настройках управления</a>'); ?>.
                     </div>
                 </div>
                 <div class="checkbox text-muted">
@@ -543,7 +542,7 @@ if (empty($adm_title)) {
                         </div>
                         <div class="modal-body">
 
-<?php if (!empty($selectModalBody)) echo $selectModalBody; ?>
+                            <?php if (!empty($selectModalBody)) echo $selectModalBody; ?>
 
                         </div>
                         <div class="modal-footer">
@@ -622,9 +621,9 @@ if (empty($adm_title)) {
         <script src="./js/bootstrap-select.min.js" data-rocketoptimized="false" data-cfasync="false"></script>
         <script src="./js/messagebox.min.js" data-rocketoptimized="false" data-cfasync="false"></script>
         <!--/ jQuery plugins -->
-        
+
         <?php
-        // WEB PUSH
+// WEB PUSH
         $PHPShopPush = new PHPShopPush();
         $PHPShopPush->init();
         ?>

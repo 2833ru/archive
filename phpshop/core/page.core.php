@@ -39,6 +39,12 @@ class PHPShopPage extends PHPShopCore {
         // Список экшенов
         $this->action = array("nav" => "CID");
         $this->empty_index_action = true;
+        $this->cid_cat_with_foto_template = 'catalog/cid_page_category.tpl';
+
+        // Учет модуля SEOURLPRO
+        if (!empty($GLOBALS['SysValue']['base']['seourlpro']['seourlpro_system'])) {
+            $this->seourlpro_enabled = true;
+        }
 
         parent::__construct();
     }
@@ -49,32 +55,37 @@ class PHPShopPage extends PHPShopCore {
         $title = __('Блог');
         $this->title = $title . " - " . $this->PHPShopSystem->getValue("name");
 
-        // Учет модуля SEOURLPRO
-        if (!empty($GLOBALS['SysValue']['base']['seourlpro']['seourlpro_system'])) {
-            $seourlpro_enabled = true;
-        }
-
         $PHPShopOrm = new PHPShopOrm($this->getValue('base.page_categories'));
         $PHPShopOrm->debug = $this->debug;
         $data = $PHPShopOrm->select(array('*'), array('parent_to' => "=0"), array('order' => 'num,id desc'), array('limit' => 300));
-
         $dis = null;
         if (is_array($data)) {
             foreach ($data as $row) {
 
-                if (empty($row['page_cat_seo_name']) or empty($seourlpro_enabled))
-                    $dis.=PHPShopText::li($row['name'], '/page/CID_' . $row['id'] . '.html');
+                if (empty($row['page_cat_seo_name']) or empty($this->seourlpro_enabled))
+                    $url = '/page/CID_' . $row['id'] . '.html';
                 else
-                    $dis.=PHPShopText::li($row['name'], '/page/' . $row['page_cat_seo_name'] . '.html');
+                    $url = '/page/' . $row['page_cat_seo_name'] . '.html';
+
+                if (PHPShopParser::checkFile($this->cid_cat_with_foto_template)) {
+                    $this->set('podcatalogIcon', $row['icon']);
+                    $this->set('podcatalogId', $row['id']);
+                    $this->set('podcatalogName', $row['name']);
+                    $this->set('podcatalogUrl', $url);
+
+                    $dis .= ParseTemplateReturn('catalog/cid_page_category.tpl');
+                } else {
+                    $dis .= PHPShopText::li($row['name'], $url);
+                }
             }
         }
-
 
         // Навигация хлебные крошки
         $this->navigation(0, $title);
 
         $this->set('pageContent', PHPShopText::ul($dis));
         $this->set('pageTitle', $title);
+        $this->set('pageIcon', $data['icon']);
 
         // Подключаем шаблон
         $this->parseTemplate($this->getValue('templates.page_catalog_list'));
@@ -107,9 +118,9 @@ class PHPShopPage extends PHPShopCore {
 
         // Мультибаза
         if (defined("HostID")) {
-            $sort.= " and servers REGEXP 'i" . HostID . "i'";
+            $sort .= " and servers REGEXP 'i" . HostID . "i'";
         } elseif (defined("HostMain"))
-            $sort.= " and (servers = '' or servers REGEXP 'i1000i')";
+            $sort .= " and (servers = '' or servers REGEXP 'i1000i')";
 
         $PHPShopOrm = new PHPShopOrm();
         $PHPShopOrm->debug = $this->debug;
@@ -130,7 +141,7 @@ class PHPShopPage extends PHPShopCore {
         $this->odnotip($row);
 
         // Определяем переменные
-        $this->set('isPage',true);
+        $this->set('isPage', true);
         $this->set('pageContent', Parser(stripslashes($row['content'])));
         $this->set('pageTitle', $row['name']);
         $this->set('catalogCategory', $this->category_name);
@@ -219,7 +230,7 @@ class PHPShopPage extends PHPShopCore {
         if (defined("HostID"))
             $where['servers'] = " REGEXP 'i" . HostID . "i'";
         elseif (defined("HostMain"))
-            $where['enabled'].= ' and (servers ="" or servers REGEXP "i1000i")';
+            $where['enabled'] .= ' and (servers ="" or servers REGEXP "i1000i")';
 
         // Выборка данных
         $dataArray = $this->PHPShopOrm->select(array('*'), $where, array('order' => 'num,id desc'), array('limit' => 100));
@@ -227,7 +238,7 @@ class PHPShopPage extends PHPShopCore {
 
             if (count($dataArray) > 1)
                 foreach ($dataArray as $row) {
-                    $dis.=PHPShopText::li($row['name'], '/page/' . $row['link'] . '.html');
+                    $dis .= PHPShopText::li($row['name'], '/page/' . $row['link'] . '.html');
 
                     // Максимальная дата изменения
                     if ($row['datas'] > $lastmodified)
@@ -261,7 +272,16 @@ class PHPShopPage extends PHPShopCore {
         $this->set('catalogId', $cat);
 
         // Мета
-        $this->title = $this->category_name . " - " . $this->PHPShopSystem->getValue("name");
+        if($this->PHPShopCategory->getValue('title') != "")
+            $this->title =$this->PHPShopCategory->getValue('title');
+        else $this->title = $this->category_name . " - " . $this->PHPShopSystem->getValue("name");
+        
+        if($this->PHPShopCategory->getValue('description') != "")
+            $this->description =$this->PHPShopCategory->getValue('description');
+         
+        if($this->PHPShopCategory->getValue('keywords') != "")
+            $this->description =$this->PHPShopCategory->getValue('keywords');
+        
         $this->lastmodified = $lastmodified;
 
         // Навигация хлебные крошки
@@ -294,7 +314,7 @@ class PHPShopPage extends PHPShopCore {
         if (defined("HostID"))
             $where['servers'] = " REGEXP 'i" . HostID . "i'";
         elseif (defined("HostMain"))
-            $where['parent_to'].= ' and (servers ="" or servers REGEXP "i1000i")';
+            $where['parent_to'] .= ' and (servers ="" or servers REGEXP "i1000i")';
 
         // Выборка данных
         $PHPShopOrm = new PHPShopOrm($this->getValue('base.page_categories'));
@@ -303,7 +323,21 @@ class PHPShopPage extends PHPShopCore {
         if (is_array($dataArray))
             foreach ($dataArray as $row) {
 
-                $dis.=PHPShopText::li($row['name'], '/page/CID_' . $row['id'] . '.html');
+                if (empty($row['page_cat_seo_name']) or empty($this->seourlpro_enabled))
+                    $url = '/page/CID_' . $row['id'] . '.html';
+                else
+                    $url = '/page/' . $row['page_cat_seo_name'] . '.html';
+
+                if (PHPShopParser::checkFile($this->cid_cat_with_foto_template)) {
+                    $this->set('podcatalogIcon', $row['icon']);
+                    $this->set('podcatalogId', $row['id']);
+                    $this->set('podcatalogName', $row['name']);
+                    $this->set('podcatalogUrl', $url);
+
+                    $dis .= ParseTemplateReturn('catalog/cid_page_category.tpl');
+                } else {
+                    $dis .= PHPShopText::li($row['name'], $url);
+                }
             }
 
         // Список подкаталогов
@@ -357,7 +391,7 @@ class PHPShopPage extends PHPShopCore {
         if (is_array($odnotip))
             foreach ($odnotip as $value) {
                 if (!empty($value))
-                    $odnotipList.=' id=' . trim($value) . ' OR';
+                    $odnotipList .= ' id=' . trim($value) . ' OR';
             }
 
         $odnotipList = substr($odnotipList, 0, strlen($odnotipList) - 2);
@@ -415,20 +449,20 @@ class PHPShopPage extends PHPShopCore {
     function getLast($link) {
         $dis = null;
 
-       
+
         // Перехват модуля
         $hook = $this->setHook(__CLASS__, __FUNCTION__, false, 'START');
         if ($hook)
             return $hook;
 
 
-        $where = array('enabled' => "='1'", 'preview' => '!=""','link'=>'!="'.$link.'"');
+        $where = array('enabled' => "='1'", 'preview' => '!=""', 'link' => '!="' . $link . '"');
 
         // Мультибаза
         if (defined("HostID"))
             $where['servers'] = " REGEXP 'i" . HostID . "i'";
         elseif (defined("HostMain"))
-            $where['preview'].= ' and (servers ="" or servers REGEXP "i1000i")';
+            $where['preview'] .= ' and (servers ="" or servers REGEXP "i1000i")';
 
         $PHPShopOrm = new PHPShopOrm($this->objBase);
         $PHPShopOrm->debug = $this->debug;

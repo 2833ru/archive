@@ -183,9 +183,9 @@ function actionStart() {
 
     // Иконка
     if ($PHPShopSystem->ifSerilizeParam("admoption.image_off", 1)) {
-        $Tab_info .= $PHPShopGUI->setField("Изображение", $PHPShopGUI->setIcon($data['pic_big'], "pic_big_new", true, array('load' => false, 'server' => true, 'url' => false)), 1, 'Активирован режим для товара с одной картинкой, заранее подготовленной на сервере. Для загрузки дополнительных фото товара, снимите запрет на фотогалерею, снимите галку в Настройка - Изображения - Отключить фотогалерею.');
+        $Tab_info .= $PHPShopGUI->setField("Изображение", $PHPShopGUI->setIcon($data['pic_big'], "pic_big_new", true, array('load' => false, 'server' => true, 'url' => true)), 1, 'Активирован режим для товара с одной картинкой, заранее подготовленной на сервере. Для загрузки дополнительных фото товара, снимите запрет на фотогалерею, снимите галку в Настройка - Изображения - Отключить фотогалерею.');
         
-        $Tab_info .= $PHPShopGUI->setField("Превью", $PHPShopGUI->setFile($data['pic_small'], "pic_small_new", array('load' => false, 'server' => 'image', 'url' => false)), 1, 'Активирован режим для товара с одной картинкой, заранее подготовленной на сервере. Для загрузки дополнительных фото товара, снимите запрет на фотогалерею, снимите галку в Настройка - Изображения - Отключить фотогалерею.');
+        $Tab_info .= $PHPShopGUI->setField("Превью", $PHPShopGUI->setFile($data['pic_small'], "pic_small_new", array('load' => false, 'server' => 'image', 'url' => true)), 1, 'Активирован режим для товара с одной картинкой, заранее подготовленной на сервере. Для загрузки дополнительных фото товара, снимите запрет на фотогалерею, снимите галку в Настройка - Изображения - Отключить фотогалерею.');
     }
 
     // Единица измерения
@@ -206,6 +206,9 @@ function actionStart() {
 
     // Вес
     $Tab_info .= $PHPShopGUI->setField('Вес', $PHPShopGUI->setInputText(false, 'weight_new', $data['weight'], 100, __('г&nbsp;&nbsp;&nbsp;&nbsp;')), 'left');
+    $Tab_info .= $PHPShopGUI->setField('Длина', $PHPShopGUI->setInputText(false, 'length_new', $data['length'], 100, __('см&nbsp;')), 'left');
+    $Tab_info .= $PHPShopGUI->setField('Ширина', $PHPShopGUI->setInputText(false, 'width_new', $data['width'], 100, __('см&nbsp;')), 'left');
+    $Tab_info .= $PHPShopGUI->setField('Высота', $PHPShopGUI->setInputText(false, 'height_new', $data['height'], 100, __('см&nbsp;')), 'left');
 
     $Tab_info .= $PHPShopGUI->setField('Единица измерения', $PHPShopGUI->setInputText(false, 'ed_izm_new', $ed_izm, 100));
 

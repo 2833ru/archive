@@ -18,7 +18,7 @@ function sendMailNotice($productID, $saveID, $email) {
 
     if (PHPShopSecurity::true_email($email)) {
 
-        $title = $PHPShopSystem->getName() . " - "._('уведомление о товаре, заявка')." №" . $saveID;
+        $title = $PHPShopSystem->getName() . " - ".__('уведомление о товаре, заявка')." №" . $saveID;
         PHPShopParser::set('title', $title);
 
         PHPShopObj::loadClass(array('array', 'valuta', 'product'));

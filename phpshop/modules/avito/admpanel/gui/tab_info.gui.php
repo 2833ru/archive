@@ -4,11 +4,13 @@ function tab_info($data) {
     global $PHPShopGUI;
     
     $Info = '<p>
-      <h4>Настройки параметров размещения в Авито</h4>
+      <h4>Предоставить менеджеру Авито ссылку на XML файл:</h4>
         <ol>
             <li>
-                Предоставить менеджеру Авито ссылку на XML файл:
                 Бытовая электроника: <code>http://' . $_SERVER['SERVER_NAME'] .$GLOBALS['SysValue']['dir']['dir']. '/phpshop/modules/avito/xml/appliances.php</code>   
+            </li> 
+            <li>
+                Для дома и дачи: <code>http://' . $_SERVER['SERVER_NAME'] .$GLOBALS['SysValue']['dir']['dir']. '/phpshop/modules/avito/xml/home.php</code>   
             </li> 
         </ol>
         <h4>Настройка модуля</h4>

@@ -1280,7 +1280,7 @@ class PHPShopSliderElement extends PHPShopElements {
             $where['enabled'] .= ' and (servers ="" or servers REGEXP "i1000i")';
 
         if (!empty($view)) {
-            $result = $this->PHPShopOrm->select(array('image', 'alt', 'link'), $where, array('order' => 'num, id DESC'), array("limit" => $this->limit));
+            $result = $this->PHPShopOrm->select(array('*'), $where, array('order' => 'num, id DESC'), array("limit" => $this->limit));
 
             // Проверка на еденичную запись
             if ($this->limit > 1)
@@ -1295,6 +1295,7 @@ class PHPShopSliderElement extends PHPShopElements {
                     $this->set('image', $row['image']);
                     $this->set('alt', $row['alt']);
                     $this->set('link', $row['link']);
+                    $this->set('sliderID', $row['id']);
 
                     // Перехват модуля
                     $this->setHook(__CLASS__, __FUNCTION__, $row, 'END');
@@ -1302,7 +1303,7 @@ class PHPShopSliderElement extends PHPShopElements {
                     // Подключаем шаблон
                     $dis .= $this->parseTemplate("/slider/slider_oneImg.tpl");
                 }
-            if (@$dis) {
+            if ($dis) {
                 $this->set('imageSliderContent', $dis);
                 return$this->parseTemplate("/slider/slider_main.tpl");
             }
@@ -1547,13 +1548,13 @@ class PHPShopPhotoElement extends PHPShopElements {
 
         $PHPShopOrm = new PHPShopOrm($this->getValue('base.photo_categories'));
         $PHPShopOrm->debug = $this->debug;
-        $data = $PHPShopOrm->select(array('*'), array('enabled' => "='1'", "page" => " LIKE '%$url%'"), array('order' => 'num'), array("limit" => 100));
+        $data = $PHPShopOrm->select(array('*'), array('enabled' => "='1'", "page" => " LIKE '%$url%'"), array('order' => 'num'), array("limit" => 1000));
 
         if (is_array($data))
             foreach ($data as $row) {
                 $this->set('photoTitle', $row['name']);
                 $this->set('photoLink', $row['id']);
-                $this->set('photoContent', $this->ListPhoto($row['id'], $row['num']));
+                $this->set('photoContent', $this->ListPhoto($row['id'], $row['count']));
                 $dis .= $this->parseTemplate('./phpshop/lib/templates/photo/photo_list_forma.tpl', true);
             }
         return $dis;

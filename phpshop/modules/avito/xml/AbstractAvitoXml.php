@@ -19,12 +19,11 @@ abstract class AbstractAvitoXml
 
     private $ssl = 'http://';
     private $categories = array();
+    private $xmlPriceId;
 
-    /**
-     * AbstractAvitoXml constructor.
-     */
-    public function __construct() {
+    public function __construct($xmlPriceId) {
 
+        $this->xmlPriceId = $xmlPriceId;
         $this->PHPShopSystem = new PHPShopSystem();
 
         // SSL
@@ -112,6 +111,7 @@ abstract class AbstractAvitoXml
                 "id" => $product['id'],
                 "category" => PHPShopString::win_utf8($this->categories[$product['category']]['category']),
                 "type" => PHPShopString::win_utf8($this->categories[$product['category']]['type']),
+                "subtype" => PHPShopString::win_utf8($this->categories[$product['category']]['subtype']),
                 "name" => str_replace(array('&#43;', '&#43'), '+', $product['name']),
                 "images" => $images,
                 "price" => $this->getProductPrice($product),
@@ -176,8 +176,13 @@ abstract class AbstractAvitoXml
      */
     private function loadCategories()
     {
-        $where['skin_enabled '] = "!='1'";
-        $where['category_avito'] = " > '0'";
+        $orm = new PHPShopOrm('phpshop_modules_avito_categories');
+        $categories = array_column($orm->getList(['id'], ['xml_price_id' => sprintf('="%s"', $this->xmlPriceId)]), 'id');
+
+        $where = [
+            'skin_enabled' => "!='1'",
+            'category_avito' => sprintf(' IN (%s)', implode(',', $categories))
+        ];
 
         if (defined("HostID"))
             $where['servers'] = " REGEXP 'i" . HostID . "i'";
@@ -185,14 +190,15 @@ abstract class AbstractAvitoXml
             $where['skin_enabled'] .= ' and (servers ="" or servers REGEXP "i1000i")';
 
         $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['categories']);
-        $categories = $PHPShopOrm->getList(array('id', 'category_avito', 'type_avito'), $where);
+        $categories = $PHPShopOrm->getList(array('id', 'category_avito', 'type_avito', 'subtype_avito'), $where);
 
         foreach ($categories as $category) {
             $avitoCategory = $this->Avito->getCategoryById((int) $category['category_avito']);
             if(!empty($avitoCategory)) {
                 $this->categories[$category['id']] = array(
                     'category' => $avitoCategory,
-                    'type' => $this->Avito->getAvitoType($category['type_avito'])
+                    'type'     => $this->Avito->getAvitoType($category['type_avito']),
+                    'subtype'  => $this->Avito->getAvitoSubType($category['subtype_avito'])
                 );
             }
         }

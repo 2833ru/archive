@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="windows-1251"?>
+<module>
+    <version>1.0</version>
+    <name>МойСклад</name>
+    <description>Интеграция с системой МойСклад.</description>
+    <faqlink>https://docs.phpshop.ru/moduli/crm/moysklad</faqlink>
+    <sign>1600408414</sign>
+    <status>New</status>
+    <pro>true</pro>
+    <category>crm</category>
+     <adminmenu>
+        <title>МойСклад</title>
+        <capability>true</capability>
+         <podmenu>
+             <podmenu_name>Журнал операций</podmenu_name>
+             <podmenu_action>dir.moysklad</podmenu_action>
+         </podmenu>
+    </adminmenu>
+</module>

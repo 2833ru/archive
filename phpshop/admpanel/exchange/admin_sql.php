@@ -95,7 +95,11 @@ function actionSave() {
             $sql_file_content = PHPShopString::win_utf8($sql_file_content, true);
         }
 
-        $sql_query = explode(";\r", $sql_file_content);
+        //$crlf=PHP_EOL;
+        //$crlf="\r";
+        $crlf = '
+';
+        $sql_query = explode(";".$crlf, $sql_file_content);
         $count = count($sql_query);
         if ($count < 1)
             $sql_query = explode(";", $sql_file_content);

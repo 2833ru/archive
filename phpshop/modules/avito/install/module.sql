@@ -4,30 +4,31 @@ CREATE TABLE `phpshop_modules_avito_system` (
   `password` varchar(64),
   `manager` varchar(255),
   `phone` varchar(64),
-  `version` varchar(64) default '1.1',
-  `additional_description` text default '',
+  `additional_description` text default null,
+  `version` varchar(64) default '1.2',
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
 
-INSERT INTO `phpshop_modules_avito_system` VALUES (1,'', '', '', '', '1.1');
+INSERT INTO `phpshop_modules_avito_system` VALUES (1,'', '', '', '', '1.2');
 
-DROP TABLE IF EXISTS `phpshop_modules_avito_categories`;
-CREATE TABLE `phpshop_modules_avito_categories` (
+DROP TABLE IF EXISTS `phpshop_modules_avito_category_types`;
+CREATE TABLE `phpshop_modules_avito_xml_prices` (
   `id` int(11) NOT NULL auto_increment,
   `name` varchar(64),
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
 
-INSERT INTO `phpshop_modules_avito_categories` (`id`, `name`) VALUES
-(1, 'Телефоны'),
-(2, 'Аудио и видео'),
-(3, 'Товары для компьютера'),
-(4, 'Фототехника'),
-(5, 'Игры, приставки и программы'),
-(6, 'Оргтехника и расходники'),
-(7, 'Планшеты и электронные книги'),
-(8, 'Ноутбуки'),
-(9, 'Настольные компьютеры');
+INSERT INTO `phpshop_modules_avito_xml_prices` (`id`, `name`) VALUES
+(1, 'Бытовая электроника'),
+(2, 'Для дома и дачи');
+
+DROP TABLE IF EXISTS `phpshop_modules_avito_categories`;
+CREATE TABLE `phpshop_modules_avito_categories` (
+  `id` int(11) NOT NULL auto_increment,
+  `name` varchar(64),
+  `xml_price_id` int(11) NOT NULL,
+  PRIMARY KEY  (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
 
 DROP TABLE IF EXISTS `phpshop_modules_avito_types`;
 CREATE TABLE `phpshop_modules_avito_types` (
@@ -36,6 +37,26 @@ CREATE TABLE `phpshop_modules_avito_types` (
   `category_id` int(11) NOT NULL,
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
+
+DROP TABLE IF EXISTS `phpshop_modules_avito_subtypes`;
+CREATE TABLE `phpshop_modules_avito_subtypes` (
+  `id` int(11) NOT NULL auto_increment,
+  `name` varchar(64),
+  `type_id` int(11) NOT NULL,
+  PRIMARY KEY  (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
+
+-- Бытовая электроника
+INSERT INTO `phpshop_modules_avito_categories` (`id`, `name`, `xml_price_id`) VALUES
+(1, 'Телефоны', 1),
+(2, 'Аудио и видео', 1),
+(3, 'Товары для компьютера', 1),
+(4, 'Фототехника', 1),
+(5, 'Игры, приставки и программы', 1),
+(6, 'Оргтехника и расходники', 1),
+(7, 'Планшеты и электронные книги', 1),
+(8, 'Ноутбуки', 1),
+(9, 'Настольные компьютеры', 1);
 
 INSERT INTO `phpshop_modules_avito_types` (`id`, `name`, `category_id`) VALUES
 (1, 'Acer', 1),
@@ -143,6 +164,71 @@ INSERT INTO `phpshop_modules_avito_types` (`id`, `name`, `category_id`) VALUES
 (103, 'Xiaomi', 8),
 (104, 'Другой', 8);
 
+-- Для дома и дачи
+INSERT INTO `phpshop_modules_avito_categories` (`id`, `name`, `xml_price_id`) VALUES
+(10, 'Ремонт и строительство', 2),
+(11, 'Мебель и интерьер', 2),
+(12, 'Бытовая техника', 2),
+(13, 'Посуда и товары для кухни', 2),
+(14, 'Растения', 2),
+(15, 'Продукты питания', 2);
+
+INSERT INTO `phpshop_modules_avito_types` (`id`, `name`, `category_id`) VALUES
+(105, 'Двери', 10),
+(106, 'Инструменты', 10),
+(107, 'Камины и обогреватели', 10),
+(108, 'Окна и балконы', 10),
+(109, 'Потолки', 10),
+(110, 'Садовая техника', 10),
+(111, 'Сантехника и сауна', 10),
+(112, 'Стройматериалы', 10),
+(113, 'Компьютерные столы и кресла', 11),
+(114, 'Кровати, диваны и кресла', 11),
+(115, 'Кухонные гарнитуры', 11),
+(116, 'Освещение', 11),
+(117, 'Подставки и тумбы', 11),
+(118, 'Предметы интерьера, искусство', 11),
+(119, 'Столы и стулья', 11),
+(120, 'Текстиль и ковры', 11),
+(121, 'Шкафы и комоды', 11),
+(122, 'Другое', 11),
+(123, 'Пылесосы', 12),
+(124, 'Стиральные машины', 12),
+(125, 'Утюги', 12),
+(126, 'Швейные машины', 12),
+(127, 'Бритвы и триммеры', 12),
+(128, 'Машинки для стрижки', 12),
+(129, 'Фены и приборы для укладки', 12),
+(130, 'Эпиляторы', 12),
+(131, 'Вытяжки', 12),
+(132, 'Мелкая кухонная техника', 12),
+(133, 'Микроволновые печи', 12),
+(134, 'Плиты', 12),
+(135, 'Посудомоечные машины', 12),
+(136, 'Холодильники и морозильные камеры', 12),
+(137, 'Вентиляторы', 12),
+(138, 'Кондиционеры', 12),
+(139, 'Обогреватели', 12),
+(140, 'Очистители воздуха', 12),
+(141, 'Термометры и метеостанции', 12),
+(142, 'Другое', 12),
+(143, 'Посуда', 13),
+(144, 'Товары для кухни', 13);
+
+INSERT INTO `phpshop_modules_avito_subtypes` (`id`, `name`, `type_id`) VALUES
+(1, 'Изоляция', 112),
+(2, 'Крепёж', 112),
+(3, 'Кровля и водосток', 112),
+(4, 'Листовые материалы', 112),
+(5, 'Металлопрокат', 112),
+(6, 'Общестроительные материалы', 112),
+(7, 'Отделка', 112),
+(8, 'Пиломатериалы', 112),
+(9, 'Строительные смеси', 112),
+(10, 'Строительство стен', 112),
+(11, 'Электрика', 112),
+(12, 'Другое', 112);
+
 ALTER TABLE `phpshop_products` ADD `condition_avito` varchar(64) DEFAULT 'Новое';
 ALTER TABLE `phpshop_products` ADD `export_avito` enum('0','1') DEFAULT '0';
 ALTER TABLE `phpshop_products` ADD `name_avito` varchar(255) DEFAULT '';
@@ -150,4 +236,5 @@ ALTER TABLE `phpshop_products` ADD `listing_fee_avito` varchar(64) DEFAULT 'Pack
 ALTER TABLE `phpshop_products` ADD `ad_status_avito` varchar(64) DEFAULT 'Free';
 ALTER TABLE `phpshop_categories` ADD `category_avito` int(11) DEFAULT NULL;
 ALTER TABLE `phpshop_categories` ADD `type_avito` int(11) DEFAULT NULL;
+ALTER TABLE `phpshop_categories` ADD `subtype_avito` int(11) DEFAULT NULL;
   

@@ -167,7 +167,7 @@ $().ready(function() {
     // Расширенный поиск товара - 2 шаг
     $("body").on('click', ".search-send", function(event) {
         event.preventDefault();
-        var push = '?';
+        var push = '?from=search&';
         $('#modal-form .form-control,  #modal-form input:radio:checked, #modal-form input:checkbox:checked').each(function() {
             if ($(this).attr('name') !== undefined) {
                 push += $(this).attr('name') + '=' + escape($(this).val()) + '&';

@@ -95,7 +95,7 @@ function checkSeoUrlProName($data){
             $result = $PHPShopOrm->select(array('id','name'),array('id'=>'='.$data['parent_to_new']),false,array('limit'=>1));
             
             if(empty($data['cat_seo_name_new']))
-                $data['cat_seo_name_new']=PHPShopString::toLatin($data['name_new']);
+                return PHPShopString::toLatin($_POST['name_new']);
             
             if(!empty($result['name']))
                 return PHPShopString::toLatin($result['name']).'-'.$data['cat_seo_name_new'];

@@ -1,10 +1,34 @@
 <?php
 
+// SQL
+$PHPShopOrm = new PHPShopOrm($PHPShopModules->getParam("base.productsgroup.productsgroup_system"));
+
+// Обновление версии модуля
+function actionBaseUpdate() {
+    global $PHPShopModules, $PHPShopOrm;
+    $PHPShopOrm->clean();
+    $option = $PHPShopOrm->select();
+    $new_version = $PHPShopModules->getUpdate($option['version']);
+    $PHPShopOrm->clean();
+    $PHPShopOrm->update(array('version_new' => $new_version));
+}
+
+// Функция обновления
+function actionUpdate() {
+    global $PHPShopModules,$PHPShopOrm;
+
+    // Настройки витрины
+    $PHPShopModules->updateOption($_GET['id'], $_POST['servers']);
+    $PHPShopOrm->update($_POST);
+
+    header('Location: ?path=modules&id='.$_GET['id']);
+}
+
 // Начальная функция загрузки
 function actionStart() {
-    global $PHPShopGUI,$select_name;
-    
-    $PHPShopGUI->setActionPanel(__("Настройка модуля") . ' <span id="module-name">' . ucfirst($_GET['id']).'</span>', $select_name, null);
+    global $PHPShopGUI, $PHPShopOrm;
+
+    $data = $PHPShopOrm->select();
 
     $Info = '<p>Модуль позволяет выводить составные товары в виде единой карточки и управлять составом корзины при их добавлении. Подходит для продажи мебели, компьютеров в сборе и т.д.</p>
         <h4>Настройка товара</h4>
@@ -20,14 +44,14 @@ function actionStart() {
     // Содержание закладки 1
     $Tab2 = $PHPShopGUI->setInfo($Info);
 
-    // Содержание закладки 2
-    $Tab3 = $PHPShopGUI->setPay('О модуле', false);
-
     // Вывод формы закладки
-    $PHPShopGUI->setTab(array("Инструкция", $Tab2), array("О Модуле", $Tab3));
+    $PHPShopGUI->setTab(array("Инструкция", $Tab2), array("О Модуле", $PHPShopGUI->setPay(false, false, $data['version'], true)));
 
     // Вывод кнопок сохранить и выход в футер
-    $ContentFooter = $PHPShopGUI->setInput("submit", "saveID", "Применить", "right", 80, "", "but", "actionUpdate.modules.edit");
+    $ContentFooter =
+        $PHPShopGUI->setInput("hidden", "rowID", $data['id']) .
+        $PHPShopGUI->setInput("submit", "saveID", "Применить", "right", 80, "", "but", "actionUpdate.modules.edit");
+
 
     $PHPShopGUI->setFooter($ContentFooter);
     return true;

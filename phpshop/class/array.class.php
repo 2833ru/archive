@@ -2,17 +2,8 @@
 
 /**
  * Библиотека работы с массивами данных
- * <code>
- * // example:
- * class PHPShopCategoryArray extends PHPShopArray{
- * 	 function __construct(){
- * 	 $this->objBase=$GLOBALS['SysValue']['base']['name'];
- * 	 parent::__construct("id","name","PID");
- * 	 }
-  }
- * </code>
  * @author PHPShop Software
- * @version 1.5
+ * @version 1.7
  * @package PHPShopClass
  */
 class PHPShopArray {
@@ -73,12 +64,12 @@ class PHPShopArray {
      * Режим игнорирования полей в аргументах [NEW]
      * @var bool 
      */
-    var $ignor = false; 
+    var $ignor = false;
 
     function __construct() {
-        
+
         // Лимит из конфига
-        if(!empty($GLOBALS['SysValue']['my']['array_limit']))
+        if (!empty($GLOBALS['SysValue']['my']['array_limit']))
             $this->limit = $GLOBALS['SysValue']['my']['array_limit'];
 
         $this->objArg = func_get_args();
@@ -104,13 +95,13 @@ class PHPShopArray {
             foreach ($this->objArg as $v) {
                 $select[] = $v;
             }
-        }
-        else $select[] = "*";
+        } else
+            $select[] = "*";
 
-        if($this->ignor){
-           $this->ignor_select = $select;
-           unset($select);
-           $select[] = "*";
+        if ($this->ignor) {
+            $this->ignor_select = $select;
+            unset($select);
+            $select[] = "*";
         }
 
         $PHPShopOrm = new PHPShopOrm($this->objBase);
@@ -120,17 +111,17 @@ class PHPShopArray {
         $data = $PHPShopOrm->select($select, $this->objSQL, $this->order, array('limit' => $this->limit));
 
         if ($select[0] == "*") {
-            
-            if(is_array($data)){
-                
-                if(count($data) == 1)
+
+            if (is_array($data)) {
+
+                if (count($data) == 1)
                     $data_true[] = $data;
-                else $data_true = $data;
-                
-                foreach($data_true as $val)
-                     $array[$val['id']] = $val;
+                else
+                    $data_true = $data;
+
+                foreach ($data_true as $val)
+                    $array[$val['id']] = $val;
             }
-            
         } else if (is_array($data))
             foreach ($data as $k => $objRow) {
                 switch ($this->objType) {
@@ -153,7 +144,7 @@ class PHPShopArray {
 
         // Игнорирование полей   
         if (@count($this->ignor_select) > 0) {
-            foreach ($array as $k=>$v)
+            foreach ($array as $k => $v)
                 foreach ($v as $key => $val)
                     if (in_array($key, $this->ignor_select)) {
                         unset($array[$k][$key]);
@@ -180,8 +171,7 @@ class PHPShopArray {
         if (strstr($param, '.')) {
             $param = explode(".", $param);
             $this->objArray[$param[0]][$param[1]] = $value;
-        }
-        else
+        } else
             $this->objArray[$param] = $value;
     }
 
@@ -195,8 +185,7 @@ class PHPShopArray {
             $param = explode(".", $param);
             if (isset($this->objArray[$param[0]][$param[1]]))
                 return $this->objArray[$param[0]][$param[1]];
-        }
-        else
+        } else
             return $this->objArray[$param];
     }
 

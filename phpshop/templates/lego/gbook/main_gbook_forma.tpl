@@ -9,7 +9,7 @@
                 </span>
                 <span itemprop="reviewBody">@gbookOtsiv@</span>
                 
-                <footer itemprop="author" itemscope itemtype="https://schema.org/Person"><cite><span itemprop="name">@gbookName@</span>@gbookName@, @gbookData@</cite></footer>
+                <footer itemprop="author" itemscope itemtype="https://schema.org/Person"><cite><span itemprop="name">@gbookName@</span>, @gbookData@</cite></footer>
                 <p>@gbookOtvet@</p>
             </div>
         </div>

@@ -11,9 +11,13 @@ class PHPShopBrandsElement extends PHPShopElements {
     /**
      * @var int  Кол-во брендов
      */
-    var $limitOnLine = 5;
-    var $firstClassName = 'span-first-child';
-    var $debug = false;
+    public $limitOnLine = 5;
+    public $firstClassName = 'span-first-child';
+    public $debug = false;
+
+    // Хранение брендов и значений к ним, что бы не делать лишних запросов при использовании в циклах.
+    private $brands = [];
+    private $brandValues = [];
 
     /**
      * Конструктор
@@ -33,101 +37,150 @@ class PHPShopBrandsElement extends PHPShopElements {
         if ($hook)
             return $hook;
 
-        $arrayVendorValue = array();
+        foreach ($this->getBrandsValues() as $v) {
+            if ($i % $this->limitOnLine == 0) {
+                $this->set('brandFirstClass', $this->firstClassName);
+            } else {
+                $this->set('brandFirstClass', '');
+            }
+            $i++;
 
+            $this->set('brandIcon', null);
+            foreach ($v as $val) {
+                if (!empty($val['icon']))
+                    $this->set('brandIcon', $val['icon']);
+            }
+            $this->set('brandName', $v[0]['name']);
+            $this->set('brandPageLink', $this->getBrandLink($v));
+            $this->set('brandsList', ParseTemplateReturn('brands/top_brands_one.tpl'), true);
+
+            // Для мобильного меню
+            $this->set('brandsListMobile', PHPShopText::li($this->get('brandName'), $this->get('brandPageLink'), false), true);
+        }
+
+        if ($this->get('brandsList'))
+            return ParseTemplateReturn('brands/top_brands_main.tpl');
+    }
+
+    public function getCategoryBrands($categoryId)
+    {
+        // Перехват модуля
+        $hook = $this->setHook(__CLASS__, __FUNCTION__, $categoryId, 'START');
+        if ($hook)
+            return $hook;
+
+        $this->set('categoryBrandsList', null);
+        $category = new PHPShopCategory((int) $categoryId);
+        $categories = $category->getChildrenCategories(10, ['id', 'sort']);
+        $categories[] = $category->objRow;
+
+        $brands = $this->getBrands();
+        $categoryBrands = [];
+        foreach ($categories as $category) {
+            $sorts = unserialize($category['sort']);
+            if(is_array($sorts)) {
+                foreach ($sorts as $sort) {
+                    if(isset($brands[$sort])) {
+                        $categoryBrands[] = (int) $sort;
+                    }
+                }
+            }
+        }
+
+        foreach ($this->getBrandsValues($categoryBrands) as $brandValues) {
+            $this->set('categoryBrandIcon', null);
+            foreach ($brandValues as $brandValue) {
+                if (!empty($brandValue['icon']))
+                    $this->set('categoryBrandIcon', $brandValue['icon']);
+            }
+            $this->set('categoryBrandName', $brandValues[0]['name']);
+            $this->set('categoryBrandPageLink', $this->getBrandLink($brandValues));
+            $this->set('categoryBrandsList', ParseTemplateReturn('brands/category_brands_one.tpl'), true);
+        }
+
+        if(!empty($this->get('categoryBrandsList'))) {
+            return ParseTemplateReturn('brands/category_brands.tpl');
+        }
+    }
+
+    private function getBrands()
+    {
+        if(count($this->brands) > 0) {
+            return $this->brands;
+        }
+
+        // Мультибаза
+        $where = ['brand' => '="1"'];
+        if (defined("HostID"))
+            $where['brand'] .= " and servers REGEXP 'i" . HostID . "i'";
+        elseif (defined("HostMain"))
+            $where['brand'] .= ' and (servers ="" or servers REGEXP "i1000i")';
+
+        // Массив имен характеристик
+        $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['sort_categories']);
+        $this->brands = array_column($PHPShopOrm->getList(['*'], $where, ['order' => 'num']), null, 'id');
+
+        return $this->brands;
+    }
+
+    private function getBrandsValues($categories = null)
+    {
+        if(count($this->brandValues) === 0) {
+            $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['sort']);
+            $PHPShopOrm->debug = $this->debug;
+            $PHPShopOrm->mysql_error = false;
+
+            $brands = array_keys($this->getBrands());
+            if (is_array($brands) && count($brands) > 0) {
+                $result = $PHPShopOrm->query('select * from ' . $GLOBALS['SysValue']['base']['sort'] . ' where category IN (' . implode(',', $brands) . ') order by num,name');
+                while ($row = mysqli_fetch_assoc($result)) {
+                    $this->brandValues[$row['name']][] = ['name' => $row['name'], 'id' => $row['id'], 'category' => $row['category'], 'icon' => $row['icon'], 'seo' => $row['sort_seo_name']];
+                }
+            }
+        }
+
+        // Значения для бренда категории
+        if(is_array($categories)) {
+            $result = [];
+            foreach ($this->brandValues as $brandName => $brandValue) {
+                foreach ($brandValue as $value) {
+                    if(in_array((int) $value['category'], $categories)) {
+                        $result[$brandName][] = $value;
+                    }
+                }
+            }
+
+            return $result;
+        }
+
+
+        return $this->brandValues;
+    }
+
+    private function getBrandLink($values)
+    {
         // Учет модуля SEOURLPRO
         if (!empty($GLOBALS['SysValue']['base']['seourlpro']['seourlpro_system'])) {
             $PHPShopOrmSeo = new PHPShopOrm($GLOBALS['SysValue']['base']['seourlpro']['seourlpro_system']);
             $seourlpro = $PHPShopOrmSeo->select();
         }
 
-        // Мультибаза
-        if (defined("HostID"))
-            $sql_add .= " and servers REGEXP 'i" . HostID . "i'";
-        elseif (defined("HostMain"))
-            $sql_add .= ' and (servers ="" or servers REGEXP "i1000i")';
+        $link = null;
+        $isSeoNameIdentical = true;
+        foreach ($values as $key => $val) {
+            $link .= 'v[' . $val['category'] . ']=' . $val['id'] . '&';
 
-        // Массив имен характеристик
-        $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['sort_categories']);
-        $PHPShopOrm->debug = $this->debug;
-        $PHPShopOrm->mysql_error = false;
-        $result = $PHPShopOrm->query("select * from " . $GLOBALS['SysValue']['base']['sort_categories'] . " where brand='1' " . $sql_add . " order by num");
-        while (@$row = mysqli_fetch_assoc($result)) {
-            $arrayVendor[$row['id']] = $row;
-        }
-        if (is_array($arrayVendor))
-            foreach ($arrayVendor as $k => $v) {
-                if (is_numeric($k))
-                    $sortValue .= ' category=' . $k . ' OR';
-            }
-        $sortValue = substr($sortValue, 0, strlen($sortValue) - 2);
-
-        if (!empty($sortValue)) {
-
-            // Массив значений 
-            $i = 0;
-            $result = $PHPShopOrm->query("select * from " . $GLOBALS['SysValue']['base']['sort'] . " where $sortValue order by num,name");
-
-            while (@$row = mysqli_fetch_array($result)) {
-                $arrayVendorValue[$row['name']][] = array('name' => $row['name'], 'id' => $row['id'], 'category' => $row['category'], 'icon' => $row['icon'], 'seo' => $row['sort_seo_name']);
-            }
-
-            // Проверка на уникального имени
-            if (is_array($arrayVendorValue)) {
-                foreach ($arrayVendorValue as $k => $v) {
-
-                    if ($i % $this->limitOnLine == 0) {
-                        $this->set('brandFirstClass', $this->firstClassName);
-                    } else {
-                        $this->set('brandFirstClass', '');
-                    }
-                    $i++;
-
-                    if (is_array($v[1])) {
-                        $link = null;
-                        $this->set('brandIcon', null);
-                        foreach ($v as $val) {
-                            $link .= 'v[' . $val['category'] . ']=' . $val['id'] . '&';
-
-                            if (!empty($val['icon']))
-                                $this->set('brandIcon', $val['icon']);
-                        }
-                        $this->set('brandName', $v[0]['name']);
-
-
-                        if ($seourlpro['seo_brands_enabled'] == 2) {
-                            if (empty($v[0]['sort_seo_name']))
-                                $this->set('brandPageLink', $GLOBALS['SysValue']['dir']['dir'] . '/selection/?' . substr($link, 0, strlen($link) - 1));
-                            else
-                                $this->set('brandPageLink', '/brand/' . $v[0]['sort_seo_name'] . '.html');
-                        } else
-                            $this->set('brandPageLink', $GLOBALS['SysValue']['dir']['dir'] . '/selection/?' . substr($link, 0, strlen($link) - 1));
-
-                        $this->set('brandsList', ParseTemplateReturn('brands/top_brands_one.tpl'), true);
-                    } else {
-
-                        $this->set('brandIcon', $v[0]['icon']);
-                        $this->set('brandName', $v[0]['name']);
-
-                        if ($seourlpro['seo_brands_enabled'] == 2) {
-                            if (empty($v[0]['sort_seo_name']))
-                                $this->set('brandPageLink', $GLOBALS['SysValue']['dir']['dir'] . '/selection/?v[' . $v[0]['category'] . ']=' . $v[0]['id']);
-                            else
-                                $this->set('brandPageLink', '/brand/' . $v[0]['sort_seo_name'] . '.html');
-                        } else
-                            $this->set('brandPageLink', $GLOBALS['SysValue']['dir']['dir'] . '/selection/?v[' . $v[0]['category'] . ']=' . $v[0]['id']);
-                        $this->set('brandsList', ParseTemplateReturn('brands/top_brands_one.tpl'), true);
-                    }
-
-                    // Для мобильного меню
-                    $this->set('brandsListMobile', PHPShopText::li($this->get('brandName'), $this->get('brandPageLink'), false), true);
-                }
+            if($key > 0 && $val['seo'] !== $values[$key-1]['seo']) {
+                $isSeoNameIdentical = false;
             }
         }
-        if ($this->get('brandsList'))
-            return ParseTemplateReturn('brands/top_brands_main.tpl');
+
+        if ((int) $seourlpro['seo_brands_enabled'] === 2 && $isSeoNameIdentical) {
+            return $GLOBALS['SysValue']['dir']['dir'] . '/brand/' . $values[0]['seo'] . '.html';
+        }
+
+        return $GLOBALS['SysValue']['dir']['dir'] . '/selection/?' . substr($link, 0, strlen($link) - 1);
     }
-
 }
 
 /**
@@ -556,12 +609,20 @@ class PHPShopProductIndexElements extends PHPShopProductElements {
             if (empty($this->cell))
                 $this->cell = $this->PHPShopSystem->getValue('num_vitrina');
 
-            if ($this->enabled > 0) {
+            if (!empty($this->enabled)) {
+
+                $where['statusi']=" !=1";
+
+                // Мультибаза
+                if (defined("HostID"))
+                    $where['servers'] = "=" . HostID;
+                elseif (defined("HostMain"))
+                    $where['servers'] .= '=0';
 
                 // Последние заказы
                 $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['orders']);
                 $PHPShopOrm->debug = $this->debug;
-                $data = $PHPShopOrm->select(array('orders'), false, array('order' => 'id desc'), array('limit' => $this->limitorders));
+                $data = $PHPShopOrm->select(array('orders'), $where, array('order' => 'id desc'), array('limit' => $this->limitorders));
 
                 if (is_array($data)) {
                     foreach ($data as $row) {
@@ -787,6 +848,7 @@ class PHPShopShopCatalogElement extends PHPShopProductElements {
     }
 
     /**
+     * @deprecated Используется только в шаблонах, class PHPShopNtCatalogElement.
      * Шаблон вывода подкаталогов с иконками
      * @param array $val массив данных
      * @return string
@@ -819,41 +881,39 @@ class PHPShopShopCatalogElement extends PHPShopProductElements {
         // Выполнение только в Index
         if ($this->PHPShopNav->index()) {
 
-            // Количество ячеек
-            if (empty($this->cell))
-                $this->cell = $this->PHPShopSystem->getValue('num_vitrina');
-
-            $table = null;
-            $j = 1;
-            $item = 1;
-
             // Перехват модуля
             $hook = $this->setHook(__CLASS__, __FUNCTION__, null, 'START');
             if ($hook)
                 return $hook;
 
-            if (is_array($this->tree_array[0]['sub']))
-                foreach ($this->tree_array[0]['sub'] as $k => $v) {
+            $dis = null;
 
-                    //$dis = $podcatalog = null;
-                    $this->set('catalogId', $k);
-                    $this->set('catalogTitle', $v);
-                    $this->set('catalogName', $v);
-                    $this->set('catalogIcon', $this->CategoryArray[$k]['icon']);
+            // Не выводить скрытые каталоги
+            $where['skin_enabled'] = "!='1' and tile='1'";
+
+            // Мультибаза
+            if (defined("HostID"))
+                $where['servers'] = " REGEXP 'i" . HostID . "i'";
+            elseif (defined("HostMain"))
+                $where['skin_enabled'] .= ' and (servers ="" or servers REGEXP "i1000i")';
+
+            $PHPShopCategoryArray = new PHPShopCategoryArray($where);
+            $PHPShopCategoryArray->order = array('order' => $this->root_order);
+            $categories = $PHPShopCategoryArray->getArray();
+
+            if (is_array($categories))
+                foreach ($categories as $category) {
+
+                    $this->set('catalogId', $category['id']);
+                    $this->set('catalogTitle', $category['name']);
+                    $this->set('catalogName', $category['name']);
+                    $this->set('catalogIcon', $category['icon']);
                     $this->set('catalogContent', null);
 
-                    // Подключаем шаблон
-                    if ($this->CategoryArray[$k]['tile'] == 1)
-                        $dis .= ParseTemplateReturn("catalog/catalog_table_forma.tpl");
+                    $dis .= ParseTemplateReturn("catalog/catalog_table_forma.tpl");
 
-                    // Подкаталоги
-                    if (is_array($this->tree_array[$k]['sub']))
-                        foreach ($this->tree_array[$k]['sub'] as $key => $val) {
-                            $dis .= $this->template_cat_table(array('name' => $val, 'id' => $key, 'tile' => $this->CategoryArray[$key]['tile'], 'icon' => $this->CategoryArray[$key]['icon']));
-                        }
-                        
                     // Перехват модуля
-                    $this->setHook(__CLASS__, __FUNCTION__, $this->CategoryArray[$k], 'END');
+                    $this->setHook(__CLASS__, __FUNCTION__, $category, 'END');
                 }
 
             return $dis;

@@ -18,7 +18,7 @@
       <div class="">
           <div class="prodRatioHolder">
               <div id="productSlider" class="slider">
-                  <div class="slideHolder" data-elem="slides" >
+                  <div class="slideHolder">
                       @productSliderOneImage@
                   </div>
               </div>
@@ -29,7 +29,7 @@
   </div>
   <div class="row-fluid thumbPad">
     <div data-elem="thumbHolder" class="span8 offset2 thumbHolder">
-      <div data-elem="thumbScroller" class="thumbScroller" data-options="thumbWidth:60; thumbHeight:60;  defaultBorderColor:#EEE; borderColor:#EB6F4B; borderRadius:0; space:10; padding:5; borderThickness:2; defaultAlpha:0.8; alpha:1; preloaderUrl:assets/preloader.gif;"> </div>
+      <div data-elem="thumbScroller" class="thumbScroller" data-options="thumbWidth:60; thumbHeight:60;  defaultBorderColor:#EEE; borderColor:#EB6F4B; borderRadius:0; space:10; padding:5; borderThickness:2; defaultAlpha:0.8; alpha:1; preloaderUrl:@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@/images/zoomloader.gif;"> </div>
     </div>
   </div>
             </div>

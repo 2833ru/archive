@@ -29,6 +29,7 @@ function actionStart() {
     $work[] = array('Курсы валют', 'phpshop/modules/cron/sample/currency.php');
     $work[] = array('Снятие с продаж товаров', 'phpshop/modules/cron/sample/product.php');
     $work[] = array('Разновалютый поиск', 'phpshop/modules/cron/sample/pricesearch.php');
+    $work[] = array('Кеширование фильтра', 'phpshop/modules/cron/sample/filter.php');
 
     // Учет модуля SiteMap
     if (!empty($GLOBALS['SysValue']['base']['sitemap']['sitemap_system'])) {
@@ -46,11 +47,14 @@ function actionStart() {
             if ($row['type'] == 'import')
                 $import[] = array($row['name'], 'phpshop/modules/cron/sample/import.php?id=' . $row['id']);
             elseif ($row['type'] == 'export')
-                $export[] = array($row['name'], 'phpshop/modules/cron/sample/export.php?id=' . $row['id'].'&file=export_'.md5($row['name']));
+                $export[] = array($row['name'], 'phpshop/modules/cron/sample/export.php?id=' . $row['id'] . '&file=export_' . md5($row['name']));
         }
 
-        $work[] = array('Импорт данных', $import);
-        $work[] = array('Экспорт данных', $export);
+        if (is_array($import))
+            $work[] = array('Импорт данных', $import);
+
+        if (is_array($export))
+            $work[] = array('Экспорт данных', $export);
     }
 
     $Tab1 = $PHPShopGUI->setField("Название задачи:", $PHPShopGUI->setInput("text.requared", "name_new", __('Новая задача')));

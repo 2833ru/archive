@@ -4,7 +4,7 @@ include_once dirname(__DIR__) . '/class/include.php';
 
 class Pochta
 {
-    /** @var Request */
+    /** @var PochtaRequest */
     private $request;
 
     /** @var Settings */
@@ -17,7 +17,7 @@ class Pochta
         $options = $PHPShopOrm->select();
 
         $this->settings = new Settings($options);
-        $this->request = new Request($this->settings);
+        $this->request = new PochtaRequest($this->settings);
     }
 
     /**

@@ -27,8 +27,8 @@ if (stristr(ini_get("default_charset"), "utf") and function_exists('ini_set')) {
 }
 
 // PHP Version Warning
-if(floatval(phpversion()) < 5.3 and !getenv("COMSPEC")){
-   exit("PHP ".phpversion()." не поддерживается. Требуется PHP 5.3 или выше.");
+if(floatval(phpversion()) < 5.6 and !getenv("COMSPEC")){
+   exit("PHP ".phpversion()." не поддерживается. Требуется PHP 5.6 или выше.");
 } 
 
 // PHP V-Warning

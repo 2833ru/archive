@@ -228,6 +228,8 @@ function navigation_seourl($obj, $name) {
         }
     }
 
+    $obj->set('breadcrumbElemTitle', PHPShopText::b($name));
+
     $dis = $home . $dis . '' . ParseTemplateReturn($lastElemTemplate, true, $obj->template_debug);
 
     $obj->set('breadCrumbs', $dis);

@@ -173,14 +173,18 @@ class PHPShopGUI {
     /**
      *  Сообщение
      * @param string $text текст сообщения
-     * @param string $type офрмление [succes | danger]
+     * @param string $type оформление [succes | danger]
+     * @param string $width размер
      */
-    function setAlert($text, $type = 'success', $locale = true) {
+    function setAlert($text, $type = 'success', $locale = true, $width = false) {
 
         if ($locale)
             $text = $this->__($text);
+        
+        if($width)
+            $width='style="width:'.$width.'px"';
 
-        return '<div class="alert alert-' . $type . ' alert-dismissible" role="alert">
+        return '<div class="alert alert-' . $type . ' alert-dismissible" role="alert" '.$width.'>
   <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
   ' . $text . '</div>';
     }

@@ -53,8 +53,8 @@ class Sberbank {
         $params = array(
             "orderNumber" => $orderNum,
             "amount"    => $total,
-            "returnUrl" => 'http://' . $_SERVER['HTTP_HOST'] . '/success/?uid=' . $orderNum,
-            "failUrl"   => 'http://' . $_SERVER['HTTP_HOST'] . '/success/?uid=' . $orderNum,
+            "returnUrl" => 'http://' . $_SERVER['HTTP_HOST'] . '/success/?module=sberbankrf&status=success&uid=' . $orderNumber,
+            "failUrl"   => 'http://' . $_SERVER['HTTP_HOST'] . '/success/?module=sberbankrf&status=fail&uid=' . $orderNumber,
             "orderBundle" => $orderBundle,
             "taxSystem" => (int) $this->options["taxationSystem"]
         );
@@ -79,9 +79,9 @@ class Sberbank {
         curl_close($rbsCurl);
 
         // Запись лога
-        if(isset($result["formUrl"]))
+        if(isset($result["formUrl"])) {
             $this->log($result, $orderNumber, 'Заказ зарегистрирован', 'register');
-        else {
+        } else {
             $result['errorMessage'] = PHPShopString::utf8_win1251($result['errorMessage']);
             $this->log($result, $orderNumber, 'Ошибка регистрации заказа', 'register');
         }
@@ -270,6 +270,42 @@ class Sberbank {
         }
 
         return 'https://securepayments.sberbank.ru/payment/rest/';
+    }
+
+    public function isOrderPaid($orderNumber, $merchantId)
+    {
+        $params = array(
+            "orderId" => $merchantId,
+            "userName" => $this->options["login"],
+            "password" => $this->options["password"]
+        );
+
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $this->getApiUrl() . 'getOrderStatus.do' . "?" . http_build_query($params));
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        $r = json_decode(curl_exec($ch), true);
+        curl_close($ch);
+
+        // Ошибка запроса
+        if($r['ErrorCode'] != 0) {
+            $r['errorMessage'] = PHPShopString::utf8_win1251($r['errorMessage']);
+            $this->log($r, $orderNumber, 'Ошибка проведения платежа', 'Запрос состояния заказа');
+
+            return false;
+        }
+
+        if((int)$r['OrderStatus'] !== 2) {
+
+            $code_description = PHPShopString::utf8_win1251($r['actionCodeDescription']);
+            $this->log($r, $orderNumber, $code_description, 'Запрос состояния заказа');
+
+            return false;
+        }
+
+        $this->log($r, $orderNumber, 'Платеж проведен', 'Запрос состояния заказа');
+
+        return true;
     }
 
     private function applyCurrency($price)

@@ -25,16 +25,21 @@ function actionStart() {
         $LicenseUntil = PHPShopDate::get($LicenseUntilUnixTime);
     else
         $LicenseUntil = " " . __("без ограничений");
+    
+     if (getenv("COMSPEC"))
+         $License['License']['Pro'] = 'Enabled';
 
     if ($License['License']['Pro'] == 'Start') {
         $product_name = 'Basic';
-        $mod_limit = __('максимум 5 модулей').' <a href="https://www.phpshop.ru/order/?from=' . $_SERVER['SERVER_NAME'] . '" target="_blank">'.__('Снять ограничение').' Basic?</a>';
+        $mod_limit = __('максимум 5 модулей') . ' <a href="https://www.phpshop.ru/order/?from=' . $_SERVER['SERVER_NAME'] . '" target="_blank">' . __('Снять ограничение') . ' Basic?</a>';
     } else {
-        if ($License['License']['Pro'] == 'Enabled')
-            $product_name = 'Pro 1C';
-        else
+        if ($License['License']['Pro'] == 'Enabled') {
+            $product_name = 'Pro';
+            $mod_limit = __('без ограничений');
+        } else {
             $product_name = 'Enterprise';
-        $mod_limit = __('без ограничений');
+            $mod_limit = __('без ограничений кроме <span class="label label-default">Pro</span> модулей');
+        }
     }
 
     // Размер названия поля
@@ -78,7 +83,7 @@ function actionStart() {
             $PHPShopGUI->setField("Версия MySQL", @mysqli_get_server_info($PHPShopBase->link_db), false, false, false, 'text-right') .
             $PHPShopGUI->setField("Max execution time", @ini_get('max_execution_time') . ' sec.', false, 'Максимальное время работы', false, 'text-right') .
             $PHPShopGUI->setField("Memory limit", @ini_get('memory_limit'), false, 'Выделяемая память', false, 'text-right') .
-            $PHPShopGUI->setField("Имя базы данных", $PHPShopBase->getParam('connect.dbase'), false, false, false, 'text-right').
+            $PHPShopGUI->setField("Имя базы данных", $PHPShopBase->getParam('connect.dbase'), false, false, false, 'text-right') .
             $PHPShopGUI->setField("Кодировка", $PHPShopBase->codBase, false, false, false, 'text-right')
     );
 
@@ -109,9 +114,9 @@ function actionLoadLic() {
     $licFile = PHPShopFile::searchFile('../../license/', 'getLicense', true);
     $License = parse_ini_file_true("../../license/" . $licFile, 1);
 
-    if(empty($License['License']['DomenLocked']))
-        $License['License']['DomenLocked']=$_SERVER['SERVER_NAME'];
-    
+    if (empty($License['License']['DomenLocked']))
+        $License['License']['DomenLocked'] = $_SERVER['SERVER_NAME'];
+
     if (!empty($licFile)) {
         if (@unlink("../../license/" . $licFile)) {
             $action = true;

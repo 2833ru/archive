@@ -39,7 +39,7 @@ function actionStart() {
     $Tab1 .=$PHPShopGUI->setField("Категория", $PHPShopGUI->setSelect('category', $value, 400));
     $Tab1 .= $PHPShopGUI->setField("Тема", $PHPShopGUI->setInput('text.required.10', "subject", null));
     $Tab1 .= $PHPShopGUI->setField('Сообщение', $PHPShopGUI->setTextarea('message.required.10', null, true, false, 300, false, __('Пожалуйста, опишите Вашу проблему. Для ускорения решения вопроса, сразу предоставьте пароли доступа от Админпанели (логин, пароль) сайта и FTP (имя сервера, логин, пароль)')));
-    $Tab1 .= $PHPShopGUI->setField('Файл', $PHPShopGUI->setIcon(null, "attachment", false, array('load' => false, 'server' => true, 'url' => false, 'multi' => false, 'view' => false)));
+    $Tab1 .= $PHPShopGUI->setField('Файл', $PHPShopGUI->setIcon(null, "attachment", false, array('load' => true, 'server' => true, 'url' => false, 'multi' => false, 'view' => false)));
 
 
     $PHPShopGUI->_CODE = $PHPShopGUI->setCollapse('Форма заявки', $Tab1, 'in', false);
@@ -79,6 +79,31 @@ function actionInsert() {
     curl_exec($ch);
     curl_close($ch);
     header('Location: ?path=' . $_GET['path']);
+}
+
+// Добавление файла
+function fileAdd() {
+    global $PHPShopSystem;
+
+    // Папка сохранения
+    $path = $GLOBALS['SysValue']['dir']['dir'] . '/UserFiles/Image/' . $PHPShopSystem->getSerilizeParam('admoption.image_result_path');
+
+    // Копируем от пользователя
+    if (!empty($_FILES['file']['name'])) {
+        $_FILES['file']['ext'] = PHPShopSecurity::getExt($_FILES['file']['name']);
+        $_FILES['file']['name'] = PHPShopString::toLatin(str_replace('.' . $_FILES['file']['ext'], '', PHPShopString::utf8_win1251($_FILES['file']['name']))) . '.' . $_FILES['file']['ext'];
+       if (!empty($_FILES['file']['ext'])) {
+            if (move_uploaded_file($_FILES['file']['tmp_name'], $_SERVER['DOCUMENT_ROOT'] . $GLOBALS['dir']['dir'] . $path . $_FILES['file']['name'])) {
+                $file = $GLOBALS['dir']['dir'] . $path . $_FILES['file']['name'];
+            }
+        }
+        else $file='Error_PHP_ext';
+    }
+
+    if (empty($file))
+        $file = '';
+
+    return $file;
 }
 
 // Обработка событий

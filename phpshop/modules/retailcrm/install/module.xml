@@ -5,6 +5,7 @@
     <faqlink>https://docs.phpshop.ru/moduli/crm/retailcrm</faqlink>
     <description>Автоматизация интернет-продаж Retail CRM</description>
     <category>crm</category>
+    <pro>true</pro>
     <adminmenu>
         <title>Retail CRM</title>
         <capability>true</capability>

@@ -244,9 +244,6 @@ class PHPShopSeoPro {
         ParseTemplate($obj->getValue($obj->template));
         $result = ob_get_clean();
 
-        // Закомментировать для отладки вывода данных
-        ob_end_clean();
-
         if (is_array($this->memory))
             $result = $this->stro_replace($array_id, $array_str, $result);
 

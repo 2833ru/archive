@@ -62,6 +62,6 @@ class Appliances extends AbstractAvitoXml {
 
 header("HTTP/1.1 200");
 header("Content-Type: application/xml; charset=utf-8");
-$Appliances = new Appliances();
+$Appliances = new Appliances(1);
 $Appliances->compile();
 ?>

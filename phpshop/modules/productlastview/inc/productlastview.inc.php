@@ -79,6 +79,7 @@ class ProductLastView extends PHPShopProductElements {
         // Массив корзины
         $array = array(
             "id" => $objProduct->getParam("id"),
+            "category" => $objProduct->getParam('category'),
             "name" => PHPShopSecurity::CleanStr($objProduct->getParam("name")),
             "price" => PHPShopProductFunction::GetPriceValuta($objID, $objProduct->getParam("price"), $objProduct->getParam("baseinputvaluta"), true),
             "price_n" => PHPShopProductFunction::GetPriceValuta($objID, $objProduct->getParam("price_n"), $objProduct->getParam("baseinputvaluta"), true, false),

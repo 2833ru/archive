@@ -27,7 +27,7 @@ if (strstr($_SERVER['SERVER_SOFTWARE'], 'Apache')) {
 }
 
 // PHP
-if (floatval(phpversion()) < 5.2)
+if (floatval(phpversion()) < 5.6)
     $php = $error;
 else
     $php = $ok;

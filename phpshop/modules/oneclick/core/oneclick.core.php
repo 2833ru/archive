@@ -225,6 +225,7 @@ class PHPShopOneclick extends PHPShopCore {
         $insert['fio_new'] = $name;
         $insert['tel_new'] = $phone;
         $insert['statusi_new'] = $this->system['status'];
+        $insert['status_new'] = serialize(array("maneger"=>'Áûñòğûé çàêàç'));
 
         // Çàïèñü â áàçó
         $PHPShopOrm->insert($insert);

@@ -26,14 +26,9 @@ class ProductDay extends PHPShopProductElements {
         $queryMultibase = $this->queryMultibase();
 
         if ($this->option['status'] == 3)
-            $where['spec'] = "='1'";
+            $where['spec'] = "='1' " . $queryMultibase;
         else
-            $where['productday'] = "='1'";
-
-        if(!empty($queryMultibase)) {
-            $where['id'] = '> "1" ' . $queryMultibase;
-        }
-
+            $where['productday'] = "='1' " . $queryMultibase;
 
         $productday = $PHPShopOrm->select(array('*'), $where, array('order' => 'datas desc'), array('limit' => 1));
 

@@ -3,6 +3,7 @@
 class Avito
 {
     public $avitoTypes;
+    public $avitoSubTypes;
     public $avitoCategories;
     public $options;
 
@@ -16,32 +17,69 @@ class Avito
         $this->options = $PHPShopOrm->select();
     }
 
-    public static function getAvitoCategories($currentCategory = null)
+    public static function getAvitoCategories($xmlPriceId = null, $currentCategory = null)
     {
         $orm = new PHPShopOrm('phpshop_modules_avito_categories');
 
-        $categories = $orm->getList(array('*'));
+        $categories = [];
+        if((int) $currentCategory > 0) {
+            $category = $orm->getOne(['xml_price_id'], ['id' => sprintf('="%s"', $currentCategory)]);
+            $xmlPriceId = $category['xml_price_id'];
+        }
 
-        $result = array(array(__('Не выбрано'), 0, $currentCategory));
+        if((int) $xmlPriceId > 0) {
+            $categories = $orm->getList(['*'], ['xml_price_id' => '="' . (int) $xmlPriceId . '"']);
+        }
+
+        $result = [['Не выбрано', 0, $currentCategory]];
+
         foreach ($categories as $category) {
-            $result[] = array($category['name'], $category['id'], $currentCategory);
+            $result[] = [$category['name'], $category['id'], $currentCategory];
         }
 
         return $result;
     }
 
-    public static function getCategoryTypes($category = 1, $currentType = null)
+    public static function getCategoryTypes($category = null, $currentType = null)
     {
-        if(empty($category)) {
-            $category = 1;
+        $orm = new PHPShopOrm('phpshop_modules_avito_types');
+
+        $types = [];
+        if((int) $category > 0) {
+            $types = $orm->getList(['*'], ['category_id' => '="' . $category . '"']);
         }
 
-        $orm = new PHPShopOrm('phpshop_modules_avito_types');
-        $types = $orm->getList(array('*'), array('category_id' => '="' . $category . '"'));
-
-        $result = array();
+        $result = [['Не выбрано', 0, $currentType]];
         foreach ($types as $type) {
-            $result[] = array($type['name'], $type['id'], $currentType);
+            $result[] = [$type['name'], $type['id'], $currentType];
+        }
+
+        return $result;
+    }
+
+    public static function getCategorySubTypes($currentSubType = null)
+    {
+        $orm = new PHPShopOrm('phpshop_modules_avito_subtypes');
+
+        $result = [['Не выбрано', 0, $currentSubType]];
+        foreach ($orm->getList() as $subtype) {
+            $result[] = [$subtype['name'], $subtype['id'], $currentSubType];
+        }
+
+        return $result;
+    }
+
+    public static function getAvitoCategoryTypes($currentCategory)
+    {
+        $orm = new PHPShopOrm('phpshop_modules_avito_categories');
+        $xmlOrm = new PHPShopOrm('phpshop_modules_avito_xml_prices');
+
+        $category = $orm->getOne(['xml_price_id'], ['id' => sprintf('="%s"', $currentCategory)]);
+        $xmlPrices = $xmlOrm->getList();
+
+        $result = [[__('Не выбрано'), 0, $currentCategory]];
+        foreach ($xmlPrices as $xmlPrice) {
+            $result[] = [$xmlPrice['name'], $xmlPrice['id'], $category['xml_price_id']];
         }
 
         return $result;
@@ -85,6 +123,23 @@ class Avito
 
         if(isset($this->avitoTypes[$typeId])) {
             return $this->avitoTypes[$typeId];
+        }
+
+        return null;
+    }
+
+    public function getAvitoSubType($subTypeId)
+    {
+        if(!is_array($this->avitoSubTypes)) {
+            $orm = new PHPShopOrm('phpshop_modules_avito_subtypes');
+            $subTypes = $orm->getList();
+            foreach ($subTypes as $subType) {
+                $this->avitoSubTypes[$subType['id']] = $subType['name'];
+            }
+        }
+
+        if(isset($this->avitoSubTypes[$subTypeId])) {
+            return $this->avitoSubTypes[$subTypeId];
         }
 
         return null;

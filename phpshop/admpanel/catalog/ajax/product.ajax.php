@@ -172,7 +172,8 @@ if ($_GET['from'] == 'header') {
     $where['parent_enabled'] = "='0'";
     $where['parent_enabled'].= " and (name " . $where['name'] . " or uid " . $where['name'] . " or id " . $where['name'] . ")";
     unset($where['name']);
-} else {
+} 
+elseif($_GET['from'] != 'search') {
 
     // Убираем подтипы
     $where['parent_enabled'] = "='0'";

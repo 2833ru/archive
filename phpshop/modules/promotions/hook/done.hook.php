@@ -78,8 +78,14 @@ function promotions_send_to_order($obj, $data, $rout) {
         if((float) $sum_promo > 0) {
             $obj->discount_sum = number_format($obj->sum - $sum_promo, $obj->PHPShopOrder->format, '.', ' ');
         }
-        $obj->sum = $obj->PHPShopOrder->returnSumma($sum_promo)+$obj->PHPShopOrder->returnSumma($sum);
-        $obj->total = $obj->PHPShopOrder->returnSumma($obj->sum, $obj->discount) + $obj->delivery;
+
+        // Возвращаем бонусы обратно для корректного подсчета total
+        PHPShopObj::loadClass('bonus');
+        $PHPShopBonus = new PHPShopBonus($_SESSION['UsersId']);
+        $bonus = $PHPShopBonus->getUserBonus($sum);
+
+        $obj->sum = $obj->PHPShopOrder->returnSumma($sum_promo) + $obj->PHPShopOrder->returnSumma($sum) + (float) $bonus;
+        $obj->total = $obj->PHPShopOrder->returnSumma((float) $obj->sum + (float) $bonus, $obj->discount) + $obj->delivery;
         
         unset($_SESSION['totalsummainput']);
     }

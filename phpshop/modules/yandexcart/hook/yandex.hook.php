@@ -113,10 +113,26 @@ function setProducts_yandexcart_hook($obj, $data) {
     if (!empty($data['val']['rec']))
         $add.='<rec>' . $data['val']['rec'] . '</rec>';
 
+    // Артикул
+    if (!empty($data['val']['uid']))
+        $add.='<shop-sku>' . $data['val']['uid'] . '</shop-sku>';
+
+    // Габариты
+    if (!empty($data['val']['length']) && !empty($data['val']['width']) && !empty($data['val']['height']))
+        $add.='<dimensions>' . sprintf('%s/%s/%s',
+                number_format($data['val']['length'], 2, '.', ''),
+                number_format($data['val']['width'], 2, '.', ''),
+                number_format($data['val']['height'], 2, '.', '')
+            ) . '</dimensions>';
+
+    // Компания, которая произвела товар
+    if (!empty($data['val']['manufacturer']))
+        $add.='<manufacturer>' . $data['val']['manufacturer'] . '</manufacturer>';
+
     // vendorCode
     if (!empty($data['val']['vendor_code']))
         $add.='<vendorCode>' . $data['val']['vendor_code'] . '</vendorCode>';
-    
+
     // condition
     if ($data['val']['condition'] > 1 and !empty($data['val']['condition_reason'])){
         

@@ -1,0 +1,1 @@
+ALTER TABLE `phpshop_products` ADD `manufacturer` varchar(255) DEFAULT '';

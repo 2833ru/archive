@@ -96,10 +96,10 @@ class PHPShopPromotions {
     function promotion_get_discount($row) {
 
         $data = $this->promotionslist;
-        $promo_discount = $promo_discountsum = 0;
+        $promo_discount = $promo_discountsum = $num_check = 0;
         $lab = null;
         $id = null;
-        $labels = $ids = $hidePrices = array();
+        $labels = $ids = $hidePrices = $numChecks = array();
 
         if (isset($data)) {
             foreach ($data as $pro) {
@@ -112,7 +112,6 @@ class PHPShopPromotions {
 
                 if ($date_act == 1 && $user_act) {
                     $sum_order_check = $pro['sum_order_check'];
-                    $num_check = $pro['num_check'];
 
                     // Массив категорий
                     if ($pro['categories_check'] == 1)
@@ -173,6 +172,7 @@ class PHPShopPromotions {
                             }
 
                             $ids[$pro['discount']] = $pro['id'];
+                            $numChecks[$pro['discount']] = $pro['num_check'];
                         }
                     }
                 }
@@ -184,6 +184,7 @@ class PHPShopPromotions {
                 $lab = $labels[$promo_discount * 100];
                 $hidePrice = $hidePrices[$promo_discount * 100];
                 $id = $ids[$promo_discount * 100];
+                $num_check = $numChecks[$promo_discount * 100];
             }
 
             if (isset($discountsum)) {
@@ -191,6 +192,7 @@ class PHPShopPromotions {
                 $lab = $labels[$promo_discountsum];
                 $hidePrice = $hidePrices[$promo_discountsum];
                 $id = $ids[$promo_discountsum];
+                $num_check = $numChecks[$promo_discountsum];
             }
         }
 

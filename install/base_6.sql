@@ -888,13 +888,17 @@ CREATE TABLE phpshop_page_categories (
   `servers` varchar(64) DEFAULT '',
   `menu` enum('0','1') DEFAULT '0',
   `page_cat_seo_name` varchar(255) DEFAULT '',
+  `icon` VARCHAR(255) DEFAULT '',
+  `title` varchar(255) DEFAULT '',
+  `description` varchar(255) DEFAULT '',
+  `keywords` text,
   PRIMARY KEY (`id`),
   KEY `parent_to` (`parent_to`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
 
-INSERT INTO phpshop_page_categories VALUES ('18', 'Органическая косметика', '1', '0', '', '', '0', 'organicheskaya-kosmetika');
-INSERT INTO phpshop_page_categories VALUES ('19', 'Внимание, конкурс!', '1', '0', '<p>Это раздел редактирования каталога Статей. Сюда можно добавить описание, фото или видео. Каталог Статей можно вывести в Главное меню сайта, поставив галочку в закладке Основное. </p>\n<p><iframe src="https://www.youtube.com/embed/HnEDodW4SCE" width="560" height="315" frameborder="0" allowfullscreen="allowfullscreen"></iframe></p>', '', '0', 'vnimanie-konkurs');
-INSERT INTO phpshop_page_categories VALUES ('16', 'Пример статьи', '1', '7', '<p>вамвамвам</p>', '', '0', 'primer-stati');
+INSERT INTO phpshop_page_categories VALUES ('18', 'Органическая косметика', '1', '0', '', '', '0', 'organicheskaya-kosmetika','','','','');
+INSERT INTO phpshop_page_categories VALUES ('19', 'Внимание, конкурс!', '1', '0', '<p>Это раздел редактирования каталога Статей. Сюда можно добавить описание, фото или видео. Каталог Статей можно вывести в Главное меню сайта, поставив галочку в закладке Основное. </p>\n<p><iframe src="https://www.youtube.com/embed/HnEDodW4SCE" width="560" height="315" frameborder="0" allowfullscreen="allowfullscreen"></iframe></p>', '', '0', 'vnimanie-konkurs','','','','');
+INSERT INTO phpshop_page_categories VALUES ('16', 'Пример статьи', '1', '7', '<p>вамвамвам</p>', '', '0', 'primer-stati','','','','');
 DROP TABLE IF EXISTS phpshop_parent_name;
 CREATE TABLE phpshop_parent_name (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -959,7 +963,7 @@ CREATE TABLE phpshop_photo_categories (
   `content` text,
   `enabled` enum('0','1') DEFAULT '0',
   `page` varchar(255) DEFAULT '',
-  `multilanguages` longtext NOT NULL,
+  `count` tinyint(11) default 2,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
 
@@ -1039,6 +1043,9 @@ CREATE TABLE IF NOT EXISTS `phpshop_products` (
   `yandex_step_quantity` int(11) DEFAULT '0',
   `yandex_condition` enum('1','2','3') DEFAULT '1',
   `yandex_condition_reason` text,
+  `length` varchar(64) default '',
+  `width` varchar(64) default '',
+  `height` varchar(64) default '',
   PRIMARY KEY (`id`),
   KEY `category` (`category`),
   KEY `enabled` (`enabled`),

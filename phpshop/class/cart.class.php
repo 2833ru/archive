@@ -42,7 +42,7 @@ class PHPShopCart {
             PHPShopObj::loadClass('promotions');
         }
 
-        if (!class_exists('PHPShopValutaArray')) {
+        if (!class_exists('PHPShopValutaArray') || !is_object($PHPShopValutaArray)) {
             PHPShopObj::loadClass('array');
             PHPShopObj::loadClass('valuta');
             $PHPShopValutaArray = new PHPShopValutaArray();

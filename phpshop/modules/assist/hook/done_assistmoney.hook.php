@@ -3,9 +3,8 @@
 function send_to_order_mod_Assistmoney_hook($obj, $value, $rout) {
     global $PHPShopSystem;
 
-    if ($rout == 'MIDDLE' and $value['order_metod'] == 10010) {
-        
-       
+    if ($rout === 'END' and $value['order_metod'] == 10010) {
+
         // Настройки модуля
         include_once(dirname(__FILE__) . '/mod_option.hook.php');
         $PHPShopAssistmoneyArray = new PHPShopAssistmoneyArray();
@@ -19,11 +18,9 @@ function send_to_order_mod_Assistmoney_hook($obj, $value, $rout) {
             $inv_id = $mrh_ouid[0] . $mrh_ouid[1];
 
             // Сумма покупки
-            $out_summ = $obj->get('total');
-
+            $out_summ = $obj->total;
 
 			$hashcode = strtoupper(md5(strtoupper(md5( $option['merchant_sig'] ).md5( $option['merchant_id'] . $inv_id .  $out_summ . "RUB"))));
-
 
 			$fio_arr = explode(" ", $_POST[fio_new]);
 			$firstname = $fio_arr[0];
@@ -57,19 +54,8 @@ function send_to_order_mod_Assistmoney_hook($obj, $value, $rout) {
             $obj->set('payment_info', $option['title_end']);
             $forma = ParseTemplateReturn($GLOBALS['SysValue']['templates']['assist']['assistmoney_payment_forma'], true);
         } else {
-
-            $clean_cart = "
-<script>
-if(window.document.getElementById('num')){
-window.document.getElementById('num').innerHTML='0';
-window.document.getElementById('sum').innerHTML='0';
-}
-</script>";
-            $obj->set('mesageText', $option['title_end'] . $clean_cart);
+            $obj->set('mesageText', $option['title_end']);
             $forma = ParseTemplateReturn($GLOBALS['SysValue']['templates']['order_forma_mesage']);
-
-            // Очищаем корзину
-            unset($_SESSION['cart']);
         }
 
         $obj->set('orderMesage', $forma);

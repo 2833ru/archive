@@ -48,7 +48,7 @@ function actionStart() {
 
     // Размер названия поля
     $PHPShopGUI->field_col = 2;
-    $PHPShopGUI->addJSFiles('./js/jquery.treegrid.js', './js/bootstrap-datetimepicker.min.js','./page/gui/page.gui.js');
+    $PHPShopGUI->addJSFiles('./js/jquery.treegrid.js', './js/bootstrap-datetimepicker.min.js', './page/gui/page.gui.js');
 
     // Выборка
     $data = $PHPShopOrm->select(array('*'), array('id' => '=' . intval($_GET['id'])));
@@ -129,6 +129,16 @@ function actionStart() {
 
     $Tab1 = $PHPShopGUI->setCollapse('Информация', $Tab_info);
 
+    // Иконка
+    $Tab_icon .= $PHPShopGUI->setField("Изображение", $PHPShopGUI->setIcon($data['icon'], "icon_new", false));
+    $Tab1 .= $PHPShopGUI->setCollapse('Иконка', $Tab_icon);
+
+    // SEO
+    $Tab_seo = $PHPShopGUI->setField("Title", $PHPShopGUI->setTextarea("title_new", $data['title']));
+    $Tab_seo .= $PHPShopGUI->setField("Description", $PHPShopGUI->setTextarea("description_new", $data['description']));
+    $Tab_seo .= $PHPShopGUI->setField("Keywords", $PHPShopGUI->setTextarea("keywords_new", $data['keywords']));
+    $Tab1 .= $PHPShopGUI->setCollapse('SEO / Мета-данные', $Tab_seo);
+
     // Редактор
     $PHPShopGUI->setEditor($PHPShopSystem->getSerilizeParam("admoption.editor"));
     $editor = new Editor('content_new');
@@ -162,6 +172,40 @@ function actionStart() {
     return true;
 }
 
+// Добавление изображения 
+function iconAdd() {
+    global $PHPShopSystem;
+
+    // Папка сохранения
+    $path = $GLOBALS['SysValue']['dir']['dir'] . '/UserFiles/Image/' . $PHPShopSystem->getSerilizeParam('admoption.image_result_path');
+
+    // Копируем от пользователя
+    if (!empty($_FILES['file']['name'])) {
+        $_FILES['file']['ext'] = PHPShopSecurity::getExt($_FILES['file']['name']);
+        $_FILES['file']['name'] = PHPShopString::toLatin(str_replace('.' . $_FILES['file']['ext'], '', PHPShopString::utf8_win1251($_FILES['file']['name']))) . '.' . $_FILES['file']['ext'];
+        if (in_array($_FILES['file']['ext'], array('gif', 'png', 'jpg', 'jpeg', 'svg'))) {
+            if (move_uploaded_file($_FILES['file']['tmp_name'], $_SERVER['DOCUMENT_ROOT'] . $GLOBALS['dir']['dir'] . $path . $_FILES['file']['name'])) {
+                $file = $GLOBALS['dir']['dir'] . $path . $_FILES['file']['name'];
+            }
+        }
+    }
+
+    // Читаем файл из URL
+    elseif (!empty($_POST['furl'])) {
+        $file = $_POST['icon_new'];
+    }
+
+    // Читаем файл из файлового менеджера
+    elseif (!empty($_POST['icon_new'])) {
+        $file = $_POST['icon_new'];
+    }
+
+    if (empty($file))
+        $file = '';
+
+    return $file;
+}
+
 /**
  * Экшен сохранения
  */
@@ -189,6 +233,8 @@ function actionUpdate() {
         foreach ($_POST['servers'] as $v)
             if ($v != 'null' and ! strstr($v, ','))
                 $_POST['servers_new'] .= "i" . $v . "i";
+
+    $_POST['icon_new'] = iconAdd();
 
     // Корректировка пустых значений
     $PHPShopOrm->updateZeroVars('menu_new');

@@ -219,10 +219,15 @@ function actionStart() {
     if ($License['License']['Expires'] != 'Never' and $License['License']['RegisteredTo'] == 'Trial NoName')
         $_SESSION['chat'] = true;
 
-    if ($License['License']['Pro'] == 'Start') {
+    if ($License['License']['Pro'] == 'Start') 
         $_SESSION['mod_limit'] = 5;
-    } else
+    elseif($License['License']['Pro'] == 'Enabled')
+        $_SESSION['mod_pro'] = true;
+    else
         $_SESSION['mod_limit'] = 50;
+    
+    if (getenv("COMSPEC"))
+        $_SESSION['mod_pro'] = true;
 
     // ќзнакомительный режим
     if (is_array($License)) {

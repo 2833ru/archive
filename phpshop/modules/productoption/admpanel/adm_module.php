@@ -42,7 +42,7 @@ function actionUpdate() {
         'option_9_name' => $_POST['option_9_name'],
         'option_9_format' => $_POST['option_9_format'],
         'option_10_name' => $_POST['option_10_name'],
-        'option_11_format' => $_POST['option_11_format'],
+        'option_10_format' => $_POST['option_10_format'],
     );
 
     $_POST['option_new'] = serialize($vendor);

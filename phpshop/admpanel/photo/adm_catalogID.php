@@ -124,7 +124,8 @@ function actionStart() {
     // Выбор каталога
     $Tab_info.= $PHPShopGUI->setField("Размещение", $tree_select);
 
-    $Tab_info.=$PHPShopGUI->setField("Количество фото в превью", $PHPShopGUI->setInputText(false, 'num_new', $data['num'], '100'));
+    $Tab_info.=$PHPShopGUI->setField("Количество фото в превью", $PHPShopGUI->setInputText(false, 'count_new', $data['count'], '100'));
+    $Tab_info.=$PHPShopGUI->setField("Приоритет", $PHPShopGUI->setInputText(false, 'num_new', $data['num'], '100'));
     $Tab_info.=$PHPShopGUI->setField("Таргетинг", $PHPShopGUI->setInput("text", "page_new", $data['page']) .
                     $PHPShopGUI->setHelp('* Пример: /,/page/,/shop/UID_1.html. Можно указать несколько адресов через запятую.'));
 

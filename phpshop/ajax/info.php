@@ -68,7 +68,7 @@ if ($License['License']['Pro'] == 'Start') {
     $product_name = 'Basic';
 } else {
     if ($License['License']['Pro'] == 'Enabled')
-        $product_name = 'Pro 1C';
+        $product_name = 'Pro';
     else
         $product_name = 'Enterprise';
 }

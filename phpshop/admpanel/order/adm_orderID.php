@@ -138,7 +138,7 @@ function updateStore($data) {
 
     // Если новый статус Аннулирован, а был статус не Новый заказ, то мы не списываем, а добавляем обратно
     if ($data['statusi'] != 0 && $_POST['statusi_new'] == 1) {
-        if (is_array($data)) {
+        if (is_array($data) && (int) $PHPShopSystem->getSerilizeParam('admoption.sklad_status') > 1) {
             if (is_array($order['Cart']['cart']))
                 foreach ($order['Cart']['cart'] as $val) {
 

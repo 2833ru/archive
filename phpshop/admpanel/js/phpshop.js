@@ -161,7 +161,9 @@ $().ready(function () {
         $('[data-icon="' + id + '"]').html(log);
         $("input[name='" + id + "']").val('/UserFiles/Image/' + log);
         $('[data-icon="' + id + '"]').prev('.glyphicon').removeClass('hide');
-        showAlertMessage(locale.icon_load, 'info');
+
+        if (locale.icon_load != null)
+            showAlertMessage(locale.icon_load, 'info');
     });
 
     // ¬вод URL иконки

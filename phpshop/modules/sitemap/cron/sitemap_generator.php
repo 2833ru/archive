@@ -294,19 +294,21 @@ if($seourlpro_enabled && $seo_brands_enabled) {
         $brandsIds[] = $value['id'];
     }
 
-    $brandValuesOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['sort']);
+    if(count($brandsIds) > 0) {
+        $brandValuesOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['sort']);
 
-    $brandValues = $brandValuesOrm->getList(array('sort_seo_name'), array(
-        'category' => sprintf(' IN(%s)', implode(',', $brandsIds)),
-        'sort_seo_name' => '<> ""'
-    ));
+        $brandValues = $brandValuesOrm->getList(array('sort_seo_name'), array(
+            'category' => sprintf(' IN(%s)', implode(',', $brandsIds)),
+            'sort_seo_name' => '<> ""'
+        ));
 
-    foreach ($brandValues as $brandValue) {
-        $brands.= '<url>' . "\n";
-        $brands.= '<loc>'. $loc . $_SERVER['SERVER_NAME'] . '/brand/' . $brandValue['sort_seo_name'] . '.html</loc>' . "\n";
-        $brands.= '<changefreq>weekly</changefreq>' . "\n";
-        $brands.= '<priority>0.5</priority>' . "\n";
-        $brands.= '</url>' . "\n";
+        foreach ($brandValues as $brandValue) {
+            $brands.= '<url>' . "\n";
+            $brands.= '<loc>'. $loc . $_SERVER['SERVER_NAME'] . '/brand/' . $brandValue['sort_seo_name'] . '.html</loc>' . "\n";
+            $brands.= '<changefreq>weekly</changefreq>' . "\n";
+            $brands.= '<priority>0.5</priority>' . "\n";
+            $brands.= '</url>' . "\n";
+        }
     }
 }
 

@@ -29,10 +29,10 @@ CREATE TABLE `phpshop_modules_cron_job` (
 DROP TABLE IF EXISTS `phpshop_modules_cron_system`;
 CREATE TABLE `phpshop_modules_cron_system` (
   `id` int(11) NOT NULL auto_increment,
-  `version` varchar(64) default '1.5',
+  `version` varchar(64) default '1.7',
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
 
 
 
-INSERT INTO `phpshop_modules_cron_system` VALUES (1,'1.6');
+INSERT INTO `phpshop_modules_cron_system` VALUES (1,'1.7');

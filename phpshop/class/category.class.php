@@ -16,6 +16,8 @@ class PHPShopCategory extends PHPShopObj {
 
     private $childrenDepth = 1;
     private $categories = array();
+    public $search_id;
+    public $found;
 
     /**
      * Конструктор
@@ -63,37 +65,81 @@ class PHPShopCategory extends PHPShopObj {
 
     /**
      * Выборка подкаталогов
-     * @param int $depth
+     * @param int $depth глубина поиска
+     * @param array $select массив данных запроса
+     * @param bool dop_cat учитывать дополнительные каталоги
+     * @param string  $search полный путь каталога каталог/подкаталог
+     * @param bool $revers обратный режим обработки вверх
      * @return array
      */
-    public function getChildrenCategories($depth = 2)
-    {
-        $this->categories = array();
+    public function getChildrenCategories($depth = 2, $select = array("id", "name", "parent_to", "skin_enabled", "parent_title", "icon", "dop_cat", "vid", "num_row", "tile"), $dop_cat = true, $search = false, $revers = false) {
 
-        return $this->recursive($this->objID, $depth);
+        if (!empty($search)) {
+            $this->search = explode("/", $search);
+            $this->found = 0;
+            $this->search_id = 0;
+        }
+
+        if (!empty($revers)) {
+            $this->parent = $this->getParam('parent_to');
+            $this->search_str[] = $this->getParam('name');
+        }
+
+        return $this->recursive($this->objID, $depth, $select, $dop_cat, $revers);
     }
 
-    private function recursive($categoryId, $depth) {
-        $PHPShopCategoryArray = new PHPShopCategoryArray(array('parent_to=' => $categoryId . " or dop_cat LIKE '%#" . (int) $categoryId . "#%'"));
+    private function recursive($categoryId, $depth, $select, $dop_cat, $revers) {
+
+        if ($revers) {
+            $key = 'id';
+            $categoryId = $this->parent;
+        } else
+            $key = 'parent_to';
+
+        if (!empty($dop_cat))
+            $where = array($key . '=' => $categoryId . " or dop_cat LIKE '%#" . (int) $categoryId . "#%'");
+        else
+            $where = array($key . '=' => $categoryId);
+
+
+        $PHPShopCategoryArray = new PHPShopCategoryArray($where, $select);
         $PHPShopCategoryArray->order = array('order' => 'num, name');
         $PHPShopCategoryArray->setArray();
 
         $childrens = $PHPShopCategoryArray->getArray();
 
-        if(!is_array($childrens) || count($childrens) === 0) {
+        if (!is_array($childrens) || count($childrens) === 0) {
             return $this->categories;
         }
 
-        if($depth > $this->childrenDepth) {
+        if ($depth > $this->childrenDepth) {
             $this->childrenDepth++;
             foreach ($childrens as $category) {
-                $this->categories[$category['id']] = $category;
-                $this->recursive($category['id'], $depth);
+
+                // Поиск конечный ИД
+                if (is_array($this->search)) {
+                    if ($category['name'] == $this->search[$this->found] and $category['parent_to'] == $this->search_id) {
+                        $this->search_id = $category['id'];
+                        $this->found++;
+                    }
+                }
+
+                // Получение строки пути каталогов
+                if ($revers) {
+                    $this->parent = $category['parent_to'];
+                    $this->search_str[] = $category['name'];
+                    $this->categories[$category['parent_to']] = $category;
+                    $this->recursive($category['parent_to'], $depth, $select, $dop_cat, $revers);
+                } else {
+                    $this->categories[$category['id']] = $category;
+                    $this->recursive($category['id'], $depth, $select, $dop_cat, $revers);
+                }
             }
         }
 
         return $this->categories;
     }
+
 }
 
 /**
@@ -179,6 +225,7 @@ class PHPShopPageCategory extends PHPShopObj {
         if (!empty($id))
             return true;
     }
+
 }
 
 /**
@@ -194,7 +241,7 @@ class PHPShopCategoryArray extends PHPShopArray {
      * Конструктор
      * @param string $sql SQL условие выборки
      */
-    function __construct($sql = false) {
+    function __construct($sql = false, $select = ["id", "name", "parent_to", "skin_enabled", "parent_title", "icon", "dop_cat", "vid", "num_row", "tile"]) {
 
         // Мультибаза
         if (defined("HostID"))
@@ -207,10 +254,11 @@ class PHPShopCategoryArray extends PHPShopArray {
         $this->cache = false;
         $this->debug = false;
         $this->ignor = false;
-        $this->order = array('order' => 'num,name');
+        $this->order = ['order' => 'num,name'];
         $this->objBase = $GLOBALS['SysValue']['base']['categories'];
-        parent::__construct("id", "name", "parent_to", "skin_enabled", "parent_title", "icon", "dop_cat", "vid", "num_row","tile");
+        parent::__construct(...$select);
     }
+
 }
 
 /**

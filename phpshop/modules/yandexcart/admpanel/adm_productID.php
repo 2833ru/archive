@@ -5,11 +5,13 @@ function addYandexcartCPA($data) {
 
     $PHPShopGUI->addJSFiles('../modules/yandexcart/admpanel/gui/yandexcart.gui.js');
 
-    $Tab3 .= $PHPShopGUI->setField('Гарантия производителя', $PHPShopGUI->setRadio('manufacturer_warranty_new', 1, 'Включить', $data['manufacturer_warranty']) . $PHPShopGUI->setRadio('manufacturer_warranty_new', 2, 'Выключить', $data['manufacturer_warranty'], false, 'text-muted'), 1, 'Тег manufacturer_warranty');
+    $Tab3 = $PHPShopGUI->setField('Гарантия производителя', $PHPShopGUI->setRadio('manufacturer_warranty_new', 1, 'Включить', $data['manufacturer_warranty']) . $PHPShopGUI->setRadio('manufacturer_warranty_new', 2, 'Выключить', $data['manufacturer_warranty'], false, 'text-muted'), 1, 'Тег manufacturer_warranty');
 
     $Tab3 .= $PHPShopGUI->setField("Имя производителя", $PHPShopGUI->setInputText(null, 'vendor_name_new', $data['vendor_name'], 300), 1, 'Тег vendor');
 
     $Tab3 .= $PHPShopGUI->setField("Код производителя", $PHPShopGUI->setInputText(null, 'vendor_code_new', $data['vendor_code'], 300), 1, 'Тег vendorCode');
+
+    $Tab3 .= $PHPShopGUI->setField("Компания производитель, адрес и рег. номер (если есть)", $PHPShopGUI->setInputText(null, 'manufacturer_new', $data['manufacturer'], 300), 1, 'Тег manufacturer');
 
     $Tab3 .= $PHPShopGUI->setField("Комментарий", $PHPShopGUI->setInputText(null, 'sales_notes_new', $data['sales_notes'], 300), 1, 'Тег sales_notes');
 

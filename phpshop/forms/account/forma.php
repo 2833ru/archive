@@ -81,9 +81,30 @@ if (PHPShopSecurity::true_param($_GET['tip'], $_GET['orderId'], $_GET['datas']))
     PHPShopParser::set('nds', $PHPShopOrder->PHPShopSystem->getParam('nds'));
     PHPShopParser::set('discount', $PHPShopOrder->getDiscount());
     PHPShopParser::set('ouid', $PHPShopOrder->getValue('uid'));
-    // âûâîäèì â @person_org@ Þð. äàííûå êëèåíòà:
-    PHPShopParser::set('person_org', $PHPShopOrder->getSerilizeParam('orders.Person.org_name') . $PHPShopOrder->getParam('org_name') . ' ÈÍÍ ' .
-            $PHPShopOrder->getSerilizeParam('orders.Person.org_inn') . $PHPShopOrder->getParam('org_inn') . ' ÊÏÏ ' . $PHPShopOrder->getSerilizeParam('orders.Person.org_kpp') . $PHPShopOrder->getParam('org_kpp') . ' Þð. àäðåñ ' . $PHPShopOrder->getParam('org_yur_adres'));
+
+    $orgData = $PHPShopOrder->getSerilizeParam('orders.Person.org_name');
+    if(empty($orgData)) {
+        $orgData = $PHPShopOrder->getParam('org_name');
+    }
+    if(!empty($PHPShopOrder->getSerilizeParam('orders.Person.org_inn')) || !empty($PHPShopOrder->getParam('org_inn'))) {
+        $orgData .= ' ÈÍÍ ';
+        $inn = $PHPShopOrder->getSerilizeParam('orders.Person.org_inn');
+        if(empty($inn)) {
+            $inn = $PHPShopOrder->getParam('org_inn');
+        }
+        $orgData .= $inn;
+    }
+    if(!empty($PHPShopOrder->getSerilizeParam('orders.Person.org_kpp')) || !empty($PHPShopOrder->getParam('org_kpp'))) {
+        $orgData .= ' ÊÏÏ ';
+        $kpp = $PHPShopOrder->getSerilizeParam('orders.Person.org_kpp');
+        if(empty($kpp)) {
+            $kpp = $PHPShopOrder->getParam('org_kpp');
+        }
+        $orgData .= $kpp;
+    }
+    if(!empty($PHPShopOrder->getParam('org_yur_adres'))) {
+        $orgData .= ' Þð. àäðåñ ' . $PHPShopOrder->getParam('org_yur_adres');
+    }
 
     $fio = $PHPShopOrder->getParam('fio');
     if(!empty($fio))
@@ -91,6 +112,11 @@ if (PHPShopSecurity::true_param($_GET['tip'], $_GET['orderId'], $_GET['datas']))
     else
         $user = $PHPShopOrder->getSerilizeParam('orders.Person.name_person');
 
+    if(!empty($orgData)) {
+        PHPShopParser::set('buyer_data', $orgData);
+    } else {
+        PHPShopParser::set('buyer_data', $user);
+    }
     PHPShopParser::set('person_user', $user);
     PHPShopParser::set('org_bank_acount', $PHPShopSystem->getSerilizeParam('bank.org_bank_schet'));
     PHPShopParser::set('org_bic', $PHPShopSystem->getSerilizeParam('bank.org_bic'));

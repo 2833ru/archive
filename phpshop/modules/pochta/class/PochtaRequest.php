@@ -1,6 +1,6 @@
 <?php
 
-class Request
+class PochtaRequest
 {
     const API_URL = 'https://otpravka-api.pochta.ru';
     const CALCULATE_URL = '/1.0/tariff';

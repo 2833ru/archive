@@ -60,6 +60,9 @@ function leftCatal_countcat_hookMiddle($obj, $row, $rout) {
     }
 
     if ($rout == 'END') {
+        if (empty($countcat_hook_option))
+            $countcat_hook_option['enabled'] = countcat_hook_option();
+
         if (empty($countcat_hook_option['enabled']))
             $obj->set('catalogCount', $row['count']);
         else

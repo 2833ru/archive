@@ -13,6 +13,8 @@ function actionUpdate() {
 
     if (empty($_POST["dev_mode_new"]))
         $_POST["dev_mode_new"] = 0;
+    if (empty($_POST["notification_new"]))
+        $_POST["notification_new"] = 0;
 
     $action = $PHPShopOrm->update($_POST);
     header('Location: ?path=modules&id=' . $_GET['id']);
@@ -52,10 +54,9 @@ function actionStart() {
 
     // Статус заказа
     $Tab2 .= $PHPShopGUI->setField('Оплата при статусе', $PHPShopGUI->setSelect('status_new', $order_status_value, 300));
-
     $Tab2 .= $PHPShopGUI->setField('Режим разработки', $PHPShopGUI->setCheckbox("dev_mode_new", 1, "Отправка данных на тестовую среду Сбербанка РФ", $data["dev_mode"]));
-
     $Tab2 .= $PHPShopGUI->setField('Сообщение предварительной проверки', $PHPShopGUI->setTextarea('title_sub_new', $data['title_sub'], true, 300));
+    $Tab2 .= $PHPShopGUI->setField('Уведомление об оплате', $PHPShopGUI->setCheckbox("notification_new", 1, "Уведомление об оплате на Email администратора", $data["notification"]));
 
     // Инструкция
     $info = '
@@ -63,6 +64,7 @@ function actionStart() {
         <ol>
 <li>Предоставить необходимые документы и заключить договор со Сбербанком РФ</li>
 <li>На закладке настройки ввести предоставленные Сбербанком РФ Логин API магазина (*********-api) и Пароль магазина.</li>
+<li>Указать сотрудникам Сбербанка URL Callback-уведомлений <code>https://' . $_SERVER['SERVER_NAME'] . '/phpshop/modules/sberbankrf/payment/check.php</code></li>
 <li>Вместо логина и пароля магазина можно использовать token авторизации, его необходимо запросить у менеджера Сбербанка РФ.</li>
 <li>Во время тестирования включить "Режим разработки", данные будут отправляться на тестовую среду Сбербанка РФ</li>
 <li>Для перевода модуля в рабочий режим, выключить "Режим разработки"</a></li>

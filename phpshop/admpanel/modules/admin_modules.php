@@ -8,6 +8,8 @@ function getFileInfo($file) {
 
     if ($f['License']['Pro'] == 'Start')
         $_SESSION['mod_limit'] = 5;
+    elseif($f['License']['Pro'] == 'Enabled')
+        $_SESSION['mod_pro'] = true;
     else
         $_SESSION['mod_limit'] = 50;
 
@@ -18,6 +20,7 @@ if (!getenv("COMSPEC"))
     define("EXPIRES", PHPShopFile::searchFile("../../license/", 'getFileInfo'));
 else {
     define("EXPIRES", time() + 100000);
+    $_SESSION['mod_pro'] = true;
 }
 
 // Информация по модулю
@@ -229,9 +232,9 @@ function actionStart() {
                         else
                             $trial = null;
 
-
-                        if (!$PHPShopBase->Rule->CheckedRules('modules', 'edit') or EXPIRES < $Info['sign']) {
+                        if (!$PHPShopBase->Rule->CheckedRules('modules', 'edit') or EXPIRES < $Info['sign'] or (!empty($Info['pro']) and empty($_SESSION['mod_pro']))) {
                             $status = '<span class="glyphicon glyphicon-lock pull-right"></span>';
+                            $new = '<span class="label label-warning">Pro</span>';
                             unset($drop_menu);
                         }
                         else
@@ -283,8 +286,9 @@ function actionStart() {
                         else
                             $trial = null;
 
-                        if (!$PHPShopBase->Rule->CheckedRules('modules', 'edit') or EXPIRES < $Info['sign']) {
+                        if (!$PHPShopBase->Rule->CheckedRules('modules', 'edit') or EXPIRES < $Info['sign'] or (!empty($Info['pro']) and empty($_SESSION['mod_pro']))) {
                             $status = '<span class="glyphicon glyphicon-lock pull-right"></span> ';
+                            $new = '<span class="label label-warning">Pro</span>';
                             unset($drop_menu);
                         }
                         else
@@ -309,7 +313,7 @@ function actionStart() {
 
     $tree = '<table class="table table-hover">
         <tr class="treegrid-all">
-           <td><a href="?path=modules" class="treegrid-parent" data-parent="treegrid-all">'.__('Все модули').'</a> <span class="label label-primary pull-right">89</span></td>
+           <td><a href="?path=modules" class="treegrid-parent" data-parent="treegrid-all">'.__('Все модули').'</a> <span class="label label-primary pull-right">90</span></td>
 	</tr>
         <tr class="treegrid-template">
            <td><a href="?path=modules&cat=template" class="treegrid-parent" data-parent="treegrid-template">'.__('Дизайн').'</a> <span class="label label-primary pull-right">6</span></td>
@@ -327,7 +331,7 @@ function actionStart() {
            <td><a href="?path=modules&cat=chat" class="treegrid-parent" data-parent="treegrid-delivery">'.__('Чаты и звонки').'</a> <span class="label label-primary pull-right">6</span></td>
 	</tr>
         <tr class="treegrid-crm">
-           <td><a href="?path=modules&cat=crm" class="treegrid-parent" data-parent="treegrid-crm">CRM</a> <span class="label label-primary pull-right">3</span></td>
+           <td><a href="?path=modules&cat=crm" class="treegrid-parent" data-parent="treegrid-crm">CRM</a> <span class="label label-primary pull-right">4</span></td>
 	</tr>
         <tr class="treegrid-payment">
            <td><a href="?path=modules&cat=payment" class="treegrid-parent" data-parent="treegrid-payment">'.__('Платежные системы').'</a> <span class="label label-primary pull-right">26</span></td>

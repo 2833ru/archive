@@ -53,7 +53,8 @@ class GrastinWidget {
                         </div>
                     </div>
                 </div>
-                <script src="//grastin.ru/widgets/delivery_widget/js/gWidget.js" async></script>';
+                <script src="//grastin.ru/widgets/delivery_widget/js/gWidget.js" async></script>
+                <style>#gWidget {overflow-x: auto;-webkit-overflow-scrolling: touch;}#gWidget iframe {width:65rem!important}</style>';
     }
 
     private function getCityParam($city, $type) {

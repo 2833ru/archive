@@ -48,10 +48,10 @@
                             <div class="">
                                 <div class="prodRatioHolder">
                                     <div id="productSlider" class="slider" data-elem="touchnswipe" data-options="appendControls:false; appendControlHolder:false">
-                                        <div class="slideHolder" data-elem="slides" >
+                                        <div class="slideHolder" data-elem="slides" data-options="preloaderUrl:@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@/images/zoomloader.gif;">
                                             @productSliderSlides@
                                         </div>
-                                        <div data-elem="thumbs" class="thumbs" data-options="initShow:true; onCss:{top:0%; position:absolute; display:block; autoAlpha:1}; offCss:{top:100%; position:absolute; display:block; autoAlpha:1.0; }; visibility:fullscreen"> </div>
+                                        <div data-elem="thumbs" class="thumbs" data-options="initShow:true; onCss:{top:0%; position:absolute; display:block; autoAlpha:1}; offCss:{top:100%; position:absolute; display:block; autoAlpha:1.0; }; visibility:fullscreen; preloaderUrl:@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@/images/zoomloader.gif;"> </div>
                                         <div class="fullscreenToggle" data-elem="fullscreenToggle" data-options="onCss:{className:'fullscreenToggle on'}; offCss:{className:'fullscreenToggle off'}"> </div>
                                     </div>
                                 </div>
@@ -67,7 +67,7 @@
                 </div>
                 <div class="row-fluid thumbPad">
                     <div data-elem="thumbHolder" class="span8 offset2 thumbHolder">
-                        <div data-elem="thumbScroller" class="thumbScroller" data-options="thumbWidth:60; thumbHeight:60;  defaultBorderColor:#EEE; borderColor:#EB6F4B; borderRadius:0; space:10; padding:5; borderThickness:2; defaultAlpha:0.8; alpha:1; preloaderUrl:assets/preloader.gif;"> </div>
+                        <div data-elem="thumbScroller" class="thumbScroller" data-options="thumbWidth:60; thumbHeight:60;  defaultBorderColor:#EEE; borderColor:#EB6F4B; borderRadius:0; space:10; padding:5; borderThickness:2; defaultAlpha:0.8; alpha:1; preloaderUrl:@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@/images/zoomloader.gif;"> </div>
                     </div>
                 </div>
             </div>

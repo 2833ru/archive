@@ -3,10 +3,10 @@
 /**
  * Файл выгрузки для Яндекс Маркет
  * @author PHPShop Software
- * @version 2.6
+ * @version 2.7
  * @package PHPShopXML
  * @example ?ssl [bool] SSL
- * @example ?getall [bool] Выгрузка всех товаров без учета флага YML
+ * @example ?getall [bool] Выгрузка всех товаров без учета флага YML. Выгрузка всех изображений.
  * @example ?from [bool] Метка в ссылки товара from
  * @example ?amount [bool] Добавление склада в тег amount для CRM
  * @example ?search [bool] Убрать подтипы из выгрузки (для Яндекс.Поиск по сайту).
@@ -214,6 +214,34 @@ class PHPShopYml {
     }
 
     /**
+     * Изображения товара
+     * @param array $product_row
+     * @return string
+     */
+    function getImages($product_row) {
+
+        $xml = null;
+        if(isset($_GET['getall'])) {
+            $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['foto']);
+            $data = $PHPShopOrm->select(array('*'), array('parent' => '=' . $product_row['id']), false, array('limit' => 10000));
+            
+            if (is_array($data))
+                foreach ($data as $row) {
+
+                    // Исходное изображение
+                    if (!empty($this->image_source))
+                        $row['name'] = str_replace(".", "_big.", $row['name']);
+
+                    $xml .= '<picture>' . $this->ssl . $_SERVER['SERVER_NAME'] . $row['name'] . '</picture>';
+                }
+        }
+        if (empty($xml))
+            $xml = '<picture>' . $product_row['picture'] . '</picture>';
+
+        return $xml;
+    }
+
+    /**
      * Данные по каталогам
      * @return array массив каталогов
      */
@@ -324,6 +352,9 @@ class PHPShopYml {
                 "price" => $price,
                 "oldprice" => $oldprice,
                 "weight" => $row['weight'],
+                "length" => $row['length'],
+                "width" => $row['width'],
+                "height" => $row['height'],
                 "p_enabled" => $p_enabled,
                 "yml_bid_array" => unserialize($row['yml_bid_array']),
                 "uid" => $uid,
@@ -343,6 +374,7 @@ class PHPShopYml {
                 "yandex_step_quantity" => $row['yandex_step_quantity'],
                 "vendor_code" => $row['vendor_code'],
                 "vendor_name" => $row['vendor_name'],
+                "manufacturer" => $row['manufacturer'],
                 "condition" => $row['yandex_condition'],
                 "condition_reason" => $row['yandex_condition_reason'],
                 "items" => $row['items'],
@@ -419,10 +451,10 @@ class PHPShopYml {
         $price = ($price + (($price * $this->percent) / 100));
         $price = round($price, intval($this->format));
         $oldprice = round($oldprice, intval($this->format));
-        
+
         // Изображение
-        if(empty($row['pic_big']))
-            $row['pic_big']=$parent_array['picture'];
+        if (empty($row['pic_big']))
+            $row['pic_big'] = $parent_array['picture'];
 
         $array = array(
             "id" => $id,
@@ -436,6 +468,9 @@ class PHPShopYml {
             "price" => $price,
             "oldprice" => $oldprice,
             "weight" => $parent_array['weight'],
+            "length" => $parent_array['length'],
+            "width" => $parent_array['width'],
+            "height" => $parent_array['height'],
             "p_enabled" => $parent_array['p_enabled'],
             "yml_bid_array" => $parent_array['yml_bid_array'],
             "uid" => $uid,
@@ -451,6 +486,7 @@ class PHPShopYml {
             "delivery" => $parent_array['delivery'],
             "pickup" => $parent_array['pickup'],
             "store" => $parent_array['store'],
+            "manufacturer" => $parent_array['manufacturer'],
             "yandex_min_quantity" => $parent_array['yandex_min_quantity'],
             "yandex_step_quantity" => $parent_array['yandex_step_quantity'],
             "vendor_array" => $parent_array['vendor_array'],
@@ -618,12 +654,11 @@ function setProducts() {
                 if (!empty($this->image_source))
                     $val['picture'] = str_replace(".", "_big.", $val['picture']);
 
-                $picture = $this->ssl . $_SERVER['SERVER_NAME'] . $val['picture'];
-            } else
-                $picture = $val['picture'];
-        } else
-            $picture = null;
+                $val['picture'] = $this->ssl . $_SERVER['SERVER_NAME'] . $val['picture'];
+            }
+        }
 
+        $picture = $this->getImages($val);
 
         $xml = '
 <offer id="' . $val['id'] . '" available="' . $val['p_enabled'] . '" ' . $bid_str . $group_id . '>
@@ -641,7 +676,7 @@ function setProducts() {
 
         $xml .= '<currencyId>' . $this->defvalutaiso . '</currencyId>
       <categoryId>' . $val['category'] . '</categoryId>
-      <picture>' . $picture . '</picture>
+      ' . $picture . '
       <name><![CDATA[' . $this->cleanStr($val['name']) . ']]></name>
       <description>' . $this->cleanStr($val['description']) . '</description>
 </offer>';

@@ -108,7 +108,13 @@ $key_name = array(
     'parent2' => 'Цвет',
     'rate' => 'Рейтинг',
     'productday' => 'Товар дня',
-    'hit' => 'Хит'
+    'hit' => 'Хит',
+    'url' => 'URL',
+    'path' => 'Путь каталога',
+    'length' => 'Длина',
+    'width' =>'Ширина',
+    'height' => 'Высота',
+    'moysklad_product_id' => 'МойСклад Id'
 );
 
 if ($GLOBALS['PHPShopBase']->codBase == 'utf-8')
@@ -116,7 +122,6 @@ if ($GLOBALS['PHPShopBase']->codBase == 'utf-8')
 
 // Стоп лист
 $key_stop = array('password', 'wishlist', 'sort', 'yml_bid_array', 'vendor', 'files', 'vid', 'name_rambler', 'skin', 'skin_enabled', 'secure_groups', 'icon_description', 'title_enabled', 'title_shablon', 'descrip_shablon', 'descrip_enabled', 'productsgroup_check', 'productsgroup_product', 'keywords_enabled', 'keywords_shablon', 'rate_count');
-
 
 switch ($subpath[2]) {
     case 'catalog':
@@ -224,7 +229,6 @@ function serializeSelect($str, $cat) {
                         $data_v = $PHPShopSortArray->getArray();
                     }
 
-
                     $array_line_value = null;
                     foreach ($v as $a_v) {
                         if ($sortdelim != ';') {
@@ -292,6 +296,7 @@ function actionSave() {
     switch ($subpath[2]) {
         case 'catalog':
             $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['categories']);
+            break;
         case 'user':
             PHPShopObj::loadClass('user');
             $PHPShopUserStatusArray = new PHPShopUserStatusArray();
@@ -338,6 +343,20 @@ function actionSave() {
         unset($memory[$_GET['path']]);
         foreach ($_POST['pattern_cols'] as $k => $v) {
             $memory[$_GET['path']][$v] = 1;
+
+            // URL
+            if ($v == 'url') {
+                $url = true;
+                unset($pattern_cols[$k]);
+            }
+            // Путь каталога
+            if ($v == 'path') {
+                $path = true;
+                unset($pattern_cols[$k]);
+
+                if (empty($pattern_cols['category']))
+                    $pattern_cols[] = 'category';
+            }
         }
         if (is_array($memory))
             setcookie("check_memory", json_encode($memory), time() + 3600000, $GLOBALS['SysValue']['dir']['dir'] . '/phpshop/admpanel/');
@@ -347,11 +366,12 @@ function actionSave() {
     if ($_POST['export_format'] == 'xml')
         $pattern_cols = array('*');
 
+
     $data = $PHPShopOrm->select($pattern_cols, $where, array('order' => 'id desc'), array('limit' => $_POST['export_limit']));
 
     // XML
     if ($_POST['export_format'] == 'xml') {
-        
+
         PHPShopObj::loadClass('cml');
         $PHPShopCommerceML = new PHPShopCommerceML();
 
@@ -361,10 +381,10 @@ function actionSave() {
             $csv = $PHPShopCommerceML->getOrders($data);
         }
         // Товары
-        elseif(empty($subpath[2])){
+        elseif (empty($subpath[2])) {
             $csv = $PHPShopCommerceML->getProducts($data);
         }
-            
+
         $ext_file = 'xml';
     }
     // CSV
@@ -452,6 +472,30 @@ function actionSave() {
                     elseif ($cols_name == 'data_adres' and $subpath[2] == 'user') {
                         $data_adres = unserialize($row['data_adres']);
                         $csv_line .= '"' . $data_adres['list'][$data_adres['main']]['tel_new'] . '"' . $delim;
+                    }
+                    // URL
+                    elseif (!empty($url) and $cols_name == 'url') {
+
+                        if (isset($row['prod_seo_name'])) {
+
+                            if (empty($row['prod_seo_name']))
+                                $csv_line .= 'http://' . $_SERVER['SERVER_NAME'] . '/id/' . str_replace("_", "-", PHPShopString::toLatin($row['name'])) . '-' . $row['id'] . '.html' . $delim;
+                            else
+                                $csv_line .= 'http://' . $_SERVER['SERVER_NAME'] . '/id/' . $row['prod_seo_name'] . '-' . $row['id'] . '.html' . $delim;
+                        } else
+                            $csv_line .= 'http://' . $_SERVER['SERVER_NAME'] . '/shop/UID_' . $row['id'] . '.html' . $delim;
+                    }
+                    // Путь каталога
+                    elseif (!empty($path) and $cols_name == 'path') {
+
+                        if (isset($row['category'])) {
+
+                            $category = new PHPShopCategory($row['category']);
+                            $result = $category->getChildrenCategories(100, ['id', 'parent_to', 'name'], false, false, true);
+                            $search_str = implode("/", array_reverse($category->search_str));
+
+                            $csv_line .= $search_str . $delim;
+                        }
                     }
 
                     // Статус заказа
@@ -552,6 +596,13 @@ function actionStart() {
     $sel_left = $sel_right = null;
 
     $data = $PHPShopOrm->select(array('*'), false, false, array('limit' => 1));
+
+    // URL
+    if (empty($subpath[2])) {
+        $data['url'] = null;
+        $data['path'] = null;
+    }
+
     if (is_array($data))
         foreach ($data as $key => $val) {
 
@@ -658,7 +709,7 @@ function actionStart() {
             $PHPShopGUI->setField('Полный путь для изображений', $PHPShopGUI->setCheckbox('export_imgpath', 1, 'Включить', 0), 1, 'Добавляет к изображениям адрес сайта', $class) .
             $PHPShopGUI->setField('Разделитель для изображений', $PHPShopGUI->setSelect('export_imgdelim', $delim_imgvalue, 150), 1, 'Дополнительные изображения', $class) .
             $PHPShopGUI->setField('Кодировка текста', $PHPShopGUI->setSelect('export_code', $code_value, 150)) .
-            $PHPShopGUI->setField('Формат файла', $PHPShopGUI->setSelect('export_format', $format_value, 150),1,false,$class_xml) .
+            $PHPShopGUI->setField('Формат файла', $PHPShopGUI->setSelect('export_format', $format_value, 150), 1, false, $class_xml) .
             $PHPShopGUI->setField('GZIP сжатие', $PHPShopGUI->setCheckbox('export_gzip', 1, 'Включить', 0), 1, 'Сокращает размер создаваемого файла') .
             $PHPShopGUI->setField('Лимит строк', $PHPShopGUI->setInputText(null, 'export_limit', '0,10000', 150), 1, 'Запись c 1 по 10000');
 

@@ -194,7 +194,7 @@ function actionStart() {
     $PHPShopGUI->setTab(array("Основное", $Tab1, true));
 
     // Вывод кнопок сохранить и выход в футер
-    $ContentFooter = $PHPShopGUI->setInput("submit", "saveID", "Сохранить", "right", false, false, false, "actionInsert.servers.create");
+    $ContentFooter = $PHPShopGUI->setInput("submit", "saveID", "Сохранить", "right", false, false, false, "actionInsert.system.edit");
 
     $PHPShopGUI->setFooter($ContentFooter);
     return true;

@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="windows-1251"?>
 <module>
-    <version>1.1</version>
+    <version>1.2</version>
     <name>Avito</name>
     <faqlink>https://docs.phpshop.ru/moduli/prodazhi/avito</faqlink>
-    <description>Экспорт товаров бытовой электроники на Авито.</description>
+    <description>Экспорт товаров на Авито.</description>
     <category>sale</category>
-    <sign>1592392637</sign>
+    <sign>1599825552</sign>
     <adminmenu>
         <title>Avito</title>
         <capability>true</capability>

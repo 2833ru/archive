@@ -184,7 +184,7 @@ class PHPShopCore {
         }
         $lastTemplatePath = $this->getValue('templates.breadcrumbs_splitter_last');
         if(empty($lastTemplatePath) || PHPShopParser::checkFile($lastElemTemplate, true) === false) {
-            $lastElemTemplate = './phpshop/lib/templates/breadcrumbs/breadcrumbs_splitter_last.tpl';
+            $lastElemTemplate = './phpshop/lib/templates/breadcrumbs/breadcrumbs_last.tpl';
         }
         $home = ParseTemplateReturn($this->getValue('templates.breadcrumbs_home'), false, $this->template_debug);
 

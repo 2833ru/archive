@@ -1,0 +1,1 @@
+ALTER TABLE `phpshop_modules_sberbankrf_system` ADD `notification` enum('0','1') NOT NULL default '0';

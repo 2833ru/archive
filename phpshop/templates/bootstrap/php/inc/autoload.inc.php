@@ -1,4 +1,5 @@
 <?php
+
 define("SkinName", "bootstrap");
 
 // ÷ветовые темы CSS
@@ -70,7 +71,8 @@ if ($GLOBALS['SysValue']['template_theme']['user'] == 'true' or ! empty($GLOBALS
     if (is_array($option))
         foreach ($option['element'] as $id => $element) {
 
-            $element_var[0] = $element['var'];
+            if (!empty($element['var']))
+                $element_var[0] = $element['var'];
 
             if (is_array($element_var))
                 foreach ($element_var as $var) {
