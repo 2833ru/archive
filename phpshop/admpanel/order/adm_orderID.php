@@ -68,8 +68,8 @@ function updateDiscount($data) {
         $sql_d = "SELECT * FROM `" . $GLOBALS['SysValue']['base']['shopusers_status'] . "` WHERE `id` =" . intval($status_user) . " ";
         $query_d = mysqli_query($link_db, $sql_d);
         $row_d = mysqli_fetch_array($query_d);
-        $cumulative_array = unserialize($row_d['cumulative_discount']);
-        $cumulative_array_check = $row_d['cumulative_discount_check'];
+        $cumulative_array = unserialize(@$row_d['cumulative_discount']);
+        $cumulative_array_check = @$row_d['cumulative_discount_check'];
         if ($cumulative_array_check == 1) {
 
             // Список заказов
@@ -255,6 +255,8 @@ function actionStart() {
                 $name = explode(".", $payment['name']);
                 $payment['name'] = $name[0];
             }
+            
+            $payment = $PHPShopGUI->valid($payment,'color');
 
             $payment_value[] = array($payment['name'], $payment['id'], $order['Person']['order_metod'], 'data-content="<span class=\'glyphicon glyphicon-text-background\' style=\'color:' . $payment['color'] . '\'></span> ' . $payment['name'] . '"');
         }
@@ -360,11 +362,11 @@ function actionStart() {
     else $dialog_enabled=true;
     
     if (!empty($dialog_enabled))
-        $PHPShopGUI->addTab(array("Диалог <span class=badge>" . $dialog . "</span>", $Tab7, true, 'dialog'));
+        $PHPShopGUI->addTabSeparate(array("Диалог <span class=badge>" . $dialog . "</span>", $Tab7, true, 'dialog'));
 
 
     // Вывод формы закладки
-    $PHPShopGUI->setTab(array("Корзина", $Tab2), array("Данные покупателя", $Tab3), array("Заказы пользователя", $Tab4), array("Документы", $Tab5));
+    $PHPShopGUI->setTab(array("Корзина", $PHPShopGUI->setCollapse(null,$Tab2)), array("Данные покупателя", $PHPShopGUI->setCollapse(null,$Tab3)), array("Заказы пользователя", $PHPShopGUI->setCollapse(null,$Tab4)), array("Документы", $PHPShopGUI->setCollapse(null,$Tab5)));
 
     // Вывод кнопок сохранить и выход в футер
     $ContentFooter = $PHPShopGUI->setInput("hidden", "rowID", $data['id'], "right", 70, "", "but") .
@@ -407,7 +409,7 @@ function actionUpdate() {
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $data);
 
     // Изменение из формы заказа
-    if (is_array($_POST['person'])) {
+    if (!empty($_POST['person']) and is_array($_POST['person'])) {
 
         // Новые данные
         if (is_array($_POST['person']))

@@ -9,6 +9,15 @@ function template_CID_Product($obj, $data, $rout) {
         // Âèðòóàëüíûå êàòàëîãè
         $obj->cat_template = 'sortñattemplatehook';
 
+        if (empty($_GET['gridChange']))
+            $_GET['gridChange'] = null;
+
+        if (empty($_GET['s']))
+            $_GET['s'] = null;
+
+        if (empty($_GET['f']))
+            $_GET['f'] = null;
+
         switch ($_GET['gridChange']) {
             case 1:
                 $obj->set('gridSetAactive', 'active');
@@ -86,7 +95,7 @@ function template_parent($obj, $dataArray, $rout) {
         $true_color_array = $true_size_color_array = $color_array = array();
         $size = $color = null;
 
-        if (is_array($obj->select_value) and count($obj->select_value > 0)) {
+        if (is_array($obj->select_value) and count($obj->select_value) > 0) {
 
             foreach ($obj->select_value as $value) {
 

@@ -145,6 +145,8 @@ class PHPShopString {
         $str = str_replace("™", "", $str);
         $str = str_replace("’", "", $str);
         $str = str_replace("®", "", $str);
+        $str = str_replace("%", "", $str);
+        $str = str_replace("*", "", $str);
         $str = str_replace(array('&#43;', '&#43'), '+', $str);
 
         $new_str = '';
@@ -271,7 +273,7 @@ class PHPShopString {
     static function is_mobile() {
         $detect = new Mobile_Detect();
 
-        return $detect->isMobile();
+        return $detect->isMobile() && !$detect->isTablet();
     }
 
 }

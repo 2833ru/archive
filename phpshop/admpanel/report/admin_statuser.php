@@ -57,7 +57,12 @@ function actionStart() {
     $PHPShopOrm->sql = 'SELECT sum(a.sum) as total, a.* FROM phpshop_orders AS a where ' . $where . ' group by a.id';
     $PHPShopOrm->debug = false;
     $data = $PHPShopOrm->select();
-    $max = $data[0]['total'];
+
+    if (!empty($data[0]['total']))
+        $max = $data[0]['total'];
+    else
+        $max = 0;
+
     $PHPShopOrm->clean();
 
     $PHPShopOrm->debug = false;
@@ -93,7 +98,7 @@ function actionStart() {
 
     // Статус заказа
     $PHPShopInterface->field_col = 1;
-    $searchforma .= $PHPShopInterface->setInputDate("date_start", $date_start, 'margin-bottom:10px', null, 'Дата начала отбора');
+    $searchforma = $PHPShopInterface->setInputDate("date_start", $date_start, 'margin-bottom:10px', null, 'Дата начала отбора');
     $searchforma .= $PHPShopInterface->setInputDate("date_end", $date_end, false, null, 'Дата конца отбора');
     $searchforma .= $PHPShopInterface->setInputArg(array('type' => 'hidden', 'name' => 'path', 'value' => $_GET['path']));
     $searchforma .= $PHPShopInterface->setButton('Показать', 'search', 'btn-order-search pull-right');

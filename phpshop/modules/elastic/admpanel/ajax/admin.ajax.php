@@ -13,6 +13,8 @@ PHPShopObj::loadClass('system');
 PHPShopObj::loadClass('security');
 PHPShopObj::loadClass('order');
 
+$PHPShopModules = new PHPShopModules($_classPath . "modules/");
+
 if(isset($_REQUEST['token'])) {
     if($_REQUEST['token'] !== Elastic::getOption('api')) {
         echo 'Access Denied!'; exit;

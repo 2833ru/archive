@@ -74,6 +74,7 @@ function actionStart() {
                 break;
         }
     }
+    else $_GET['group_date']=null;
 
 
     $TitlePage.=' '.__('с').' ' . $date_start . ' '.__('по').' ' . $date_end;
@@ -105,6 +106,8 @@ function actionStart() {
             CURLOPT_URL => $url,
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_HTTPHEADER => array('Authorization: OAuth ' . $metrica_token),
+            CURLOPT_SSL_VERIFYHOST => false,
+            CURLOPT_SSL_VERIFYPEER => false
         ));
 
         $json_data = json_decode(curl_exec($сurl), true);
@@ -512,10 +515,11 @@ function actionStart() {
         $PHPShopGUI->_CODE.= $PHPShopGUI->setAlert('Для получения статистики посещения требуется настроить параметры интеграции <a href="?path=system.integration"><span class="glyphicon glyphicon-share-alt"></span> Яндекс.Metrika</a>', 'warning');
     }
 
-    $searchforma.=$PHPShopGUI->setInputDate("date_start", $date_start, 'margin-bottom:10px', null, 'Дата начала отбора');
+    $searchforma=$PHPShopGUI->setInputDate("date_start", $date_start, 'margin-bottom:10px', null, 'Дата начала отбора');
     $searchforma.=$PHPShopGUI->setInputDate("date_end", $date_end, false, null, 'Дата конца отбора');
     $searchforma.=$PHPShopGUI->setInputArg(array('type' => 'hidden', 'name' => 'path', 'value' => $_GET['path']));
 
+    
 
     $group_date_value[] = array(__('Интервал'), 0, $_GET['group_date']);
     $group_date_value[] = array(__('Сегодня'), 'today', $_GET['group_date']);
@@ -528,7 +532,7 @@ function actionStart() {
 
     $searchforma.=$PHPShopGUI->setButton('Показать', 'search', 'btn-order-search pull-right');
 
-    if ($clean)
+    if (!empty($clean))
         $searchforma.=$PHPShopInterface->setButton('Сброс', 'remove', 'btn-order-cancel pull-left visible-lg');
 
 

@@ -6,7 +6,6 @@
     <description>Виджет расчета доставки shiptor.ru</description>
     <category>delivery</category>
     <sign>1620802556</sign>
-    <status>new</status>
     <adminmenu>
         <title>Shiptor Widget</title>
         <capability>true</capability>

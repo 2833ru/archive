@@ -1,9 +1,7 @@
 
 <div class="panel panel-default">
-  <div class="panel-heading">
-    <div class="panel-title">@leftMenuName@</div>
+    <h3 class="side-heading">@leftMenuName@</h3>
   </div>
   <div class="panel-body">
     @leftMenuContent@
-  </div>
 </div>

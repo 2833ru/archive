@@ -7,10 +7,14 @@
             </span>
     <div class="product-col">
         <div class="image product-img-centr">
-            <a href="/shop/UID_@productUid@.html" title="@productName@"> <img data-src="@productImg@" alt="@productName@"></a>
+            <a href="/shop/UID_@productUid@.html" title="@productNameClean@">
+                <img data-src="@productImg@" alt="@productNameClean@">
+            </a>
         </div>
         <div class="caption">
-            <h4 class="product-name-fix"><a href="/shop/UID_@productUid@.html" title="@productName@">@productName@</a></h4>
+            <h4 class="product-name-fix">
+                <a href="/shop/UID_@productUid@.html" title="@productNameClean@">@productName@</a>
+            </h4>
             <div class="description product-description">
                 <div class="description-content">
                     @productDes@

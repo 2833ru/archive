@@ -2668,6 +2668,9 @@
           PclZip::privErrorLog(PCLZIP_ERR_READ_OPEN_FAIL, "Unable to open file '$p_filename' in binary read mode");
           return PclZip::errorCode();
         }
+        
+        if(empty($p_header['size']))
+	  $p_header['size']=100;
 
         // ----- Read the file content
         $v_content = @fread($v_file, $p_header['size']);

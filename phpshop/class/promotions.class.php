@@ -103,9 +103,9 @@ class PHPShopPromotions {
     function promotion_get_discount($row) {
 
         $data = $this->promotionslist;
-        $promo_discount = $promo_discountsum = $num_check = 0;
-        $lab = null;
-        $id = null;
+        $promo_discount = $promo_discountsum = $num_check = $action = 0;
+        $lab = $hidePrice = $id = $sum_order_check = null;
+
         $labels = $ids = $hidePrices = $numChecks = $actions = [];
 
         if (isset($data)) {
@@ -122,7 +122,7 @@ class PHPShopPromotions {
 
                     // Массив категорий
                     if ($pro['categories_check'] == 1)
-                        $category_ar = explode(',', $pro['categories']);
+                        $category_ar = array_diff(explode(',', $pro['categories']), ['']);
 
                     // Массив товаров
                     if ($pro['products_check'] == 1)
@@ -132,16 +132,16 @@ class PHPShopPromotions {
 
                     // Не нулевая цена или выключен режим проверки нулевой цены
                     if (empty($row['price_n']) or empty($pro['block_old_price'])) {
-
-                        // узнаем по каким категориям
                         if (isset($category_ar)) {
                             foreach ($category_ar as $val_c) {
-                                if ($val_c == $row['category']) {
+                                if (
+                                    ((int) $val_c === (int) $row['category'] && (int) $pro['disable_categories'] !== 1) ||
+                                    ((int) $val_c !== (int) $row['category'] && (int) $pro['disable_categories'] === 1)
+                                ) {
                                     $sumche = 1;
                                     break;
-                                } else {
-                                    $sumche = 0;
                                 }
+                                $sumche = 0;
                             }
                         }
 
@@ -292,7 +292,8 @@ class PHPShopPromotions {
         $num = 0;
         foreach ($this->cart->_CART as $k => $cartProduct) {
             $discount = $this->promotion_get_discount($cartProduct);
-            if(!empty($discount['sum']) or !empty($discount['percent']) and (int) $discount['id'] === $discountId) {
+
+            if((!empty($discount['sum']) or !empty($discount['percent'])) and (int) $discount['id'] === $discountId) {
                 $num += $cartProduct['num'];
             }
         }

@@ -11,10 +11,10 @@ function treegenerator($array, $i, $curent, $dop_cat_array) {
     $tree_select = $tree_select_dop = $check = false;
 
     $del = str_repeat($del, $i);
-    if (is_array($array['sub'])) {
+    if (!empty($array['sub']) and is_array($array['sub'])) {
         foreach ($array['sub'] as $k => $v) {
 
-            $check = treegenerator($tree_array[$k], $i + 1, $k, $dop_cat_array);
+            $check = treegenerator(@$tree_array[$k], $i + 1, $k, $dop_cat_array);
 
             $selected = null;
             $disabled = null;
@@ -45,9 +45,10 @@ function actionStart() {
 
     // Начальные данные
     $data['enabled'] = 1;
+    $data = $PHPShopGUI->valid($data,'action','block_categories','sum','discount','block_old_price');
 
     // Размер названия поля
-    $PHPShopGUI->field_col = 2;
+    $PHPShopGUI->field_col = 4;
     $PHPShopGUI->setActionPanel(__("Покупатели") . ' / ' . $TitlePage, false, array('Сохранить и закрыть', 'Создать и редактировать'));
 
     $action_value[] = array('Максимально возможная скидка', 1, $data['action']);
@@ -66,20 +67,21 @@ function actionStart() {
         }
         $tree_array[$k]['name'] = $CategoryArray[$k]['name'];
         $tree_array[$k]['id'] = $k;
-        if ($k == $data['parent_to'])
+        if (!empty($data['parent_to']) and $k == $data['parent_to'])
             $tree_array[$k]['selected'] = true;
     }
 
     $GLOBALS['tree_array'] = &$tree_array;
 
     $blockCategories = preg_split('/,/', $data['block_categories'], -1, PREG_SPLIT_NO_EMPTY);
+    $tree_select=null;
 
     if (is_array($tree_array[0]['sub']))
         foreach ($tree_array[0]['sub'] as $k => $v) {
-            $check = treegenerator($tree_array[$k], 1, $k, $blockCategories);
+            $check = treegenerator(@$tree_array[$k], 1, $k, $blockCategories);
 
             // Допкаталоги
-            $selected_ = null;
+            $selected = null;
             if (is_array($blockCategories))
                 foreach ($blockCategories as $vs) {
                     if ($k == $vs)
@@ -99,7 +101,7 @@ function actionStart() {
     $tree_select = '<select class="selectpicker show-menu-arrow hidden-edit" data-live-search="true" data-container=""  data-style="btn btn-default btn-sm" name="block_categories[]"  data-width="300px" multiple>' . $tree_select . '</select>';
 
     // Содержание закладки 1
-    $Tab1 = $PHPShopGUI->setCollapse(__('Информация'), $PHPShopGUI->setField("Сумма", $PHPShopGUI->setInput('text.required', "sum_new", $data['sum'], null, 300)) .
+    $Tab1 = $PHPShopGUI->setCollapse(__('Информация'), $PHPShopGUI->setField("Сумма", $PHPShopGUI->setInput('text.required', "sum_new", $data['sum'], null, 100)) .
             $PHPShopGUI->setField("Скидка", $PHPShopGUI->setInputText('%', "discount_new", $data['discount'], 100)) .
             $PHPShopGUI->setField("Статус", $PHPShopGUI->setRadio("enabled_new", 1, "Вкл.", $data['enabled']) . $PHPShopGUI->setRadio("enabled_new", 0, "Выкл.", $data['enabled'])) .
             $PHPShopGUI->setField("Формула расчета", $PHPShopGUI->setSelect('action_new', $action_value, 300)) .
@@ -111,7 +113,7 @@ function actionStart() {
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $data);
 
     // Вывод формы закладки
-    $PHPShopGUI->setTab(array("Основное", $Tab1, true));
+    $PHPShopGUI->setTab(array("Основное", $Tab1,true,false,'block-grid'));
 
     // Вывод кнопок сохранить и выход в футер
     $ContentFooter = $PHPShopGUI->setInput("submit", "saveID", "ОК", "right", 70, "", "but", "actionInsert.shopusers.create");

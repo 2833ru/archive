@@ -6,7 +6,7 @@ if (!defined("OBJENABLED"))
 /**
  * Родительский класс Объекта
  * @author PHPShop Software
- * @version 1.7
+ * @version 1.8
  * @package PHPShopClass
  */
 class PHPShopObj {
@@ -71,14 +71,25 @@ class PHPShopObj {
      */
     function setRow($var) {
         $this->loadClass("orm");
-        $PHPShopOrm = new PHPShopOrm($this->objBase);
-        $PHPShopOrm->debug = $this->debug;
-        $PHPShopOrm->cache = $this->cache;
-        $PHPShopOrm->cache_format = $this->cache_format;
-        $PHPShopOrm->install = $this->install;
-        $this->objRow = $PHPShopOrm->select(array('*'), array($var => '="' . $this->objID . '"'), false, array('limit' => 1));
+        $this->PHPShopOrm = new PHPShopOrm($this->objBase);
+        $this->PHPShopOrm->debug = $this->debug;
+        $this->PHPShopOrm->cache = $this->cache;
+        $this->PHPShopOrm->cache_format = $this->cache_format;
+        $this->PHPShopOrm->install = $this->install;
+        $this->objRow = $this->PHPShopOrm->select(array('*'), array($var => '="' . $this->objID . '"'), false, array('limit' => 1));
     }
 
+    /**
+     * Обновить параметр в базе
+     * @param array $value массив значений
+     * @param string $var поле выборки, по умолчанию id
+     * @param string $prefix префикс полей в форме [_new]
+     */
+    function updateParam($value, $var = 'id', $prefix = '_new'){
+       return $this->PHPShopOrm->update($value, array($var => '="' . $this->objID . '"'), $prefix);
+    }
+    
+   
     /**
      * Сравнение параметра из массива
      * @param string $paramName имя переменной

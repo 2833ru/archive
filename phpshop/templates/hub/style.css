@@ -4531,3 +4531,100 @@ footer .submenu{display:none}
 #dialog-widget {
     bottom: 58px !important;
 }
+
+
+.banner-header {
+padding: 1rem 0.825rem;
+color: #454444;
+margin-top: 0.5rem;
+text-align: center;
+margin-bottom: 1rem;
+padding-left: 1rem;
+}
+
+.banner-list {
+padding: 1rem 1rem;
+color: white;
+margin: 1rem 1rem;
+text-fill-color: !important;
+}
+
+.otz {
+display: inline-block;
+color: #3F3E3E;
+padding: 6px 12px;
+margin-bottom: 0;
+font-size: 14px;
+transition: all 0.3s;
+margin-top: 10px;
+border: 0px;
+}
+
+.carousel-caption {
+	text-align: center;
+	color: #333;
+	text-shadow: none;
+ }
+
+ .slider-icon {
+    font-size: small;
+    background: #f8f8f8;
+    padding: 3px;
+    color: #333;
+
+     }
+     
+ .item   {
+	 width: 100%;
+	 height: auto;
+	 align-content: center;
+	 padding-bottom: 2rem;
+ }
+ 
+ .top-banner {
+    padding-right: 10px;
+    padding-left: 10px;
+    width: 100%;
+    height: 40px;
+    overflow: hidden;
+    -webkit-align-items: center;
+    align-items: center;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-justify-content: center;
+    justify-content: center;
+    position:relative;
+    background-color: #f7f7f7;
+
+}
+
+.top-banner p {
+    margin: 0;
+    text-align: center;
+}
+
+.top-banner img {
+    width: 100%;
+    height: auto
+}
+
+.top-banner .close {
+    position: absolute;
+    top: 13px;
+    right: 170px;
+    font-size: 14px
+}
+
+
+.block-dark {
+    background-color: #515151;
+    border-radius: 0px;
+    background-size: cover;
+}
+
+.block {
+    border-radius: 0px;
+    background-size: cover;
+    background-color: #fafafa;
+
+}

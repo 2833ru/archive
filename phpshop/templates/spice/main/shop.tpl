@@ -43,10 +43,15 @@
 
         <!-- Theme -->
         <link id="bootstrap_theme" data-name="@php echo $_SESSION['skin']; php@" href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@css/@spice_theme@.css" rel="stylesheet">
+	        <!-- Стикер-полоска -->
+	        <div class="top-banner @php __hide('sticker_close','cookie'); php@">
+				<div class="sticker-text">@sticker_top@</div>
+				<span class="close sticker-close">x</span>
+			</div>
+			<!-- /Стикер-полоска -->
 
         <!-- Header Section Starts -->
         <header id="header-area">
-
             <!-- Header Top Starts -->
             <div class="header-top">
                 <!-- Nested Container Starts -->
@@ -309,7 +314,7 @@
             </div>
             <div class="col-xs-12">
                 <div class="banner-block">
-                    @sticker_banner@
+                    @banersDispHorizontal@
                 </div>
             </div>
 

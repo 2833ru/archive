@@ -215,7 +215,7 @@ class PHPShopCoreElement extends PHPShopElements {
             $this->set($_SESSION['skin'] . '_theme3', $theme3);
 
         // Настройка шаблона
-        if (!is_array($_SESSION['editor'][$_SESSION['skin']])) {
+        if (empty($_SESSION['editor'][$_SESSION['skin']])) {
             $editor = $this->PHPShopSystem->getSerilizeParam('admoption.' . $_SESSION['skin'] . '_editor');
             if (is_array($editor))
                 $_SESSION['editor'][$_SESSION['skin']] = $editor;
@@ -300,9 +300,9 @@ class PHPShopUserElement extends PHPShopElements {
         parent::__construct();
 
         // Если есть параметр from, нужно сохранить реферальную страницу и вернуть на нее пользователя после авторизации, регистрации.
-        if ($_REQUEST['from'] AND ! $_REQUEST['fromSave'])
+        if (!empty($_REQUEST['from']) and $_REQUEST['from'] AND empty($_REQUEST['fromSave']))
             $this->set('fromSave', $_SERVER['HTTP_REFERER']);
-        else
+        elseif (!empty($_REQUEST['fromSave']))
             $this->set('fromSave', $_REQUEST['fromSave']);
 
         // Экшены
@@ -332,7 +332,7 @@ class PHPShopUserElement extends PHPShopElements {
         unset($_SESSION['UsersBan']);
         unset($_COOKIE['UserLogin']);
         unset($_COOKIE['UserPassword']);
-        
+
         setcookie("UserLogin", '', time() + 60 * 60 * 24 * 30, "/", $_SERVER['SERVER_NAME'], 0);
         setcookie("UserPassword", '', time() + 60 * 60 * 24 * 30, "/", $_SERVER['SERVER_NAME'], 0);
 
@@ -345,11 +345,12 @@ class PHPShopUserElement extends PHPShopElements {
      */
     function wishlist() {
         if (!empty($_SESSION['UsersId']) and PHPShopSecurity::true_num($_SESSION['UsersId'])) {
+
             $this->set('wishlistCount', $_SESSION['wishlistCount']);
             $dis = $this->parseTemplate('users/wishlist/wishlist_top_enter.tpl');
         } else {
 
-            if (is_array($_SESSION['wishlist']))
+            if (!empty($_SESSION['wishlist']) and is_array($_SESSION['wishlist']))
                 $wishlistCount = count($_SESSION['wishlist']);
             else
                 $wishlistCount = 0;
@@ -367,7 +368,7 @@ class PHPShopUserElement extends PHPShopElements {
         $wishlist = unserialize($user['wishlist']);
         if (!is_array($wishlist))
             $wishlist = array();
-        if (is_array($_SESSION['wishlist']))
+        if (!empty($_SESSION['wishlist']) and is_array($_SESSION['wishlist']))
             foreach ($_SESSION['wishlist'] as $key => $value) {
                 $wishlist[$key] = 1;
             }
@@ -396,7 +397,7 @@ class PHPShopUserElement extends PHPShopElements {
 
         // Bot
         $_SESSION['UsersBot'] = $user['bot'];
-        
+
         // Блокировка диалогов
         $_SESSION['UsersBan'] = $user['dialog_ban'];
 
@@ -537,13 +538,13 @@ class PHPShopUserElement extends PHPShopElements {
         } else {
 
             // Блок авторизации, данные из cookie
-            if (PHPShopSecurity::true_num($_COOKIE['UserChecked']))
+            if (!empty($_COOKIE['UserChecked']) and PHPShopSecurity::true_num($_COOKIE['UserChecked']))
                 $this->set('UserChecked', 'checked');
 
-            if (PHPShopSecurity::true_email($_COOKIE['UserLogin']))
+            if (!empty($_COOKIE['UserLogin']) and PHPShopSecurity::true_email($_COOKIE['UserLogin']))
                 $this->set('UserLogin', $_COOKIE['UserLogin']);
 
-            if (PHPShopSecurity::true_passw($_COOKIE['UserPassword']))
+            if (!empty($_COOKIE['UserPassword']) and PHPShopSecurity::true_passw($_COOKIE['UserPassword']))
                 $this->set('UserPassword', $_COOKIE['UserPassword']);
 
             // Перехват модуля
@@ -1347,7 +1348,7 @@ class PHPShopSliderElement extends PHPShopElements {
      * Вывод изображений в слайдер
      * @return string
      */
-    function index($isMobile = false) {
+    function index() {
         $dis = null;
 
         // Перехват модуля
@@ -1359,14 +1360,17 @@ class PHPShopSliderElement extends PHPShopElements {
             $view = false;
         }
 
+        // Мобильный
+        $isMobile = PHPShopString::is_mobile();
+
         $where = [
             'enabled' => '="1"',
-            'mobile' => '="0"'
         ];
 
         if ($isMobile) {
             $where['mobile'] = '="1"';
-        }
+        } else
+            $where['mobile'] = '="0"';
 
         // Мультибаза
         if (defined("HostID"))
@@ -1391,6 +1395,8 @@ class PHPShopSliderElement extends PHPShopElements {
                     $this->set('alt', $row['alt']);
                     $this->set('link', $row['link']);
                     $this->set('sliderID', $row['id']);
+                    $this->set('sliderName', $row['name']);
+                    $this->set('sliderLinkName', $row['link_text']);
 
                     // Перехват модуля
                     $this->setHook(__CLASS__, __FUNCTION__, $row, 'END');
@@ -1400,136 +1406,10 @@ class PHPShopSliderElement extends PHPShopElements {
                 }
             if ($dis) {
                 $this->set('imageSliderContent', $dis);
-                return$this->parseTemplate("/slider/slider_main.tpl");
+                return $this->parseTemplate("/slider/slider_main.tpl");
             }
             return false;
         }
-    }
-
-    public function imageSliderMobile() {
-        return $this->index(true);
-    }
-
-}
-
-/**
- * Элемент Форма опросов
- * @author PHPShop Software
- * @version 1.1
- * @package PHPShopElements
- */
-class PHPShopOprosElement extends PHPShopElements {
-
-    /**
-     * Конструктор
-     */
-    function __construct() {
-        $this->debug = false;
-        parent::__construct();
-    }
-
-    /**
-     * Вывод формы голосования
-     * @return string
-     */
-    function oprosDisp() {
-
-        // Выборка данных
-        $PHPShopOrm = new PHPShopOrm($this->getValue('base.opros_categories'));
-        $PHPShopOrm->debug = $this->debug;
-        $dataArray = $PHPShopOrm->select(array('*'), array('flag' => "='1'"), array('order' => 'id DESC'), array('limit' => 10));
-        $content = null;
-        if (is_array($dataArray))
-            foreach ($dataArray as $row) {
-
-                if (empty($row['dir'])) {
-                    // Определяем переменные
-                    $this->set('oprosName', $row['name']);
-                    $this->set('oprosContent', $this->getOprosValue($row['id'], "FORMA"));
-
-                    // Подключаем шаблон
-                    $content .= $this->parseTemplate($this->getValue('templates.opros_list'));
-                } else {
-
-                    // Если через запятую указано
-                    if (strpos($row['dir'], ","))
-                        $dirs = explode(",", $row['dir']);
-                    else
-                        $dirs[] = $row['dir'];
-
-                    foreach ($dirs as $dir)
-                        if (!empty($dir))
-                            if (strpos($_SERVER['REQUEST_URI'], $dir) or $_SERVER['REQUEST_URI'] == $dir) {
-
-                                // Определяем переменные
-                                $this->set('oprosName', $row['name']);
-                                $this->set('oprosContent', $this->getOprosValue($row['id'], "FORMA"));
-
-                                // Перехват модуля
-                                $this->setHook(__CLASS__, __FUNCTION__, $row);
-
-                                // Подключаем шаблон
-                                $content .= $this->parseTemplate($this->getValue('templates.opros_list'));
-                            }
-                }
-            }
-
-        return $content;
-    }
-
-    /**
-     * Вывод ответов
-     * @param int $n ИД опроса
-     * @param string $flag [FORMA|RESULT] опция места вывода (форма опроса или результат опросов)
-     * @return string
-     */
-    function getOprosValue($n, $flag) {
-        $dis = null;
-        $PHPShopOrm = new PHPShopOrm($this->getValue('base.opros'));
-        $PHPShopOrm->comment = 'getOprosValue';
-        $PHPShopOrm->debug = $this->debug;
-        $this->dataArray = $PHPShopOrm->select(array('*'), array('category' => '=' . $n), array('order' => 'num'), array('limit' => 100));
-        if (is_array($this->dataArray))
-            foreach ($this->dataArray as $row) {
-
-                if ($row['total'] > 0)
-                    $total = $row['total'];
-                else
-                    $total = "--";
-
-                // Определяем переменые
-                $this->set('valueName', $row['name']);
-                $this->set('valueId', $row['id']);
-
-                // Подключаем шаблон
-                if ($flag == "FORMA")
-                    $dis .= $this->parseTemplate($this->getValue('templates.opros_forma'));
-                elseif ($flag == "RESULT") {
-                    $sum = $this->getSumValue($row['category']);
-                    $pr = @number_format(($total * 100) / $sum, "1", ".", "");
-
-                    // Определяем переменые
-                    $this->set('valueSum', $total);
-                    $this->set('valueProc', $pr);
-                    $this->set('valueWidth', $pr * 3 + 1);
-
-                    $dis .= $this->parseTemplate($this->getValue('templates.opros_page_forma'));
-                }
-            }
-        return $dis;
-    }
-
-    /**
-     * Сумма значений
-     * @param int $n ИД опроса
-     * @return int
-     */
-    function getSumValue($n) {
-        $objBase = $this->getValue('base.opros');
-        $PHPShopOrm = new PHPShopOrm($objBase);
-        $result = $PHPShopOrm->query("select SUM(total) as sum from " . $objBase . " where category=" . $n);
-        $row = mysqli_fetch_array($result);
-        return $row['sum'];
     }
 
 }
@@ -1537,26 +1417,91 @@ class PHPShopOprosElement extends PHPShopElements {
 /**
  * Элемент баннер
  * @author PHPShop Software
- * @version 1.8
+ * @version 2.2
  * @package PHPShopElements
  */
 class PHPShopBannerElement extends PHPShopElements {
+
+    var $popup;
+    var $horizontal;
+    var $vertical;
 
     function __construct() {
         $this->debug = false;
         $this->template_debug = true;
         $this->objBase = $GLOBALS['SysValue']['base']['banner'];
         parent::__construct();
+        $this->index();
+    }
+
+    function template($row) {
+
+        // Размер
+        $size_value = array('modal-sm', '', 'modal-lg');
+
+        // Определяем переменные
+        $this->set('banerTitle', $row['name']);
+        $this->set('banerContent', $row['content']);
+        $this->set('banerDescription', $row['description']);
+        $this->set('banerImage', $row['image']);
+        $this->set('banerLink', $row['link']);
+        $this->set('popupSize', $size_value[$row['size']]);
+        $this->set('popupId', $row['id']);
+
+        switch ($row['type']) {
+
+            // Баннер в колонке
+            case 0:
+
+                $this->vertical = $this->parseTemplate($this->getValue('templates.baner_list_forma'));
+                break;
+
+            // PopUp
+            case 1:
+
+                // Первый заход на сайт
+                if ($row['display'] == 1) {
+
+                    if (empty($_COOKIE['popup' . $row['id'] . '_close'])) {
+                        if (PHPShopParser::checkFile($this->getValue('templates.banner_window_forma'))) {
+                            $this->popup = $this->parseTemplate($this->getValue('templates.banner_window_forma'));
+                        } else {
+                            $this->popup = $this->parseTemplate('phpshop/lib/templates/banner/banner_window_forma.tpl', true);
+                        }
+                    }
+                } else {
+
+                    if (PHPShopParser::checkFile($this->getValue('templates.banner_window_forma'))) {
+                        $this->popup = $this->parseTemplate($this->getValue('templates.banner_window_forma'));
+                    } else {
+                        $this->popup = $this->parseTemplate('phpshop/lib/templates/banner/banner_window_forma.tpl', true);
+                    }
+                }
+                break;
+
+            // Баннер под шапкой
+            case 2:
+
+                $this->horizontal = $this->parseTemplate($this->getValue('templates.banner_horizontal_forma'));
+                break;
+        }
     }
 
     /**
-     * Вывод баннера
+     * Выборка данных
      * @return string
      */
     function index() {
 
         $where['flag'] = "='1'";
-        $result = null;
+
+        // Мобильный
+        $isMobile = PHPShopString::is_mobile();
+
+        if ($isMobile) {
+            $where['mobile'] = '="1"';
+        } else
+            $where['mobile'] = '="0"';
 
         // Мультибаза
         if (defined("HostID"))
@@ -1565,108 +1510,60 @@ class PHPShopBannerElement extends PHPShopElements {
             $where['flag'] .= ' and (servers ="" or servers REGEXP "i1000i")';
 
         // Каталоги
-        if (!empty($GLOBALS['SysValue']['base']['seourlpro']['seourlpro_system']))
+        if (!empty($GLOBALS['SysValue']['base']['seourlpro']['seourlpro_system'])) {
+
+            // Корневой каталог
             $true_cid = $GLOBALS['PHPShopSeoPro']->getCID();
-        else
+
+            // Вложенный подкаталог
+            if (empty($true_cid) and $this->PHPShopNav->objNav['truepath'] != '/' and $this->PHPShopNav->notPath(array('page', 'news', 'gbook'))) {
+                $GLOBALS['PHPShopSeoPro']->catArrayToMemory();
+                $true_cid = $GLOBALS['PHPShopSeoPro']->getCID();
+            }
+        } else
             $true_cid = $this->PHPShopNav->getId();
 
         if (!empty($true_cid))
-            $where['flag'] .= " and ( dop_cat REGEXP '#" . $true_cid . "#' or dop_cat='') ";
-
-        // Размер
-        $size_value = array('modal-sm', '', 'modal-lg');
+           $where['flag'] .= " and ( dop_cat REGEXP '#" . $true_cid . "#' or dop_cat='') ";
 
         $data = $this->PHPShopOrm->select(array('*'), $where, array('order' => 'RAND()'), array("limit" => 100));
-
+        
         if (is_array($data))
             foreach ($data as $row) {
                 if (empty($row['dir'])) {
 
-                    if (!empty($row['dop_cat']) and empty($true_cid))
-                        continue;
-
-                    if (!empty($row['skin']) and $row['skin'] != $_SESSION['skin'])
-                        continue;
-
-                    // Определяем переменные
-                    $this->set('banerContent', $row['content']);
-                    $this->set('banerTitle', $row['name']);
-                    $this->set('popupSize', $size_value[$row['size']]);
-                    $this->set('popupId', $row['id']);
-
-                    // Баннер
-                    if (empty($row['type']))
-                        $result = $this->parseTemplate($this->getValue('templates.baner_list_forma'));
-                    // PopUp
-                    else {
-
-                        // Первый заход на сайт
-                        if ($row['display'] == 1) {
-
-                            if (empty($_COOKIE['popup' . $row['id'] . '_close'])) {
-                                if (PHPShopParser::checkFile($this->getValue('templates.banner_window_forma'))) {
-                                    $this->result = $this->parseTemplate($this->getValue('templates.banner_window_forma'));
-                                } else {
-                                    $this->result = $this->parseTemplate('phpshop/lib/templates/banner/banner_window_forma.tpl', true);
-                                }
-                            }
-                        } else {
-
-                            if (PHPShopParser::checkFile($this->getValue('templates.banner_window_forma'))) {
-                                $this->result = $this->parseTemplate($this->getValue('templates.banner_window_forma'));
-                            } else {
-                                $this->result = $this->parseTemplate('phpshop/lib/templates/banner/banner_window_forma.tpl', true);
-                            }
-                        }
-                    }
+                    // Шаблон
+                    $this->template($row);
                 } else {
+
                     $dirs = explode(",", $row['dir']);
+                    if (!is_array($dirs))
+                        $dirs[] = $row['dir'];
+                    
 
-                    foreach ($dirs as $dir)
+                    // Таргетинг
+                    foreach ($dirs as $dir) {
                         if (!empty($dir))
-                            if (stristr($_SERVER['REQUEST_URI'], trim($dir)) or $_SERVER['REQUEST_URI'] == trim($dir)) {
-
+                                
+                            if (stristr($this->PHPShopNav->objNav['truepath'], trim($dir)) or $this->PHPShopNav->objNav['truepath'] == trim($dir) or !empty($true_cid)) {
+                                
                                 // Проверка индекса
-                                if ($dir == '/' and $_SERVER['REQUEST_URI'] != '/')
+                                if ($dir == '/' and $this->PHPShopNav->objNav['truepath'] != '/')
                                     continue;
 
-                                // Определяем переменные
-                                $this->set('banerContent', $row['content']);
-                                $this->set('banerTitle', $row['name']);
-                                $this->set('popupSize', $size_value[$row['size']]);
-                                $this->set('popupId', $row['id']);
-
-                                // Баннер
-                                if (empty($row['type'])) {
-
-                                    $result = $this->parseTemplate($this->getValue('templates.baner_list_forma'));
-                                }
-                                // PopUp
-                                else {
-
-                                    // Первый заход на сайт
-                                    if ($row['display'] == 1) {
-
-                                        if (empty($_COOKIE['popup' . $row['id'] . '_close'])) {
-                                            if (PHPShopParser::checkFile($this->getValue('templates.banner_window_forma'))) {
-                                                $this->result = $this->parseTemplate($this->getValue('templates.banner_window_forma'));
-                                            } else {
-                                                $this->result = $this->parseTemplate('phpshop/lib/templates/banner/banner_window_forma.tpl', true);
-                                            }
-                                        }
-                                    } else {
-
-                                        if (PHPShopParser::checkFile($this->getValue('templates.banner_window_forma'))) {
-                                            $this->result = $this->parseTemplate($this->getValue('templates.banner_window_forma'));
-                                        } else {
-                                            $this->result = $this->parseTemplate('phpshop/lib/templates/banner/banner_window_forma.tpl', true);
-                                        }
-                                    }
-                                }
+                                // Шаблон
+                                $this->template($row);
                             }
+                    }
+
+                    
+                   if (!empty($row['dop_cat']) and empty($true_cid))
+                        continue;
+                       
+                    // Каталоги
+                    $this->template($row);
                 }
             }
-        return $result;
     }
 
     /**
@@ -1674,7 +1571,23 @@ class PHPShopBannerElement extends PHPShopElements {
      * @return string
      */
     function getPopup() {
-        echo $this->result;
+        echo $this->popup;
+    }
+
+    /**
+     * Вывод горизонтального баннера
+     * @return string
+     */
+    function banersDispHorizontal() {
+        return $this->horizontal;
+    }
+
+    /**
+     * Вывод баннера в колонке
+     * @return string
+     */
+    function banersDisp() {
+        return $this->vertical;
     }
 
 }
@@ -1889,7 +1802,7 @@ class PHPShopRecaptchaElement extends PHPShopElements {
     public function captcha($name = 'default', $size = 'normal') {
 
         if ($this->PHPShopSystem->ifSerilizeParam('admoption.recaptcha_enabled')) {
-            $dis .= '<div id="recaptcha_' . $name . '" data-size="' . $size . '" data-key="' . $this->public . '"></div>';
+            $dis = '<div id="recaptcha_' . $name . '" data-size="' . $size . '" data-key="' . $this->public . '"></div>';
             $this->recaptcha = true;
         } else {
             $dis = '<img src="phpshop/lib/captcha/captcha.php" align="left" style="margin-right:10px"> <input type="text" name="key" class="form-control" placeholder="' . __('Код с картинки') . '..." style="width:100px" required="">';
@@ -1905,6 +1818,18 @@ class PHPShopRecaptchaElement extends PHPShopElements {
      */
     public function true(){
     return $this->recaptcha;
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

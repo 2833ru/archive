@@ -30,8 +30,14 @@ class PHPShopBot {
 
     public function dialog($message) {
 
+        if (empty($message['attachments']))
+            $message['attachments'] = null;
+
+        if (empty($message['order_id']))
+            $message['order_id'] = null;
+
         // Картинка
-        if (is_array($message['photo'])) {
+        if (!empty($message['photo']) and is_array($message['photo'])) {
             $file = $message['photo'][count($message['photo']) - 1]['file_id'];
 
             if (empty($message['caption']))
@@ -387,6 +393,8 @@ class PHPShopVKBot extends PHPShopBot {
 
         $link = $this->protocol . $_SERVER['SERVER_NAME'] . '/phpshop/admpanel/admin.php?path=dialog&id=' . $message['user_id'] . '&bot=' . $bot . '&user=' . $message['user_id'];
 
+        if(empty($message['from']['last_name']))
+            $message['from']['last_name']=null;
 
         $buttons[][] = array(
             'action' => array(

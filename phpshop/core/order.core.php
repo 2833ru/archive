@@ -229,6 +229,7 @@ document.getElementById('order').style.display = 'none';
         PHPShopObj::loadClass('payment');
 
         $where['name']='!=""';
+        $disp=$showYurDataForPaymentClass=null;
 
         // Мультибаза
         if (defined("HostID"))
@@ -392,8 +393,12 @@ document.getElementById('order').style.display = 'none';
      * Функция вынесена в отдельный файл /order.core/import.php
      */
     function import() {
+        
+        if(!empty($_GET['from']))
+            $from=$_GET['from'];
+        else $from=null;
 
-        $this->doLoadFunction(__CLASS__, __FUNCTION__, $_GET['from']);
+        $this->doLoadFunction(__CLASS__, __FUNCTION__, $from);
 
         // Перехват модуля
         $this->setHook(__CLASS__, __FUNCTION__, $_GET);

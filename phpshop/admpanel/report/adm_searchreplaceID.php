@@ -10,10 +10,10 @@ function treegenerator($array, $i, $parent) {
     $del = '¦&nbsp;&nbsp;&nbsp;&nbsp;';
     $tree = $tree_select = $check = false;
     $del = str_repeat($del, $i);
-    if (is_array($array['sub'])) {
+    if (!empty($array['sub']) and is_array($array['sub'])) {
         foreach ($array['sub'] as $k => $v) {
 
-            $check = treegenerator($tree_array[$k], $i + 1, $k);
+            $check = treegenerator(@$tree_array[$k], $i + 1, $k);
 
             if ($k == $_GET['parent_to'])
                 $selected = 'selected';
@@ -65,7 +65,7 @@ function viewCatalog($category) {
 
     if (is_array($tree_array[0]['sub']))
         foreach ($tree_array[0]['sub'] as $k => $v) {
-            $check = treegenerator($tree_array[$k], 1, $category);
+            $check = treegenerator(@$tree_array[$k], 1, $category);
 
             if ($k == $category)
                 $selected = 'selected';
@@ -103,7 +103,7 @@ function actionStart() {
     // Размер названия поля
     $PHPShopGUI->field_col = 2;
     $data['name'] = str_replace('ii', ',', $data['name']);
-    $PHPShopGUI->setActionPanel(__("Переадресация поиска") . ' / ' . str_replace('i', '', $data['name']),false, array('Сохранить', 'Сохранить и закрыть'),false);
+    $PHPShopGUI->setActionPanel(__("Переадресация поиска") . ' / ' . str_replace('i', '', $data['name']),array('Удалить'), array('Сохранить', 'Сохранить и закрыть'),false);
 
     // Содержание закладки 1
     $Tab1 = $PHPShopGUI->setField("Запрос", $PHPShopGUI->setInputText(false, "name_new", str_replace(array('i', 'ii'), array('', ','), $data['name'])) . $PHPShopGUI->setRadio("enabled_new", 1, "Показывать", $data['enabled']) . $PHPShopGUI->setRadio("enabled_new", 0, "Скрыть", $data['enabled']));

@@ -6796,6 +6796,5 @@ a,.strong {
 }
 
 #body,#form-signin{
-    background: #F0F0F0 url(images/cake.png) top center repeat !important;
-    background-attachment: fixed !important;
+    background: #F0F0F0;
 }

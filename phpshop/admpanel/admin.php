@@ -17,7 +17,6 @@ $_classPath = "../";
 include($_classPath . "class/obj.class.php");
 PHPShopObj::loadClass(array("base", "system", "admgui", "orm", "date", "xml", "security", "string", "parser", "mail", "lang"));
 
-
 $PHPShopBase = new PHPShopBase($_classPath . "inc/config.ini", true, true);
 $PHPShopBase->chekAdmin();
 
@@ -62,7 +61,11 @@ if (strpos($_GET['path'], '.')) {
             header('Location: ?path=' . $subpath[0] . '&cat=' . $subpath[1]);
         else
             header('Location: ?path=' . $subpath[0] . '&id=' . $subpath[1]);
-    } else
+    } 
+    else if (is_numeric($subpath[2])) {
+          header('Location: ?path=' . $subpath[0] .'.'.$subpath[1]. '&cat=' . $subpath[2]);
+     }
+    else
         $loader_file = $subpath[0] . '/admin_' . $subpath[1] . '.php';
 } else
     $subpath = array($_GET['path'], $_GET['path']);
@@ -76,7 +79,7 @@ if (!empty($_GET['path'])) {
 
         $loader_file = $subpath[0] . '/adm_' . $subpath[1] . 'ID.php';
     }
-    if ($_REQUEST['action'] == 'new') {
+    if (array_key_exists('action',$_REQUEST) and $_REQUEST['action'] == 'new') {
         $loader_file = $subpath[0] . '/adm_' . $subpath[1] . '_new.php';
     }
     $active_path = str_replace(".", "_", $_GET['path']);
@@ -119,11 +122,11 @@ function modulesMenu() {
 
             if ($db['capability']) {
 
-                if (is_array($db['podmenu'])) {
+                if (array_key_exists('podmenu',$db) and is_array($db['podmenu'])) {
                     $dis .= '<li class="dropdown-submenu"><a href="?path=modules&id=' . $path . '">' . __($db['title']) . '</a>';
                     $dis .= '<ul class="dropdown-menu">';
 
-                    if (!is_array($db['podmenu'][0]))
+                    if (!@is_array($db['podmenu'][0]))
                         $db_podmenu[0] = $db['podmenu'];
                     else
                         $db_podmenu = $db['podmenu'];
@@ -142,7 +145,7 @@ function modulesMenu() {
             }
 
             // Redirect module.xml redirect.from -> redirect.to
-            if (is_array($db['redirect'])) {
+            if (array_key_exists('redirect',$db) and is_array($db['redirect'])) {
                 if ($_GET['path'] == $db['redirect']['from'] and empty($_GET['id'])) {
 
                     // Сохранение GET параметров
@@ -204,6 +207,17 @@ if (!empty($_COOKIE['fullscreen'])) {
 
         <!-- Bootstrap -->
         <link id="bootstrap_theme" href="./css/bootstrap-theme-<?php echo $theme; ?>.css" rel="stylesheet">
+        
+        <!-- Preload -->
+        <link rel="preload"  href="./css/bootstrap-toggle.min.css" as="style">
+        <link rel="preload"  href="./css/jquery.dataTables.css" as="style">
+        <link rel="preload"  href="./css/bootstrap-select.min.css" as="style">
+        <link rel="preload"  href="./css/jquery.treegrid.css" as="style">
+        <link rel="preload"  href="./css/admin.css" as="style">
+        <link rel="preload"  href="./css/bar.css" as="style">
+        <link rel="preload"  href="./css/bootstrap-tour.min.css" as="style">
+        <link rel="preload"  href="./css/messagebox.min.css" as="style">
+        <link rel="preload"  href="//fonts.googleapis.com/css?family=Open+Sans:300,400,700&display=swap&subset=cyrillic,cyrillic-ext" as="style">
     </head>
 
     <body role="document" id="body" data-token="<?php echo $DADATA_TOKEN; ?>">
@@ -216,6 +230,7 @@ if (!empty($_COOKIE['fullscreen'])) {
         <link href="./css/bar.css" rel="stylesheet">
         <link href="./css/bootstrap-tour.min.css" rel="stylesheet">
         <link href="./css/messagebox.min.css" rel="stylesheet">
+        <link href="./css/bootstrap-toggle.min.css" rel="stylesheet">
 
         <!-- jQuery -->
         <script src="js/jquery-1.11.0.min.js" data-rocketoptimized="false" data-cfasync="false"></script>
@@ -253,7 +268,7 @@ if (!empty($_COOKIE['fullscreen'])) {
 
                                 </ul>
                             </li>
-                            <li class="dropdown <?php echo $menu_active_system . $menu_active_system_company . $menu_active_system_seo . $menu_active_system_sync . $menu_active_tpleditor . $menu_active_system_image . $menu_active_system_servers . $menu_active_system_integration . $menu_active_system_warehouse . $menu_active_company ?>">
+                            <li class="dropdown <?php echo @$menu_active_system . @$menu_active_system_company . @$menu_active_system_seo . @$menu_active_system_sync . @$menu_active_tpleditor . @$menu_active_system_image . @$menu_active_system_servers . @$menu_active_system_integration . @$menu_active_system_warehouse . @$menu_active_company ?>">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><?php _e('Настройки'); ?> <span class="caret"></span></a>
                                 <ul class="dropdown-menu" role="menu">
                                     <li><a href="?path=system"><?php _e('Основные'); ?></a></li>
@@ -274,13 +289,21 @@ if (!empty($_COOKIE['fullscreen'])) {
                                     <li><a href="?path=tpleditor"><span class="glyphicon glyphicon-picture"></span> <?php _e('Шаблоны дизайна'); ?></a></li>
                                 </ul>
                             </li>
-                            <li class="dropdown <?php echo $menu_active_exchange_export . $menu_active_exchange_import . $menu_active_exchange_sql . $menu_active_exchange_backup . $menu_active_exchange_service . $menu_active_exchange_export_order . $menu_active_exchange_export_user . $menu_active_exchange_export_catalog . $menu_active_exchange_import_order . $menu_active_exchange_import_user . $menu_active_exchange_import_catalog; ?>">
+                            <li class="dropdown <?php echo @$menu_active_exchange_export . @$menu_active_exchange_import . @$menu_active_exchange_sql . @$menu_active_exchange_backup . @$menu_active_exchange_service . @$menu_active_exchange_export_order . @$menu_active_exchange_export_user . @$menu_active_exchange_export_catalog . @$menu_active_exchange_import_order . @$menu_active_exchange_import_user . @$menu_active_exchange_import_catalog; ?>">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><?php _e('База'); ?> <span class="caret"></span></a>
                                 <ul class="dropdown-menu" role="menu">
                                     <li><a href="?path=exchange.import"><span class="glyphicon glyphicon-import"></span> <?php _e('Импорт данных'); ?></a></li>
                                     <li><a href="?path=exchange.export"><span class="glyphicon glyphicon-export"></span> <?php _e('Экспорт данных'); ?></a></li>
                                     <li class="divider"></li>
-                                    <li><a href="?path=exchange.service"><?php _e('Обслуживание'); ?></a></li>
+
+                                    <li class="dropdown-submenu">
+                                        <a href="?path=exchange.service"><?php _e('Обслуживание'); ?></a>
+                                        <ul class="dropdown-menu">
+                                            <li><a href="?path=exchange.service"><?php _e('Очистка базы данных'); ?></a></li>
+                                            <li><a href="?path=exchange.file"><?php _e('Проверка изображений'); ?></a></li>
+                                        </ul>
+                                    </li>
+
                                     <li><a href="?path=exchange.sql"><?php _e('SQL запрос к базе'); ?></a></li>
                                     <li><a href="?path=exchange.backup"><?php _e('Резервное копирование'); ?></a></li>
                                 </ul>
@@ -297,7 +320,7 @@ if (!empty($_COOKIE['fullscreen'])) {
                                 $update_style = null;
                             ?>
 
-                            <li class="dropdown <?php echo $menu_active_update . $menu_active_update_restore . $menu_active_system_about ?>">
+                            <li class="dropdown <?php echo @$menu_active_update . @$menu_active_update_restore . @$menu_active_system_about ?>">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><?php _e('Справка'); ?> <span class="caret"></span></a>
                                 <ul class="dropdown-menu" role="menu">
                                     <li><a href="?path=system.about"><?php _e('О программе'); ?></a></li>
@@ -313,13 +336,13 @@ if (!empty($_COOKIE['fullscreen'])) {
                                 </ul>
                             </li>
                             <li class="divider"></li>
-                            <li class="dropdown <?php echo $menu_active_users . $menu_active_users_jurnal . $menu_active_users_stoplist; ?>">
+                            <li class="dropdown <?php echo @$menu_active_users . @$menu_active_users_jurnal . @$menu_active_users_stoplist; ?>">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><span class="glyphicon glyphicon-user hidden-xs"></span> <span class="visible-xs"><?php _e('Администратор'); ?> <span class="caret"></span></span><span class="caret  hidden-xs"></span></a>
                                 <ul class="dropdown-menu" role="menu">
                                     <li class="dropdown-header"><?php
-                            _e('Вошел как');
-                            echo ' ' . $_SESSION['logPHPSHOP'];
-                            ?></li>
+                                        _e('Вошел как');
+                                        echo ' ' . $_SESSION['logPHPSHOP'];
+                                        ?></li>
                                     <li class="divider"></li>
                                     <li><a href="?path=users&id=<?php echo $_SESSION['idPHPSHOP']; ?>"><?php _e('Профиль'); ?></a></li>
                                     <li><a href="?path=users"><?php _e('Все администраторы'); ?></a></li>
@@ -351,8 +374,8 @@ if (!empty($_COOKIE['fullscreen'])) {
 
                         <ul class="nav navbar-nav">
                             <li><a href="../../" title="><?php _e('Магазин'); ?>" target="_blank" class="visible-xs"><?php _e('Магазин'); ?></a></li>
-                            <li class="<?php echo $menu_active_intro; ?>"><a href="./admin.php" title="<?php _e('Домой'); ?>" class="home"><span class="glyphicon glyphicon-home hidden-xs"></span><span class="visible-xs"><?php _e('Домой'); ?></span></a></li>
-                            <li class="dropdown <?php echo $menu_active_order . $menu_active_payment . $menu_active_order_paymentlog . $menu_active_order_status . $menu_active_report_statorder . $menu_active_report_statuser . $menu_active_report_statpayment . $menu_active_report_statproduct; ?>">
+                            <li class="<?php echo @$menu_active_intro; ?>"><a href="./admin.php" title="<?php _e('Домой'); ?>" class="home"><span class="glyphicon glyphicon-home hidden-xs"></span><span class="visible-xs"><?php _e('Домой'); ?></span></a></li>
+                            <li class="dropdown <?php echo @$menu_active_order . @$menu_active_payment . @$menu_active_order_paymentlog . @$menu_active_order_status . @$menu_active_report_statorder . @$menu_active_report_statuser . @$menu_active_report_statpayment . @$menu_active_report_statproduct; ?>">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><?php _e('Заказы'); ?> <span class="caret"></span></a>
                                 <ul class="dropdown-menu" role="menu">
                                     <li><a href="?path=order"><span><?php _e('Заказы'); ?></span><span class="dropdown-header"><?php _e('Просмотр и оформление заказов, распечатка счетов'); ?></span></a></li>
@@ -365,7 +388,7 @@ if (!empty($_COOKIE['fullscreen'])) {
                                 </ul>
                             </li>
 
-                            <li class="dropdown <?php echo $menu_active_catalog . $menu_active_catalog_list . $menu_active_product . $menu_active_report_searchjurnal . $menu_active_report_searchreplace . $menu_active_sort; ?>" id="tour-product">
+                            <li class="dropdown <?php echo @$menu_active_catalog . @$menu_active_catalog_list . @$menu_active_product . @$menu_active_report_searchjurnal . @$menu_active_report_searchreplace . @$menu_active_sort; ?>" id="tour-product">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><?php _e('Товары'); ?> <span class="caret"></span></a>
                                 <ul class="dropdown-menu" role="menu">
                                     <li><a href="?path=catalog"><span><?php _e('Товары'); ?></span><span class="dropdown-header"><?php _e('Просмотр, добавление и редактирование товаров'); ?></span></a></li>
@@ -377,7 +400,7 @@ if (!empty($_COOKIE['fullscreen'])) {
                                 </ul>
                             </li>
 
-                            <li class="dropdown <?php echo $menu_active_shopusers . $menu_active_shopusers_status . $menu_active_shopusers_notice . $menu_active_shopusers_comment . $menu_active_dialog; ?>">
+                            <li class="dropdown <?php echo @$menu_active_shopusers . @$menu_active_shopusers_status . @$menu_active_shopusers_notice . @$menu_active_shopusers_comment . @$menu_active_dialog; ?>">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><?php _e('Пользователи'); ?> <span class="caret"></span></a>
                                 <ul class="dropdown-menu" role="menu">
                                     <li><a href="?path=shopusers"><?php _e('Покупатели'); ?><span class="dropdown-header"><?php _e('Список зарегистрированных покупателей магазина'); ?></span></a></li>
@@ -386,18 +409,18 @@ if (!empty($_COOKIE['fullscreen'])) {
                                         <a href="?path=shopusers.status"><?php _e('Статусы и скидки'); ?><span class="dropdown-header"><?php _e('Управление статусами и скидками пользователей магазина'); ?></span></a>
                                         <ul class="dropdown-menu">
                                             <li><a href="?path=shopusers.status"><?php _e('Статусы пользователей'); ?><span class="dropdown-header"><?php _e('Управление накопительными скидками и статусами пользователей'); ?></span></a></li>
-                                            <li><a href="?path=shopusers.discount"><?php _e('Скидки от заказа'); ?><span class="dropdown-header"><?php _e('Управление скидками от суммы заказа'); ?></span></a></a></li>
+                                            <li><a href="?path=shopusers.discount"><?php _e('Скидки от заказа'); ?><span class="dropdown-header"><?php _e('Управление скидками от суммы заказа'); ?></span></a></li>
                                             <li><a href="?path=promotions"><span><?php _e('Промоакции'); ?></span><span class="dropdown-header"><?php _e('Промоакции и скидки'); ?></span></a></li>
                                         </ul>
                                     </li>
-                                    <li><a href="?path=shopusers.notice"><?php _e('Уведомления'); ?><span class="dropdown-header"><?php _e('Заявки о поступлении товара на склад от пользователей магазина'); ?></span></a></li>
+                                    <li><a href="?path=shopusers.notice"><?php _e('Уведомления'); ?><span class="dropdown-header"><?php _e('Запросы от покупателей о поступлении товара на склад'); ?></span></a></li>
                                     <li><a href="?path=shopusers.comment"><?php _e('Комментарии'); ?><span class="dropdown-header"><?php _e('Список комментариев для товаров, оставленные пользователями'); ?></span></a></li>
                                     <li class="divider"></li>
                                     <li><a href="?path=dialog"><span class="glyphicon glyphicon-comment"></span> <?php _e('Диалоги с пользователями'); ?></a></li>
                                 </ul>
                             </li>
 
-                            <li class="dropdown <?php echo $menu_active_menu . $menu_active_gbook . $menu_active_page_catalog . $menu_active_page . $menu_active_news . $menu_active_news_rss . $menu_active_photo_catalog; ?>">
+                            <li class="dropdown <?php echo @$menu_active_menu . @$menu_active_gbook . @$menu_active_page_catalog . @$menu_active_page . @$menu_active_news . @$menu_active_news_rss . @$menu_active_photo_catalog; ?>">
                                 <a href="#" class="dropdown-toggle " data-toggle="dropdown" role="button" aria-expanded="false"><?php _e('Веб-сайт'); ?> <span class="caret"></span></a>
                                 <ul class="dropdown-menu" role="menu">
                                     <li><a href="?path=page.catalog"><?php _e('Страницы'); ?><span class="dropdown-header"><?php _e('Создание и публикация страниц'); ?></span></a></li>
@@ -408,7 +431,7 @@ if (!empty($_COOKIE['fullscreen'])) {
                                 </ul>
                             </li>
 
-                            <li class="dropdown <?php echo $menu_active_slider . $menu_active_links . $menu_active_banner . $menu_active_opros . $menu_active_metrica_traffic . $menu_active_metrica_sources_summary . $menu_active_metrica_sources_social . $menu_active_metrica_sources_sites . $menu_active_metrica_search_phrases . $menu_active_metrica_search_engines . $menu_active_metrica . $menu_active_promotions . $menu_active_lead_kanban; ?>" >
+                            <li class="dropdown <?php echo @$menu_active_slider . @$menu_active_links . @$menu_active_banner . @$menu_active_opros . @$menu_active_metrica_traffic . @$menu_active_metrica_sources_summary . @$menu_active_metrica_sources_social . @$menu_active_metrica_sources_sites . @$menu_active_metrica_search_phrases . @$menu_active_metrica_search_engines . @$menu_active_metrica . @$menu_active_promotions . @$menu_active_lead_kanban; ?>" >
                                 <a href="#" class="dropdown-toggle " data-toggle="dropdown" role="button" aria-expanded="false"><?php _e('Маркетинг'); ?> <span class="caret"></span></a>
                                 <ul class="dropdown-menu" role="menu">
                                     <li><a href="?path=lead.kanban"><span><?php _e('Канбан доска'); ?></span><span class="dropdown-header"><?php _e('Управление заказами и задачами'); ?></span></a></li>
@@ -416,15 +439,18 @@ if (!empty($_COOKIE['fullscreen'])) {
                                     <li><a href="?path=slider"><span><?php _e('Слайдер'); ?></span><span class="dropdown-header"><?php _e('Рекламный слайдер на главной странице'); ?></span></a></li>
                                     <li><a href="?path=news.sendmail"><?php _e('Рассылки'); ?><span class="dropdown-header"><?php _e('Создание email рассылок пользователям'); ?></span></a></li>
 
-                                    <li><a href="?path=links"><span><?php _e('Ссылки'); ?></span><span class="dropdown-header"><?php _e('Обмен ссылками с сайтами'); ?></span></a></li>
                                     <li><a href="?path=banner"><?php _e('Баннеры и pop-up'); ?><span class="dropdown-header"><?php _e('Вывод баннеров и уведомлений'); ?></span></a></li>
-                                    <li><a href="?path=opros"><?php _e('Опросы'); ?><span class="dropdown-header"><?php _e('Опросы для пользователей на сайте'); ?></span></a></li>                                    <li class="divider"></li>
+                                    <li class="divider"></li>
                                     <li><a href="?path=metrica"><span class="glyphicon glyphicon-equalizer"></span> <?php _e('Статистика посещений'); ?></a></li>
                                 </ul>
                             </li>
                         </ul>
                         <?php
-// Быстрый поиск
+                        
+                        if(empty($_GET['where']['name']))
+                            $_GET['where']['name']=null;
+                        
+                        // Быстрый поиск
                         switch ($PHPShopSystem->getSerilizeParam('admoption.search_enabled')) {
                             case 1:
                                 $search_class = 'hidden';
@@ -482,7 +508,7 @@ if (!empty($_COOKIE['fullscreen'])) {
 
 
                         // dialog
-                        $dialog = $PHPShopBase->getNumRows('dialog', "where isview='0' and staffid='1' group by chat_id");
+                        $dialog = $PHPShopBase->getNumRows('dialog', "where isview='0'");
                         if ($dialog > 99)
                             $dialog = 99;
                         ?>
@@ -595,7 +621,7 @@ if (!empty($_COOKIE['fullscreen'])) {
                             <?php if (!empty($selectModalBody)) echo $selectModalBody; ?>
 
                         </div>
-                        <div class="modal-footer">
+                        <div class="modal-footer" >
 
                             <!-- Progress -->
                             <div class="progress hidden">
@@ -634,17 +660,41 @@ if (!empty($_COOKIE['fullscreen'])) {
             </div>
         </div>
         <!--/ Modal filemanager -->
+        
+        <!-- Modal product -->
+        <div class="modal bs-example-modal-lg" id="adminModal" tabindex="-1" role="dialog"  aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                      
+                        <div class="pull-right">
+                            <span class="btn btn-default btn-sm pull-left glyphicon glyphicon-fullscreen" id="filemanagerwindow" title="<?php _e('Увеличить размер'); ?>"></span>
+                            <a class="btn btn-default btn-sm glyphicon glyphicon-eye-open" id="productlink" href="#" target="_blank" title="<?php _e('Предпросмотр'); ?>"></a>
+                            <button class="btn btn-default btn-sm glyphicon glyphicon-remove" data-dismiss="modal" aria-label="Close" title="<?php _e('Закрыть'); ?>"></button> 
+                        </div>
+                        
+                        <h4 class="modal-title"><?php _e('Редактирование'); ?></h4>
+                    </div>
+                    <div class="modal-body" style="padding:0px">
+                        <iframe name="adminModal" class="product-modal-content" frameborder="0" marginheight="0" marginwidth="0" scrolling="auto" width="100%"></iframe>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--/ Modal product  -->
 
         <!-- Fixed mobile bar -->
         <div class="bar-padding-fix <?php echo $isMobile . $isFrame; ?>"> </div>
-        <nav class="navbar navbar-statick navbar-fixed-bottom bar bar-tab visible-xs visible-sm <?php echo $isFrame; ?>" role="navigation">
-            
+        <nav class="navbar navbar-statick navbar-fixed-bottom bar bar-tab visible-xs  <?php echo $isFrame; ?>" role="navigation">
+
             <?php
-            if(empty($dialog))
+            if (empty($dialog))
                 $dialog_mobile_check = 'hide';
-            else $dialog_mobile_check = null;
+            else
+                $dialog_mobile_check = null;
             ?>
-            
+
             <a class="tab-item <?php echo $menu_active_dialog; ?>" href="?path=dialog">
                 <span class="icon icon-code"></span> <span class="badge badge-positive <?php echo $dialog_mobile_check; ?>" id="dialog-mobile-check"><?php echo $dialog; ?></span>
                 <span class="tab-label"><?php _e('Диалоги'); ?></span>
@@ -677,10 +727,11 @@ if (!empty($_COOKIE['fullscreen'])) {
         <script src="./js/jquery.form.js" data-rocketoptimized="false" data-cfasync="false"></script>
         <script src="./js/bootstrap-select.min.js" data-rocketoptimized="false" data-cfasync="false"></script>
         <script src="./js/messagebox.min.js" data-rocketoptimized="false" data-cfasync="false"></script>
+        <script src="./js/bootstrap-toggle.js" data-rocketoptimized="false" data-cfasync="false"></script>
         <!--/ jQuery plugins -->
 
         <?php
-// WEB PUSH
+        // WEB PUSH
         $PHPShopPush = new PHPShopPush();
         $PHPShopPush->init();
         ?>

@@ -44,10 +44,8 @@ function actionStart() {
 
     $info = 'Для произвольной вставки элемента, следует выбрать параметр вывода "Счетчики" и вставить переменную
         <kbd>@button@</kbd> в свой шаблон в нужное вам место.';
-    $Tab1 = $PHPShopGUI->setInfo($info, 200, '96%');
 
-
-    $Tab1.=$PHPShopGUI->setField('Расположение блока', $PHPShopGUI->setSelect('enabled_new', $value));
+    $Tab1.=$PHPShopGUI->setField('Расположение блока', $PHPShopGUI->setSelect('enabled_new', $value).$PHPShopGUI->setHelp($info ));
 
     // Содержание закладки 2
     $Tab3 = $PHPShopGUI->setPay();

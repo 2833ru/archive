@@ -5,7 +5,6 @@
    @pageTitle@
 </h2>
 
-
 @catContent@
 <div class="grid main-grid page-list">
 <p>@pageContent@</p></div>

@@ -1,8 +1,8 @@
 <?php
 
 /**
- * Панель краткого описания товара
- * @param array $row массив данных
+ * Панель описания товара
+ * @param array $data массив данных
  * @return string 
  */
 function tab_description($data) {

@@ -65,7 +65,9 @@ if ($GLOBALS['SysValue']['template_theme']['user'] == 'true' or ! empty($GLOBALS
     $PHPShopGUI->addJSFiles($GLOBALS['SysValue']['dir']['templates'] . chr(47) . $_SESSION['skin'] . '/js/editor-lite.js');
 
     $option = xml2array($GLOBALS['SysValue']['dir']['templates'] . chr(47) . $_SESSION['skin'] . '/editor/style.xml', false, true);
-    $css_edit .= $PHPShopGUI->includeJava . $PHPShopGUI->includeCss;
+    $css_edit = $PHPShopGUI->includeJava . $PHPShopGUI->includeCss;
+    
+    $theme_menu = $admin_edit = null;
 
     $option['element'][] = $option['element'];
     if (is_array($option))
@@ -74,7 +76,7 @@ if ($GLOBALS['SysValue']['template_theme']['user'] == 'true' or ! empty($GLOBALS
          if (!empty($element['var']))
             $element_var[0] = $element['var'];
 
-            if (is_array($element_var))
+            if (!empty($element_var) and is_array($element_var))
                 foreach ($element_var as $var) {
 
                     // Цвет
@@ -196,7 +198,7 @@ if ($GLOBALS['SysValue']['template_theme']['user'] == 'true' or ! empty($GLOBALS
 
     // Редактор CSS
     $theme_menu = '
-        <div id="style-selector" style="width: 280px; right: ' . $editor['right'] . 'px;" class="hidden-xs hidden-sm">
+        <div id="style-selector" style="width: 280px; right: ' . $editor['right'] . 'px;" >
         <div class="style-toggle ' . $editor['close'] . '" title="' . __('Панель оформления') . '"></div>
            <div id="style-selector-container">
               <div class="style-selector-wrapper">

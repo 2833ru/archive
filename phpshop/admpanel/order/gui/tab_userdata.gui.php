@@ -19,6 +19,9 @@ function tab_userdata($data, $order) {
         <input name="user_new" type="hidden">
      </div></div> ';
     else $user=$PHPShopGUI->setField("ФИО", $PHPShopGUI->setInputText('', 'fio_new', $data['fio'] ));
+    
+
+    $order['Person']=$PHPShopGUI->valid($order['Person'],'adr_name','org_name','mail');
 
     // Данные покупателя
     $disp1 = $user .

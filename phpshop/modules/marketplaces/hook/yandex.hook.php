@@ -48,10 +48,10 @@ function setProducts_marketplaces_hook($obj, $data) {
         $obj->marketplaces_categories = array_column($orm->getList(['id', 'name', 'parent_to'], false, false, ['limit' => 100000]), null, 'id');
 
         $data['xml'] = str_replace(
-            '<description>' . $obj->cleanStr($data['val']['description']) . '</description>',
-            '<description><![CDATA[' . $obj->cleanStr(
+            '<description>' . $data['val']['description'] . '</description>',
+            '<description><![CDATA[' .
                 marketplacesReplaceDescriptionVariables($obj, $data['val'], $obj->marketplaces_options['description_template'])
-            ) . ']]></description>',
+             . ']]></description>',
             $data['xml']
         );
     }
@@ -90,12 +90,21 @@ function setProducts_marketplaces_hook($obj, $data) {
     if(Marketplaces::isAliexpress()) {
         if(!empty($data['val']['price_aliexpress'])) {
             $price = $data['val']['price_aliexpress'];
-        } elseif(isset($options['price_aliexpress']) && (int) $options['price_aliexpress'] > 1 && !empty($data['val']['price' . (int) $options['price_aliexpress']])) {
-            $price = $data['val']['price' . (int) $options['price_aliexpress']];
+        } elseif(isset($options['price_ali']) && (int) $options['price_ali'] > 1 && !empty($data['val']['price' . (int) $options['price_ali']])) {
+            $price = $data['val']['price' . (int) $options['price_ali']];
         }
-        if(isset($options['price_aliexpress_fee']) && (float) $options['price_aliexpress_fee'] > 0) {
-            $fee = (float) $options['price_aliexpress_fee'];
+        if(isset($options['price_ali_fee']) && (float) $options['price_ali_fee'] > 0) {
+            $fee = (float) $options['price_ali_fee'];
         }
+
+        if (!empty($data['val']['length']))
+            $add.='<length>' . $data['val']['length'] . '</length>';
+        if (!empty($data['val']['width']))
+            $add.='<width>' . $data['val']['width'] . '</width>';
+        if (!empty($data['val']['height']))
+            $add.='<height>' . $data['val']['height'] . '</height>';
+        if (!empty($data['val']['weight']))
+            $add.='<weight>' . $data['val']['weight'] . '</weight>';
     }
 
     if($fee > 0) {
@@ -188,8 +197,12 @@ function setProducts_marketplaces_hook($obj, $data) {
         $add .= '<vat>' . $ndsValue . '</vat>';
     }
 
-    if (Marketplaces::isAliexpress())
+    if (Marketplaces::isAliexpress()) {
         $add .= '<count>' . $data['val']['items'] . '</count>';
+        if(!empty($data['val']['uid'])) {
+            $add .= '<sku_code>' . $data['val']['uid'] . '</sku_code>';
+        }
+    }
 
     if (Marketplaces::isSbermarket())
         $add .= '<outlets><outlet id="1" instock="' . $data['val']['items'] . '"></outlet></outlets>';

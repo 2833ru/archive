@@ -19,6 +19,8 @@ function setSelectChek($n) {
 
 function actionStart() {
     global $PHPShopGUI, $PHPShopSystem, $PHPShopOrm, $PHPShopModules;
+    
+    $PHPShopGUI->field_col = 3;
 
     // Выборка
     $data = $PHPShopOrm->select(array('*'), array('id' => '=' . intval($_GET['id'])));
@@ -37,8 +39,8 @@ function actionStart() {
     $Select2[] = array("Справа", 1, $data['element']);
 
     // Содержание закладки 1
-    $Tab1 = $PHPShopGUI->setField("Название", $PHPShopGUI->setInput("text", "name_new", $data['name'], "none", 500)) .
-            $PHPShopGUI->setField("Статус", $PHPShopGUI->setRadio("flag_new", 1, "Включить", $data['flag']) . $PHPShopGUI->setRadio("flag_new", 0, "Выключить", $data['flag'])) .
+    $Tab1 = $PHPShopGUI->setField("Название", $PHPShopGUI->setInput("text", "name_new", $data['name'])) .
+            $PHPShopGUI->setField("Статус", $PHPShopGUI->setCheckbox("flag_new", 1, null, $data['flag'])) .
             $PHPShopGUI->setField("Позиция", $PHPShopGUI->setSelect("num_new", $Select1, 150)) .
             $PHPShopGUI->setField("Место", $PHPShopGUI->setSelect("element_new", $Select2, 150,true)) .
             $PHPShopGUI->setLine() .
@@ -46,14 +48,16 @@ function actionStart() {
                     $PHPShopGUI->setHelp('* Пример: /page/,/news/. Можно указать несколько адресов через запятую.'));
 
     $Tab1.=$PHPShopGUI->setField("Витрины", $PHPShopGUI->loadLib('tab_multibase', $data, 'catalog/'));
+    
+    $Tab1= $PHPShopGUI->setCollapse('Информация',$Tab1);
 
-    $Tab1.= $PHPShopGUI->setField("Содержание", $oFCKeditor->AddGUI());
+    $Tab1.= $PHPShopGUI->setCollapse("Содержание",$oFCKeditor->AddGUI());
 
     // Запрос модуля на закладку
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $data);
 
     // Вывод формы закладки
-    $PHPShopGUI->setTab(array("Основное", $Tab1, true));
+    $PHPShopGUI->setTab(array("Основное", $Tab1, true,false,true));
 
 
     // Вывод кнопок сохранить и выход в футер

@@ -76,6 +76,7 @@ class PHPShopSystem extends PHPShopObj {
         else
             $val = parent::unserializeParam($param[0]);
 
+        if(!empty($val[$param[1]]))
         return $val[$param[1]];
     }
 
@@ -312,6 +313,29 @@ class PHPShopSystem extends PHPShopObj {
         return $column;
     }
 
+    public function isDisplayWarehouse()
+    {
+        // Отображение склада отключено
+        if ((int) $this->getSerilizeParam('admoption.sklad_enabled') === 0) {
+            return false;
+        }
+
+        // Показывать только авторизованным пользователям
+        if ((int) $this->getSerilizeParam('admoption.user_items_activate') === 1 and empty($_SESSION['UsersId'])) {
+            return false;
+        }
+
+        // Отображение склада скрыто в статусе пользователя
+        if (
+            !empty($_SESSION['UsersStatus']) &&
+            (int) $_SESSION['UsersStatus'] > 0 &&
+            !(new PHPShopUserStatus((int) $_SESSION['UsersStatus']))->isDisplayWarehouse()
+        ) {
+            return false;
+        }
+
+        return true;
+    }
 }
 
 /**

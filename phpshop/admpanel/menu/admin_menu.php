@@ -20,7 +20,7 @@ function actionStart() {
                 $element = '<span class="glyphicon glyphicon-arrow-right"></span>';
 
             
-             $PHPShopInterface->setRow($row['id'], array('name' => $row['name'], 'link' => '?path=menu&id=' . $row['id'], 'align' => 'left'), $row['num'], array('name' => $element, 'align' => 'center'), array('action' => array('edit', 'delete','id'=>$row['id']), 'align' => 'center'), array('status' => array('enable'=>$row['flag'], 'align' => 'right','caption'=>array('Выкл', 'Вкл'))));
+             $PHPShopInterface->setRow($row['id'], array('name' => $row['name'], 'link' => '?path=menu&id=' . $row['id'], 'align' => 'left'), $row['num'], array('name' => $element, 'align' => 'center'), array('action' => array('edit', '|', 'delete','id'=>$row['id']), 'align' => 'center'), array('status' => array('enable'=>$row['flag'], 'align' => 'right','caption'=>array('Выкл', 'Вкл'))));
             
         }
 

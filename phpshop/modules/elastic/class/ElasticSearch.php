@@ -14,6 +14,7 @@ class ElasticSearch
 
     public function search($query, $pole, $category = 0, $from = 0, $size = 15)
     {
+        $categories = [];
         if((defined('HostID') or defined('HostMain')) && $category === 0) {
             $categories = array_keys($this->getServerCategories());
         }
@@ -43,9 +44,15 @@ class ElasticSearch
             );
 
         $products = array_map(function ($product) use($highlights) {
-            $title = html_entity_decode(PHPShopString::utf8_win1251(array_shift($highlights[$product['elastic_id']]['title'])));
-            $description = html_entity_decode(PHPShopString::utf8_win1251(array_shift($highlights[$product['elastic_id']]['short_description'])));
-            $content = html_entity_decode(PHPShopString::utf8_win1251(array_shift($highlights[$product['elastic_id']]['description'])));
+            if (isset($highlights[$product['elastic_id']]['title']) && !empty($highlights[$product['elastic_id']]['title'])) {
+                $title = html_entity_decode(PHPShopString::utf8_win1251(array_shift($highlights[$product['elastic_id']]['title'])));
+            }
+            if (isset($highlights[$product['elastic_id']]['short_description']) && !empty($highlights[$product['elastic_id']]['short_description'])) {
+                $description = html_entity_decode(PHPShopString::utf8_win1251(array_shift($highlights[$product['elastic_id']]['short_description'])));
+            }
+            if (isset($highlights[$product['elastic_id']]['description']) && !empty($highlights[$product['elastic_id']]['description'])) {
+                $content = html_entity_decode(PHPShopString::utf8_win1251(array_shift($highlights[$product['elastic_id']]['description'])));
+            }
 
             if(!empty($title)) {
                 $product['name'] = $title;
@@ -73,6 +80,7 @@ class ElasticSearch
         $wordsArr = explode(' ', urldecode(PHPShopSecurity::true_search($query)));
         $query = implode(' ', array_slice($wordsArr, 0, ceil(count($wordsArr) / 2)));
 
+        $categories = [];
         if(defined('HostID') or defined('HostMain')) {
             $categories = $this->getServerCategories();
         }
@@ -136,7 +144,9 @@ class ElasticSearch
                 );
 
             $products = array_map(function ($product) use($highlightsProducts) {
-                $title = PHPShopString::utf8_win1251(array_shift($highlightsProducts[$product['elastic_id']]['title.autocomplete']));
+                if(isset($highlightsProducts[$product['elastic_id']]['title.autocomplete']) && !empty($highlightsProducts[$product['elastic_id']]['title.autocomplete'])) {
+                    $title = PHPShopString::utf8_win1251(array_shift($highlightsProducts[$product['elastic_id']]['title.autocomplete']));
+                }
                 if(!empty($title)) {
                     $product['name'] = $title;
                 }

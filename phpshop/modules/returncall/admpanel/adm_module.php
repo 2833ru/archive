@@ -65,18 +65,11 @@ function actionStart() {
     
      $Tab1 .= $PHPShopGUI->setField('Статус перевода в заказ', $PHPShopGUI->setSelect('status_new', $order_status_value, 300) . $PHPShopGUI->setHelp('Создается  пустой заказ с данными клиента'));
 
-    $info = 'Для произвольной вставки элемента следует выбрать парамет вывода "Кнопка звонок" и в ручном режиме вставить переменную
-        <kbd>@returncall@</kbd> в свой шаблон.
-        <p>Для персонализации формы вывода отредактируйте шаблоны <code>phpshop/modules/returncall/templates/</code></p>
- ';
-
-    $Tab2 = $PHPShopGUI->setInfo($info);
-
     // Форма регистрации
     $Tab3 = $PHPShopGUI->setPay($data['serial'], false, $data['version'], true);
 
     // Вывод формы закладки
-    $PHPShopGUI->setTab(array("Основное", $Tab1, true), array("Инструкция", $Tab2), array("О Модуле", $Tab3), array("Обзор заявок", null, '?path=modules.dir.returncall'));
+    $PHPShopGUI->setTab(array("Основное", $Tab1, true),array("О Модуле", $Tab3), array("Обзор заявок", null, '?path=modules.dir.returncall'));
 
     // Вывод кнопок сохранить и выход в футер
     $ContentFooter =

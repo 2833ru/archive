@@ -5,7 +5,7 @@ $_classPath = "../../../";
 
 include($_classPath . "class/obj.class.php");
 PHPShopObj::loadClass("base");
-$PHPShopBase = new PHPShopBase($_classPath . "inc/config.ini", true, false);
+$PHPShopBase = new PHPShopBase($_classPath . "inc/config.ini", true, true);
 
 PHPShopObj::loadClass("array");
 PHPShopObj::loadClass("orm");
@@ -21,12 +21,6 @@ PHPShopObj::loadClass("modules");
 PHPShopObj::loadClass("parser");
 PHPShopObj::loadClass("text");
 PHPShopObj::loadClass("lang");
-
-// Подключаем библиотеку поддержки.
-if ($_REQUEST['type'] != 'json') {
-    require_once $_classPath . "/lib/Subsys/JsHttpRequest/Php.php";
-    $JsHttpRequest = new Subsys_JsHttpRequest_Php("windows-1251");
-}
 
 // Массив валют
 $PHPShopValutaArray = new PHPShopValutaArray();

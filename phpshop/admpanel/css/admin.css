@@ -51,7 +51,7 @@ html{
 }
 
 #body{
-    background: #F0F0F0 url(images/default.png) top center repeat;
+    background: #F0F0F0;
     background-attachment: fixed;
 }
 
@@ -97,9 +97,13 @@ html{
     line-height: 1.5;
 }
 
+#navbar1 .dropdown-menu{
+   font-size: 13px;
+   min-width: 200px;
+}
+
 .dropdown-menu{
-    font-size: 13px;
-    min-width: 200px;
+   font-size: 13px;
 }
 
 .elfinder-modal-content{
@@ -184,8 +188,9 @@ input[readonly] {
     cursor: pointer;
 }
 
-.img-thumbnail{
-    max-height: 200px; 
+.img-preview > img{
+    max-height: 150px !important;
+    max-width:  150px !important;
 }
 
 label{
@@ -307,6 +312,7 @@ img.media-object{
 .sidebar-left, .sidebar-right{
     margin-bottom: -99999px;
     padding-bottom: 99999px;
+    box-shadow: 0 12px 15px rgb(140 152 164 / 10%);    
 }
 
 
@@ -348,7 +354,6 @@ img.media-object{
 
 .navbar-action .navbar-brand{
     color: #000;
-    margin-left: 10px !important;
 }
 
 .navbar-collapse{
@@ -749,15 +754,15 @@ table.dataTable th{
     width: 18px;
     height: 18px;
     margin-right: 7px;
-        
+
 }
 .progress{
     margin-bottom: 10px !important;
 }
 .center-block {
-  display: block;
-  margin-left: auto;
-  margin-right: auto;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 li.active .text-muted{
@@ -766,4 +771,67 @@ li.active .text-muted{
 
 .nav-stacked > li {
     width:100%;
+}
+
+.masonry-grid {
+    margin:auto;
+    column-count:2;
+}
+.col-block,.panel {
+    max-width: 100%;
+    margin-bottom: 13px;
+    background-color: #fcfcfc;
+    border: 1px solid #F1F1F1; 
+    box-sizing: border-box;  
+    box-shadow: 0 12px 15px rgb(140 152 164 / 10%);    
+    border-radius: 3px;
+}
+
+.block-grid .col-block{
+   max-width: 50%; 
+}
+
+.masonry-grid .col-block{
+    break-inside: avoid-column;
+    page-break-inside: avoid;
+    overflow: hidden; /* fix for firefox */
+}
+
+.col-block {
+    padding: 0px 10px 10px 10px; 
+}
+
+@media (max-width:700px) {
+    .masonry-grid {
+        column-count:1;
+    }
+}
+@media (max-width:500px) {
+    .masonry-grid {
+        column-count:1;
+    }
+}
+
+.table > thead > tr > th{
+    border-bottom: 0px solid #ddd !important;
+}
+
+.main{
+    transition: all 1s ease;
+    margin-bottom:10px;
+}
+
+.transition {
+    opacity: 0;
+}
+
+#template-tree-block{
+   overflow-y: scroll;
+   overflow-x: hidden;
+   max-height: 870px;
+}
+
+.toggle.btn-xs {
+    min-width: 48px !important;
+    min-height: 22px;
 }

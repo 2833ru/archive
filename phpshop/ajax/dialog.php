@@ -37,8 +37,19 @@ if (!empty($_POST['reg']))
 elseif(isset($_POST['answer'])){
     $result = $PHPShopDialogElement->answer($_POST['answer']);
 }
-else
-    $result = $PHPShopDialogElement->message($_SESSION['UsersId'],$_POST['new'],false,$_POST['path']);
+else{
+    if(!empty($_SESSION['UsersId']))
+        $UsersId = $_SESSION['UsersId'];
+    else $UsersId=null;
+    $result = $PHPShopDialogElement->message($UsersId,$_POST['new'],false,$_POST['path']);
+}
+
+if(empty($result['bot']))
+    $result['bot']=null;
+if(empty($result['status']))
+    $result['status']=null;
+if(empty($result['animation']))
+    $result['animation']=null;
 
 echo json_encode(array('success' => 1, 'num' => $result['count'], 'bot' => $result['bot'], 'status' => $result['status'],'animation'=>$result['animation'],'message' => PHPShopString::win_utf8($result['message'])));
 ?>

@@ -41,11 +41,16 @@
 
         <!-- Theme -->
         <link id="bootstrap_theme" data-name="@php echo $_SESSION['skin']; php@" href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@css/@spice_theme@.css" rel="stylesheet">
+	        <!-- Стикер-полоска -->
+	        <div class="top-banner @php __hide('sticker_close','cookie'); php@">
+				<div class="sticker-text">@sticker_top@</div>
+				<span class="close sticker-close">x</span>
+			</div>
+			<!-- /Стикер-полоска -->
 
 
         <!-- Header Section Starts -->
         <header id="header-area">
-
             <!-- Header Top Starts -->
             <div class="header-top">
                 <!-- Nested Container Starts -->
@@ -195,22 +200,15 @@
         <!-- Slider Section Starts -->
         <!-- Nested Container Starts -->
         <!-- Carousel Starts -->
-        <div class="slider hidden-xs">
-            <div class="container">
+        <div class="container">
+            <div class="slider">
                 <div class="row">
                     @imageSlider@
                 </div>
             </div>
         </div>
+					<div class="clearfix"></div>
 
-        <div class="slider col-xs-12 hidden-lg hidden-md hidden-sm">
-            <div class="banner text-center hidden-lg hidden-md hidden-sm">
-                @sticker_mobile_slider@
-            </div>
-
-            <!-- Carousel Ends -->
-            <!-- Nested Container Ends -->
-        </div>
         <!-- Slider Section Ends -->
 
 
@@ -246,7 +244,7 @@
             <!-- Featured Products Ends -->
 
             <!-- Banners Starts -->
-            <div class="top-col-banners">@sticker_banner@</div>
+            <div class="top-col-banners">@banersDispHorizontal@</div>
 
             <!-- Banners Ends -->    
 

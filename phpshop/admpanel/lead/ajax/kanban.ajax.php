@@ -87,7 +87,7 @@ foreach ($status_array as $row) {
 }
 
 $ajax['Новый']['title'] = PHPShopString::win_utf8('Новый');
-
+$count=[];
 $data = $PHPShopOrm->select();
 if (is_array($data))
     foreach ($data as $row) {
@@ -95,7 +95,7 @@ if (is_array($data))
         $sum = null;
 
         // Вывод не более 15
-        if ($count[$status_array_name[$row['statusi']]['name']] > 15)
+        if (!empty($count[$status_array_name[$row['statusi']]['name']]) and $count[$status_array_name[$row['statusi']]['name']] > 15)
             continue;
 
         switch ($row['uid']) {
@@ -148,7 +148,7 @@ if (is_array($data))
         $info = '<div class="text-muted">' . $datas . '<span class="glyphicon ' . $ico . ' pull-right" style="color:' . $status_array[$row['statusi']]['color'] . '"></span></div>' .
                 PHPShopString::win_utf8($type) .
                 '<div>' . $row['tel'] . '</div>' .
-                '<div>' . $row['mail'] . '</div>' .
+                '<div>' . @$row['mail'] . '</div>' .
                 $sum;
 
         $ajax[$status_array_name[$row['statusi']]['name']]['item'][] = array(
@@ -157,10 +157,10 @@ if (is_array($data))
             "uid" => $row['id'],
             "link" => $link,
             "user" => $user_link,
-            "date" => $row['datas'] . $row['date']
+            "date" => @$row['datas'] . $row['date']
         );
 
-        $count[$status_array_name[$row['statusi']]['name']] ++;
+        @$count[@$status_array_name[@$row['statusi']]['name']] ++;
     }
 
 if (is_array($ajax))

@@ -66,6 +66,13 @@
                 <li class=""><a href="/map/">{Карта сайта}</a></li>
             </ul>
         </div>
+        	        <!-- Стикер-полоска -->
+	        <div class="top-banner @php __hide('sticker_close','cookie'); php@">
+				<div class="sticker-text">@sticker_top@</div>
+				<span class="close sticker-close">x</span>
+			</div>
+			<!-- /Стикер-полоска -->
+
         <!-- Header Section Starts -->
         <header>
             <div class="header-top">
@@ -205,7 +212,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="menu-fix hidden-sm hidden-xs">
+                        <div class="menu-fix">
                             <h3 class="side-heading">{Полезная информация}</h3>
                             <div class="list-group sidebar-nav">
                                 @pageCatal@
@@ -227,7 +234,7 @@
                     </div>
 
                     <div class="col-xs-12">
-                        <div class="hidden-xs banner-block">@sticker_banner@</div>
+                        <div class="hidden-xs banner-block">@banersDispHorizontal@</div>
                     </div>
 
                     <div class="col-xs-12 @php __hide('now_buying'); php@">

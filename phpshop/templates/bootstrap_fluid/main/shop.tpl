@@ -36,6 +36,13 @@
 
         <!-- Header -->
         <header class="container-fluid ">
+	        <!-- Стикер-полоска -->
+	        <div class="top-banner @php __hide('sticker_close','cookie'); php@">
+				<div class="sticker-text">@sticker_top@</div>
+				<span class="close sticker-close">x</span>
+			</div>
+			<!-- /Стикер-полоска -->
+
             <div class="row">
                 <div class="col-md-12 hidden-xs">
                     <ul class="nav nav-pills pull-right">
@@ -212,7 +219,7 @@
                     </ul>
                 </div>
                 @leftMenu@
-                <div class="visible-lg visible-md text-center banner hidden-xs hidden-sm">@banersDisp@</div>
+                <div class="banner">@banersDisp@</div>
                 <div class="news-list row hidden-xs hidden-sm">
                     @miniNews@
                 </div>
@@ -268,7 +275,7 @@
 
         </div>
 
-        <div class="visible-lg visible-md text-center banner">@sticker_banner@<br></div>
+        <div class="visible-lg visible-md text-center banner">@banersDispHorizontal@<br></div>
 
 
         <!-- toTop -->

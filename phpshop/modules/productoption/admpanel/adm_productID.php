@@ -31,6 +31,8 @@ function addModOption($data) {
     $PHPShopOrm = new PHPShopOrm($PHPShopModules->getParam("base.productoption.productoption_system"));
     $m_data = $PHPShopOrm->select();
     $vendor = unserialize($m_data['option']);
+    
+    $data = $PHPShopGUI->valid($data,'option1','option2','option3','option4','option5');
 
     $Tab10 = '';
     if (is_array($vendor)) {

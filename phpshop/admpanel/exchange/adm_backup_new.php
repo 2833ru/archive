@@ -35,7 +35,7 @@ function actionStart() {
             $baseArray[$val] = $val;
     }
 
-
+    $table=null;
     foreach ($baseArray as $val) {
         $table.='<option value="' . $val . '" selected class="">' . $val . '</option>';
     }
@@ -45,7 +45,7 @@ function actionStart() {
         <table >
         <tr>
         <td>
-        <select id="pattern_table" style="height:300px;width:500px" name="pattern_table[]" multiple class="form-control" required>' . $table . '</select>
+        <select id="pattern_table" style="height:400px;width:500px" name="pattern_table[]" multiple class="form-control" required>' . $table . '</select>
         </td>
         <td>&nbsp;</td>
         <td class="text-center"><a class="btn btn-default btn-sm" href="#" id="select-all" data-toggle="tooltip" data-placement="top" title="' . __('Выбрать все') . '"><span class="glyphicon glyphicon-chevron-left"></span></a><br><br>
@@ -54,7 +54,7 @@ function actionStart() {
    </table>
             
 ' . $PHPShopGUI->setHelp('Для выбора более одной записи нажмите левой кнопкой мыши на запись, удерживая клавишу CTRL')) .
-            $PHPShopGUI->setField('GZIP сжатие', $PHPShopGUI->setCheckbox('export_gzip', 1, 'Включить', 1), 1, 'Сокращает размер создаваемого файла') .
+            $PHPShopGUI->setField('GZIP сжатие', $PHPShopGUI->setCheckbox('export_gzip', 1, null, 1), 1, 'Сокращает размер создаваемого файла') .
             $PHPShopGUI->setField('Комментарий', $PHPShopGUI->setInputText(false, 'export_comment', '', 300)) .
             $PHPShopGUI->setField('Варианты копирования', $PHPShopGUI->setSelect('export_structure', $structure_value, 300, true)), 'in', false);
 

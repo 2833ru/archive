@@ -35,23 +35,14 @@ function actionStart() {
     // Выборка
     $data = $PHPShopOrm->select();
 
-    $Tab1 = $PHPShopGUI->setField('Количество хитов на главной странице:', '<input class="form-control input-sm" type="number" step="1" min="0" value="' . $data['hit_main'] . '" name="hit_main_new" style="width:300px; ">');
-    $Tab1 .= $PHPShopGUI->setField('Количество хитов в ряд на странице хитов:', '<input class="form-control input-sm" type="number" step="1" min="0" value="' . $data['hit_page'] . '" name="hit_page_new" style="width:300px; ">');
-
-    $info = '<h4>Настройка модуля</h4>
-       <ol>
-        <li>Включить модуль, в карточке товара отметить "Хит", на соответствующей вкладке.</li>
-        <li>Для вывода на главной странице, добавить в ваш <code>phpshop/имя_шаблона/main/index.tpl</code> переменную <kbd>@hitMain@</kbd>, для скрытия блока, при отсутсвии товаров, используется переменная <kbd>@hitMainHidden@</kbd>.</li>
-        <li>Для вывода Хитов в каталоге, добавить в файл <code>phpshop/имя_шаблона/product/product_catalog_content.tpl</code> переменную <kbd>@hit@</kbd>.</li>
-        </ol>';
-
-    $Tab2 = $PHPShopGUI->setInfo($info);
+    $Tab1 = $PHPShopGUI->setField('Количество хитов на главной странице:', '<input class="form-control input-sm" type="number" step="1" min="0" value="' . $data['hit_main'] . '" name="hit_main_new" style="width:100px; ">');
+    $Tab1 .= $PHPShopGUI->setField('Количество хитов в ряд на странице хитов:', '<input class="form-control input-sm" type="number" step="1" min="0" value="' . $data['hit_page'] . '" name="hit_page_new" style="width:100px; ">');
 
     // Форма регистрации
     $Tab3 = $PHPShopGUI->setPay($serial = false, false, $data['version'], true);
 
     // Вывод формы закладки
-    $PHPShopGUI->setTab(array("Основное", $Tab1, true), array("Инструкция", $Tab2), array("О Модуле", $Tab3));
+    $PHPShopGUI->setTab(array("Основное", $Tab1, true), array("О Модуле", $Tab3));
 
     // Вывод кнопок сохранить и выход в футер
     $ContentFooter =

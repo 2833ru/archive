@@ -57,6 +57,8 @@ function actionStart() {
             CURLOPT_URL => $url,
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_HTTPHEADER => array('Authorization: OAuth ' . $metrica_token),
+            CURLOPT_SSL_VERIFYHOST => false,
+            CURLOPT_SSL_VERIFYPEER => false
         ));
 
         $json_data = json_decode(curl_exec($сurl), true);
@@ -131,7 +133,7 @@ function actionStart() {
      </div>';
     }
 
-    $searchforma.=$PHPShopInterface->setInputDate("date_start", $date_start, 'margin-bottom:10px', null, 'Дата начала отбора');
+    $searchforma=$PHPShopInterface->setInputDate("date_start", $date_start, 'margin-bottom:10px', null, 'Дата начала отбора');
     $searchforma.=$PHPShopInterface->setInputDate("date_end", $date_end, false, null, 'Дата конца отбора');
     $searchforma.= $PHPShopInterface->setInputArg(array('type' => 'hidden', 'name' => 'path', 'value' => $_GET['path']));
 
@@ -142,7 +144,7 @@ function actionStart() {
 
     $searchforma.=$PHPShopInterface->setButton('Показать', 'search', 'btn-order-search pull-right');
 
-    if ($clean)
+    if (!empty($clean))
         $searchforma.=$PHPShopInterface->setButton('Сброс', 'remove', 'btn-order-cancel pull-left visible-lg');
 
 

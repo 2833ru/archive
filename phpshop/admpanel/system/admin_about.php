@@ -71,7 +71,7 @@ function actionStart() {
         $ShowcaseLimit = __('нет');
 
     // Содержание закладки 1
-    $Tab1 .= $PHPShopGUI->setCollapse('Информация', $PHPShopGUI->setField("Название программы", '<a class="btn btn-sm btn-default" href="https://www.phpshop.ru/page/compare.html?from=' . $_SERVER['SERVER_NAME'] . '" target="_blank"><span class="glyphicon glyphicon-info-sign"></span> PHPShop ' . $product_name . '</a>') .
+    $Tab1 = $PHPShopGUI->setCollapse('Информация', $PHPShopGUI->setField("Название программы", '<a class="btn btn-sm btn-default" href="https://www.phpshop.ru/page/compare.html?from=' . $_SERVER['SERVER_NAME'] . '" target="_blank"><span class="glyphicon glyphicon-info-sign"></span> PHPShop ' . $product_name . '</a>') .
             $PHPShopGUI->setField("Версия программы", '<a class="btn btn-sm btn-default" href="https://www.phpshop.ru/docs/update.html?from=' . $_SERVER['SERVER_NAME'] . '" target="_blank"><span class="glyphicon glyphicon-info-sign"></span> ' . substr($version, 0, strlen($version) - 1) . '</a>') .
             $PHPShopGUI->setField("Подключаемые модули", $mod_limit, false, false, false, 'text-right') .
             $PHPShopGUI->setField("Дополнительные витрины", $ShowcaseLimit, false, 'Многосайтовость', false, 'text-right') .
@@ -92,12 +92,14 @@ function actionStart() {
 <input type="hidden" value="supportenterprise" name="addToCartFromPages" id="addToCartFromPages">             
 <input type="hidden" value="' . $DomenLocked . '" name="addToCartFromPagesDomen" id="addToCartFromPagesDomen">
 </form><form><a class="btn btn-sm btn-primary pay-support" href="#" target="_blank"><span class="glyphicon glyphicon-ruble"></span> ' . __('Приобрести техническую поддержку') . '</a>');
+    
+    $Tab2 = $PHPShopGUI->setCollapse('Лицензионное соглашение',$PHPShopGUI->loadLib('tab_license', false, './system/'));
 
     // Запрос модуля на закладку
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $License);
-
+    
     // Вывод формы закладки
-    $PHPShopGUI->setTab(array("Основное", $Tab1), array("Лицензионное соглашение", $PHPShopGUI->loadLib('tab_license', false, './system/'), true));
+    $PHPShopGUI->setTab(array("Основное", $Tab1), array("Лицензионное соглашение", $Tab2, true));
 
     // Вывод кнопок сохранить и выход в футер
     $ContentFooter = $PHPShopGUI->setInput("submit", "loadLic", "Применить", "", "", "", "", "actionLoadLic.system.edit");
@@ -147,5 +149,5 @@ function actionLoadLic() {
 $PHPShopGUI->getAction();
 
 // Вывод формы при старте
-$PHPShopGUI->setAction($_GET['id'], 'actionStart', 'none');
+$PHPShopGUI->setAction(null, 'actionStart', 'none');
 ?>

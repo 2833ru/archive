@@ -46,9 +46,14 @@
 
 
         <div id="bootstrap_theme" data-name="@php echo $_SESSION['skin']; php@"></div>
+	        <!-- Стикер-полоска -->
+	        <div class="top-banner @php __hide('sticker_close','cookie'); php@">
+				<div class="sticker-text">@sticker_top@</div>
+				<span class="close sticker-close">x</span>
+			</div>
+			<!-- /Стикер-полоска -->
 
         <header>
-
             <div class="header-top">
                 <div class="container">
                     <div class="row">
@@ -167,6 +172,7 @@
                         <h3 class="side-heading"><a href="/page/">{Блог}</a></h3>
                         <div class="list-group sidebar-nav">
                             @pageCatal@
+                            @banersDisp@
                         </div>
 
                     </div>
@@ -178,7 +184,7 @@
         </div>
         <!-- Main Container Ends -->
 
-        <div class="top-col-banners text-center  container">@sticker_banner@</div>
+        <div class="top-col-banners text-center  container">@banersDispHorizontal@</div>
 
         <div class="copyright">
             <!-- Container Starts -->

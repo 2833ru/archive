@@ -4,7 +4,7 @@
  * Автономная синхронизация номенклатуры из 1С
  * @package PHPShopExchange
  * @author PHPShop Software
- * @version 3.0
+ * @version 3.1
  */
 // Авторизация
 include_once("login.php");
@@ -400,9 +400,10 @@ class ReadCsv1C extends PHPShopReadCsvNative {
             if ($this->ObjSystem->getSerilizeParam("1c_option.update_category") == 1 and ! empty($CsvToArray[15]))
                 $sql .= "category='" . trim($CsvToArray[15]) . "', "; // категория
 
-            if ($this->ObjSystem->getSerilizeParam("1c_option.update_price") == 1)
-                $sql .= "price='" . @$CsvToArray[7] . "', "; // цена 1
-         
+            if ($this->ObjSystem->getSerilizeParam("1c_option.update_price") == 1 and $CsvToArray[7] != "")
+                $sql .= "price='" . $CsvToArray[7] . "', "; // цена 1
+
+                
             // Склад
             if ($this->ObjSystem->getSerilizeParam("1c_option.update_item") == 1) {
 
@@ -410,7 +411,7 @@ class ReadCsv1C extends PHPShopReadCsvNative {
                 if (strstr($CsvToArray[6], '/')) {
                     $sql .= $this->getWarehouse($CsvToArray[6]);
                     $CsvToArray[6] = $this->items;
-                } else
+                } elseif($CsvToArray[6] !="")
                     $sql .= "items='" . $CsvToArray[6] . "', ";
 
                 switch ($this->Sklad_status) {
@@ -447,20 +448,28 @@ class ReadCsv1C extends PHPShopReadCsvNative {
 
             if ($this->ObjSystem->getSerilizeParam("1c_option.update_price") == 1) {
 
-                $sql .= "price2='" . @$CsvToArray[8] . "', "; // цена 2
-                $sql .= "price3='" . @$CsvToArray[9] . "', "; // цена 3
-                $sql .= "price4='" . @$CsvToArray[10] . "', "; // цена 4
-                $sql .= "price5='" . @$CsvToArray[11] . "', "; // цена 5
+                if ($CsvToArray[8] != "")
+                    $sql .= "price2='" . $CsvToArray[8] . "', "; // цена 2
+
+                if ($CsvToArray[9] != "")
+                    $sql .= "price3='" . $CsvToArray[9] . "', "; // цена 3
+
+                if ($CsvToArray[10] != "")
+                    $sql .= "price4='" . $CsvToArray[10] . "', "; // цена 4
+
+                if ($CsvToArray[11] != "")
+                    $sql .= "price5='" . $CsvToArray[11] . "', "; // цена 5
             }
 
             // Подчиненные товары
             if ($this->ObjSystem->getSerilizeParam("1c_option.update_option") == 1) {
 
-                if (PHPShopProductFunction::true_parent($CsvToArray[0])) {
+                if (PHPShopProductFunction::true_parent($CsvToArray[0]) and ! PHPShopProductFunction::true_parent($CsvToArray[16])) {
                     $sql .= "parent_enabled='1', ";
                 } else {
                     $sql .= "parent_enabled='0', ";
                 }
+
 
                 if (strstr($CsvToArray[16], "@")) {
                     $parent_array = explode("@", $CsvToArray[16]);
@@ -470,7 +479,7 @@ class ReadCsv1C extends PHPShopReadCsvNative {
             }
 
             // SEO
-            if ($this->seourlpro_enabled and $this->seo_update and ($this->ObjSystem->getSerilizeParam("1c_option.update_name") == 1)) {
+            if ($this->seourlpro_enabled and $this->seo_update and ( $this->ObjSystem->getSerilizeParam("1c_option.update_name") == 1)) {
                 $sql .= "prod_seo_name='" . str_replace("_", "-", PHPShopString::toLatin($CsvToArray[1])) . "', ";
             }
 
@@ -629,6 +638,7 @@ class ReadCsv1C extends PHPShopReadCsvNative {
 
             if ($this->ObjSystem->getSerilizeParam("1c_option.update_price") == 1 and ! empty($CsvToArray[7]))
                 $sql .= "price='" . $CsvToArray[7] . "', "; // цена 1
+
 
 
                 

@@ -56,7 +56,7 @@ function addYandexcartCPA($data) {
 
     $Tab3 .= $PHPShopGUI->setField('Состояние товара', $PHPShopGUI->setSelect('yandex_condition_new', $condition,300), 1, 'Тег condition');
     
-    $Tab3 .= $PHPShopGUI->setField('Причина уценки', $PHPShopGUI->setTextarea('yandex_condition_reason_new', $data['yandex_condition_reason']), 1, 'Тег reason');
+    $Tab3 .= $PHPShopGUI->setField('Причина уценки', $PHPShopGUI->setTextarea('yandex_condition_reason_new', $data['yandex_condition_reason'],true,300), 1, 'Тег reason');
 
     $Tab3 .= $PHPShopGUI->setField('Курьерская доставка', $PHPShopGUI->setRadio('delivery_new', 1, 'Включить', $data['delivery']) . $PHPShopGUI->setRadio('delivery_new', 2, 'Выключить', $data['delivery'], false, 'text-muted'), 1, 'Тег delivery');
 
@@ -68,7 +68,7 @@ function addYandexcartCPA($data) {
 
     $Tab3 .= $PHPShopGUI->setField("Минимальный шаг", $PHPShopGUI->setInputText(null, 'yandex_step_quantity_new', $data['yandex_step_quantity'], 100), 1, ' Количество товара, добавляемое к минимальному');
 
-    $PHPShopGUI->addTab(array("Яндекс", $Tab3, true));
+    $PHPShopGUI->addTabSeparate(array("Яндекс", $PHPShopGUI->setPanel(null,$Tab3,'panel'), true));
 }
 
 function addYandexCartOptions($data) {

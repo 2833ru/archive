@@ -104,6 +104,7 @@ class PHPShopText {
      */
     static function a($href, $text, $title = false, $color = false, $size = false, $target = false, $class = false, $option = false) {
 
+        $style=null;
         if ($size)
             $style.='font-size:' . $size . 'px;';
         if ($color)

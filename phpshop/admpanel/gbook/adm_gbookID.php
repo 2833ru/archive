@@ -6,6 +6,8 @@ $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['gbook']);
 
 function actionStart() {
     global $PHPShopGUI, $PHPShopSystem, $PHPShopOrm, $PHPShopModules;
+    
+    $PHPShopGUI->field_col = 3;
 
     // Выборка
     $data = $PHPShopOrm->select(array('*'), array('id' => '=' . intval($_GET['id'])));
@@ -26,7 +28,7 @@ function actionStart() {
     // Редактор 1
     $PHPShopGUI->setEditor($PHPShopSystem->getSerilizeParam("admoption.editor"));
     $oFCKeditor = new Editor('otvet_new');
-    $oFCKeditor->Height = '320';
+    $oFCKeditor->Height = '400';
     $oFCKeditor->Value = $data['otvet'];
 
     // Содержание закладки 1
@@ -39,17 +41,20 @@ function actionStart() {
     $Tab1.=$PHPShopGUI->setField("Тема", $PHPShopGUI->setTextarea("tema_new", $data['tema'])) .
             $PHPShopGUI->setField("Отзыв", $PHPShopGUI->setTextarea("otsiv_new", $data['otsiv'], "", '100%', '200'));
     $Tab1.=$PHPShopGUI->setField("Статус", $PHPShopGUI->setRadio("flag_new", 1, "Вкл.", $data['flag']) . $PHPShopGUI->setRadio("flag_new", 0, "Выкл.", $data['flag']));
+    
+    $Tab1.=$PHPShopGUI->setField("Витрины", $PHPShopGUI->loadLib('tab_multibase', $data, 'catalog/'));
+    
+    $Tab1= $PHPShopGUI->setCollapse('Отзыв',$Tab1);
 
     // Содержание закладки 2
-    $Tab1.= $PHPShopGUI->setField("Ответ", $oFCKeditor->AddGUI());
+    $Tab1.= $PHPShopGUI->setCollapse('Ответ',$oFCKeditor->AddGUI());
     
-    $Tab2=$PHPShopGUI->setField("Витрины", $PHPShopGUI->loadLib('tab_multibase', $data, 'catalog/'));
 
     // Запрос модуля на закладку
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $data);
 
     // Вывод формы закладки
-    $PHPShopGUI->setTab(array("Основное", $Tab1, true), array("Дополнительно", $Tab2, true));
+    $PHPShopGUI->setTab(array("Основное", $Tab1, true,false,true));
 
     // Вывод кнопок сохранить и выход в футер
     $ContentFooter =

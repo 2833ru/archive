@@ -37,6 +37,12 @@
 
         <!-- Header -->
         <header class="container ">
+	        <!-- Стикер-полоска -->
+	        <div class="top-banner @php __hide('sticker_close','cookie'); php@">
+				<div class="sticker-text">@sticker_top@</div>
+				<span class="close sticker-close">x</span>
+			</div>
+			<!-- /Стикер-полоска -->
             <div class="row">
                 <div class="col-md-12 hidden-xs">
                     <ul class="nav nav-pills pull-right">
@@ -246,7 +252,7 @@
                     </div>
                 </div>
 
-                <div class="visible-lg visible-md text-center banner">@banersDisp@</div>
+                <div class="text-center banner">@banersDisp@</div>
 
 
                 @oprosDisp@
@@ -265,7 +271,7 @@
             <a href="#" id="toTop"><span id="toTopHover"></span>{Наверх}</a>
         </div>
         <!--/ toTop -->
-        <div class="visible-lg visible-md text-center banner">@sticker_banner@<br></div>
+        <div class="text-center banner">@banersDispHorizontal@</div>
 
 
         <div class="row">

@@ -64,6 +64,7 @@ function actionStart() {
                 break;
         }
     }
+    else $_GET['group_date']=null;
 
     $TitlePage.=' с ' . $date_start . ' по ' . $date_end;
 
@@ -87,6 +88,8 @@ function actionStart() {
         CURLOPT_URL => $url,
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_HTTPHEADER => array('Authorization: OAuth ' . $metrica_token),
+        CURLOPT_SSL_VERIFYHOST => false,
+            CURLOPT_SSL_VERIFYPEER => false
     ));
 
     $json_data = json_decode(curl_exec($сurl), true);
@@ -98,10 +101,11 @@ function actionStart() {
     $PHPShopInterface->setActionPanel($TitlePage, $select_name, array('Показать в Метрике'));
     $PHPShopInterface->setCaption(array("Адрес страницы", "40%"), array("Визиты", "10%", array('align' => 'center')), array("Посетители", "10%", array('align' => 'center')));
 
-    if (is_array($json_data)) {
+    if (!empty($json_data['data']) and is_array($json_data['data'])) {
 
-        $json_data = $json_data[data];
+        $json_data = $json_data['data'];
 
+        if(is_array($json_data))
         foreach ($json_data as $key => $value) {
 
             $name = $json_data[$key][dimensions][4][name];
@@ -114,7 +118,7 @@ function actionStart() {
         }
     }
 
-    $searchforma.=$PHPShopInterface->setInputDate("date_start", $date_start, 'margin-bottom:10px', null, 'Дата начала отбора');
+    $searchforma=$PHPShopInterface->setInputDate("date_start", $date_start, 'margin-bottom:10px', null, 'Дата начала отбора');
     $searchforma.=$PHPShopInterface->setInputDate("date_end", $date_end, false, null, 'Дата конца отбора');
     $searchforma.= $PHPShopInterface->setInputArg(array('type' => 'hidden', 'name' => 'path', 'value' => $_GET['path']));
 
@@ -129,7 +133,7 @@ function actionStart() {
 
     $searchforma.=$PHPShopInterface->setButton('Показать', 'search', 'btn-order-search pull-right');
 
-    if ($clean)
+    if (!empty($clean))
         $searchforma.=$PHPShopInterface->setButton('Сброс', 'remove', 'btn-order-cancel pull-left visible-lg');
 
 

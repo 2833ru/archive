@@ -870,9 +870,13 @@ class PHPShopUsers extends PHPShopCore {
         $hook = $this->setHook(__CLASS__, __FUNCTION__);
         if ($hook)
             return $hook;
+        
+        if(!empty($_SESSION['UsersId']))
+            $UsersId = $_SESSION['UsersId'];
+        else $UsersId = null;
 
-        if (PHPShopSecurity::true_num($_SESSION['UsersId'])) {
-            $this->UsersId = $_SESSION['UsersId'];
+        if (PHPShopSecurity::true_num($UsersId)) {
+            $this->UsersId = $UsersId;
             $this->UsersStatus = $_SESSION['UsersStatus'];
             $this->UserName = $_SESSION['UsersName'];
             return true;
@@ -1054,8 +1058,12 @@ class PHPShopUsers extends PHPShopCore {
         $PHPShopOrm->debug = $this->debug;
         $PHPShopOrm->Option['where'] = " or ";
         if (PHPShopSecurity::true_email($login)) {
-            $data = $PHPShopOrm->select(array('id'), array('mail' => '="' . trim($login) . '"', 'login' => '="' . trim($login) . '"'), array('order' => 'id desc'), array('limit' => 1));
+            $data = $PHPShopOrm->select(array('id', 'password'), array('mail' => '="' . trim($login) . '"', 'login' => '="' . trim($login) . '"'), array('order' => 'id desc'), array('limit' => 1));
             if (is_array($data) AND PHPShopSecurity::true_num($data['id'])) {
+                setcookie("UserLogin", trim(trim($login)), time() + 60 * 60 * 24 * 30, "/", $_SERVER['SERVER_NAME'], 0);
+                setcookie("UserPassword", base64_decode($data['password']), time() + 60 * 60 * 24 * 30, "/", $_SERVER['SERVER_NAME'], 0);
+                setcookie("UserChecked", 1, time() + 60 * 60 * 24 * 30, "/", $_SERVER['SERVER_NAME'], 0);
+
                 return $data['id'];
             }
         }
@@ -1099,8 +1107,12 @@ class PHPShopUsers extends PHPShopCore {
 
         $this->UsersId = $this->user_check_by_email($login);
         // если пользователь существующий, авторизуем его
-        if (!$this->UsersId)
+        if (!$this->UsersId) {
             $this->action_add_user();
+            setcookie("UserLogin", trim(trim($login)), time() + 60 * 60 * 24 * 30, "/", $_SERVER['SERVER_NAME'], 0);
+            setcookie("UserPassword", base64_decode($_POST['password_new']), time() + 60 * 60 * 24 * 30, "/", $_SERVER['SERVER_NAME'], 0);
+            setcookie("UserChecked", 1, time() + 60 * 60 * 24 * 30, "/", $_SERVER['SERVER_NAME'], 0);
+        }
 
         if ($this->UsersId)
             return $this->UsersId;

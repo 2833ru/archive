@@ -27,6 +27,7 @@ class PHPShopPage extends PHPShopCore {
      * @var int 
      */
     var $limit = 3;
+    var $odnotip_setka_num;
 
     /**
      * Конструктор
@@ -396,7 +397,7 @@ class PHPShopPage extends PHPShopCore {
         }
 
         // Список для выборки
-        if (is_array($odnotip))
+        if (!empty($odnotip) and is_array($odnotip))
             foreach ($odnotip as $value) {
                 if (!empty($value))
                     $odnotipList .= ' id=' . trim($value) . ' OR';

@@ -74,6 +74,10 @@ class CDEKWidget {
         $list = [];
         foreach ($cart as $cartItem) {
             for($i = 1; $i <= $cartItem['num']; $i++) {
+                
+                if(empty($cartItem['parent']))
+                    $cartItem['parent']=null;
+                
                 $list[] = [
                     'length' => $this->getDimension('length', $cartItem['id'], $cartItem['parent']),
                     'width'  => $this->getDimension('width', $cartItem['id'], $cartItem['parent']),

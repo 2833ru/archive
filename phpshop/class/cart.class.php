@@ -8,12 +8,12 @@ if (!defined("OBJENABLED")) {
 /**
  * Корзина товаров
  * @author PHPShop Software
- * @version 1.9
+ * @version 2.0
  * @package PHPShopClass
  */
 class PHPShopCart {
 
-    var $_CART = array();
+    var $_CART;
     var $message;
 
     /**
@@ -28,7 +28,7 @@ class PHPShopCart {
     function __construct($import_cart = false) {
         global $PHPShopSystem, $PHPShopValutaArray, $PHPShopModules;
 
-        if (!is_array($_SESSION['cart']))
+        if (!is_array(@$_SESSION['cart']))
             unset($_SESSION['cart']);
 
         // Режим проверки остатков на складе
@@ -54,7 +54,7 @@ class PHPShopCart {
         if ($import_cart)
             $this->_CART = $import_cart;
         else {
-            if (!is_array($_SESSION['cart'])) {
+            if (empty($_SESSION['cart']) or !is_array($_SESSION['cart'])) {
                 $_SESSION['cart'] = array();
             }
             $this->_CART = &$_SESSION['cart'];
@@ -95,7 +95,7 @@ class PHPShopCart {
                 "price_n" => $this->getCartProductPrice($objProduct, 'price_n'),
                 "price_purch" => $this->applyCurrency($objProduct->getParam("price_purch"),true),
                 "uid" => $objProduct->getParam("uid"),
-                "num" => abs($this->_CART[$xid]['num'] + $num),
+                "num" => abs(@$this->_CART[$xid]['num'] + $num),
                 "ed_izm" => $objProduct->getParam("ed_izm"),
                 "pic_small" => $objProduct->getParam("pic_small"),
                 "weight" => $objProduct->getParam("weight"),
@@ -185,7 +185,7 @@ class PHPShopCart {
      */
     function getNum() {
         $num = 0;
-        if (is_array($this->_CART))
+        if (!empty($this->_CART) and is_array($this->_CART))
             foreach ($this->_CART as $val)
                 $num += $val['num'];
         return $num;

@@ -25,6 +25,7 @@ $row = mysqli_fetch_array(@$result);
 $ouid = $row['uid'];
 $order = unserialize($row['orders']);
 $dis = null;
+$weight=0;
 if (is_array($order['Cart']['cart']))
     foreach ($order['Cart']['cart'] as $val) {
 
@@ -90,15 +91,17 @@ $sum = number_format($sum, "2", ".", "");
 $summa_nds_dos = number_format($deliveryPrice * $nds / (100 + $nds), "2", ".", "");
 
 
-$name_person = $order['Person']['name_person'];
-$org_name = $order['Person']['org_name'];
+$name_person = @$order['Person']['name_person'];
+$org_name = @$order['Person']['org_name'];
 $datas = PHPShopDate::dataV($row['datas'], "false");
 
 // время доставки под старый формат данных в заказе
 if (!empty($order['Person']['dos_ot']) OR !empty($order['Person']['dos_do']))
     $dost_ot = " От: " . $order['Person']['dos_ot'] . ", до: " . $order['Person']['dos_do'];
+else $dost_ot = null;
 
 // формируем адрес доставки с учётом старого формата данных в заказах
+$adr_info=null;
 if ($row['country'])
     $adr_info .= ", ".__("страна").": " . $row['country'];
 if ($row['state'])
@@ -107,8 +110,8 @@ if ($row['city'])
     $adr_info .= ", ".__("город").": " . $row['city'];
 if ($row['index'])
     $adr_info .= ", ".__("индекс").": " . $row['index'];
-if ($row['street'] OR $order['Person']['adr_name'])
-    $adr_info .= ", ".__("улица").": " . $row['street'] . $order['Person']['adr_name'];
+if ($row['street'] OR @$order['Person']['adr_name'])
+    $adr_info .= ", ".__("улица").": " . $row['street'] . @$order['Person']['adr_name'];
 if ($row['house'])
     $adr_info .= ", ".__("дом").": " . $row['house'];
 if ($row['porch'])
@@ -121,10 +124,10 @@ if ($row['flat'])
 $adr_info = substr($adr_info, 2);
 
 $PERSON = $order['Person'];
-if ($PERSON['discount'] > 0) {
-    $discount = $PERSON['discount'] . '%';
+if (@$PERSON['discount'] > 0) {
+    $discount = @$PERSON['discount'] . '%';
 } else {
-    $discount = ($PERSON['tip_disc'] == 1 ? $PERSON['discount_promo'] . '%' : $PERSON['discount_promo']);
+    $discount = (@$PERSON['tip_disc'] == 1 ? @$PERSON['discount_promo'] . '%' : @$PERSON['discount_promo']);
 }
 ?>
 <!doctype html>

@@ -4,6 +4,7 @@ if (!defined("OBJENABLED"))
     exit(header('Location: /?error=OBJENABLED'));
 
 class AddToTemplateHitElement extends PHPShopProductIconElements {
+    var $check_index=null;
 
     function __construct() {
         parent::__construct();
@@ -39,7 +40,7 @@ class AddToTemplateHitElement extends PHPShopProductIconElements {
                 $this->dataArray = $result;
             }
 
-            if(!count($this->dataArray)) {
+            if(!is_array($this->dataArray)) {
                 $this->set('hitMain', '');
                 $this->set('hitMainHidden', 'hide');
             } else {

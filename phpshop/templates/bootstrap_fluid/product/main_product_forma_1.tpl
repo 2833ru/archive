@@ -7,9 +7,11 @@
                 @hitIcon@
                 @promotionsIcon@
             </span>
-            <a class="media-left text-center" href="/shop/UID_@productUid@.html" style="min-width:200px" title="@productName@"><img data-src="@productImg@" alt="@productName@"></a>
+            <a class="media-left text-center" href="/shop/UID_@productUid@.html" style="min-width:200px" title="@productNameClean@">
+                <img data-src="@productImg@" alt="@productNameClean@">
+            </a>
             <div class="media-body">
-                <h3 class="media-heading"><a href="/shop/UID_@productUid@.html" title="@productName@">@productName@</a></h3>
+                <h3 class="media-heading"><a href="/shop/UID_@productUid@.html" title="@productNameClean@">@productName@</a></h3>
                 <p>@productDes@</p>
                 @previewSorts@
             <h4 class="product-price">@productPrice@<span class="rubznak">@productValutaName@</span><sup class="text-muted">@productPriceOld@</sup></h4>

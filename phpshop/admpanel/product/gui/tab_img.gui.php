@@ -48,8 +48,6 @@ function tab_img($data) {
     }
     else $parent_style='hide';
 
-
-
     if (is_array($data_pic))
         foreach ($data_pic as $row) {
 
@@ -75,7 +73,7 @@ function tab_img($data) {
 
             unset($value_option);
             $value_option[] = array(__('Основной товар'), 0, 0);
-            if (is_array($data_option))
+            if (!empty($data_option) and is_array($data_option))
                 foreach ($data_option as $row_option) {
 
                     if (empty($row_option['parent']) and empty($row_option['parent2']) and !empty($row_option['name']))
@@ -91,7 +89,7 @@ function tab_img($data) {
 
 
 
-            $select_option = $PHPShopGUI->setSelect("foto_parent_new[" . $row['id'] . "]", $value_option, 190, null, false, false, false, false, false, $row['name'], 'selectpicker pull-right img-parent ', false, 'btn btn-default btn-xs hidden-xs');
+            $select_option = $PHPShopGUI->setSelect("foto_parent_new[" . $row['id'] . "]", $value_option, 170, null, false, false, false, false, false, $row['name'], 'selectpicker pull-right img-parent ', false, 'btn btn-default btn-xs hidden-xs');
 
             if(empty($row['info']))
                 $row['info']=str_replace(array('"','\''),array('',''),$data['name']);
@@ -100,7 +98,7 @@ function tab_img($data) {
             if(!file_exists($_SERVER['DOCUMENT_ROOT'] . $img))
                 $img=$row['name'];
 
-            $img_list.='<div class="col-md-3 data-row"><div class="panel panel-default"><div class="panel-heading" title="' . $path_parts['basename'] . '"><a href="' . $row['name'] . '" target="_blank">' . $basename . '</a><span class="glyphicon glyphicon-remove pull-right btn btn-default btn-xs img-delete" data-id="' . $row['id'] . '" data-toggle="tooltip" data-placement="top" title="' . __('Удалить') . '"></span><span class="pull-right">&nbsp;</span><span class="glyphicon glyphicon-heart pull-right btn ' . $main . ' btn-xs img-main" data-path="' . $row['name'] . '" data-path-s="' . $img . '"  data-toggle="tooltip" data-placement="top" title="' . __('Главное превью товара') . '"></span><span class="pull-right">&nbsp;</span>' . $select . '</div><div class="panel-body text-center"><a href="#" class="setAlt" data-id="'.$row['id'].'" data-alt="'.$row['info'].'"><img data-id="'.$row['id'].'" title="'.$row['info'].'" alt="'.$row['info'].'" style="max-width:250px" src="' . $img. '"></a></div><div class="panel-footer '.$parent_style.'">' . __('Подтип') . ': ' . $select_option . '</div></div></div>';
+            $img_list.='<div class="col-md-3 col-sm-4 col-hs-12 data-row"><div class="panel panel-default"><div class="panel-heading" title="' . $path_parts['basename'] . '"><a href="' . $row['name'] . '" target="_blank">' . $basename . '</a><span class="glyphicon glyphicon-remove pull-right btn btn-default btn-xs img-delete" data-id="' . $row['id'] . '" data-toggle="tooltip" data-placement="top" title="' . __('Удалить') . '"></span><span class="pull-right">&nbsp;</span><span class="glyphicon glyphicon-heart pull-right btn ' . $main . ' btn-xs img-main" data-path="' . $row['name'] . '" data-path-s="' . $img . '"  data-toggle="tooltip" data-placement="top" title="' . __('Главное превью товара') . '"></span><span class="pull-right">&nbsp;</span>' . $select . '</div><div class="panel-body text-center"><a href="#" class="setAlt" data-id="'.$row['id'].'" data-alt="'.$row['info'].'"><img data-id="'.$row['id'].'" title="'.$row['info'].'" alt="'.$row['info'].'" style="max-width:220px;max-height:220px;" src="' . $img. '"></a></div><div class="panel-footer '.$parent_style.'">' . __('Подтип') . ': ' . $select_option . '</div></div></div>';
 
             if ($i == 4) {
                 $img_list.='</div>';
@@ -113,11 +111,11 @@ function tab_img($data) {
         }
 
 
-    if (count($data_pic) % 4 != 0)
+    if (!empty($data_pic) and is_array($data_pic) and count($data_pic) % 4 != 0)
         $img_list.='</div>';
 
 
-    $img_add = '<div class="panel panel-default"><div class="panel-body">' . $PHPShopGUI->setIcon(false, "img_new", false, array('load' => true, 'server' => true, 'url' => true, 'multi' => true), $img_width) . '</div></div>';
+    $img_add = $PHPShopGUI->setIcon(false, "img_new", false, array('load' => true, 'server' => true, 'url' => true, 'multi' => true), $img_width);
 
 
 

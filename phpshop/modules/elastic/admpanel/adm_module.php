@@ -34,6 +34,8 @@ function actionUpdate() {
         $_POST["ajax_search_categories_new"] = 0;
     if (empty($_POST["available_sort_new"]))
         $_POST["available_sort_new"] = 0;
+    if (empty($_POST["use_additional_categories_new"]))
+        $_POST["use_additional_categories_new"] = 0;
 
     $PHPShopOrm->debug = false;
     $action = $PHPShopOrm->update($_POST);
@@ -119,8 +121,13 @@ function actionStart() {
                 ['Отображение плитками', 1, $data['find_in_categories']],
                 ['Отображение списком', 2, $data['find_in_categories']]
             ], 300)) .
+            $PHPShopGUI->setField('Максимальное кол-во категорий в блоке "Найдено в категориях"', $PHPShopGUI->setInputText(false, 'max_categories_new', $data['max_categories'], 300)) .
             $PHPShopGUI->setField('Товаров на странице', $PHPShopGUI->setInputText(false, 'search_page_size_new', $data['search_page_size'], 300)) .
+            $PHPShopGUI->setField('Количество опечаток', $PHPShopGUI->setInputText(false, 'misprints_new', $data['misprints'], 300)) .
+            $PHPShopGUI->setField('Опечаток в быстром поиске', $PHPShopGUI->setInputText(false, 'misprints_ajax_new', $data['misprints_ajax'], 300)) .
+            $PHPShopGUI->setField('Учитывать опечатку при длине поискового запроса от', $PHPShopGUI->setInputText(false, 'misprints_from_cnt_new', $data['misprints_from_cnt'], 300)) .
             $PHPShopGUI->setField('Информационная строка', $PHPShopGUI->setCheckbox('search_show_informer_string_new', 1, 'Отображать строку "Найдено XX результатов в XX категориях."', $data['search_show_informer_string'])) .
+            $PHPShopGUI->setField('Дополнительные категории', $PHPShopGUI->setCheckbox('use_additional_categories_new', 1, 'Отображать дополнительные категории товаров', $data['use_additional_categories'])) .
             $PHPShopGUI->setField('Категории в быстром поиске', $PHPShopGUI->setCheckbox('ajax_search_categories_new', 1, 'Добавить в результаты быстрого поиска категории соответствующие поисковому запросу', $data['ajax_search_categories'])) .
             $PHPShopGUI->setField('Товаров в быстром поиске', $PHPShopGUI->setInputText(false, 'ajax_search_products_cnt_new', $data['ajax_search_products_cnt'], 300)) .
             $PHPShopGUI->setField('Файл фильтр поиска', $PHPShopGUI->setInputText(false, 'search_filter_new', $data['search_filter'], 300), 1, 'Файл с уникальной логикой поиска. Должен имплементировать интерфейс ElasticSearchFilterInterface.php') .
@@ -145,6 +152,7 @@ function actionStart() {
         <li>Настроить количество товаров в ряд, количество товаров на странице поиска.</li>
         <li>Над списком товаров в результатах поиска доступен блок <kbd>Найдено в категориях</kbd>. Это список категорий с количеством найденных в них товаров. По нажатию на каталог поиск будет ограничен выбранной категорией. 
         Блок <kbd>Найдено в категориях</kbd> доступен в двух вариантах <kbd>Отображение плитками</kbd> с картинками и <kbd>Отображение списком</kbd> для компактного вывода в интернет-магазинах с очень большим ассортиментом.</li>
+        <li>Включение опции <kbd>Дополнительные категории</kbd> позволяет добавить вывод дополнительных категорий товара в блок <kbd>Найдено в категориях</kbd>.</li>
         <li>Нажать <kbd>Экспортировать данные</kbd> и дождаться выполнения экспорта данных в поисковый сервис.</li>
     </ol>
     <h4>Фильтр товаров</h4>

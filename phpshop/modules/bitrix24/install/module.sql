@@ -7,10 +7,10 @@ CREATE TABLE IF NOT EXISTS `phpshop_modules_bitrix24_system` (
   `delete_contact_token` varchar(255) DEFAULT '',
   `delete_company_token` varchar(255) DEFAULT '',
   `statuses` text NOT NULL,
-  `version` varchar(64) DEFAULT '1.0',
+  `version` varchar(64) DEFAULT '1.2',
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
-INSERT INTO `phpshop_modules_bitrix24_system` VALUES ('1', '', '', '', '', '', '', '1.0');
+INSERT INTO `phpshop_modules_bitrix24_system` VALUES ('1', '', '', '', '', '', '', '1.2');
 
 CREATE TABLE IF NOT EXISTS `phpshop_modules_bitrix24_log` (
   `id` int(11) NOT NULL AUTO_INCREMENT,

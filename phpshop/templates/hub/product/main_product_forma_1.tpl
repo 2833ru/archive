@@ -4,12 +4,14 @@
         <div class="product-block-top">
             
             <div class="product-block-img">
-                <a class="product-block-img-link" href="/shop/UID_@productUid@.html" title="@productName@"><img data-src="@productImg@" class="image-fix owl-lazy" alt="@productName@"></a>
+                <a class="product-block-img-link" href="/shop/UID_@productUid@.html" title="@productNameClean@">
+                    <img data-src="@productImg@" class="image-fix owl-lazy" alt="@productNameClean@">
+                </a>
             </div>
         </div>
         <div class="product-block-bottom">
             <h3 class="product-block-name product-name-fix">
-                <a href="/shop/UID_@productUid@.html" title="@productName@">@productName@</a>
+                <a href="/shop/UID_@productUid@.html" title="@productNameClean@">@productName@</a>
             </h3>
             <h4 class="product-block-price">
                 <span class="price-new">@productPrice@<span class="rubznak">@productValutaName@</span></span><span class="price-old">@productPriceOld@</span>

@@ -192,14 +192,15 @@ function filter_load(filter_str, obj) {
         type: "POST",
         url: '?' + filter_str.split('#').join(''),
         data: {
-            ajax: true
+            ajax: true,
+            json: true
         },
         success: function (data)
         {
             if (data === 'empty_sort') {
                 showAlertMessage('Товары не найдены', true);
             } else {
-                $(".template-product-list").html(data);
+                $(".template-product-list").html(data['products']);
                 $('#price-filter-val-max').removeClass('has-error');
                 $('#price-filter-val-min').removeClass('has-error');
 
@@ -215,6 +216,8 @@ function filter_load(filter_str, obj) {
                 setTimeout(function () {
                     $(window).lazyLoadXT();
                 }, 50);
+
+                $("#pagination-block").html(data['pagination']);
 
                 // Сброс Waypoint
                 Waypoint.refreshAll();
@@ -268,8 +271,6 @@ function faset_filter_click(obj) {
             }
         }
 
-        $(".pagination").hide();
-
         if ($(obj).prop('checked')) {
             window.location.hash += $(obj).attr('data-url') + '&';
 
@@ -288,19 +289,17 @@ function faset_filter_click(obj) {
         if (href == undefined)
             href = '';
 
+        var last = href.substring((href.length - 1), href.length);
+        if (last != '&' && last != '')
+            href += '&';
 
         if ($(obj).prop('checked')) {
-            var last = href.substring((href.length - 1), href.length);
-            if (last != '&' && last != '')
-                href += '&';
-
             href += $(obj).attr('data-url').split(']').join('][]') + '&';
-
         } else {
             href = href.split($(obj).attr('data-url').split(']').join('][]') + '&').join('');
         }
 
-        window.location.href = '?' + href;
+        window.location.href = catalogFirstPage + '?' + href;
     }
 }
 
@@ -1464,4 +1463,14 @@ $(document).ready(function () {
                     }
                 });
     }
+    
+     // Закрыть стикер в шапке
+    $('.sticker-close').on('click', function (e) {
+        e.preventDefault();
+        $(".top-banner").remove();
+        $.cookie('sticker_close', 1, {
+            path: '/',
+            expires: 365
+        });
+    });
 });

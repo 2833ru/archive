@@ -8,6 +8,7 @@
 function tab_base($data) {
     global $PHPShopGUI, $skin_base_path, $PHPShopBase;
 
+    $disp=null;
 
     // Установленные шаблоны
     if (is_array($data))
@@ -196,7 +197,7 @@ function tab_base($data) {
            <div class="text-center panel-footer">
                     
                         <div class="btn-group" role="group" aria-label="...">
-                        <a class="btn btn-sm btn-primary ' . $demo . '" data-toggle="tooltip" data-placement="top" title="' . __('Настроить') . '" href="?path=' . $_GET['path'] . '&name=' . $row['name'] . '"><span class="glyphicon glyphicon-cog"></span> ' . __('Настроить') . ' ' . $row['price'] . ' </a>
+                        <a class="btn btn-sm btn-primary ' . $demo . '" data-toggle="tooltip" data-placement="top" title="' . __('Настроить') . '" href="?path=' . $_GET['path'] . '&name=' . $row['name'] . '"><span class="glyphicon glyphicon-cog"></span> ' . __('Настроить') . '</a>
                             
                         <a class="btn btn-sm btn-default skin-load ' . $reload . ' " data-path="' . $row['name'] . '" data-type="default" data-toggle="tooltip" data-placement="top" title="' . $load . '"><span class="glyphicon ' . $icon . '"></span> </a>
                               
@@ -242,8 +243,9 @@ function tab_base($data) {
         if (stristr($_SESSION['lang'], "utf"))
             $promo = __($promo);
 
-        $PHPShopGUI->addTab(array('Персональный дизайн', $promo, true));
-        $PHPShopGUI->setTab(array('Доступные шаблоны', $title_default . $img_list_default, true));
+        //$PHPShopGUI->addTab(array('Персональный дизайн', $promo, true));
+        //$PHPShopGUI->setTab(array('Доступные шаблоны', $title_default . $img_list_default, true));
+        $PHPShopGUI->_CODE = $title_default . $img_list_default;
     } else
         $disp = $PHPShopGUI->setAlert('Ошибка связи с сервером ' . $skin_base_path, $type = 'warning');
 

@@ -20,7 +20,7 @@ function tab_menu_sort() {
     var cat="' . intval($_GET['cat']) . '";
     </script>';
 
-    $help = '<p class="text-muted">'.__('Для отображения характеристик у товаров, необходимо объединить их в группы и выбрать эти группы у <a href="?path=catalog&action=new" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-share-alt"></span> Каталогов товаров</a>. Характеристики из выбранных групп появятся в товарах указанных каталогов').'.</p>';
+    $help = '<p class="text-muted">'.__('Размер в одном каталоге может быть 1200*1000, а в другом 1мм. Чтобы не выводить в фильтре все значения, используйте Группы. Добавьте в Группу свой набор хар-к, и привяжите к нужным <a href="?path=catalog&action=new" class=""><span class="glyphicon glyphicon-share-alt"></span> Каталогам</a>.<br><br>Чтобы вручную не создавать Группы, включите опцию <a href="?path=system" target="_blank">Кешировать значения фильтра</a>, или модуль <a href="https://docs.phpshop.ru/moduli/prodazhi/umniy-poisk-elastica" target="_blank">Умный поиск</a> – он скроет пустые значения автоматически').'.</p>';
 
     return $tree;
 }

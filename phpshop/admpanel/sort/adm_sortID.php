@@ -23,9 +23,9 @@ function actionStart() {
         $TitlePage = __("Характеристика");
 
     // Размер названия поля
-    $PHPShopGUI->field_col = 2;
+    $PHPShopGUI->field_col = 4;
     $PHPShopGUI->addJSFiles('./sort/gui/sort.gui.js');
-    $PHPShopGUI->setActionPanel($TitlePage . ': ' . $data['name'] . ' [ID ' . $data['id'] . ']', array('Создать', 'Сделать копию', '|', 'Удалить',), array('Сохранить', 'Сохранить и закрыть'));
+    $PHPShopGUI->setActionPanel($TitlePage . ': ' . $data['name'] . ' [ID ' . $data['id'] . ']', array('Создать', 'Сделать копию', '|', 'Удалить'), array('Сохранить', 'Сохранить и закрыть'));
 
     // Страницы
     $page_value[] = array('- ' . __('Нет описания') . ' - ', null, $data['page']);
@@ -44,35 +44,44 @@ function actionStart() {
 
     // Группа категорий / optionname
     if (empty($_GET['type'])) {
-        $Tab3 = $PHPShopGUI->setField("Группа:", $PHPShopGUI->setSelect('category_new', $category_value, '100%', false, false, true), 1, 'Группа характеристик служит для исключения дубликатов характеристик в различных категориях.') .
-                $PHPShopGUI->setField("Бренд:", $PHPShopGUI->setCheckbox('brand_new', 1, 'Вкл.', $data['brand']), 1, 'Характеристика становится брендом и отображается в списке брендов') .
-                $PHPShopGUI->setField("Переключение", $PHPShopGUI->setCheckbox('product_new', 1, 'Вкл.', $data['product']), 1, 'Вместо значений хар-ки выводить Рекомендуемые товары для совместной продажи, указанные в карточке товара') .
-                $PHPShopGUI->setField("Опции", $PHPShopGUI->setCheckbox('filtr_new', 1, 'Фильтр', $data['filtr']) .
-                        $PHPShopGUI->setCheckbox('goodoption_new', 1, 'Товарная опция', $data['goodoption']) .
-                        $PHPShopGUI->setCheckbox('optionname_new', 1, 'Не обязательна для добавления в корзину', $data['optionname']) .
-                        $PHPShopGUI->setCheckbox('virtual_new', 1, 'Виртуальный каталог', $data['virtual']) .
-                        $PHPShopGUI->setCheckbox('show_preview_new', 1, 'Отображать в превью товара', $data['show_preview'])
-                ) .
+        $Tab3 = $PHPShopGUI->setField("Группа:", $PHPShopGUI->setSelect('category_new', $category_value, '100%', false, false, true) .
+                $PHPShopGUI->setHelp('Можно скрыть пустые значения фильтра с одной Группой хар-к. В основных настройках отметьте <a href="?path=system" target="_blank">Кешировать значения фильтра</a> или включите модуль <a href="https://docs.phpshop.ru/moduli/prodazhi/umniy-poisk-elastica" target="_blank">Умный поиск</a>.')).
+                $PHPShopGUI->setField("Бренд:", $PHPShopGUI->setCheckbox('brand_new', 1, null, $data['brand']), 1, 'Характеристика становится брендом и отображается в списке брендов') .
+                $PHPShopGUI->setField("Переключение", $PHPShopGUI->setCheckbox('product_new', 1, null, $data['product']), 1, 'Вместо значений хар-ки выводить Рекомендуемые товары для совместной продажи, указанные в карточке товара') .
+                $PHPShopGUI->setField('Фильтр',$PHPShopGUI->setCheckbox('filtr_new', 1, null, $data['filtr'])).
+                $PHPShopGUI->setField('Товарная опция',$PHPShopGUI->setCheckbox('goodoption_new', 1, null, $data['goodoption']).'<br>'.
+                        $PHPShopGUI->setCheckbox('optionname_new', 1, 'Не обязательна для добавления в корзину', $data['optionname'])
+                        ).
+                $PHPShopGUI->setField('Виртуальный каталог',$PHPShopGUI->setCheckbox('virtual_new', 1, null, $data['virtual'])).
+                $PHPShopGUI->setField('Отображать в превью товара',$PHPShopGUI->setCheckbox('show_preview_new', 1, null, $data['show_preview'])).
                 $PHPShopGUI->setField("Описание", $PHPShopGUI->setSelect('page_new', $page_value, '100%', false, false, true), 1, 'Имя характеристики (в таблице характеристик в подробном описании товара) становится ссылкой на указанную страницу с описанием.');
-    }
+        
+        $help = '<p class="text-muted">'.__('После создания характеристики, ее нужно выбрать у <a href="?path=catalog&action=new" class=""><span class="glyphicon glyphicon-share-alt"></span> Каталога товаров</a>').'</p>';
+        
+    }else $Tab3=null;
 
     // Содержание закладки 1
     $Tab1 = $PHPShopGUI->setCollapse('Информация', $PHPShopGUI->setField("Наименование", $PHPShopGUI->setInputArg(array('type' => 'text', 'name' => 'name_new', 'value' => $data['name']))) .
             $PHPShopGUI->setField("Приоритет", $PHPShopGUI->setInputArg(array('type' => 'text', 'name' => 'num_new', 'value' => $data['num'], 'size' => 100))) .
-            $Tab3 .
-            $PHPShopGUI->setField("Подсказка", $PHPShopGUI->setTextarea('description_new', $data['description'])) .
-            $PHPShopGUI->setField("Витрины", $PHPShopGUI->loadLib('tab_multibase', $data, 'catalog/'))
+            $Tab3 
     );
-
+    
     // Варианты
-    if (empty($_GET['type']))
-        $Tab1 .= $PHPShopGUI->setCollapse('Значения', $PHPShopGUI->setField("Варианты", $PHPShopGUI->loadLib('tab_value', $data)));
+    if (empty($_GET['type'])){
+        $Tab1 .= $PHPShopGUI->setCollapse('Подсказка',$help);
+        $Tab1 .= $PHPShopGUI->setCollapse('Значения', $PHPShopGUI->loadLib('tab_value', $data));
+    }
+    
+    // Дополнительно
+    $Tab1 .= $PHPShopGUI->setCollapse('Дополнительно', $PHPShopGUI->setField("Витрины", 
+            $PHPShopGUI->loadLib('tab_multibase', $data, 'catalog/','100%')).
+            $PHPShopGUI->setField("Подсказка", $PHPShopGUI->setTextarea('description_new', $data['description']) ));
 
     // Запрос модуля на закладку
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $data);
 
     // Вывод формы закладки
-    $PHPShopGUI->setTab(array("Основное", $Tab1));
+    $PHPShopGUI->setTab(array("Основное", $Tab1,true,false,true));
 
     // Вывод кнопок сохранить и выход в футер
     $ContentFooter = $PHPShopGUI->setInput("hidden", "rowID", $data['id'], "right", 70, "", "but") .
@@ -105,8 +114,9 @@ function actionSave() {
     // Сохранение данных
     actionUpdate();
 
-
-    header('Location: ?path=' . $_GET['path'] . '&cat=' . $_POST['category_new']);
+    if (!empty($_GET['type']))
+        header('Location: ?path=' . $_GET['path'] . '&cat=' . $_POST['rowID']);
+    else header('Location: ?path=' . $_GET['path'] . '&cat=' . $_POST['category_new']);
 }
 
 // Функция обновления

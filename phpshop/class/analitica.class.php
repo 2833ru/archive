@@ -51,12 +51,12 @@ class PHPShopAnalitica {
     public function CID_Product($row) {
 
         // OpenGraph
-        PHPShopParser::set('ogTitle', $row['name']);
+        PHPShopParser::set('ogTitle', str_replace(['"', "'"], '', strip_tags($row['name'])));
         PHPShopParser::set('ogImage', $row['pic_small']);
         PHPShopParser::set('ogUrl', $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI']);
 
         if (!empty($row['description']))
-            PHPShopParser::set('ogDescription', strip_tags($row['description']));
+            PHPShopParser::set('ogDescription', str_replace(['"', "'"], '', strip_tags($row['description'])));
 
 
         if ($this->analitics or $this->ecommerce) {
@@ -269,12 +269,15 @@ class PHPShopAnalitica {
     public function UID($row) {
 
         // OpenGraph
-        PHPShopParser::set('ogTitle', $row['name']);
+        PHPShopParser::set('ogTitle', str_replace(['"', "'"], '', strip_tags($row['name'])));
         PHPShopParser::set('ogImage', $row['pic_small']);
         PHPShopParser::set('ogUrl', $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI']);
 
         if (!empty($row['description']))
-            PHPShopParser::set('ogDescription', strip_tags($row['description']));
+            PHPShopParser::set('ogDescription', str_replace(['"', "'"], '', strip_tags($row['description'])));
+        
+        if(empty($row['catregory']))
+            $row['catregory']=null;
 
         if ($this->analitics or $this->ecommerce) {
             $this->code .= "

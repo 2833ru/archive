@@ -141,6 +141,7 @@ $().ready(function () {
         data.push({name: 'selectID', value: 1});
         data.push({name: 'actionList[selectID]', value: 'actionGetNew'});
 
+        if( typeof chat_id != 'undefined')
         $.ajax({
             mimeType: 'text/html; charset=' + locale.charset,
             url: '?path=dialog&id=' + chat_id + '&bot=' + bot,

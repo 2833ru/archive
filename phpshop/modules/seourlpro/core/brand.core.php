@@ -50,7 +50,9 @@ class PHPShopBrand extends PHPShopShopCore {
             $arrayVendor[$row['id']] = $row;
         }
 
-        if (is_array($arrayVendor))
+        $sortValue=$brands=$charList=$brandsList=null;
+        
+        if (!empty($arrayVendor) and is_array($arrayVendor))
             foreach ($arrayVendor as $key => $value) {
                 if (is_numeric($key))
                     $sortValue.=' category=' . $key . ' OR';
@@ -75,6 +77,7 @@ class PHPShopBrand extends PHPShopShopCore {
             foreach ($arrForSort as $value => $key) {
                 $charOld = $char;
                 $char = substr(strtoupper($value), 0, 1);
+                
                 if ($charOld != $char) {
                     if (!empty($char))
                         $charList.= '   ' . PHPShopText::a("#" . $char, PHPShopText::b($char), $char);
@@ -130,6 +133,7 @@ class PHPShopBrand extends PHPShopShopCore {
         elseif (empty($this->cell))
             $this->cell = 3;
 
+        if(!empty($_GET['gridChange']))
         switch ($_GET['gridChange']) {
             case 1:
                 $this->set('gridSetAactive', 'active');
@@ -141,6 +145,7 @@ class PHPShopBrand extends PHPShopShopCore {
         }
 
 
+        if(!empty($_GET['s']))
         switch ($_GET['s']) {
             case 1:
                 $this->set('sSetAactive', 'active');
@@ -152,6 +157,7 @@ class PHPShopBrand extends PHPShopShopCore {
         }
 
 
+        if(!empty($_GET['f']))
         switch ($_GET['f']) {
             case 1:
                 $this->set('fSetAactive', 'active');

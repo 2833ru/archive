@@ -36,7 +36,12 @@
         <link href="@pageCss@" rel="stylesheet">
         <link id="bootstrap_theme" data-name="@php echo $_SESSION['skin']; php@" href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@css/@astero_theme@.css" rel="stylesheet">
         <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,700&display=swap&subset=cyrillic" rel="stylesheet">
-
+	        <!-- Стикер-полоска -->
+	        <div class="top-banner @php __hide('sticker_close','cookie'); php@">
+				<div class="sticker-text">@sticker_top@</div>
+				<span class="close sticker-close">x</span>
+			</div>
+			<!-- /Стикер-полоска -->
         <!-- Header Section Starts -->
         <header id="header-area">
             <!-- Nested Container Starts -->
@@ -254,8 +259,6 @@
                           <div id="productlist">
     <table>@productlist_list@</table>
 </div>
-
-
                         </div>
                     </div>
                     @oprosDisp@
@@ -269,14 +272,8 @@
 
                         </div>
                     </div>
-
-
-
                 </div>
             </div>
-
-
-
 
             <!-- Sidebar Ends -->
 
@@ -286,15 +283,10 @@
                 @DispShop@
                 @getPhotos@
 
-
-
-
             </div>
-
-
             <div class="col-xs-12">
                 <div class="banner-block">
-                    @sticker_banner@
+                    @banersDispHorizontal@
                 </div>
             </div>
 

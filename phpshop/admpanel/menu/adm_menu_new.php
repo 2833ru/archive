@@ -20,9 +20,12 @@ function setSelectChek($n) {
 function actionStart() {
     global $PHPShopGUI, $PHPShopSystem, $TitlePage, $PHPShopModules;
 
+    $PHPShopGUI->field_col = 3;
+
     // Выборка
     $data['flag'] = 1;
     $data['name'] = __('Новый блок');
+    $data = $PHPShopGUI->valid($data, 'content', 'num', 'element', 'dir', 'servers');
 
     $PHPShopGUI->setActionPanel($TitlePage, false, array('Сохранить и закрыть'));
 
@@ -38,23 +41,25 @@ function actionStart() {
     $Select2[] = array("Справа", 1, $data['element']);
 
     // Содержание закладки 1
-    $Tab1 = $PHPShopGUI->setField("Название", $PHPShopGUI->setInput("text", "name_new", $data['name'], "none", 500)) .
-            $PHPShopGUI->setField("Статус", $PHPShopGUI->setRadio("flag_new", 1, "Включить", $data['flag']) . $PHPShopGUI->setRadio("flag_new", 0, "Выключить", $data['flag'])) .
+    $Tab1 = $PHPShopGUI->setField("Название", $PHPShopGUI->setInput("text", "name_new", $data['name'])) .
+            $PHPShopGUI->setField("Статус", $PHPShopGUI->setCheckbox("flag_new", 1, null, $data['flag'])) .
             $PHPShopGUI->setField("Позиция", $PHPShopGUI->setSelect("num_new", $Select1, 150)) .
-            $PHPShopGUI->setField("Место", $PHPShopGUI->setSelect("element_new", $Select2, 150,true)) .
+            $PHPShopGUI->setField("Место", $PHPShopGUI->setSelect("element_new", $Select2, 150, true)) .
             $PHPShopGUI->setLine() .
             $PHPShopGUI->setField("Таргетинг", $PHPShopGUI->setInput("text", "dir_new", $data['dir']) .
                     $PHPShopGUI->setHelp('* Пример: /page/,/news/. Можно указать несколько адресов через запятую.'));
 
-    $Tab1.=$PHPShopGUI->setField("Витрины", $PHPShopGUI->loadLib('tab_multibase', $data, 'catalog/'));
+    $Tab1 .= $PHPShopGUI->setField("Витрины", $PHPShopGUI->loadLib('tab_multibase', $data, 'catalog/'));
 
-    $Tab1.= $PHPShopGUI->setField("Содержание", $oFCKeditor->AddGUI());
+    $Tab1 = $PHPShopGUI->setCollapse('Информация', $Tab1);
+
+    $Tab1 .= $PHPShopGUI->setCollapse("Содержание", $oFCKeditor->AddGUI());
 
     // Запрос модуля на закладку
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $data);
 
     // Вывод формы закладки
-    $PHPShopGUI->setTab(array("Основное", $Tab1, true));
+    $PHPShopGUI->setTab(array("Основное", $Tab1, true, false, true));
 
     // Вывод кнопок сохранить и выход в футер
     $ContentFooter = $PHPShopGUI->setInput("submit", "saveID", "ОК", "right", 70, "", "but", "actionInsert.menu.create");
@@ -72,8 +77,11 @@ function actionInsert() {
     $_POST['servers_new'] = "";
     if (is_array($_POST['servers']))
         foreach ($_POST['servers'] as $v)
-            if ($v != 'null' and !strstr($v, ','))
-                $_POST['servers_new'].="i" . $v . "i";
+            if ($v != 'null' and ! strstr($v, ','))
+                $_POST['servers_new'] .= "i" . $v . "i";
+
+    if (empty($_POST['flag_new']))
+        $_POST['flag_new'] = 0;
 
     // Перехват модуля
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $_POST);

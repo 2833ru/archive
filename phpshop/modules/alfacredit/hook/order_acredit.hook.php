@@ -15,7 +15,7 @@ function payment_mod_acredit_hook($obj, $arr) {
     $PHPShopPayment = new PHPShopPaymentArray();
     $Payment = $PHPShopPayment->getArray();
     
-    $disp = null;
+    $disp = $showYurDataForPaymentClass = null;
     if (is_array($Payment))
         foreach ($Payment as $val) {
             if (!empty($val['enabled']) OR $val['path'] == 'modules') {

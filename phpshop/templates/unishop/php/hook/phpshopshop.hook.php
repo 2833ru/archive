@@ -9,6 +9,15 @@ function template_CID_Product($obj, $data, $rout) {
         // Âèðòóàëüíûå êàòàëîãè
         $obj->cat_template = 'sortñattemplatehook';
 
+        if (empty($_GET['gridChange']))
+            $_GET['gridChange'] = null;
+
+        if (empty($_GET['s']))
+            $_GET['s'] = null;
+
+        if (empty($_GET['f']))
+            $_GET['f'] = null;
+
         switch ($_GET['gridChange']) {
             case 1:
                 $obj->set('gridSetAactive', 'active');
@@ -46,7 +55,7 @@ function template_CID_Product($obj, $data, $rout) {
         }
     }
     if ($rout == "END") {
-        $obj->set("productDescriptionSmall", $data["description"]);
+        $obj->set("productDescriptionSmall", @$data["description"]);
     }
 }
 
@@ -363,7 +372,7 @@ function template_image_gallery($obj, $array) {
             $bxpager = null;
 
 
-        $obj->set('productFotoList', '<img itemprop="image" content="http://' . $_SERVER['SERVER_NAME'] . $array['pic_big'] . '" class="bxslider-pre" alt="' . $array['name'] . '" title="' . $array['name'] . '" src="' . $array['name_s'] . '" /><div class="bxslider hide">' . $bxslider . '</div><div class="bx-pager">' . $bxpager . '</div>');
+        $obj->set('productFotoList', '<img itemprop="image" content="http://' . $_SERVER['SERVER_NAME'] . $array['pic_big'] . '" class="bxslider-pre" alt="' . $array['name'] . '" title="' . $array['name'] . '" src="' . @$array['name_s'] . '" /><div class="bxslider hide">' . $bxslider . '</div><div class="bx-pager">' . $bxpager . '</div>');
         $obj->set('productFotoListBig', '<ul class="bxsliderbig" data-content="' . $bxsliderbig . '" data-page="' . $bxpager . '"></ul><div class="bx-pager-big">' . $bxpager . '</div>');
         return true;
     }

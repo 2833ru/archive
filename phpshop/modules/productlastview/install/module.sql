@@ -11,7 +11,7 @@ CREATE TABLE `phpshop_modules_productlastview_system` (
   `num` tinyint(11) NOT NULL default '0',
   `serial` varchar(64) NOT NULL default '',
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=cp1251 AUTO_INCREMENT=2 ;
+) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
 
 
 INSERT INTO `phpshop_modules_productlastview_system` VALUES (1, '0', '1', 'Просмотренные товары', 50, '1', 5, '');

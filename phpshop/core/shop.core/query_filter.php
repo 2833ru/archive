@@ -12,7 +12,7 @@ function query_filter($obj) {
 
     $sort = null;
 
-    if(count($obj->category_array) === 0) {
+    if (count($obj->category_array) === 0) {
         $obj->category_array = array($obj->category);
     }
 
@@ -24,10 +24,25 @@ function query_filter($obj) {
 
     $catt = "(category IN ('$categories_str') " . $dop_cats . " ) ";
 
-    $v = @$_REQUEST['v'];
-    $s = intval($_REQUEST['s']);
-    $f = intval($_REQUEST['f']);
-    $l = @$_REQUEST['l'];
+    if (!empty($_REQUEST['v']))
+        $v = $_REQUEST['v'];
+    else
+        $v = null;
+
+    if (!empty($_REQUEST['s']))
+        $s = intval($_REQUEST['s']);
+    else
+        $s = null;
+
+    if (!empty($_REQUEST['f']))
+        $f = intval($_REQUEST['f']);
+    else
+        $f = null;
+
+    if (!empty($_REQUEST['l']))
+        $l = $_REQUEST['l'];
+    else
+        $l = null;
 
     // Сортировка по характеристикам
     if (is_array($v)) {
@@ -35,29 +50,29 @@ function query_filter($obj) {
 
             // Множественный отбор [][]
             if (is_array($value)) {
-                $sort.=" and (";
+                $sort .= " and (";
                 foreach ($value as $v) {
                     if (PHPShopSecurity::true_num($key) and PHPShopSecurity::true_num($v)) {
                         $obj->selected_filter[$key][] = $v;
                         $hash = $key . "-" . $v;
-                        $sort.=" vendor REGEXP 'i" . $hash . "i' or";
+                        $sort .= " vendor REGEXP 'i" . $hash . "i' or";
                     }
                 }
                 $sort = substr($sort, 0, strlen($sort) - 2);
-                $sort.=")";
+                $sort .= ")";
             }
             // Обычный отбор []
             elseif (PHPShopSecurity::true_num($key) and PHPShopSecurity::true_num($value)) {
                 $obj->selected_filter[$key][] = $value;
                 $hash = $key . "-" . $value;
-                $sort.=" and vendor REGEXP 'i" . $hash . "i' ";
+                $sort .= " and vendor REGEXP 'i" . $hash . "i' ";
             }
         }
     }
-    
+
     // Сортировка по алфавиту ?l=a
-    if(!empty($l)){
-        $sort.= " and name LIKE '".strtoupper(substr(urldecode($l),0,1))."%' ";
+    if (!empty($l)) {
+        $sort .= " and name LIKE '" . strtoupper(substr(urldecode($l), 0, 1)) . "%' ";
     }
 
     // Направление сортировки из настроек каталога. Вторая часть логики в sort.class.php
@@ -132,7 +147,7 @@ function query_filter($obj) {
         $string = $key . ' by ' . $val;
 
     // Поиск по цене
-    if (PHPShopSecurity::true_param($_REQUEST['min'], $_REQUEST['max'])) {
+    if (!empty($_REQUEST['min']) and !empty($_REQUEST['max'])) {
 
         $priceOT = intval($_REQUEST['min']) - 1;
         $priceDO = intval($_REQUEST['max']) + 1;
@@ -144,16 +159,17 @@ function query_filter($obj) {
 
 
         // Цена с учетом выбранной валюты
-        $priceOT/=$obj->currency('kurs');
-        $priceDO/=$obj->currency('kurs');
+        $priceOT /= $obj->currency('kurs');
+        $priceDO /= $obj->currency('kurs');
 
         // Сортировки по прайсу среди мультивалютных товаров
         if ($obj->multi_currency_search)
-            $sort.= " and (price_search BETWEEN " . ($priceOT / (100 + $percent) * 100) . " AND " . ($priceDO / (100 + $percent) * 100) . ") ";
+            $sort .= " and (price_search BETWEEN " . ($priceOT / (100 + $percent) * 100) . " AND " . ($priceDO / (100 + $percent) * 100) . ") ";
         else
-            $sort.= " and (" . $obj->PHPShopSystem->getPriceColumn() ." BETWEEN " . ($priceOT / (100 + $percent) * 100) . " AND " . ($priceDO / (100 + $percent) * 100) . ") ";
+            $sort .= " and (" . $obj->PHPShopSystem->getPriceColumn() . " BETWEEN " . ($priceOT / (100 + $percent) * 100) . " AND " . ($priceDO / (100 + $percent) * 100) . ") ";
     }
 
     return array('sql' => $catt . " and enabled='1' and parent_enabled='0' " . $sort . $string);
 }
+
 ?>

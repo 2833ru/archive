@@ -12,10 +12,10 @@ function treegenerator($array, $i, $curent) {
     $tree_select = $check = false;
 
     $del = str_repeat($del, $i);
-    if (is_array($array['sub'])) {
+    if (!empty($array) and is_array($array['sub'])) {
         foreach ($array['sub'] as $k => $v) {
 
-            $check = treegenerator($tree_array[$k], $i + 1, $curent);
+            $check = treegenerator(@$tree_array[$k], $i + 1, $curent);
 
             if ($k == $curent)
                 $selected = 'selected';
@@ -23,13 +23,13 @@ function treegenerator($array, $i, $curent) {
                 $selected = null;
 
             if (empty($check['select'])) {
-                $tree_select.='<option value="' . $k . '" ' . $selected . '>' . $del . $v . '</option>';
+                $tree_select .= '<option value="' . $k . '" ' . $selected . '>' . $del . $v . '</option>';
                 $i = 1;
             } else {
-                $tree_select.='<option value="' . $k . '" ' . $selected . '>' . $del . $v . '</option>';
+                $tree_select .= '<option value="' . $k . '" ' . $selected . '>' . $del . $v . '</option>';
             }
 
-            $tree_select.=$check['select'];
+            $tree_select .= $check['select'];
         }
     }
     return array('select' => $tree_select);
@@ -60,15 +60,13 @@ function actionStart() {
     else
         $title_name = $data['name'];
 
-    $PHPShopGUI->field_col = 2;
+    $PHPShopGUI->field_col = 3;
     $PHPShopGUI->setActionPanel(__("Страница") . ': ' . $title_name, array('Создать', 'Предпросмотр', '|', 'Удалить'), array('Сохранить', 'Сохранить и закрыть'), false);
-    $PHPShopGUI->addJSFiles('./js/jquery.tagsinput.min.js', './js/bootstrap-datetimepicker.min.js', './page/gui/page.gui.js');
+    $PHPShopGUI->addJSFiles('./js/jquery.tagsinput.min.js', './js/bootstrap-datetimepicker.min.js', './js/jquery.waypoints.min.js', './page/gui/page.gui.js');
     $PHPShopGUI->addCSSFiles('./css/jquery.tagsinput.css', './css/bootstrap-datetimepicker.min.css');
 
     $PHPShopCategoryArray = new PHPShopPageCategoryArray();
     $CategoryArray = $PHPShopCategoryArray->getArray();
-
-    $CategoryArray[0]['name'] = '- ' . __('Корневой уровень') . ' -';
 
     $tree_array = array();
 
@@ -78,7 +76,7 @@ function actionStart() {
             foreach ($v as $cat) {
                 $tree_array[$k]['sub'][$cat] = $CategoryArray[$cat]['name'];
             }
-            $tree_array[$k]['name'] = $CategoryArray[$k]['name'];
+            $tree_array[$k]['name'] = @$CategoryArray[$k]['name'];
             $tree_array[$k]['id'] = $k;
         }
 
@@ -89,10 +87,10 @@ function actionStart() {
     $tree_array[0]['sub'][1000] = __('Главное меню сайта');
     $tree_array[0]['sub'][2000] = __('Начальная страница');
 
-    $tree_select.='<option value="0" ' . $data['category'] . ' data-subtext="<span class=\'glyphicon glyphicon-cog\'></span> ' . __('Настройка') . '">' . __('Внутренняя страница') . '</option>';
-    if (is_array($tree_array[0]['sub']))
+    $tree_select .= '<option value="0" ' . $data['category'] . ' data-subtext="<span class=\'glyphicon glyphicon-cog\'></span> ' . __('Настройка') . '">' . __('Внутренняя страница') . '</option>';
+    if (!empty($tree_array) and is_array($tree_array[0]['sub']))
         foreach ($tree_array[0]['sub'] as $k => $v) {
-            $check = treegenerator($tree_array[$k], 1, $data['category']);
+            $check = treegenerator(@$tree_array[$k], 1, $data['category']);
 
             if ($k == $data['category'])
                 $selected = 'selected';
@@ -104,78 +102,95 @@ function actionStart() {
             else
                 $subtext = null;
 
-            $tree_select.='<option value="' . $k . '" ' . $selected . ' ' . $subtext . '>' . $v . '</option>';
+            $tree_select .= '<option value="' . $k . '" ' . $selected . ' ' . $subtext . '>' . $v . '</option>';
 
-            $tree_select.=$check['select'];
+            $tree_select .= $check['select'];
         }
-    $tree_select.='</select>';
+    $tree_select .= '</select>';
 
     // Редактор 1
     $PHPShopGUI->setEditor($PHPShopSystem->getSerilizeParam("admoption.editor"));
     $oFCKeditor = new Editor('content_new');
-    $oFCKeditor->Height = '550';
+    $oFCKeditor->Height = '400';
     $oFCKeditor->Value = $data['content'];
-
-    // Содержание закладки 1
-    $Tab1 = $PHPShopGUI->setCollapse('Информация', $PHPShopGUI->setField("Размещение", $tree_select) .
-            $PHPShopGUI->setField("Заголовок", $PHPShopGUI->setInput("text", "name_new", $data['name'])) .
-            $PHPShopGUI->setField("Сортировка", $PHPShopGUI->setInputText("№", "num_new", $data['num'], 150)) .
-            $PHPShopGUI->setField("URL Ссылка", $PHPShopGUI->setInputText('/page/', "link_new", $data['link'], '100%', '.html')));
 
     $SelectValue[] = array('Вывод в каталоге', 1, $data['enabled']);
     $SelectValue[] = array('Заблокировать', 0, $data['enabled']);
 
-    $Tab1.= $PHPShopGUI->setField("Опции вывода:", $PHPShopGUI->setSelect("enabled_new", $SelectValue, 300, true));
+    // Содержание закладки 1
+    $Tab_info = $PHPShopGUI->setField("Каталог", $tree_select) .
+            $PHPShopGUI->setField("Заголовок", $PHPShopGUI->setInput("text", "name_new", $data['name'])) .
+            $PHPShopGUI->setField("Сортировка", $PHPShopGUI->setInputText("№", "num_new", $data['num'], 150)) .
+            $PHPShopGUI->setField("URL Ссылка", $PHPShopGUI->setInputText('/page/', "link_new", $data['link'], '100%', '.html')) .
+            $PHPShopGUI->setField("Опции вывода:", $PHPShopGUI->setSelect("enabled_new", $SelectValue, 300, true)
+            );
+    
+    if ($data['category'] != 2000)
+        $Tab_info .= $PHPShopGUI->setField("Подвал", $PHPShopGUI->setCheckbox('footer_new', 1, 'Главное меню в подвале', $data['footer']));
 
-    // Футер
-    $Tab1.= $PHPShopGUI->setField("Подвал", $PHPShopGUI->setCheckbox('footer_new', 1, 'Главное меню в подвале', $data['footer']));
+    $Tab_info = $PHPShopGUI->setCollapse('Информация',$Tab_info);
 
     // Содержание закладки 3
     if ($data['category'] != 2000) {
         $Tab3 = $PHPShopGUI->setField("Title", $PHPShopGUI->setTextarea("title_new", $data['title']));
-        $Tab3.=$PHPShopGUI->setField("Description", $PHPShopGUI->setTextarea("description_new", $data['description']));
-        $Tab3.=$PHPShopGUI->setField("Keywords", $PHPShopGUI->setTextarea("keywords_new", $data['keywords']));
-        $Tab1.=$PHPShopGUI->setCollapse('SEO / Мета-данные', $Tab3);
+        $Tab3 .= $PHPShopGUI->setField("Description", $PHPShopGUI->setTextarea("description_new", $data['description']));
+        $Tab3 .= $PHPShopGUI->setField("Keywords", $PHPShopGUI->setTextarea("keywords_new", $data['keywords']));
+        $Tab_seo = $PHPShopGUI->setCollapse('SEO / Мета-данные', $Tab3);
 
         // Безопасность
         $SecurityValue[] = array('Всем пользователям', 0, $data['secure']);
         $SecurityValue[] = array('Только зарегистрированным пользователям', 1, $data['secure']);
         $TabSec = $PHPShopGUI->setField("Показывать", $PHPShopGUI->setSelect("secure_new", $SecurityValue, 300, true));
-    }
-    else
+    } else
         $TabSec = null;
 
-    $Tab1.=$PHPShopGUI->setCollapse('Доступность', $TabSec . $PHPShopGUI->setField("Витрины", $PHPShopGUI->loadLib('tab_multibase', $data, 'catalog/')));
-
     // Иконка
-    $Tab4 = $PHPShopGUI->setField("Изображение", $PHPShopGUI->setIcon($data['icon'], "icon_new", false));
-
-    // Дата
-    $Tab4 .= $PHPShopGUI->setField("Дата", $PHPShopGUI->setInputDate("datas_new", PHPShopDate::get($data['datas'])));
+    if (!empty($data['category']) and $data['category'] != 2000 and $data['category'] != 1000)
+        $Tab_dop = $PHPShopGUI->setField("Изображение", $PHPShopGUI->setIcon($data['icon'], "icon_new", false));
 
 
     // Рекомендуемые товары
     if ($data['category'] != 2000) {
-        $Tab4.=$PHPShopGUI->setField('Рекомендуемые товары для совместной продажи', $PHPShopGUI->setTextarea('odnotip_new', $data['odnotip'], false, false, false,  __('Укажите ID товаров или воспользуйтесь') . ' <a href="#" data-target="#odnotip_new"  class="btn btn-sm btn-default tag-search"><span class="glyphicon glyphicon-search"></span> ' . __('поиском товаров') . '</a>'));
+
+        // Дата
+        $Tab_dop .= $PHPShopGUI->setField("Дата", $PHPShopGUI->setInputDate("datas_new", PHPShopDate::get($data['datas'])));
+
+        $Tab_dop .= $PHPShopGUI->setField('Рекомендуемые товары для совместной продажи', $PHPShopGUI->setTextarea('odnotip_new', $data['odnotip'], false, false, false, __('Укажите ID товаров или воспользуйтесь') . ' <a href="#" data-target="#odnotip_new"  class="btn btn-sm btn-default tag-search"><span class="glyphicon glyphicon-search"></span> ' . __('поиском товаров') . '</a>'));
 
         // Анонс
         $oFCKeditor2 = new Editor('preview_new');
-        $oFCKeditor2->Height = '270';
+        $oFCKeditor2->Height = '400';
         $oFCKeditor2->Value = $data['preview'];
-        $Tab4.=$PHPShopGUI->setField("Анонс", $oFCKeditor2->AddGUI());
+    }
+
+    if ($data['category'] != 2000)
+        $Tab_dop = $PHPShopGUI->setCollapse('Дополнительно', $Tab_dop);
+
+    $Tab_sec = $PHPShopGUI->setCollapse('Доступность', $TabSec . $PHPShopGUI->setField("Витрины", $PHPShopGUI->loadLib('tab_multibase', $data, 'catalog/')));
+
+    // Вывод формы закладки
+    if (!empty($data['category']) and $data['category'] != 2000 and $data['category'] != 1000) {
+        $Tab_content = $PHPShopGUI->setCollapse("Анонс", $oFCKeditor2->AddGUI());
+        $Tab_description = $PHPShopGUI->setCollapse("Содержание", $oFCKeditor->AddGUI());
+        $PHPShopGUI->setTab(array("Основное", $Tab_content . $Tab_info . $Tab_seo . $Tab_description . $Tab_dop . $Tab_sec, true, false, true));
+    } else {
+        
+        $Tab_description = $PHPShopGUI->setCollapse("Содержание", $oFCKeditor->AddGUI());
+
+        if ($data['category'] == 2000)
+            $grid = false;
+        else
+            $grid = true;
+
+        $PHPShopGUI->setTab(array("Основное", $Tab_description . $Tab_info . $Tab_seo . $Tab_dop . $Tab_sec, true, false, true));
     }
 
     // Запрос модуля на закладку
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $data);
 
-    // Вывод формы закладки
-    if($data['category'] != 2000)
-    $PHPShopGUI->setTab(array("Основное", $Tab1), array("Содержание", $oFCKeditor->AddGUI()), array("Дополнительно", $Tab4, true));
-    else $PHPShopGUI->setTab(array("Основное", $Tab1), array("Содержание", $oFCKeditor->AddGUI()));
 
     // Вывод кнопок сохранить и выход в футер
-    $ContentFooter =
-            $PHPShopGUI->setInput("hidden", "rowID", $data['id'], "right", 70, "", "but") .
+    $ContentFooter = $PHPShopGUI->setInput("hidden", "rowID", $data['id'], "right", 70, "", "but") .
             $PHPShopGUI->setInput("button", "delID", "Удалить", "right", 70, "", "but", "actionDelete.page.edit") .
             $PHPShopGUI->setInput("submit", "editID", "Сохранить", "right", 70, "", "but", "actionUpdate.page.edit") .
             $PHPShopGUI->setInput("submit", "saveID", "Применить", "right", 80, "", "but", "actionSave.page.edit");
@@ -192,7 +207,7 @@ function actionUpdate() {
     if (!empty($_POST['datas_new']))
         $_POST['datas_new'] = PHPShopDate::GetUnixTime($_POST['datas_new']);
     else
-        $_POST['datas_new'] = PHPShopDate::GetUnixTime($_POST['datas_new']);
+        $_POST['datas_new'] = PHPShopDate::GetUnixTime(time());
 
     $PHPShopOrm->debug = false;
 
@@ -203,17 +218,18 @@ function actionUpdate() {
     if (is_array($_POST['servers'])) {
         $_POST['servers_new'] = "";
         foreach ($_POST['servers'] as $v)
-            if ($v != 'null' and !strstr($v, ','))
-                $_POST['servers_new'].="i" . $v . "i";
+            if ($v != 'null' and ! strstr($v, ','))
+                $_POST['servers_new'] .= "i" . $v . "i";
     }
 
     $_POST['icon_new'] = iconAdd();
 
-    $postOdnotip = explode(',', $_POST['odnotip_new']);
+    if (!empty($_POST['odnotip_new']))
+        $postOdnotip = explode(',', $_POST['odnotip_new']);
     $odnotip = [];
-    if(is_array($postOdnotip)) {
+    if (!empty($postOdnotip) and is_array($postOdnotip)) {
         foreach ($postOdnotip as $value) {
-            if((int) $value > 0) {
+            if ((int) $value > 0) {
                 $odnotip[] = (int) $value;
             }
         }

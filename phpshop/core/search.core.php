@@ -23,6 +23,8 @@ class PHPShopSearch extends PHPShopShopCore {
     var $isYandexSearch = false;
     var $yandexSearchAPI;
     var $yandexSearchId;
+    var $dataArray;
+    var $num_page;
 
     function __construct() {
 
@@ -69,7 +71,7 @@ class PHPShopSearch extends PHPShopShopCore {
      * Функция вынесена в отдельный файл query_filter.php
      * @return mixed
      */
-    function query_filter($where = false) {
+    function query_filter($where = false, $v = false) {
 
         $hook = $this->setHook(__CLASS__, __FUNCTION__);
         if ($hook)
@@ -267,9 +269,13 @@ class PHPShopSearch extends PHPShopShopCore {
                 $this->add(PHPShopText::h3(__('Ничего не найдено')), true);
             }
 
+            if (!empty($_REQUEST['cat']))
+                $cat = $_REQUEST['cat'];
+            else
+                $cat = null;
 
             // Запись в журнал
-            $this->write($this->get('searchString'), (int) $this->num_page, (int) $_REQUEST['cat']);
+            $this->write($this->get('searchString'), (int) $this->num_page, (int) $cat);
 
             // Перехват модуля
             $this->setHook(__CLASS__, __FUNCTION__, $this->dataArray, 'END');

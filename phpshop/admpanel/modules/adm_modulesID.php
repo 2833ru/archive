@@ -67,7 +67,7 @@ foreach ($mod_podmenu as $title) {
 }
 
 
-$PHPShopGUI->field_col = 2;
+$PHPShopGUI->field_col = 3;
 $PHPShopGUI->addJSFiles('./modules/gui/modules.gui.js');
 $PHPShopGUI->setActionPanel($TitlePage, $select_name, array('Сохранить и закрыть'));
 $path = '../modules/' . substr($_GET['id'], 0, 20) . '/admpanel/adm_module.php';

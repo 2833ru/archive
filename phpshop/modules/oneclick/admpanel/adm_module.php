@@ -80,10 +80,6 @@ function actionStart() {
     $Tab1 .= $PHPShopGUI->setField('Защитная картинка', $PHPShopGUI->setSelect('captcha_new', $c_value, 250));
     $Tab1 .= $PHPShopGUI->setField('Только в наличии', $PHPShopGUI->setCheckbox('only_available_new', 1, 'Отображать кнопку только у товаров в наличии', $data['only_available']));
 
-    $info = 'Для произвольной вставки элемента, следует выбрать параметр вывода "Кнопка купить" и вставить переменную
-        <kbd>@oneclick@</kbd> в свой шаблон в нужное вам место.
-        <p>Для персонализации формы вывода, отредактируйте шаблоны <code>phpshop/modules/oneclick/templates/</code></p>
-';
 
     $Tab2 = $PHPShopGUI->setInfo($info);
 
@@ -91,7 +87,7 @@ function actionStart() {
     $Tab3 = $PHPShopGUI->setPay(false, false, $data['version'], true);
 
     // Вывод формы закладки
-    $PHPShopGUI->setTab(array("Основное", $Tab1, true), array("Инструкция", $Tab2), array("О Модуле", $Tab3), array("Обзор заявок", 0, '?path=modules.dir.oneclick'));
+    $PHPShopGUI->setTab(array("Основное", $Tab1, true), array("О Модуле", $Tab3), array("Обзор заявок", 0, '?path=modules.dir.oneclick'));
 
     // Вывод кнопок сохранить и выход в футер
     $ContentFooter = $PHPShopGUI->setInput("hidden", "rowID", $data['id']) .

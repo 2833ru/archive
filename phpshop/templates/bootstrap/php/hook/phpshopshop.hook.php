@@ -9,6 +9,15 @@ function template_CID_Product($obj, $data, $rout) {
         // Âèðòóàëüíûå êàòàëîãè
         $obj->cat_template = 'sortñattemplatehook';
 
+        if (empty($_GET['gridChange']))
+            $_GET['gridChange'] = null;
+
+        if (empty($_GET['s']))
+            $_GET['s'] = null;
+
+        if (empty($_GET['f']))
+            $_GET['f'] = null;
+
         switch ($_GET['gridChange']) {
             case 1:
                 $obj->set('gridSetAactive', 'active');
@@ -58,7 +67,7 @@ function template_parent($obj, $dataArray, $rout) {
         $true_color_array = $true_size_color_array = $color_array = array();
         $size = $color = null;
 
-        if (is_array($obj->select_value) and count($obj->select_value > 0)) {
+        if (is_array($obj->select_value) and count($obj->select_value) > 0) {
 
             foreach ($obj->select_value as $value) {
 
@@ -122,7 +131,7 @@ function template_parent($obj, $dataArray, $rout) {
                     $obj->set('parentId', $val['id']);
                     $obj->set('parentPrice', $val['price']);
                     $obj->set('parentImage', $size_color_array[$val['id']]['image']);
-                    
+
                     // Ñêëàä
                     if ($obj->PHPShopSystem->getSerilizeParam('admoption.sklad_enabled') == 1)
                         $obj->set('parentItems', $obj->lang('product_on_sklad') . " " . $val['items'] . " " . $val['ed_izm']);
@@ -179,7 +188,7 @@ function template_parent($obj, $dataArray, $rout) {
 
             $obj->set('parentListSize', $size, true);
 
-           if (!empty($color))
+            if (!empty($color))
                 $obj->set('parentListColorTitle', $obj->parent_color);
 
             $obj->set('parentListColor', $color, true);
@@ -291,8 +300,8 @@ function sortñattemplatehook($value, $n, $title, $vendor) {
             $checked = null;
             if (is_array($vendor)) {
                 foreach ($vendor as $v) {
-                     if ($v == $p[1])
-                         $checked = 'active';
+                    if ($v == $p[1])
+                        $checked = 'active';
                 }
             }
             if ($p[3] != null)
@@ -355,7 +364,7 @@ function template_image_gallery($obj, $array) {
             $bxpager = null;
 
 
-        $obj->set('productFotoList', '<img itemprop="image" content="http://' . $_SERVER['SERVER_NAME'] . $array['pic_big'] . '" class="bxslider-pre" alt="' . $array['name'] . '" title="' . $array['name'] . '" src="' . $array['name_s'] . '" /><div class="bxslider hide">' . $bxslider . '</div><div class="bx-pager">' . $bxpager . '</div>');
+        $obj->set('productFotoList', '<img itemprop="image" content="http://' . $_SERVER['SERVER_NAME'] . $array['pic_big'] . '" class="bxslider-pre" alt="' . $array['name'] . '" title="' . $array['name'] . '" src="' . @$array['name_s'] . '" /><div class="bxslider hide">' . $bxslider . '</div><div class="bx-pager">' . $bxpager . '</div>');
         $obj->set('productFotoListBig', '<ul class="bxsliderbig" data-content="' . $bxsliderbig . '" data-page="' . $bxpager . '"></ul><div class="bx-pager-big">' . $bxpager . '</div>');
         return true;
     }

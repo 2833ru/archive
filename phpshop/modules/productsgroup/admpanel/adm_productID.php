@@ -4,16 +4,15 @@ function addProductIDProductsgroup($data) {
     global $PHPShopGUI;
 
     $productsgroup_products = unserialize($data['productsgroup_products']);
-
-
     $Tab10 = $PHPShopGUI->setCheckbox('productsgroup_check_new', 1, 'Включить вывод групп составных товаров', $data['productsgroup_check']);
+    $tr=null;
 
     for ($i = 1; $i < 10; $i++) {
         
         $tr .= '<tr>
-            <td>' . $PHPShopGUI->setInputText(null, 'productsgroup_products[' . $i . '][id]', $productsgroup_products[$i]['id']) . ' </td>
+            <td>' . $PHPShopGUI->setInputText(null, 'productsgroup_products[' . $i . '][id]', @$productsgroup_products[$i]['id']) . ' </td>
             <td><button  class="btn btn-default btn-sm cart-add" data-id="' . $i . '"><span class="glyphicon glyphicon-plus"></span> ' . __('Добавить товар') . '</button></td>
-            <td>' . $PHPShopGUI->setInputText(null, 'productsgroup_products[' . $i . '][num]', $productsgroup_products[$i]['num']) . '</td>
+            <td>' . $PHPShopGUI->setInputText(null, 'productsgroup_products[' . $i . '][num]', @$productsgroup_products[$i]['num']) . '</td>
         </tr>';
     }
 

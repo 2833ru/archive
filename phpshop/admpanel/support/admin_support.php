@@ -8,7 +8,7 @@ function actionStart() {
     $licFile = PHPShopFile::searchFile('../../license/', 'getLicense', true);
     $License = parse_ini_file_true("../../license/" . $licFile, 1);
 
-    if ($License['License']['RegisteredTo'] == 'Trial NoName' or $License['License']['SupportExpires'] < time() or $License['License']['DomenLocked'] == 'No')
+    if ($License['License']['SupportExpires'] < time() or $License['License']['DomenLocked'] == 'No')
         $action = 'noSupport';
     else
         $action = 'addNew';
@@ -30,6 +30,7 @@ function actionStart() {
 
     PHPShopObj::loadClass('xml');
     $path = 'https://help.phpshop.ru/base-xml-manager/search/xml.php?s=' . $License['License']['Serial'] . '&u=' . $License['License']['DomenLocked'];
+
     if (function_exists('curl_init')) {
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $path);

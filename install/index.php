@@ -299,7 +299,7 @@ elseif (!empty($_POST['password'])) {
                 Ниже приведена инструкция для ручной установки PHPShop на виртуальный хостинг. Перед установкой рекомендуем ознакомиться со
                 списком <a class="btn btn-info btn-xs" href="https://phpshop.ru/page/hosting-list.html" target="_blank" title="Хостинги"><span class="glyphicon glyphicon-share-alt"></span> рекомендуемых хостингов</a> на соответствие с системными требованиями PHPShop.</p>
 
-            <p class="<?php echo $system; ?>">Если вы не хотите или по каким-то причинам не можете воспользоваться автоматическим установщиком <a href="http://install.phpshop.ru" target="_blank" class="btn btn-info btn-xs"><span class="glyphicon glyphicon-share-alt"></span> Web Installer</a>, то приведенная ниже информация, поможет вам выполнить установку в ручном режиме.</p>
+            
 
 
             <div class="panel panel-info <?php echo $system; ?>" id="sys">
@@ -340,7 +340,7 @@ charset="cp1251";   # кодировка базы</pre>
                             <div class="alert alert-warning" role="alert"><b>Внимание!</b> Установщик базы запускать необходимо, в противном случае, не будет создан образ базы. </div>
                         </li>
                         <li>Для безопасности удалите папку <kbd>/install</kbd>
-                        <li>Установите опцию <kbd>CMOD 775</kbd> (UNIX сервера) для папок:
+                        <li>Установите опцию <kbd>CHMOD 777</kbd> (UNIX сервера) для папок:
                             <pre>
 /license
 /UserFiles/Image

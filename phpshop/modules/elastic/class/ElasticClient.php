@@ -188,6 +188,8 @@ class ElasticClient
             'Content-Type: application/json',
             'Content-Length: ' . strlen(PHPShopString::json_safe_encode($parameters))
         ]);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
         curl_setopt($ch, CURLOPT_POST, true);
         curl_setopt($ch, CURLOPT_POSTFIELDS, PHPShopString::json_safe_encode($parameters));
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $timeout);

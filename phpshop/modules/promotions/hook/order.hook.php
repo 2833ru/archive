@@ -7,10 +7,12 @@ function order_promotions_hook($obj, $row, $rout) {
 
     if ($rout == 'MIDDLE') {
         global $promotionslistCode;
+        
+        $code_check = $html = null;
 
         if(isset($promotionslistCode)) {
             if(is_array($promotionslistCode))
-                foreach ($promotionslistCode as $key => $value) {
+                foreach ($promotionslistCode as $value) {
                     if($value['code_check']==1) {
                         $code_check = 1;
                         break;
@@ -22,10 +24,8 @@ function order_promotions_hook($obj, $row, $rout) {
         }
 
         if($code_check==1) {
-
             $html = PHPShopParser::file('./phpshop/modules/promotions/templates/order/cart_input.tpl', true, false, true);
         }
-
 
         $order_action_add = '
         <script>
@@ -35,7 +35,7 @@ function order_promotions_hook($obj, $row, $rout) {
         });</script><script src="phpshop/modules/promotions/js/promotions-main.js"></script>';
 
 
-        if($_GET['promoselect']!='yes')
+        if(!empty($_GET['promoselect']) and $_GET['promoselect']!='yes')
             $order_action_add .= '<script>setInterval(UpdatePromotion("*"), 2000);</script>';
 
 

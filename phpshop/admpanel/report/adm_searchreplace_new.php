@@ -11,12 +11,12 @@ function treegenerator($array, $i, $parent) {
     $del = '¦&nbsp;&nbsp;&nbsp;&nbsp;';
     $tree = $tree_select = $check = false;
     $del = str_repeat($del, $i);
-    if (is_array($array['sub'])) {
+    if (!empty($array) and is_array($array['sub'])) {
         foreach ($array['sub'] as $k => $v) {
 
-            $check = treegenerator($tree_array[$k], $i + 1, $k);
+            $check = treegenerator(@$tree_array[$k], $i + 1, $k);
 
-            if ($k == $_GET['parent_to'])
+            if (!empty($_GET['parent_to']) and $k == $_GET['parent_to'])
                 $selected = 'selected';
             else
                 $selected = null;
@@ -62,11 +62,11 @@ function viewCatalog() {
 
     $tree_select = '<select class="selectpicker show-menu-arrow hidden-edit" data-live-search="true" data-container="" data-width="100%" data-style="btn btn-default btn-sm" name="category_new"><option value="0">' . $CategoryArray[0]['name'] . '</option>';
 
-    if (is_array($tree_array[0]['sub']))
+    if (!empty($tree_array) and is_array($tree_array[0]['sub']))
         foreach ($tree_array[0]['sub'] as $k => $v) {
-            $check = treegenerator($tree_array[$k], 1, $data['category']);
+            $check = treegenerator(@$tree_array[$k], 1, @$data['category']);
 
-            if ($k == $data['category'])
+            if (!empty($data['category']) and $k == $data['category'])
                 $selected = 'selected';
             else
                 $selected = null;
@@ -97,8 +97,11 @@ function actionStart() {
     $PHPShopGUI->addCSSFiles('./css/jquery.tagsinput.css');
 
     // Передача данных
+    if(!empty($_GET['data']))
     $data = $_GET['data'];
+    
     $data['enabled'] = 1;
+    $data = $PHPShopGUI->valid($data,'name','uid','category');
 
     // Содержание закладки 1
     $Tab1 = $PHPShopGUI->setField("Запрос", $PHPShopGUI->setInputText(false, "name_new", str_replace(array('i', 'ii'), array('', ','), $data['name'])) . $PHPShopGUI->setRadio("enabled_new", 1, "Показывать", $data['enabled']) . $PHPShopGUI->setRadio("enabled_new", 0, "Скрыть", $data['enabled']));

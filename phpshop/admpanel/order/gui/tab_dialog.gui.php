@@ -100,7 +100,7 @@ function tab_dialog($data, $option) {
     $data_bot = $PHPShopOrm->select(array('bot'), array('user_id' => "=" . intval($data['user'])), array('group' => 'bot'), array('limit' => 500));
 
     // Несколько чатов
-    if (count($data_bot) > 1) {
+    if (is_array($data_bot) and count($data_bot) > 1) {
 
         $message = tab_bot($data);
     } else {

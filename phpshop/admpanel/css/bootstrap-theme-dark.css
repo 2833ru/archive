@@ -7331,8 +7331,7 @@ a.list-group-item-danger.active:focus {
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff484e55', endColorstr='#ff313539', GradientType=0)!important;
   -webkit-filter: none;
           filter: none;
-  background-size: 0.375em 0.375em, 0.375em 0.375em, 100% 100% !important;
-
+  /*background-size: 0.375em 0.375em, 0.375em 0.375em, 100% 100% !important;*/
 }
 
 .form-signin{
@@ -7408,4 +7407,9 @@ h1.title{
 
 .container-fluid{
    background-color: #3E444C !important; 
+}
+
+.col-block,.panel {
+    background-color: rgb(46, 51, 56) !important; 
+    border: 1px solid rgba(0, 0, 0, 0.6) !important; 
 }

@@ -7,7 +7,7 @@ function actionStart() {
     global $PHPShopGUI, $PHPShopSystem, $PHPShopOrm, $PHPShopModules;
 
     // Размер названия поля
-    $PHPShopGUI->field_col = 2;
+    $PHPShopGUI->field_col = 3;
 
     // Выбор даты
     $PHPShopGUI->addJSFiles('./js/jquery.tagsinput.min.js', './js/bootstrap-datetimepicker.min.js', './js/jquery.waypoints.min.js', './news/gui/news.gui.js');
@@ -41,45 +41,44 @@ function actionStart() {
     // Редактор 1
     $PHPShopGUI->setEditor($PHPShopSystem->getSerilizeParam("admoption.editor"));
     $oFCKeditor = new Editor('kratko_new');
-    $oFCKeditor->Height = '270';
+    $oFCKeditor->Height = '300';
     $oFCKeditor->Value = $data['kratko'];
 
     $Tab1 = $PHPShopGUI->setField("Дата", $PHPShopGUI->setInputDate("datas_new", $data['datas'])) .
             $PHPShopGUI->setField("Заголовок", $PHPShopGUI->setInput("text", "zag_new", $data['zag']));
 
-    $Tab1.=$PHPShopGUI->setField("Анонс", $oFCKeditor->AddGUI());
-
-
-    // Редактор 2
-    $oFCKeditor2 = new Editor('podrob_new');
-    $oFCKeditor2->Height = '550';
-    $oFCKeditor2->Value = $data['podrob'];
-
-    $Tab1.=$PHPShopGUI->setField("Подробно", $oFCKeditor2->AddGUI());
-
     if (empty($data['date_start']))
         $data['date_start'] = $data['datas'];
 
-    $Tab2.=$PHPShopGUI->setField("Начало показа", $PHPShopGUI->setInputDate("datau_new", PHPShopDate::get($data['datau'])));
+    $Tab1 .= $PHPShopGUI->setField("Начало показа", $PHPShopGUI->setInputDate("datau_new", PHPShopDate::get($data['datau'])));
 
     // Иконка
     $Tab2 .= $PHPShopGUI->setField("Изображение", $PHPShopGUI->setIcon($data['icon'], "icon_new", false));
+    $Tab2 .= $PHPShopGUI->setField("Витрины", $PHPShopGUI->loadLib('tab_multibase', $data, 'catalog/'));
 
     // Рекомендуемые товары
-    $Tab2.= $PHPShopGUI->setField('Рекомендуемые товары', $PHPShopGUI->setTextarea('odnotip_new', $data['odnotip'], false, false, 300, __('Укажите ID товаров или воспользуйтесь') . ' <a href="#" data-target="#odnotip_new"  class="btn btn-sm btn-default tag-search"><span class="glyphicon glyphicon-search"></span> ' . __('поиском товаров') . '</a>'));
+    $Tab1 .= $PHPShopGUI->setField('Рекомендуемые товары', $PHPShopGUI->setTextarea('odnotip_new', $data['odnotip'], false, false, 00, __('Укажите ID товаров или воспользуйтесь') . ' <a href="#" data-target="#odnotip_new"  class="btn btn-sm btn-default tag-search"><span class="glyphicon glyphicon-search"></span> ' . __('поиском товаров') . '</a>'));
 
-    $Tab2.=$PHPShopGUI->setField("Витрины", $PHPShopGUI->loadLib('tab_multibase', $data, 'catalog/'));
+    $Tab1 = $PHPShopGUI->setCollapse('Информация', $Tab1);
+    $Tab1 .= $PHPShopGUI->setCollapse("Анонс", $oFCKeditor->AddGUI());
+
+    // Редактор 2
+    $oFCKeditor2 = new Editor('podrob_new');
+    $oFCKeditor2->Height = '470';
+    $oFCKeditor2->Value = $data['podrob'];
+
+    $Tab1 .= $PHPShopGUI->setCollapse('Дополнительно', $Tab2);
+    $Tab1 .= $PHPShopGUI->setCollapse("Подробно", '<div>' . $oFCKeditor2->AddGUI() . '</div>');
 
     // Запрос модуля на закладку
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $data);
 
     // Вывод формы закладки
-    $PHPShopGUI->setTab(array("Основное", $Tab1, true), array("Дополнительно", $Tab2, true));
+    $PHPShopGUI->setTab(array("Основное", $Tab1, true, false, true));
 
 
     // Вывод кнопок сохранить и выход в футер
-    $ContentFooter =
-            $PHPShopGUI->setInput("hidden", "rowID", $data['id'], "right", 70, "", "but") .
+    $ContentFooter = $PHPShopGUI->setInput("hidden", "rowID", $data['id'], "right", 70, "", "but") .
             $PHPShopGUI->setInput("button", "delID", "Удалить", "right", 70, "", "but", "actionDelete.news.edit") .
             $PHPShopGUI->setInput("submit", "editID", "Сохранить", "right", 70, "", "but", "actionUpdate.news.edit") .
             $PHPShopGUI->setInput("submit", "saveID", "Применить", "right", 80, "", "but", "actionSave.news.edit");
@@ -114,8 +113,8 @@ function actionUpdate() {
     if (is_array($_POST['servers'])) {
         $_POST['servers_new'] = "";
         foreach ($_POST['servers'] as $v)
-            if ($v != 'null' and !strstr($v, ','))
-                $_POST['servers_new'].="i" . $v . "i";
+            if ($v != 'null' and ! strstr($v, ','))
+                $_POST['servers_new'] .= "i" . $v . "i";
     }
 
     // Перехват модуля

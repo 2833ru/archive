@@ -54,6 +54,16 @@ function words_elastic_hook($obj, $request, $route)
 
         $categoryIds = array_column($result['categories'], 'key');
 
+        if ((int) Elastic::getOption('use_additional_categories') === 1) {
+            $additionalCategories = [];
+            foreach ($result['products'] as $product) {
+                if(!empty($product['dop_cat'])) {
+                    $additionalCategories = array_merge(preg_split('/#/', $product['dop_cat'], -1, PREG_SPLIT_NO_EMPTY), $additionalCategories);
+                }
+            }
+            $categoryIds = array_unique(array_merge($categoryIds, $additionalCategories));
+        }
+
         $grid = '';
         if((int) Elastic::getOption('search_show_informer_string') === 1) {
             $obj->set('elastic_categories_count', is_array($categoryIds) && count($categoryIds) > 0 ? count($categoryIds) : 0);

@@ -1,4 +1,3 @@
-
 $().ready(function () {
 
     $('[data-toggle="popover-icon"]').popover({

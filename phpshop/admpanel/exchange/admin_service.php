@@ -1,6 +1,6 @@
 <?php
 
-$TitlePage = __("Обслуживание и оптимизация");
+$TitlePage = __("Очистка базы данных");
 
 // Разрешенные таблицы
 $check_array = array('phpshop_1c_jurnal', 'phpshop_search_jurnal', 'phpshop_rssgraber_jurnal', 'phpshop_jurnal', 'phpshop_modules_guard_log', 'phpshop_modules_guard_crc', 'phpshop_modules_stat_visitors', 'phpshop_modules_productlastview_memory', 'phpshop_modules_admlog_log', 'phpshop_modules_errorlog_log', 'phpshop_modules_visualcart_memory', 'phpshop_modules_cron_log', 'phpshop_modules_visualcart_log');
@@ -54,6 +54,7 @@ WHERE table_schema = "' . $GLOBALS['SysValue']['connect']['dbase'] . '" order by
     $PHPShopOrm->debug = false;
     $PHPShopOrm->mysql_error = false;
     $data = $PHPShopOrm->select();
+    $n=1;
     if (is_array($data))
         foreach ($data as $row) {
             if (in_array($row['table'], $check_array)) {
@@ -70,7 +71,8 @@ WHERE table_schema = "' . $GLOBALS['SysValue']['connect']['dbase'] . '" order by
                 }
                 
 
-                $PHPShopInterface->setRow($row['id'], array('name' => $row['table'], 'align' => 'left'), $num, array('name' => $status), $size);
+                $PHPShopInterface->setRow($n, array('name' => $row['table'], 'align' => 'left'), $num, array('name' => $status), $size);
+                $n++;
             }
         }
 

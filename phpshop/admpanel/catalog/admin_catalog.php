@@ -19,6 +19,13 @@ function actionStart() {
     } else
         $where = $secure_groups = false;
 
+    if (empty($_GET['cat']))
+        $_GET['cat'] = null;
+
+    if (empty($_GET['sub']))
+        $_GET['sub'] = null;
+
+
     $where['id'] = '=' . intval($_GET['cat']);
 
     $PHPShopCategoryArray = new PHPShopCategoryArray($where);
@@ -73,7 +80,7 @@ function actionStart() {
 
     $PHPShopInterface->action_button['Добавить товар'] = array(
         'name' => '',
-        'action' => 'addNew',
+        'action' => 'addNewModal',
         'class' => 'btn btn-default btn-sm navbar-btn',
         'type' => 'button',
         'icon' => 'glyphicon glyphicon-plus',
@@ -83,10 +90,10 @@ function actionStart() {
     $PHPShopInterface->setActionPanel($TitlePage . $catname, array('Поиск', '|', 'Предпросмотр', 'Настройка', 'Редактировать каталог', 'Редактировать выбранные', 'CSV', '|', 'Удалить выбранные'), array('Добавить товар'));
 
     $PHPShopInterface->setCaption(
-       ...getTableCaption()
+            ...getTableCaption()
     );
 
-    $PHPShopInterface->addJSFiles('./catalog/gui/catalog.gui.js', './js/bootstrap-treeview.min.js','./js/bootstrap-colorpicker.min.js');
+    $PHPShopInterface->addJSFiles('./catalog/gui/catalog.gui.js', './js/bootstrap-treeview.min.js', './js/bootstrap-colorpicker.min.js');
     $PHPShopInterface->addCSSFiles('./css/bootstrap-treeview.min.css', './css/bootstrap-colorpicker.min.css');
     $PHPShopInterface->path = 'catalog';
 
@@ -112,21 +119,30 @@ function actionStart() {
     $PHPShopInterface->Compile(3);
 }
 
-function getTableCaption()
-{
+function getTableCaption() {
     global $PHPShopInterface, $PHPShopModules;
 
     $memory = $PHPShopInterface->getProductTableFields();
 
     // Мобильная версия
     if (PHPShopString::is_mobile()) {
-        $PHPShopInterface->mobile=true;
+        $PHPShopInterface->mobile = true;
     }
 
     // Дополнительный склад
     $PHPShopOrmWarehouse = new PHPShopOrm($GLOBALS['SysValue']['base']['warehouses']);
     $dataWarehouse = $PHPShopOrmWarehouse->select(array('*'), array('enabled' => "='1'"), array('order' => 'num DESC'), array('limit' => 100));
 
+    // Убираем меню если много полей
+    $count_view=0;
+    if(is_array($memory['catalog.option']))
+        foreach($memory['catalog.option'] as $view)
+            if(!empty($view))
+                $count_view++;
+    
+    if($count_view>8)
+        unset($memory['catalog.option']['menu']);
+     
     $PHPShopInterface->productTableCaption = [
         [null, "2%"],
         ["Иконка", "5%", ['sort' => 'none', 'view' => (int) $memory['catalog.option']['icon']]],
@@ -134,16 +150,16 @@ function getTableCaption()
         ["№", "10%", ['view' => (int) $memory['catalog.option']['num']]],
         ["ID", "10%", ['view' => (int) $memory['catalog.option']['id']]],
         ["Артикул", "15%", ['view' => (int) $memory['catalog.option']['uid']]],
-        ["Цена", "15%", ['view' => (int) $memory['catalog.option']['price']]],
-        ["Цена 2", "15%", ['view' => (int) $memory['catalog.option']['price2']]],
-        ["Цена 3", "15%", ['view' => (int) $memory['catalog.option']['price3']]],
-        ["Цена 4", "15%", ['view' => (int) $memory['catalog.option']['price4']]],
-        ["Цена 5", "15%", ['view' => (int) $memory['catalog.option']['price5']]],
+        ["Цена", "10%", ['view' => (int) $memory['catalog.option']['price']]],
+        ["Цена 2", "10%", ['view' => (int) $memory['catalog.option']['price2']]],
+        ["Цена 3", "10%", ['view' => (int) $memory['catalog.option']['price3']]],
+        ["Цена 4", "10%", ['view' => (int) $memory['catalog.option']['price4']]],
+        ["Цена 5", "10%", ['view' => (int) $memory['catalog.option']['price5']]],
         ["Кол-во", "10%", ['view' => (int) $memory['catalog.option']['item']]],
-        [$dataWarehouse[0]['name'], "10%", ['view' => (int) $memory['catalog.option']['items1']]],
-        [$dataWarehouse[1]['name'], "10%", ['view' => (int) $memory['catalog.option']['items2']]],
-        [$dataWarehouse[2]['name'], "10%", ['view' => (int) $memory['catalog.option']['items3']]],
-        ["Характеристики", "30%", ['view' => (int) $memory['catalog.option']['sort']]]
+        [@$dataWarehouse[0]['name'], "10%", ['view' => (int) $memory['catalog.option']['items1']]],
+        [@$dataWarehouse[1]['name'], "10%", ['view' => (int) $memory['catalog.option']['items2']]],
+        [@$dataWarehouse[2]['name'], "10%", ['view' => (int) $memory['catalog.option']['items3']]],
+        ["Характеристики", "25%", ['view' => (int) $memory['catalog.option']['sort']]]
     ];
 
     // Перехват модуля

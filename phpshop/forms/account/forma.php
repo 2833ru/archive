@@ -86,11 +86,11 @@ if (PHPShopSecurity::true_param($_GET['tip'], $_GET['orderId'], $_GET['datas']))
     PHPShopParser::set('discount', $PHPShopOrder->getDiscount());
     PHPShopParser::set('ouid', $PHPShopOrder->getValue('uid'));
 
-    $orgData = $PHPShopOrder->getSerilizeParam('orders.Person.org_name');
+    $orgData = @$PHPShopOrder->getSerilizeParam('orders.Person.org_name');
     if(empty($orgData)) {
         $orgData = $PHPShopOrder->getParam('org_name');
     }
-    if(!empty($PHPShopOrder->getSerilizeParam('orders.Person.org_inn')) || !empty($PHPShopOrder->getParam('org_inn'))) {
+    if(!empty(@$PHPShopOrder->getSerilizeParam('orders.Person.org_inn')) || !empty($PHPShopOrder->getParam('org_inn'))) {
         $orgData .= ' ÈÍÍ ';
         $inn = $PHPShopOrder->getSerilizeParam('orders.Person.org_inn');
         if(empty($inn)) {
@@ -98,7 +98,7 @@ if (PHPShopSecurity::true_param($_GET['tip'], $_GET['orderId'], $_GET['datas']))
         }
         $orgData .= $inn;
     }
-    if(!empty($PHPShopOrder->getSerilizeParam('orders.Person.org_kpp')) || !empty($PHPShopOrder->getParam('org_kpp'))) {
+    if(!empty(@$PHPShopOrder->getSerilizeParam('orders.Person.org_kpp')) || !empty($PHPShopOrder->getParam('org_kpp'))) {
         $orgData .= ' ÊÏÏ ';
         $kpp = $PHPShopOrder->getSerilizeParam('orders.Person.org_kpp');
         if(empty($kpp)) {

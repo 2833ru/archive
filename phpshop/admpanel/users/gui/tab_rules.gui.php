@@ -7,7 +7,9 @@ function rules_checked($a, $b) {
 
 function tab_rules($row, $autofill = false) {
     global $PHPShopGUI;
+    
     $status = unserialize($row['status']);
+    $PHPShopGUI->checkbox_old_style = true;
 
     $dis = '<table id="rules" class="table table-striped table-bordered text-center ' . $autofill . ' ">
                            <tr>

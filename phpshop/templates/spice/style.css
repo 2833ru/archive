@@ -686,10 +686,9 @@ hr{
 
 /* Slider Section Styles Starts */
 
-.slider{
-    margin-bottom: 30px;
+.slider {
+    padding: 14px;
 }
-
 
 /* Three Column Banner Styles Starts */
 
@@ -3036,11 +3035,11 @@ body.overflow-fix {
     display: block;
 }
 #faset-filter-reset {
-    color: #fff;
+    color: #edefef;
     float: right;
     position: relative;
     z-index: 1;
-    font-size: 16px;
+    font-size: 13px;
 }
 .product-block-wrapper .product-col {
     padding: 0px!important;
@@ -3316,6 +3315,7 @@ form[name="forma_message"] {margin-bottom:20px;}
     visibility: hidden;
 
 }
+
 #showYurDataForPaymentLoad .form-control {margin-bottom:10px}
 
 
@@ -3805,3 +3805,97 @@ margin-bottom:10px}
 .odnotip-block {margin-top:35px}
 .nowbuy-block .row .row{margin:0 -5px}
 #productlist table td{padding-bottom:10px}
+
+.banner-header {
+padding: 0.5rem 0.825rem;
+color: #454444;
+margin-top: 0.5rem;
+text-align: left;
+}
+
+.banner-list {
+padding: 1rem 1rem;
+color: white;
+margin: 1rem 1rem;
+text-fill-color: !important;
+}
+
+.otz {
+display: inline-block;
+color: #3F3E3E;
+padding: 6px 12px;
+margin-bottom: 0;
+font-size: 14px;
+border: 1px solid transparent;
+transition: all 0.3s;
+}
+
+.carousel-caption {
+    text-align: left;
+    color: #333;
+    text-shadow: none;
+    left: 10%;
+    bottom: 10%;
+    top: 0%;
+}
+
+ .slider-icon {
+    font-size: small;
+    background: #f8f8f8;
+    padding: 3px;
+    top: 80%;
+    left: 10%;
+    position: absolute;
+    color: #333;
+     }
+
+.carousel-control {
+    width: 5%;
+}
+
+.top-banner {
+    padding-right: 10px;
+    padding-left: 10px;
+    width: 100%;
+    height: 40px;
+    overflow: hidden;
+    -webkit-align-items: center;
+    align-items: center;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-justify-content: center;
+    justify-content: center;
+    position:relative;
+    background-color: #f7f7f7;
+
+}
+
+.top-banner p {
+    margin: 0;
+    text-align: center;
+}
+
+.top-banner img {
+    width: 100%;
+    height: auto
+}
+
+.top-banner .close {
+    position: absolute;
+    top: 13px;
+    right: 170px;
+    font-size: 14px
+}
+
+.block-dark {
+    background-color: #515151;
+    border-radius: 0px;
+    background-size: cover;
+}
+
+.block {
+    border-radius: 0px;
+    background-size: cover;
+    background-color: #fafafa;
+
+}

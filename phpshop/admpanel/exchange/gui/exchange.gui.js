@@ -109,7 +109,7 @@ $().ready(function () {
     });
 
     if ($('#export_action').val() == 'update') {
-        $('#export_uniq').attr('disabled', 'disabled');
+        //$('#export_uniq').attr('disabled', 'disabled');
     }
 
     // Удалить диапазон
@@ -350,14 +350,22 @@ $().ready(function () {
         }
     });
 
+    // Лимит
+    $(".btn-file-search").on('click', function() {
+        $('#file_search').submit();
+    });
+    
+
+    // Лимит - очистка
+    $(".btn-file-cancel").on('click', function() {
+        window.location.replace('?path=exchange.file');
+    });
+    
 
     // Таблица сортировки
     var table = $('#data').dataTable({
-        //ajax: "./catalog/ajax.php", 
-        //https://www.datatables.net/examples/data_sources/server_side.html
         "paging": true,
         "ordering": true,
-        "order": [[3, "desc"]],
         "info": false,
         "language": locale.dataTable
     });

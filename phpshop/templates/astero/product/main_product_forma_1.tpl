@@ -7,10 +7,12 @@
             </span>
     <div class="product-col list clearfix">
         <div class="image">
-            <a href="/shop/UID_@productUid@.html" title="@productName@"><img src="@productImg@" alt="@productName@" data-src="@productImg@" ></a>
+            <a href="/shop/UID_@productUid@.html" title="@productNameClean@">
+                <img src="@productImg@" alt="@productNameClean@" data-src="@productImg@" >
+            </a>
         </div>
         <div class="caption">
-            <h4><a href="/shop/UID_@productUid@.html" title="@productName@">@productName@</a></h4>
+            <h4><a href="/shop/UID_@productUid@.html" title="@productNameClean@">@productName@</a></h4>
             <div class="description">
                 @productDes@
             </div>

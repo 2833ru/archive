@@ -54,7 +54,7 @@ class PHPShopBase {
      * @param bool $error блокировка ошибок PHP
      */
     function __construct($iniPath, $connectdb = true, $error = true) {
-
+        
         // Отладка ядра
         $this->setPHPCoreReporting($error);
 
@@ -103,6 +103,7 @@ class PHPShopBase {
         $param = explode(".", $param);
         if (count($param) > 2)
             return $this->SysValue[$param[0]][$param[1]][$param[2]];
+        elseif(!empty($this->SysValue[$param[0]][$param[1]]))
         return $this->SysValue[$param[0]][$param[1]];
     }
 
@@ -165,8 +166,12 @@ class PHPShopBase {
      */
     function connect($connectdb = true) {
         global $link_db;
+        
+        $port = $this->getParam("connect.port");
+        if(empty($port))
+            $port=3306;
 
-        $link_db = mysqli_connect($this->getParam("connect.host"), $this->getParam("connect.user_db"), $this->getParam("connect.pass_db")) or $this->mysql_error = mysqli_connect_error();
+        $link_db = mysqli_connect($this->getParam("connect.host"), $this->getParam("connect.user_db"), $this->getParam("connect.pass_db"),null,$port) or $this->mysql_error = mysqli_connect_error();
         mysqli_select_db($link_db, $this->getParam("connect.dbase")) or $this->mysql_error .= mysqli_error($link_db);
 
         if ($this->codBase != "utf-8")
@@ -224,12 +229,6 @@ class PHPShopBase {
             ini_set("default_charset", $this->codBase);
         }
 
-        // UTF-8 Env Fix
-        if (floatval(phpversion()) < 5.6) {
-            if (ini_get("mbstring.func_overload") > 0 and function_exists('ini_set')) {
-                ini_set("mbstring.internal_encoding", null);
-            }
-        }
     }
 
     /**
@@ -239,7 +238,7 @@ class PHPShopBase {
         if (function_exists('error_reporting')) {
             if (empty($error)) {
                 error_reporting(E_ALL & ~E_NOTICE & ~E_DEPRECATED & ~E_STRICT);
-                if ($this->phpversion() and function_exists('ini_set')) {
+                if (function_exists('ini_set')) {
                     ini_set('allow_call_time_pass_reference', 1);
                 }
             } else
@@ -250,16 +249,6 @@ class PHPShopBase {
                 ini_set('short_open_tag', 1);
             }
         }
-    }
-
-    /**
-     * Определение версии PHP для поддержки PHP 5.4
-     * @param float $version версия
-     * @return boolean 
-     */
-    function phpversion($version = '5.3') {
-        if ((phpversion() * 1) >= $version)
-            return true;
     }
 
     /**

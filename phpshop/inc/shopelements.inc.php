@@ -36,29 +36,30 @@ class PHPShopDialogElement extends PHPShopElements {
             $margin = 0;
         $this->set('margin_dialog', ($margin + 10));
         $this->set('margin_button_dialog', $margin);
-        
+
         // Размер PC
         $size = (int) $this->PHPShopSystem->getSerilizeParam('admoption.size_dialog');
         if (empty($size))
             $size = 56;
-        
+
         // Размер мобильный
         $sizem = (int) $this->PHPShopSystem->getSerilizeParam('admoption.sizem_dialog');
         if (empty($sizem))
             $sizem = 56;
-        
-        if(PHPShopString::is_mobile()){
-           $size=$sizem;
+
+        if (PHPShopString::is_mobile()) {
+            $size = $sizem;
         }
-        
+
         $chat_right = $size + 30;
         $this->set('right_dialog', $chat_right);
         $this->set('size_dialog', $size);
-        
-        if($size >= 80)
+
+        if ($size >= 80)
             $icon_size = 3;
-        else $icon_size = 2;
-        
+        else
+            $icon_size = 2;
+
         $this->set('icon_size_dialog', $icon_size);
     }
 
@@ -74,7 +75,7 @@ class PHPShopDialogElement extends PHPShopElements {
             // Заголовок
             $title = $this->PHPShopSystem->getSerilizeParam('admoption.title_dialog');
             if (empty($title))
-                $title = 'Консультант';
+                $title = __('Консультант');
             $this->set('title_dialog', $title);
 
             // Время работы
@@ -167,7 +168,12 @@ class PHPShopDialogElement extends PHPShopElements {
             'date' => false
         );
 
-        $result = array('message' => $this->viewMessage($data), 'count' => 1, 'status' => $status, 'bot' => $_SESSION['UsersBot']);
+        if (!empty($_SESSION['UsersBot']))
+            $UsersBot = $_SESSION['UsersBot'];
+        else
+            $UsersBot = null;
+
+        $result = array('message' => $this->viewMessage($data), 'count' => 1, 'status' => $status, 'bot' => $UsersBot);
         return $result;
     }
 
@@ -229,9 +235,9 @@ class PHPShopDialogElement extends PHPShopElements {
         $answer = $this->answer_button($id);
 
         $row = $PHPShopOrm->getOne(array('*'), array('view' => "='1'", 'id' => '=' . intval($id)));
-        
-        
-        
+
+
+
         if (is_array($row)) {
             $row['message'] = preg_replace("~(http|https|ftp|ftps)://(.*?)(\s|\n|[,.?!](\s|\n)|$)~", '<a href="$1://$2" target="_blank">$1://$2</a>$3', $row['message']);
             $data[] = array(
@@ -245,7 +251,7 @@ class PHPShopDialogElement extends PHPShopElements {
                 'date' => false
             );
 
-            $result['message'] = $this->viewMessage($data,'chat',false);
+            $result['message'] = $this->viewMessage($data, 'chat', false);
         } else {
             $result = $this->message(0, false, true);
         }
@@ -272,7 +278,7 @@ class PHPShopDialogElement extends PHPShopElements {
         $PHPShopOrm->debug = false;
         $data = $PHPShopOrm->select(array('*'), $where, array('order' => 'id'), array('limit' => 500));
 
-        if (!is_array($data) and empty($new) and ! $_SESSION['UsersId']) {
+        if (!is_array($data) and empty($new) and empty($user)) {
 
             $text_dialog = $this->PHPShopSystem->getSerilizeParam('admoption.text_dialog');
 
@@ -299,7 +305,7 @@ class PHPShopDialogElement extends PHPShopElements {
 
             // Телефон
             if ($this->PHPShopSystem->ifSerilizeParam('admoption.tel_dialog', 1)) {
-                $tel = '<span class="dialog-reg-tel"><input type="tel" name="tel" class="form-control" placeholder="' . __('Телефон') . '" required=""></span>';
+                $tel = '<span class="dialog-reg-tel"><input type="tel" name="tel" autocomplete="off" class="form-control" placeholder="' . __('Телефон') . '" required=""></span>';
             } else
                 $tel = null;
 
@@ -308,7 +314,7 @@ class PHPShopDialogElement extends PHPShopElements {
                     'user_id' => 0,
                     'date' => time(),
                     'name' => __('Администрация'),
-                    'message' => __('Для начала диалога заполните пожалуйста все поля:') . '<form class="message_form"><span class="dialog-reg-name"><input type="text" name="name" class="form-control" placeholder="' . __('Имя') . '" required=""></span><span class="dialog-reg-mail"><input type="email" name="mail" class="form-control" placeholder="Email" required=""></span>' . $tel . '<div class="dialog-reg-rule"><input type="checkbox" value="on" name="rule" checked="checked"> ' . __('Я согласен <a href="/page/soglasie_na_obrabotku_personalnyh_dannyh.html" target="_blank" title="' . __('Согласие на обработку персональных данных') . '">на обработку моих персональных данных') . '</a></div><button class="send-message" type="button">' . __('Отправить') . '</button></form>',
+                    'message' => __('Для начала диалога заполните пожалуйста все поля:') . '<form class="message_form"><span class="dialog-reg-name"><input type="text" autocomplete="off" name="name" class="form-control" placeholder="' . __('Имя') . '" required=""></span><span class="dialog-reg-mail"><input type="email" autocomplete="off" name="mail" class="form-control" placeholder="Email" required=""></span>' . $tel . '<div class="dialog-reg-rule"><input type="checkbox" value="on" name="rule" checked="checked"> ' . __('Я согласен <a href="/page/soglasie_na_obrabotku_personalnyh_dannyh.html" target="_blank" title="' . __('Согласие на обработку персональных данных') . '">на обработку моих персональных данных') . '</a></div><button class="send-message" type="button">' . __('Отправить') . '</button></form>',
                     'staffid' => 0,
                     'isview' => 1,
                     'isview_user' => 1,
@@ -330,7 +336,8 @@ class PHPShopDialogElement extends PHPShopElements {
         $result['message'] = $this->viewMessage($data, $path);
 
         if (!empty($result['message']) and ! empty($new)) {
-            $PHPShopOrm->update(array('isview_user_new' => 1), array('id' => ' IN (' . implode($GLOBALS['chat_ids'], ',') . ')'));
+            if (!empty($GLOBALS['chat_ids']) and is_array($GLOBALS['chat_ids']))
+                $PHPShopOrm->update(array('isview_user_new' => 1), array('id' => ' IN (' . implode(',',$GLOBALS['chat_ids']) . ')'));
         }
 
         if (!empty($result['message'])) {
@@ -345,8 +352,10 @@ class PHPShopDialogElement extends PHPShopElements {
     /**
      * Список сообщений
      */
-    private function viewMessage($data, $path='chat', $url = true) {
+    private function viewMessage($data, $path = 'chat', $url = true) {
         global $chat_ids, $animation;
+
+        $message = null;
 
         if (is_array($data)) {
             foreach ($data as $row) {
@@ -354,7 +363,8 @@ class PHPShopDialogElement extends PHPShopElements {
                 if (empty($row['message']) and empty($row['attachments']))
                     continue;
 
-                $chat_ids[] = $row['id'];
+                if (!empty($row['id']))
+                    $chat_ids[] = $row['id'];
 
                 if (empty($row['staffid']))
                     $animation = 1;
@@ -362,7 +372,7 @@ class PHPShopDialogElement extends PHPShopElements {
                     $animation = 0;
 
                 // Ссылки
-                if(!empty($url))
+                if (!empty($url))
                     $row['message'] = preg_replace("~(http|https|ftp|ftps)://(.*?)(\s|\n|[,.?!](\s|\n)|$)~", '<a href="$1://$2" target="_blank">$1://$2</a>$3', $row['message']);
 
                 // Файлы
@@ -411,7 +421,7 @@ class PHPShopDialogElement extends PHPShopElements {
                 }
                 // Диалоги
                 else {
-                    
+
                     if (!empty($row['staffid'])) {
                         $message .= '
              <div class="incoming_msg">
@@ -477,6 +487,7 @@ class PHPShopBrandsElement extends PHPShopElements {
         if ($hook)
             return $hook;
 
+        $i = 0;
         foreach (self::getBrandsValues() as $v) {
             if ($i % $this->limitOnLine == 0) {
                 $this->set('brandFirstClass', $this->firstClassName);
@@ -1042,7 +1053,7 @@ class PHPShopProductIndexElements extends PHPShopProductElements {
                 $this->limitorders = 10; // Количество запрашиваемых заказов
             $disp = $li = null;
 
-            if (!$this->enabled)
+            if (empty($this->enabled))
                 $this->enabled = $this->PHPShopSystem->getSerilizeParam('admoption.nowbuy_enabled');
 
             $sort = null;
@@ -1420,6 +1431,8 @@ class PHPShopShopCatalogElement extends PHPShopProductElements {
         else
             $this->multimenu = false;
 
+        $tree_select = null;
+
         // Перехват модуля
         $hook = $this->setHook(__CLASS__, __FUNCTION__, $where, 'START');
         if ($hook)
@@ -1462,11 +1475,18 @@ class PHPShopShopCatalogElement extends PHPShopProductElements {
                     $this->setHook(__CLASS__, __FUNCTION__, $this->CategoryArray[$cat], 'MIDDLE');
                 }
 
-                $this->tree_array[$k]['name'] = $this->CategoryArray[$k]['name'];
+                if (!empty($this->CategoryArray[$k]['name']))
+                    $this->tree_array[$k]['name'] = $this->CategoryArray[$k]['name'];
+
                 $this->tree_array[$k]['id'] = $k;
-                $this->tree_array[$k]['icon'] = $this->CategoryArray[$k]['icon'];
-                $this->tree_array[$k]['vid'] = $this->CategoryArray[$k]['vid'];
-                $this->tree_array[$k]['tile'] = $this->CategoryArray[$k]['tile'];
+
+                if (!empty($this->CategoryArray[$k]['icon']))
+                    $this->tree_array[$k]['icon'] = $this->CategoryArray[$k]['icon'];
+
+                    $this->tree_array[$k]['vid'] = $this->CategoryArray[$k]['vid'];
+
+                if (!empty($this->CategoryArray[$k]['tile']))
+                    $this->tree_array[$k]['tile'] = $this->CategoryArray[$k]['tile'];
             }
 
 

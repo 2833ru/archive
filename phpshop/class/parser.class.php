@@ -77,9 +77,13 @@ class PHPShopParser {
             $string = @file_get_contents($path);
         else
             echo "Error Tpl File: $path";
-
+        
+        if(!empty($_SESSION['skin']))
+            $skin = $_SESSION['skin'];
+        else $skin = null;
+            
         $replaces = array(
-            "/(\"|\'|=)images\//i" => "\\1" . $GLOBALS['SysValue']['dir']['dir'] . $GLOBALS['SysValue']['dir']['templates'] . chr(47) . $_SESSION['skin'] . "/images/",
+            "/(\"|\'|=)images\//i" => "\\1" . $GLOBALS['SysValue']['dir']['dir'] . $GLOBALS['SysValue']['dir']['templates'] . chr(47) . $skin . "/images/",
             "/!images!\//i" => "images/",
             "/java\//i" => "/java/",
             "/phpshop\//i" => "/phpshop/",
@@ -125,7 +129,8 @@ class PHPShopParser {
 
     static function SysValueReturn($m) {
         global $SysValue;
-        return $SysValue["other"][$m[1]];
+        if (isset($SysValue["other"][$m[1]]))
+            return $SysValue["other"][$m[1]];
     }
 
     static function locale($str) {
@@ -140,7 +145,7 @@ class PHPShopParser {
 // Обработка php тегов
 function phpshopparserevalstr($str) {
     ob_start();
-    if (eval(stripslashes($str[2])) !== NULL) {
+    if (!empty($str[2]) and eval(stripslashes($str[2])) !== NULL) {
         echo ('<div class="alert alert-danger"><h4>В шаблоне обнаружена ошибка выполнения PHP</h4>');
         echo ('Код содержащий ошибки:');
         echo ('<pre>');
@@ -178,6 +183,8 @@ class PHPShopCssParser {
                 foreach ($rules as $strRule) {
                     if (!empty($strRule)) {
                         $rule = explode(":", $strRule);
+                        
+                        if(!empty($rule[1]))
                         $rules_arr[trim($rule[0])] = trim($rule[1]);
                     }
                 }
@@ -191,6 +198,7 @@ class PHPShopCssParser {
     }
 
     function getParam($element, $param) {
+        if(!empty($this->css_array[$element][$param]))
         return $this->css_array[$element][$param];
     }
 
@@ -323,7 +331,7 @@ function ParseTemplateReturn($TemplateName, $mod = false, $debug = false) {
         if (strstr($dis, '<li') or strstr($dis, 'class="product-col"'))
             $result = str_replace(array('<li', 'class="product-col"'), array('<li' . $add, 'class="product-col"' . $add), $dis);
         elseif (strstr($dis, 'product-block-wrapper-fix'))
-            $result = str_replace(array('product-block-wrapper-fix"'), array('product-block-wrapper-fix" '.$add), $dis);
+            $result = str_replace(array('product-block-wrapper-fix"'), array('product-block-wrapper-fix" ' . $add), $dis);
         else
             $result = '<div ' . $add . '>' . $dis . '</div>';
     } else
@@ -423,8 +431,8 @@ function Parser($string, $debug = false) {
     if ($debug and ! empty($_COOKIE['debug_template'])) {
         if (strstr($dis, '<li') or strstr($dis, 'class="product-col"'))
             $result = str_replace(array('<li', 'class="product-col"'), array('<li' . $add, 'class="product-col"' . $add), $dis);
-         elseif (strstr($dis, 'product-block-wrapper-fix'))
-            $result = str_replace(array('product-block-wrapper-fix"'), array('product-block-wrapper-fix" '.$add), $dis);
+        elseif (strstr($dis, 'product-block-wrapper-fix'))
+            $result = str_replace(array('product-block-wrapper-fix"'), array('product-block-wrapper-fix" ' . $add), $dis);
         else
             $result = '<div ' . $add . '>' . $dis . '</div>';
     } else
@@ -442,8 +450,8 @@ function Parser($string, $debug = false) {
 function tmpGetFile($path) {
     if (strpos($path, '.tpl')) {
         if (is_file($path))
-            $file = @file_get_contents($path);
-        if (!$file)
+            $file = file_get_contents($path);
+        if (empty($file))
             return false;
         return $file;
     } else

@@ -7,10 +7,12 @@
             </span>
     <div class="product-col">
         <div class="image product-img-centr">
-            <a href="/shop/UID_@productUid@.html" title="@productName@"> <img data-src="@productImg@" alt="@productName@" class="img-responsive img-center-sm swiper-lazy" ></a>
+            <a href="/shop/UID_@productUid@.html" title="@productNameClean@">
+                <img data-src="@productImg@" alt="@productNameClean@" class="img-responsive img-center-sm swiper-lazy" >
+            </a>
         </div>
         <div class="caption">
-            <h4><a href="/shop/UID_@productUid@.html" title="@productName@">@productName@</a></h4>
+            <h4><a href="/shop/UID_@productUid@.html" title="@productNameClean@">@productName@</a></h4>
             <div class="description product-description">
                 <div class="description-content">
                     @productDes@
@@ -19,7 +21,7 @@
             </div>
             @previewSorts@
             <div class="description-link-wrapper">
-                <a class="description-link" href="/shop/UID_@productUid@.html" title="@productName@"></a>
+                <a class="description-link" href="/shop/UID_@productUid@.html" title="@productNameClean@"></a>
             </div>
             <div class="price">
                 <span class="price-new">@productPrice@ <span class="rubznak">@productValutaName@</span></span>

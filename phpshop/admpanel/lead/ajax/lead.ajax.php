@@ -39,8 +39,8 @@ $order_status_value[] = array(__('Новый'), 0, '');
 
 if (is_array($status_array))
     foreach ($status_array as $status_val) {
-
-        $status[$status_val['id']] = mb_substr($status_val['name'], 0, 22);
+        if (!empty($status_val['id']))
+            $status[$status_val['id']] = mb_substr($status_val['name'], 0, 22);
     }
 
 // Знак рубля
@@ -64,9 +64,9 @@ if (!empty($GLOBALS['SysValue']['base']['returncall']['returncall_jurnal'])) {
 }
 
 if (empty($returncall)) {
-    $PHPShopOrm->sql = 'SELECT id,uid,date,statusi,fio,tel,user,sum FROM ' . $GLOBALS['SysValue']['base']['orders'] . ' UNION SELECT id,2,date,status,null,tel,null,message FROM ' . $GLOBALS['SysValue']['base']['notes'] . ' order by date desc limit '.$limit;
+    $PHPShopOrm->sql = 'SELECT id,uid,date,statusi,fio,tel,user,sum FROM ' . $GLOBALS['SysValue']['base']['orders'] . ' UNION SELECT id,2,date,status,null,tel,null,message FROM ' . $GLOBALS['SysValue']['base']['notes'] . ' order by date desc limit ' . $limit;
 } else {
-    $PHPShopOrm->sql = 'SELECT id,uid,date,statusi,fio,tel,user,sum FROM ' . $GLOBALS['SysValue']['base']['orders'] . ' UNION SELECT id,1,date,status,message,tel,null,message FROM ' . $GLOBALS['SysValue']['base']['returncall']['returncall_jurnal'] . ' UNION SELECT id,2,date,status,message,tel,null,message FROM ' . $GLOBALS['SysValue']['base']['notes'] . ' order by date desc limit '.$limit;
+    $PHPShopOrm->sql = 'SELECT id,uid,date,statusi,fio,tel,user,sum FROM ' . $GLOBALS['SysValue']['base']['orders'] . ' UNION SELECT id,1,date,status,message,tel,null,message FROM ' . $GLOBALS['SysValue']['base']['returncall']['returncall_jurnal'] . ' UNION SELECT id,2,date,status,message,tel,null,message FROM ' . $GLOBALS['SysValue']['base']['notes'] . ' order by date desc limit ' . $limit;
 }
 
 // Отладка
@@ -98,9 +98,9 @@ if (is_array($data))
             case "2":
                 $user_link = null;
                 $type = __('Событие') . ' ' . $row['id'];
-                $link = '?path=lead.kanban&return=lead&id='. $row['id'];
+                $link = '?path=lead.kanban&return=lead&id=' . $row['id'];
                 break;
-                
+
             // Заказ
             default:
                 $user_link = '?path=shopusers&return=lead&id=' . $row['user'];
@@ -109,7 +109,7 @@ if (is_array($data))
         }
 
         $PHPShopInterface->setRow(
-                array('name' => $type, 'link' => $link, 'align' => 'left', 'sort' => 'uid', 'order' => $row['id']), '<span style="color:'.$status_array[$row['statusi']]['color'].'">'.$status[$row['statusi']].'</span>', array('name' => $datas, 'order' => $row['date'], 'sort' => 'date'), array('name' => $row['fio'], 'sort' => 'fio', 'link' => $user_link), array('name' => $row['tel'], 'sort' => 'tel')
+                array('name' => $type, 'link' => $link, 'align' => 'left', 'sort' => 'uid', 'order' => $row['id']), '<span style="color:' . $status_array[$row['statusi']]['color'] . '">' . $status[$row['statusi']] . '</span>', array('name' => $datas, 'order' => $row['date'], 'sort' => 'date'), array('name' => $row['fio'], 'sort' => 'fio', 'link' => $user_link), array('name' => $row['tel'], 'sort' => 'tel')
         );
     }
 
@@ -126,6 +126,7 @@ if (is_array($total)) {
 
     $sum = $num = 0;
     foreach ($total as $row) {
+        if(!empty($row['sum']))
         $sum += $row['sum'];
         $num++;
     }

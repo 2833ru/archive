@@ -2,7 +2,7 @@
 <module>
     <version>1.6</version>
     <name>One Click</name>
-    <faqlink>http://faq.phpshop.ru/page/one-click.html</faqlink>
+    <faqlink>https://docs.phpshop.ru/moduli/prodazhi/zakaz-v-1-klik</faqlink>
     <description>Модуль заказа в один клик.</description>
     <category>sale</category>
     <adminmenu>

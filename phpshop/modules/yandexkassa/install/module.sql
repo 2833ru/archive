@@ -14,7 +14,7 @@ INSERT INTO `phpshop_modules_yandexkassa_system` (`id`, `status`, `title`, `titl
 (1, 0, 'Оплатить сейчас', 'Оплатите пожалуйста свой заказ', '665601', 'test_IBkYJDzgL1-gaz04YTHNxQekxtaGz6z-7_40u0rRlYs', 1.5);
 
 INSERT INTO `phpshop_payment_systems` (`id`, `name`, `path`, `enabled`, `num`, `message`, `message_header`, `yur_data_flag`, `icon`) VALUES
-(10004, 'ЮKassa', 'modules', '0', 0, '', '', '', '/UserFiles/Image/Payments/yandex-money.png');
+(10004, 'ЮKassa', 'modules', '0', 0, '', '', '', '/UserFiles/Image/Payments/yookassa.png');
 
 CREATE TABLE IF NOT EXISTS `phpshop_modules_yandexkassa_log` (
   `id` int(11) NOT NULL AUTO_INCREMENT,

@@ -56,6 +56,10 @@ $().ready(function() {
                         // Цена главного товара
                         if ($('input[name="price_new"]').val() == 0)
                             $('input[name="price_new"]').val(price);
+                        
+                        // Добавление в список изображений
+                         $('.img-parent .selectpicker').prepend('<option value="'+json['success']+'">'+escape(name)+'</option>');
+                         $('.img-parent').selectpicker('refresh');
 
                         showAlertMessage(locale.save_done);
 
@@ -220,7 +224,8 @@ $().ready(function() {
                 $('#selectModal .modal-footer .btn-primary').addClass('value-edit-send');
                 $('#selectModal .modal-footer .btn-delete').removeClass('hidden');
                 $('#selectModal .modal-footer .btn-delete').addClass('value-delete');
-                $('#selectModal .modal-body').html(data).css('min-height', '620px');
+                //$('#selectModal .modal-body').html(data).css('min-height', '620px');
+                $('#selectModal .modal-body').html(data).css('height', $(window).height() - 200).css('overflow-y','scroll').css('padding','15px');
 
                 $('.color').colorpicker({
                     format: 'hex',
@@ -273,7 +278,6 @@ $().ready(function() {
     $("button[name=editID]").on('click', function(event) {
         event.preventDefault();
 
-
         if ($('input[name="img_new"]').val()) {
             setTimeout(function() {
                 window.location.href = window.location.href.split('&tab=1').join('') + '&tab=1';
@@ -284,7 +288,6 @@ $().ready(function() {
             $('#product_edit').append('<input type="hidden" name="saveID" value="1">');
             $('#product_edit').submit();
         }
-
 
         // Проверка характеристики
         $('.vendor_add').each(function() {

@@ -48,11 +48,8 @@
                 <div class="row">
                     <div class="col-md-12 col-xs-12 main">
                         <div class="bar-padding-top-fix visible-md"></div>
-                        <div class="template-slider hidden-xs @php __hide('imageSlider'); php@">
+                        <div class="template-slider @php __hide('imageSlider'); php@">
                             @imageSlider@
-                        </div>
-                        <div class="banner text-center hidden-lg hidden-md hidden-sm">
-                            @sticker_mobile_slider@
                         </div>
                         <ul class="action-tabs" role="tablist" id="actionTab">
                             <li class="active @php __hide('specMain'); php@ spec "><a data-toggle="tab" href="#panel1">{Спецпредложения}</a></li>
@@ -156,7 +153,7 @@
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-md-12 col-xs-12 main text-center banner">
-                        @sticker_banner@
+                        @banersDispHorizontal@
                     </div>
                 </div>
             </div>

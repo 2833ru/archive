@@ -353,7 +353,7 @@ charset="utf-8";    # кодировка базы</pre>
                             <div class="alert alert-warning" role="alert"><b>Внимание!</b> Установщик базы запускать необходимо, в противном случае, не будет создан образ базы. </div>
                         </li>
                         <li>Для безопасности удалите папку <kbd>/install</kbd>
-                        <li>Установите опцию <kbd>CMOD 775</kbd> (UNIX сервера) для папок:
+                        <li>Установите опцию <kbd>CHMOD 777</kbd> (UNIX сервера) для папок:
                             <pre>
 /license
 /UserFiles/Image

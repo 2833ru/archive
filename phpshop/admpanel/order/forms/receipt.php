@@ -30,7 +30,7 @@ $n = 1;
 $row = mysqli_fetch_array(@$result);
 $ouid = $row['uid'];
 $order = unserialize($row['orders']);
-$dis = $sum = $num = null;
+$dis = $sum = $num = $weight = null;
 if (is_array($order['Cart']['cart']))
     foreach ($order['Cart']['cart'] as $val) {
 
@@ -93,7 +93,7 @@ $PERSON = $order['Person'];
 if ($PERSON['discount'] > 0) {
     $discount = $PERSON['discount'] . '%';
 } else {
-    $discount = ($PERSON['tip_disc'] == 1 ? $PERSON['discount_promo'] . '%' : $PERSON['discount_promo']);
+    $discount = (@$PERSON['tip_disc'] == 1 ? @$PERSON['discount_promo'] . '%' : @$PERSON['discount_promo']);
 }
 
 // номер товарного чека

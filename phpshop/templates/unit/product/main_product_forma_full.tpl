@@ -253,11 +253,11 @@
                 </h4>
             </div>
             <div class="modal-body">
-                <h4><a href="/shop/UID_@productUid@.html" title="@productName@">@productName@</a></h4>
+                <h4><a href="/shop/UID_@productUid@.html" title="@productNameClean@">@productName@</a></h4>
                 <div class="col-md-12">
                     <div class="row">
                         <div class="image">
-                            <a href="/shop/UID_@productUid@.html" title="@productName@">
+                            <a href="/shop/UID_@productUid@.html" title="@productNameClean@">
                                 @productSliderOneImage@
                             </a>
                         </div>
@@ -334,11 +334,11 @@
                     </button></h4>
             </div>
             <div class="modal-body">
-                <h4><a href="/shop/UID_@productUid@.html" title="@productName@">@productName@</a></h4>
+                <h4><a href="/shop/UID_@productUid@.html" title="@productNameClean@">@productName@</a></h4>
                 <div class="col-md-6">
                     <div class="row">
                         <div class="image">
-                            <a href="/shop/UID_@productUid@.html" title="@productName@">
+                            <a href="/shop/UID_@productUid@.html" title="@productNameClean@">
                                 @productSliderOneImage@
                             </a>
                         </div>
@@ -427,7 +427,7 @@
                 </h4>
             </div>
             <div class="modal-body">
-                <h4><a href="/shop/UID_@productUid@.html" title="@productName@">@productName@</a></h4>
+                <h4><a href="/shop/UID_@productUid@.html" title="@productNameClean@">@productName@</a></h4>
                 <br>
                 <form method="post" name="ajax-form" data-modal="forma" action="/forma/">
                     <div class="form-group">

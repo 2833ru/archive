@@ -1,8 +1,7 @@
-
-$().ready(function() {
+$().ready(function () {
     
     // Расширенный поиск сообщений
-    $(".search").on('click', function(event) {
+    $(".search").on('click', function (event) {
         event.preventDefault();
 
         var data = [];
@@ -12,13 +11,13 @@ $().ready(function() {
         data.push({name: 'actionList[selectID]', value: 'actionAdvanceSearch'});
 
         $.ajax({
-            mimeType: 'text/html; charset='+locale.charset,
+            mimeType: 'text/html; charset=' + locale.charset,
             url: '?path=shopusers.messages',
             type: 'post',
             data: data,
             dataType: "html",
             async: false,
-            success: function(data) {
+            success: function (data) {
                 $('#selectModal .modal-dialog').removeClass('modal-lg');
                 $('#selectModal .modal-title').html(locale.search_advance_title);
                 $('#selectModal .modal-footer .btn-primary').html(locale.search_advance_but);
@@ -31,9 +30,9 @@ $().ready(function() {
             }
         });
     });
-    
+
     // Разослать уведомления автоматически
-    $("body").on('click', ".select-action .send-user-all", function(event) {
+    $("body").on('click', ".select-action .send-user-all", function (event) {
         event.preventDefault();
 
         if (confirm(locale.confirm_notice)) {
@@ -43,17 +42,16 @@ $().ready(function() {
             data.push({name: 'actionList[saveID]', value: 'actionUpdateAuto'});
 
             $.ajax({
-                mimeType: 'text/html; charset='+locale.charset,
+                mimeType: 'text/html; charset=' + locale.charset,
                 url: '?path=shopusers.notice&id=1',
                 type: 'post',
                 data: data,
                 dataType: "json",
                 async: false,
-                success: function(json) {
+                success: function (json) {
                     if (json['success'] == 1) {
                         showAlertMessage(locale.save_done);
-                    }
-                    else
+                    } else
                         showAlertMessage(locale.save_false, true);
                 }
             });
@@ -61,12 +59,12 @@ $().ready(function() {
     });
 
     // Разослать уведомления с выбранными
-    $("body").on('click', ".select-action .send-user-select", function(event) {
+    $("body").on('click', ".select-action .send-user-select", function (event) {
         event.preventDefault();
         var result = 1;
         if ($('#data input:checkbox:checked').length) {
             if (confirm(locale.confirm_notice)) {
-                $('#data input[name="items"]:checkbox:checked').each(function() {
+                $('#data input[name="items"]:checkbox:checked').each(function () {
 
                     var data = [];
                     var id = $(this).val();
@@ -78,13 +76,13 @@ $().ready(function() {
                     data.push({name: 'actionList[saveID]', value: 'actionUpdate'});
 
                     $.ajax({
-                        mimeType: 'text/html; charset='+locale.charset,
+                        mimeType: 'text/html; charset=' + locale.charset,
                         url: '?path=shopusers.notice&id=' + id,
                         type: 'post',
                         data: data,
                         dataType: "json",
                         async: false,
-                        success: function(json) {
+                        success: function (json) {
                             if (json['success'] != 1) {
                                 result = 0;
                                 showAlertMessage(locale.save_false, true);
@@ -96,13 +94,12 @@ $().ready(function() {
                 if (result == 1)
                     showAlertMessage(locale.save_done);
             }
-        }
-        else
+        } else
             alert(locale.select_no);
 
     });
 
-    $("body").on('click', ".send-user", function(event) {
+    $("body").on('click', ".send-user", function (event) {
         event.preventDefault();
         var result = 1;
         var data = [];
@@ -115,13 +112,13 @@ $().ready(function() {
         data.push({name: 'actionList[saveID]', value: 'actionUpdate'});
 
         $.ajax({
-            mimeType: 'text/html; charset='+locale.charset,
+            mimeType: 'text/html; charset=' + locale.charset,
             url: '?path=shopusers.notice&id=' + id,
             type: 'post',
             data: data,
             dataType: "json",
             async: false,
-            success: function(json) {
+            success: function (json) {
                 if (json['success'] != 1) {
                     result = 0;
                     showAlertMessage(locale.save_false, true);
@@ -134,17 +131,17 @@ $().ready(function() {
     });
 
     // Сделать новый заказ из списка пользователей
-    $(".dropdown-menu .order").on('click', function() {
+    $(".dropdown-menu .order").on('click', function () {
         $(this).attr('href', '?path=order&action=new&user=' + $(this).attr('data-id'));
     });
 
     // Экспортировать с выбранными
-    $(".select-action .export-select").on('click', function(event) {
+    $(".select-action .export-select").on('click', function (event) {
         event.preventDefault();
 
         if ($('input:checkbox:checked').length) {
             var data = [];
-            $('input:checkbox:checked').each(function() {
+            $('input:checkbox:checked').each(function () {
                 if (this.value != 'all')
                     data.push({name: 'select[' + $(this).attr('data-id') + ']', value: $(this).attr('data-id')});
 
@@ -154,19 +151,18 @@ $().ready(function() {
             data.push({name: 'ajax', value: 1});
             data.push({name: 'actionList[selectID]', value: 'actionSelect'});
             $.ajax({
-                mimeType: 'text/html; charset='+locale.charset,
+                mimeType: 'text/html; charset=' + locale.charset,
                 url: '?path=exchange.export.user',
                 type: 'post',
                 data: data,
                 dataType: "json",
                 async: false,
-                success: function() {
+                success: function () {
                     window.location.href = '?path=exchange.export.user';
                 }
 
             });
-        }
-        else
+        } else
             alert(locale.select_no);
     });
 
@@ -176,7 +172,7 @@ $().ready(function() {
     });
 
     // Обновление данных
-    $(".comment-url").on('click', function(event) {
+    $(".comment-url").on('click', function (event) {
         event.preventDefault();
         var table = $('#data').DataTable();
         var id = $(this).closest('.data-row').find('td:nth-child(3)>a').html();
@@ -189,7 +185,7 @@ $().ready(function() {
         ymaps.ready(init);
     }
     function init() {
-        ymaps.geocode($('#map').attr('data-geocode'), {results: 1}).then(function(res) {
+        ymaps.geocode($('#map').attr('data-geocode'), {results: 1}).then(function (res) {
             var firstGeoObject = res.geoObjects.get(0);
             //res.geoObjects.get(0).properties.set('balloonContentHeader', 'Доставка');
             res.geoObjects.get(0).properties.set('balloonContentBody', $('#map').attr('data-title'));
@@ -203,16 +199,16 @@ $().ready(function() {
             myMap.geoObjects.add(firstGeoObject);
         });
     }
-    
+
     // Мобильная навигация
-    if (typeof is_mobile !== 'undefined'){
-        locale.dataTable.paginate.next="»";
-        locale.dataTable.paginate.previous="«";
+    if (typeof is_mobile !== 'undefined') {
+        locale.dataTable.paginate.next = "»";
+        locale.dataTable.paginate.previous = "«";
     }
 
     // Таблица данных
     if ($.getUrlVar('path') == 'shopusers') {
-        if (typeof($.cookie('data_length')) == 'undefined')
+        if (typeof ($.cookie('data_length')) == 'undefined')
             var data_length = [10, 25, 50, 75, 100, 500];
         else
             var data_length = [parseInt($.cookie('data_length')), 10, 25, 50, 75, 100, 500];
@@ -222,7 +218,7 @@ $().ready(function() {
                 "ajax": {
                     "type": "GET",
                     "url": ajax_path + 'shopusers.ajax.php' + window.location.search,
-                    "dataSrc": function(json) {
+                    "dataSrc": function (json) {
                         $('#stat_sum').text(json.sum);
                         $('#stat_num').text(json.num);
                         $('#select_all').prop('checked', false);
@@ -238,6 +234,19 @@ $().ready(function() {
                 "lengthMenu": data_length,
                 "language": locale.dataTable,
                 "stripeClasses": ['data-row', 'data-row'],
+                "fnDrawCallback": function () {
+
+                    // Активация из списка dropdown
+                    $('.data-row').hover(
+                            function () {
+                                $(this).find('#dropdown_action').show();
+                            },
+                            function () {
+                                $(this).find('#dropdown_action').hide();
+                            });
+
+                    $('.toggle-event').bootstrapToggle();
+                },
                 "aoColumnDefs": [{
                         'bSortable': false,
                         'aTargets': ['sorting-hide']

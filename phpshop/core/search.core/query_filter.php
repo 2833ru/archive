@@ -22,7 +22,7 @@ function query_multibase($obj) {
         if (is_array($data)) {
             foreach ($data as $row) {
                 $multi_cat[] = $row['id'];
-                $multi_dop_cat.=" or dop_cat REGEXP '#" . $row['id'] . "#'";
+                $multi_dop_cat .= " or dop_cat REGEXP '#" . $row['id'] . "#'";
             }
         }
 
@@ -52,16 +52,20 @@ function query_filter($obj) {
         $pole = intval($_REQUEST['pole']);
     else
         $pole = $obj->PHPShopSystem->getSerilizeParam('admoption.search_pole');
-    
-    if(empty($pole))
-        $pole=1;
+
+    if (empty($pole))
+        $pole = 1;
 
     if (!empty($_REQUEST['p']))
         $p = intval($_REQUEST['p']);
     else
         $p = 1;
 
-    $cat = intval($_REQUEST['cat']);
+    if (!empty($_REQUEST['cat']))
+        $cat = intval($_REQUEST['cat']);
+    else
+        $cat = null;
+    
     $words = trim(PHPShopSecurity::true_search($_REQUEST['words']));
     $num_row = $obj->num_row;
     $num_ot = $q = 0;
@@ -75,7 +79,7 @@ function query_filter($obj) {
         foreach ($v as $key => $value) {
             if (!empty($value)) {
                 $hash = $key . "-" . $value;
-                $sortV.=" and vendor REGEXP 'i" . $hash . "i' ";
+                $sortV .= " and vendor REGEXP 'i" . $hash . "i' ";
             }
         }
 
@@ -88,24 +92,25 @@ function query_filter($obj) {
     // Ajax поиск        
     if (!empty($_POST['ajax'])) {
         foreach ($_WORDS as $w)
-            if(!empty($w)) {
-                $sort.="(name REGEXP '\x20*$w' or uid REGEXP '^$w' or keywords REGEXP '$w') or ";
+            if (!empty($w)) {
+                $sort .= "(name REGEXP '\x20*$w' or uid REGEXP '^$w' or keywords REGEXP '$w') or ";
             }
     }
     // Обычный поиск
     else {
+        $wrd=null;
         foreach ($_WORDS as $w)
             $wrd .= '%' . $w;
 
-        $wrd .='%';
+        $wrd .= '%';
 
         switch ($pole) {
             case(1):
-                $sort.="(name LIKE '$wrd' or keywords LIKE '$wrd' or id LIKE '$wrd') and ";
+                $sort .= "(name LIKE '$wrd' or keywords LIKE '$wrd' or id LIKE '$wrd') and ";
                 break;
 
             case(2):
-                $sort.="(name LIKE '$wrd' or content LIKE '$wrd' or description LIKE '$wrd' or keywords LIKE '$wrd' or uid LIKE '$wrd') and ";
+                $sort .= "(name LIKE '$wrd' or content LIKE '$wrd' or description LIKE '$wrd' or keywords LIKE '$wrd' or uid LIKE '$wrd') and ";
                 break;
         }
     }
@@ -113,7 +118,7 @@ function query_filter($obj) {
     $sort = substr($sort, 0, strlen($sort) - 4);
 
     // По категориям
-    if (!empty($cat) and !defined("HostID"))
+    if (!empty($cat) and ! defined("HostID"))
         $string = " category=$cat and";
     else
         $string = null;
@@ -127,8 +132,7 @@ function query_filter($obj) {
     // Все страницы
     if ($p == "all") {
         $sql = "select * from " . $SysValue['base']['products'] . " where $sort $prewords $multibase and enabled='1' and parent_enabled='0' order by num desc, items desc";
-    }
-    else
+    } else
         while ($q < $p) {
 
             $sql = "select * from " . $SysValue['base']['products'] . " where  $string ($sort) $prewords $sortV $multibase and enabled='1' and parent_enabled='0' order by num desc, items desc LIMIT $num_ot, $num_row";
@@ -137,7 +141,7 @@ function query_filter($obj) {
         }
 
     // SQL для выборки по id товаров, найденных Яндекс.Поиском. Если нет переадресации поиска.
-    if($obj->isYandexSearch && empty($prewords)) {
+    if ($obj->isYandexSearch && empty($prewords)) {
         $sql = getYandexSearchSql($obj, $words, $p, $multibase, $cat);
     }
 
@@ -157,7 +161,7 @@ function query_filter($obj) {
         $obj->set('searchSetC', 'checked');
     else
         $obj->set('searchSetD', 'checked');
-    
+
     // Возвращаем SQL запрос
     return $sql;
 }
@@ -170,18 +174,17 @@ function query_filter($obj) {
  * @param string $multibase
  * @param int $cat
  */
-function getYandexSearchSql($obj, $search, $p, $multibase = null, $cat = 0)
-{
+function getYandexSearchSql($obj, $search, $p, $multibase = null, $cat = 0) {
     global $SysValue;
 
-    if(isset($_REQUEST['ajax'])) {
+    if (isset($_REQUEST['ajax'])) {
         $_WORDS = explode(" ", $search);
 
         // Убираем дублирование фразы на другой раскладке.
         $wordsCount = count($_WORDS);
-        if($wordsCount > 1) {
+        if ($wordsCount > 1) {
             $search = '';
-            for($i = 0; $i < $wordsCount / 2; $i++) {
+            for ($i = 0; $i < $wordsCount / 2; $i++) {
                 $search .= ' ' . $_WORDS[$i];
             }
         }
@@ -195,23 +198,23 @@ function getYandexSearchSql($obj, $search, $p, $multibase = null, $cat = 0)
         'per_page' => $obj->num_row
     );
 
-    if((int) $cat > 0) {
+    if ((int) $cat > 0) {
         $params['category_id'] = $cat;
     }
 
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, PHPShopSearch::YANDEX_SEARCH_API_URL . '?' . http_build_query($params));
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    $data = json_decode(curl_exec($ch),1);
+    $data = json_decode(curl_exec($ch), 1);
 
     $obj->set('hideSearchType', 'hidden');
-    if(is_array($data['misspell']['misspell'])) {
+    if (is_array($data['misspell']['misspell'])) {
         $obj->set('searchMisspell', __('Может быть, Вы искали: ') . '«<a href="/search?words=' . PHPShopString::utf8_win1251($data['misspell']['misspell']['text']) . '">' . PHPShopString::utf8_win1251($data['misspell']['misspell']['text']) . '</a>».');
     } else {
         $obj->set('searchMisspell', '');
     }
 
-    if(is_array($data['documents'])) {
+    if (is_array($data['documents'])) {
         $ids = array();
         foreach ($data['documents'] as $document) {
             $ids[] = $document['id'];

@@ -37,6 +37,12 @@
 
         <!-- Theme -->
         <link id="bootstrap_theme" data-name="@php echo $_SESSION['skin']; php@" href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@css/@hub_theme@.css" rel="stylesheet">        
+	        <!-- Стикер-полоска -->
+	        <div class="top-banner @php __hide('sticker_close','cookie'); php@">
+				<div class="sticker-text">@sticker_top@</div>
+				<span class="close sticker-close">x</span>
+			</div>
+			<!-- /Стикер-полоска -->
 
         <header>
             <div class="header-top">
@@ -170,7 +176,7 @@
         <!-- Slider Section Starts -->
         <!-- Nested Container Starts -->
         <!-- Carousel Starts -->
-        <div class="slider hidden-xs">
+        <div class="slider">
             <div class="container">
                 <div class="row">
                     @imageSlider@
@@ -178,16 +184,6 @@
             </div>
         </div>
 
-        <div class="slider col-xs-12 hidden-lg hidden-md hidden-sm">
-            <div class="container">
-                <div class="banner text-center hidden-lg hidden-md hidden-sm">
-                    @sticker_mobile_slider@
-                </div>
-            </div>
-
-            <!-- Carousel Ends -->
-            <!-- Nested Container Ends -->
-        </div>
         <!-- Slider Section Ends -->
         
         
@@ -219,8 +215,8 @@
                 </div>
             </div>
         </section>
-       <section class="hidden-xs main-page-banner container ">
-            <div class="top-col-banners row">@sticker_banner@</div>
+       <section class="main-page-banner container ">
+            <div class="top-col-banners row">@banersDispHorizontal@</div>
         </section>
         <section class="special-offers @php __hide('specMain'); php@">
             <div class="container">

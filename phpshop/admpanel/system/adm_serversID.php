@@ -174,12 +174,16 @@ function actionStart() {
             $company_value[] = array($company['name'], $company['id'], $data['company_id']);
 
     $Tab2 .= $PHPShopGUI->setField("Юридическое лицо", $PHPShopGUI->setSelect('company_id_new', $company_value));
+    
+    $Tab2 = $PHPShopGUI->setCollapse("Дополнительно",$Tab2);
 
     $Tab2 .= $PHPShopGUI->_CODE .= $PHPShopGUI->setCollapse('Статистика посещений', $PHPShopGUI->setField('ID сайта Яндекс.Метрика', $PHPShopGUI->setInputText(null, 'option[metrica_id]', $option['metrica_id'], 230, false, false, false, 'XXXXXXXX')) . $PHPShopGUI->setField('ID сайта Google', $PHPShopGUI->setInputText('UA-', 'option[google_id]', $option['google_id'], 230, false, false, false, 'XXXXX-Y')), 'in', true
     );
 
     // Запрос модуля на закладку
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $data);
+    
+    $Tab1 = $PHPShopGUI->setCollapse("Основное",$Tab1);
 
     // Вывод формы закладки
     $PHPShopGUI->setTab(array("Основное", $Tab1, true), array("Дополнительно", $Tab2, true), array("Инструкция", $PHPShopGUI->loadLib('tab_showcase', false, './system/')));

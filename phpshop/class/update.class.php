@@ -28,6 +28,8 @@ class PHPShopUpdate {
         include_once('../lib/zip/pclzip.lib.php');
 
         $this->path = $_SERVER['DOCUMENT_ROOT'] . $GLOBALS['SysValue']['dir']['dir'] . '/';
+        
+        /*
         $this->_user_ftp_host = $GLOBALS['SysValue']['user_ftp']['host'];
         $this->_user_ftp_login = $GLOBALS['SysValue']['user_ftp']['login'];
         $this->_user_ftp_password = $GLOBALS['SysValue']['user_ftp']['password'];
@@ -35,11 +37,13 @@ class PHPShopUpdate {
         $this->_user_ftp_re_chmod = $GLOBALS['SysValue']['user_ftp']['re_chmod'];
         $this->_endPoint = $_SERVER['SERVER_NAME'];
         $this->_user_ftp_chmod = $GLOBALS['SysValue']['user_ftp']['chmod'];
+         
 
         if ($this->islocal())
             $this->_user_ftp_dir = $_SERVER['DOCUMENT_ROOT'] . $GLOBALS['dir']['dir'];
         else
             $this->_user_ftp_dir = $GLOBALS['SysValue']['user_ftp']['dir'];
+        */
 
         set_time_limit($this->_timeLimit);
     }

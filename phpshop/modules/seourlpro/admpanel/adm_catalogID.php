@@ -20,6 +20,7 @@ class PHPShopSeourlOption extends PHPShopArray {
 function addSeoUrlPro($data) {
     global $PHPShopGUI;
 
+    $PHPShopGUI->field_col = 3;
     $PHPShopSeourlOption = new PHPShopSeourlOption();
 
     // Каталоги товаров
@@ -40,13 +41,13 @@ function addSeoUrlPro($data) {
         }
 
 
-        $Tab3 = $PHPShopGUI->setField("SEO ссылка:", $PHPShopGUI->setInput("text", "cat_seo_name_new", $data['cat_seo_name'], "left", false, false, false, false, '/', '.html'), 1, 'Можно использовать вложенные ссылки /sony/plazma/televizor');
+        $Tab3 = $PHPShopGUI->setField("Ссылка:", $PHPShopGUI->setInput("text", "cat_seo_name_new", $data['cat_seo_name'], "left", false, false, false, false, '/', '.html'), 1, 'Можно использовать вложенные ссылки /sony/plazma/televizor');
 
 
         if ($PHPShopSeourlOption->getParam('redirect_enabled') == 2)
             $Tab3.= $PHPShopGUI->setField("Старая ссылка:", $PHPShopGUI->setInput("text", "cat_seo_name_old_new", $data['cat_seo_name_old'], "left", false, false, false), 1, 'Старая ссылка для 301 редиректа');
 
-        $PHPShopGUI->addTab(array("SEO", $Tab3, 450));
+        $PHPShopGUI->addTab(array("SEO", $Tab3));
     }
     // Каталог страниц
     elseif (isset($data['page_cat_seo_name'])) {

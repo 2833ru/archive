@@ -36,7 +36,7 @@
         </div>
     </div>
     <div class="top-banner @php __hide('sticker_close','cookie'); php@">
-        <div class="sticker-text">@sticker_delivery@</div><span class="close sticker-close"><i class="fal fa-times" aria-hidden="true"></i></span>
+        <div class="sticker-text">@sticker_top@</div><span class="close sticker-close"><i class="fal fa-times" aria-hidden="true"></i></span>
     </div>
     <div class="top-menu">
         <div class="container-fluid">

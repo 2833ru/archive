@@ -131,8 +131,10 @@ function actionStart() {
          </form>
       ';
 
-    if (empty($_GET['search']))
+    if (empty($_GET['search'])){
         $class = 'none';
+        $_GET['search']=null;
+    }
     else
         $class = null;
 
@@ -288,6 +290,7 @@ function fileAdd() {
 function viewMessage($data, $ajax = false) {
     global $chat_ids, $chat_name;
 
+    $message = null;
     if (is_array($data)) {
         foreach ($data as $row) {
 
@@ -320,7 +323,7 @@ function viewMessage($data, $ajax = false) {
                 $flist = null;
 
             if (empty($row['staffid'])) {
-
+                
                 $message .= '
              <div class="incoming_msg">
               <div class="received_msg">
@@ -361,12 +364,16 @@ function actionGetNew() {
         $message = viewMessage($data, true);
     }
 
-    if (!empty($message)) {
-        $PHPShopOrm->update(array('isview_new' => 1), array('id' => ' IN (' . implode($GLOBALS['chat_ids'], ',') . ')'));
+    if (!empty($message) and is_array($GLOBALS['chat_ids'])) {
+        $PHPShopOrm->update(array('isview_new' => 1), array('id' => ' IN (' . implode(',',$GLOBALS['chat_ids']) . ')'));
     }
 
     if (!empty($message)) {
         $count = count($data);
+    }
+    else {
+        $count=0;
+        $message=null;
     }
 
     header("Content-Type: application/json");

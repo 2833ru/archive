@@ -10,6 +10,10 @@ function actionStart() {
     $PHPShopOrderStatusArray = new PHPShopOrderStatusArray();
     $status_array = $PHPShopOrderStatusArray->getArray();
     $status[] = __('Новый заказ');
+    
+    if(empty($_GET['where']['statusi']) )
+        $_GET['where']['statusi']=null;
+    
     $order_status_value[] = array(__('Новый заказ'), 0, $_GET['where']['statusi']);
     if (is_array($status_array))
         foreach ($status_array as $status_val) {
@@ -83,6 +87,10 @@ function actionStart() {
     PHPShopObj::loadClass('user');
     $PHPShopUserStatus = new PHPShopUserStatusArray();
     $PHPShopUserStatusArray = $PHPShopUserStatus->getArray();
+    
+     if(empty($_GET['where']['b.status']) )
+        $_GET['where']['b.status']=null;
+    
     $user_status_value[] = array(__('Все пользователи'), '', $_GET['where']['b.status']);
     if (is_array($PHPShopUserStatusArray))
         foreach ($PHPShopUserStatusArray as $user_status)

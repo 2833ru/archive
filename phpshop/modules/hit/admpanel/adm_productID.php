@@ -4,15 +4,16 @@ function addOptionHit($data) {
     global $PHPShopGUI;
 
     // Опции вывода
-    $Tab10 = $PHPShopGUI->setCheckbox('hit_new', 1, 'Хит', $data['hit']);
+    $Tab10 = $PHPShopGUI->setCheckbox('hit_new', 1, 'Вывод товара в хитах', @$data['hit']);
 
     $PHPShopGUI->addTab(array("Хиты", $Tab10, true));
 }
 
 function updateOptionHit($data) {
-    if (empty($_POST['hit_new'])) {
-        $_POST['hit_new'] = 0;
-    }
+    if (empty($_POST['ajax']))
+        if (empty($_POST['hit_new'])) {
+            $_POST['hit_new'] = 0;
+        }
 }
 
 $addHandler = array(

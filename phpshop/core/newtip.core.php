@@ -125,7 +125,7 @@ class PHPShopNewtip extends PHPShopShopCore {
      * Генерация SQL запроса со сложными фильтрами и условиями
      * @return mixed
      */
-    function query_filter($where = false) {
+    function query_filter($where = false, $v = false) {
 
         // Перехват модуля
         $hook = $this->setHook(__CLASS__, __FUNCTION__, $where);

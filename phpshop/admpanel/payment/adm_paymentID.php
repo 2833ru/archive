@@ -20,7 +20,7 @@ function actionStart() {
     $PHPShopGUI->addJSFiles('./js/bootstrap-colorpicker.min.js');
 
     // Размер названия поля
-    $PHPShopGUI->field_col = 2;
+    $PHPShopGUI->field_col = 3;
     $PHPShopGUI->setActionPanel($data['name'], array('Создать', '|', 'Удалить'), array('Сохранить', 'Сохранить и закрыть'), false);
 
     // Редактор 1
@@ -41,26 +41,24 @@ function actionStart() {
 
     // Содержание 
     $Tab1 = $PHPShopGUI->setCollapse('Информация', $PHPShopGUI->setField("Наименование", $PHPShopGUI->setInput("text", "name_new", $data['name'])) .
-            $PHPShopGUI->setField("Вывод", $PHPShopGUI->setRadio("enabled_new", 1, "Показывать", $data['enabled']) . $PHPShopGUI->setRadio("enabled_new", 0, "Скрыть", $data['enabled'])) .
+            $PHPShopGUI->setField("Статус", $PHPShopGUI->setCheckbox("enabled_new", 1, null, $data['enabled'])) .
             $PHPShopGUI->setField("Приоритет", $PHPShopGUI->setInputText(null, "num_new", $data['num'], '100')) .
             $PHPShopGUI->setField("Юридические данные", $PHPShopGUI->setCheckbox("yur_data_flag_new", 1, "Обязательно заполнять", $data['yur_data_flag'])) .
             $PHPShopGUI->setField("Тип подключения", $PHPShopGUI->setSelect("path_new", $PHPShopGUI->loadLib('GetTipPayment', $data['path']), 350)).
-            $PHPShopGUI->setField("Юридическое лицо", $PHPShopGUI->setSelect('company_new', $company_value,350))
+            $PHPShopGUI->setField("Юридическое лицо", $PHPShopGUI->setSelect('company_new', $company_value,350)).
+            $PHPShopGUI->setField("Витрины", $PHPShopGUI->loadLib('tab_multibase', $data, 'catalog/'))
     );
 
-    $Tab1.=$PHPShopGUI->setField("Иконка", $PHPShopGUI->setIcon($data['icon'], "icon_new", false));
-    
-    $Tab1.=$PHPShopGUI->setField('Цвет', $PHPShopGUI->setInputColor('color_new', $data['color']));
+    $Tab1.=$PHPShopGUI->setCollapse('Внешний вид',$PHPShopGUI->setField("Иконка", $PHPShopGUI->setIcon($data['icon'], "icon_new", false)).
+    $PHPShopGUI->setField('Цвет', $PHPShopGUI->setInputColor('color_new', $data['color'])));
 
-    $Tab1.=$PHPShopGUI->setCollapse('Сообщение после заказа', $PHPShopGUI->setField("Заголовок:", $PHPShopGUI->setInput("text", "message_header_new", $data['message_header'])) . $PHPShopGUI->setField("Сообщение", $oFCKeditor->AddGUI()));
+    $Tab1.=$PHPShopGUI->setCollapse('Сообщение после заказа', $PHPShopGUI->setField("Заголовок:", $PHPShopGUI->setInput("text", "message_header_new", $data['message_header'])) . '<div>'.$oFCKeditor->AddGUI().'</div>');
     
-    $Tab2=$PHPShopGUI->setField("Витрины", $PHPShopGUI->loadLib('tab_multibase', $data, 'catalog/'));
-
     // Запрос модуля на закладку
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $data);
 
     // Вывод формы закладки
-    $PHPShopGUI->setTab(array("Основное", $Tab1), array("Дополнительно", $Tab2, true));
+    $PHPShopGUI->setTab(array("Основное", $Tab1, true, false, true));
 
     // Вывод кнопок сохранить и выход в футер
     $ContentFooter =
@@ -135,7 +133,7 @@ function actionUpdate() {
     $_POST['icon_new'] = iconAdd();
 
     // Корректировка пустых значений
-    $PHPShopOrm->updateZeroVars('yur_data_flag_new');
+    $PHPShopOrm->updateZeroVars('yur_data_flag_new','enabled_new');
     
         // Мультибаза
     if (is_array($_POST['servers'])) {

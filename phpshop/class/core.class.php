@@ -198,7 +198,8 @@ class PHPShopCore {
             $arrayPath = array_reverse($this->navigation_array);
 
         $currentIndex = 2;
-        if (is_array($arrayPath)) {
+        $i=0;
+        if (!empty($arrayPath) and is_array($arrayPath)) {
             foreach ($arrayPath as $v) {
                 // назначаем thisCat, чтобы в метках сохранить ИД дерева октрытых категорий в разделе shop.
                 if ($this->PHPShopNav->getPath() == "shop")
@@ -226,7 +227,7 @@ class PHPShopCore {
             $dis = ParseTemplateReturn($elementTemplate, true, $this->template_debug);
         }
 
-        $this->set('breadcrumbElemTitle', PHPShopText::b($name));
+        $this->set('breadcrumbElemTitle', $name);
 
         $dis = $home . $dis . '' . ParseTemplateReturn($lastElemTemplate, true, $this->template_debug);
 
@@ -258,7 +259,7 @@ class PHPShopCore {
         }
 
         // HSTS
-        if(!$this->PHPShopSystem instanceof PHPShopSystem) {
+        if(empty($this->PHPShopSystem) or !$this->PHPShopSystem instanceof PHPShopSystem) {
             $this->PHPShopSystem = new PHPShopSystem();
         }
         if ($this->PHPShopSystem->ifSerilizeParam('admoption.hsts', 1))
@@ -272,7 +273,7 @@ class PHPShopCore {
      */
     function meta() {
 
-        if ($this->PHPShopSystem) {
+        if (!empty($this->PHPShopSystem)) {
 
             if (!empty($this->title))
                 $this->set('pageTitl', strip_tags($this->title));
@@ -625,7 +626,7 @@ class PHPShopCore {
 
         foreach ($name_array as $name) {
 
-            if ($flag)
+            if ($flag and !empty($this->SysValue['other'][$name]))
                 $this->SysValue['other'][$name] .= $value;
             else
                 $this->SysValue['other'][$name] = $value;
@@ -638,6 +639,7 @@ class PHPShopCore {
      * @return string
      */
     function get($name) {
+        if(isset($this->SysValue['other'][$name]))
         return $this->SysValue['other'][$name];
     }
 
@@ -760,7 +762,7 @@ class PHPShopCore {
                                 else
                                     call_user_func(array(&$this, $this->action_prefix . 'index'));
                             }
-                            elseif ($this->PHPShopNav)
+                            elseif (!empty($this->PHPShopNav))
                                 $this->setError($this->action_prefix . "phpshop" . $this->PHPShopNav->getPath() . "->index", "метод не существует");
                         }
 
@@ -800,7 +802,7 @@ class PHPShopCore {
             return true;
 
         // Титл
-        $this->title = "Ошибка 404  - " . $this->PHPShopSystem->getValue("name");
+        $this->title = __("Ошибка")." 404  - " . $this->PHPShopSystem->getValue("name");
 
         // Заголовок ошибки
         @header("HTTP/1.0 404 Not Found");
@@ -902,7 +904,7 @@ class PHPShopCore {
      * @return bool
      */
     function setHook($class_name, $function_name, $data = false, $rout = false) {
-        if ($this->PHPShopModules)
+        if (!empty($this->PHPShopModules))
             return $this->PHPShopModules->setHookHandler($class_name, $function_name, array(&$this), $data, $rout);
         else
             return false;

@@ -1,5 +1,3 @@
-var AJAX_SCROLL_HIDE_PAGINATOR = true;
-
 // добавление товара в корзину
 function addToCartList(product_id, num, parent, addname) {
 
@@ -194,10 +192,11 @@ function filter_load(filter_str, obj) {
         type: "POST",
         url: '?' + filter_str.split('#').join(''),
         data: {
-            ajax: true
+            ajax: true,
+            json: true
         },
         success: function (data) {
-            $(".template-product-list").html(data);
+            $(".template-product-list").html(data['products']);
             $('#price-filter-val-max').removeClass('has-error');
             $('#price-filter-val-min').removeClass('has-error');
 
@@ -213,6 +212,8 @@ function filter_load(filter_str, obj) {
             setTimeout(function () {
                 $(window).lazyLoadXT();
             }, 50);
+
+            $("#pagination-block").html(data['pagination']);
 
             // —брос Waypoint
             Waypoint.refreshAll();
@@ -266,8 +267,6 @@ function faset_filter_click(obj) {
             }
         }
 
-        $(".pagination").hide();
-
         if ($(obj).prop('checked')) {
             window.location.hash += $(obj).attr('data-url') + '&';
 
@@ -277,17 +276,15 @@ function faset_filter_click(obj) {
 
         filter_load(window.location.hash.split(']').join('][]'), obj);
     } else {
-
         var href = window.location.href.split('?')[1];
 
         if (href == undefined)
             href = '';
 
-
+        var last = href.substring((href.length - 1), href.length);
+        if (last != '&' && last != '')
+            href += '&';
         if ($(obj).prop('checked')) {
-            var last = href.substring((href.length - 1), href.length);
-            if (last != '&' && last != '')
-                href += '&';
 
             href += $(obj).attr('data-url').split(']').join('][]') + '&';
 
@@ -295,7 +292,7 @@ function faset_filter_click(obj) {
             href = href.split($(obj).attr('data-url').split(']').join('][]') + '&').join('');
         }
 
-        window.location.href = '?' + href;
+        window.location.href = catalogFirstPage + '?' + href;
     }
 }
 

@@ -6,9 +6,11 @@
                 @hitIcon@
                 @promotionsIcon@
             </span>
-        <a href="/shop/UID_@productUid@.html" title="@productName@"><img data-src="@productImg@" alt="@productName@"></a>
+        <a href="/shop/UID_@productUid@.html" title="@productNameClean@">
+            <img data-src="@productImg@" alt="@productNameClean@">
+        </a>
         <div class="caption description">
-            <h4><a href="/shop/UID_@productUid@.html" title="@productName@">@productName@</a></h4>
+            <h4><a href="/shop/UID_@productUid@.html" title="@productNameClean@">@productName@</a></h4>
             @productDes@
         </div>
         @previewSorts@

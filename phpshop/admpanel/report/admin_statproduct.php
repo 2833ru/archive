@@ -10,10 +10,10 @@ function treegenerator($array, $i, $curent) {
     $tree_select = $check = false;
 
     $del = str_repeat($del, $i);
-    if (is_array($array['sub'])) {
+    if (!empty($array['sub']) and is_array($array['sub'])) {
         foreach ($array['sub'] as $k => $v) {
 
-            $check = treegenerator($tree_array[$k], $i + 1, $curent);
+            $check = treegenerator(@$tree_array[$k], $i + 1, $curent);
 
             if (is_array($_GET['cat']) and in_array($k, $_GET['cat']))
                 $selected = 'selected';
@@ -91,10 +91,13 @@ function actionStart() {
     $GLOBALS['tree_array'] = &$tree_array;
 
     $tree_select = '<select class="selectpicker show-menu-arrow hidden-edit" data-live-search="true" data-container="body"  data-style="btn btn-default btn-sm" name="cat[]" data-width="100%" multiple>';
+    
+    if(empty($_GET['cat']))
+        $_GET['cat']=null;
 
     if (is_array($tree_array[0]['sub']))
         foreach ($tree_array[0]['sub'] as $k => $v) {
-            $check = treegenerator($tree_array[$k], 1, $_GET['cat']);
+            $check = treegenerator(@$tree_array[$k], 1, $_GET['cat']);
 
             if (is_array($_GET['cat']) and in_array($k, $_GET['cat']))
                 $selected = 'selected';
@@ -174,7 +177,7 @@ function actionStart() {
 
     $catCount = array();
 
-    if (is_array($productIds)) {
+    if (!empty($productIds) and is_array($productIds)) {
         $PHPShopProductArray = new PHPShopProductArray(array('id' => ' IN(' . implode(',', $productIds) . ')'));
         $data = $PHPShopProductArray->getArray();
 
@@ -236,11 +239,11 @@ function actionStart() {
 
     // Дата
     $PHPShopInterface->field_col = 1;
-    $searchforma .= $PHPShopInterface->setInputDate("date_start", $date_start, 'margin-bottom:10px', null, 'Дата начала отбора');
+    $searchforma = $PHPShopInterface->setInputDate("date_start", $date_start, 'margin-bottom:10px', null, 'Дата начала отбора');
     $searchforma .= $PHPShopInterface->setInputDate("date_end", $date_end, false, null, 'Дата конца отбора');
     $searchforma .= $tree_select;
     $searchforma .= $PHPShopInterface->setInputArg(array('type' => 'text', 'name' => 'where[name]', 'placeholder' => 'Товар', 'value' => $_GET['where']['name']));
-    $searchforma .= '<p>' . $PHPShopInterface->setInputArg(array('type' => 'text', 'caption' => '%', 'name' => 'where[margin]', 'placeholder' => 'Наценка', 'value' => $_GET['where']['margin'])) . '</p>';
+    $searchforma .= '<p>' . $PHPShopInterface->setInputArg(array('type' => 'text', 'caption' => '%', 'name' => 'where[margin]', 'placeholder' => 'Наценка', 'value' => @$_GET['where']['margin'])) . '</p>';
     $searchforma .= $PHPShopInterface->setInputArg(array('type' => 'hidden', 'name' => 'path', 'value' => $_GET['path']));
     $searchforma .= $PHPShopInterface->setButton('Показать', 'search', 'btn-order-search pull-right');
 

@@ -363,7 +363,7 @@
     overflow-y: auto;
     width: 100%;
     float: right;
-   
+
 }
 .chat_converse2{
     height: 100%;
@@ -476,11 +476,11 @@
 }
 
 .message_form input[type=checkbox]{
-   width: auto;
+    width: auto;
 }
 
 .message_form .dialog-reg-rule{
-   font-size: 9px;
+    font-size: 9px;
 }
 
 
@@ -803,7 +803,10 @@ strong.chat_time {
 
 @media (max-width:767px){
     #prime, .chat{
-        bottom: 58px !important;
+        bottom: 10px !important;
+    }
+    .fabs {
+        bottom: 50px;
     }
 }
 
@@ -815,7 +818,7 @@ strong.chat_time {
 * UItoTop
 */
 #toTop {
-  right: 100% !important;
-  left: 1.25rem;
-  border-radius: 50%;
+    right: 100% !important;
+    left: 1.25rem;
+    border-radius: 50%;
 }

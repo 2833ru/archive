@@ -23,8 +23,10 @@ function actionStart() {
         $PHPShopInterface->mobile = true;
     }
 
-    if (empty($_GET['search']))
+    if (empty($_GET['search'])){
         $class = 'none';
+        $_GET['search']=null;
+    }
     else
         $class = null;
 
@@ -65,7 +67,7 @@ function actionStart() {
 function actionGetNew() {
     global $PHPShopBase;
     header("Content-Type: application/json");
-    exit(json_encode(array('success' => 1, 'num' => $PHPShopBase->getNumRows('dialog', "where isview='0' and staffid='1' group by chat_id"))));
+    exit(json_encode(array('success' => 1, 'num' => $PHPShopBase->getNumRows('dialog', "where isview='0'"))));
 }
 
 // Обработка событий

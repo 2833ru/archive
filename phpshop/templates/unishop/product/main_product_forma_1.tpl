@@ -9,12 +9,14 @@
 			@hitIcon@
 			@promotionsIcon@
                 </div>
-                <a class="product-block-img-link" href="/shop/UID_@productUid@.html" title="@productName@"><img data-src="@productImg@" alt="@productName@" class="owl-lazy"></a>
+                <a class="product-block-img-link" href="/shop/UID_@productUid@.html" title="@productNameClean@">
+                    <img data-src="@productImg@" alt="@productNameClean@" class="owl-lazy">
+                </a>
             </div>
         </div>
         <div class="product-block-bottom">
             <h3 class="product-block-name product-name-fix">
-                <a href="/shop/UID_@productUid@.html" title="@productName@">@productName@</a>
+                <a href="/shop/UID_@productUid@.html" title="@productNameClean@">@productName@</a>
             </h3>
             <h4 class="product-block-price">
                 <span class="price-old">@productPriceOld@</span>

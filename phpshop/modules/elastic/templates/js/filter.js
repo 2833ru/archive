@@ -79,7 +79,7 @@ var ElasticaFilter = function () {
                                 $(label).find('.elastic-count').html(data['counts'][name[1]]);
                             }
                         } else {
-                            if(current === false || current.attr('data-name')[0] !== name[0]) {
+                            if(current === false || current.attr('data-name').split('-')[0] !== name[0]) {
                                 if(self.disableValues) {
                                     $(label).addClass('elastic-disabled');
                                     $(element).attr('disabled', true);

@@ -119,9 +119,11 @@ function actionSave() {
 // Функция обновления
 function actionUpdate() {
     global $PHPShopOrm, $PHPShopModules;
-    
-    $_POST['name_value'] = html_entity_decode($_POST['name_value']);
-    
+
+    if(!empty($_POST['name_value'])) {
+        $_POST['name_value'] = html_entity_decode($_POST['name_value']);
+    }
+
     // Перехват модуля
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $_POST);
     $PHPShopOrm->debug = false;

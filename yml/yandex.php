@@ -3,7 +3,7 @@
 /**
  * Файл выгрузки для Яндекс Маркет
  * @author PHPShop Software
- * @version 3.2
+ * @version 3.4
  * @package PHPShopXML
  * @example ?marketplace=retailcrm [bool] Выгрузка для RetailCRM
  * @example ?marketplace=cdek [bool] Выгрузка для СДЭК (упрощенный тип YML с использованием count)
@@ -16,6 +16,7 @@
  * @example ?utf [bool] Вывод в кодировке UTF-8
  * @example ?price [int] Колонка цен (2/3/4/5)
  * @example ?available [bool] Выводить только в наличии
+ * @example ?image_source [bool]  Показывать исходные изображения _big
  */
 $_classPath = "../phpshop/";
 include($_classPath . "class/obj.class.php");
@@ -135,7 +136,9 @@ class PHPShopYml {
             $this->ssl = 'https://';
 
         // Исходное изображение
-        $this->image_source = $this->PHPShopSystem->ifSerilizeParam('admoption.image_save_source');
+        if(isset($_GET['image_source']) and $this->PHPShopSystem->ifSerilizeParam('admoption.image_save_source'))
+            $this->image_source = true;
+        else $this->image_source = false;
 
         // Колонка цен
         $this->price = $this->PHPShopSystem->getPriceColumn();
@@ -463,7 +466,7 @@ class PHPShopYml {
                 }
             }
 
-            $Products[$id] = $array;
+            $Products[] = $array;
         }
         return $Products;
     }
@@ -559,6 +562,10 @@ class PHPShopYml {
             "barcode" => $row['barcode'],
             "model" => $row['model'],
             "market_sku" => $row['market_sku'],
+            "price_yandex_dbs" => round($row['price_yandex_dbs'], (int) $this->format),
+            "price_sbermarket" => round($row['price_sbermarket'], (int) $this->format),
+            "price_cdek" => round($row['price_cdek'], (int) $this->format),
+            "price_aliexpress" => round($row['price_aliexpress'], (int) $this->format),
         );
 
         $Products[$id] = $array;
@@ -752,15 +759,15 @@ function setProducts() {
             $xml .= '<oldprice>' . $val['price_n'] . '</oldprice>';
 
         // weight
-        if (!empty($data['val']['weight']))
-            $add.='<weight>' . round($data['val']['weight'] / 1000, 3) . '</weight>';
+        if (!empty($val['weight']))
+            $xml.='<weight>' . round($val['weight'] / 1000, 3) . '</weight>';
 
         // Габариты
-        if (!empty($data['val']['length']) && !empty($data['val']['width']) && !empty($data['val']['height']))
-            $add.='<dimensions>' . sprintf('%s/%s/%s',
-                    number_format($data['val']['length'], 2, '.', ''),
-                    number_format($data['val']['width'], 2, '.', ''),
-                    number_format($data['val']['height'], 2, '.', '')
+        if (!empty($val['length']) && !empty($val['width']) && !empty($val['height']))
+            $xml.='<dimensions>' . sprintf('%s/%s/%s',
+                    number_format($val['length'], 2, '.', ''),
+                    number_format($val['width'], 2, '.', ''),
+                    number_format($val['height'], 2, '.', '')
                 ) . '</dimensions>';
 
         $xml .= '<currencyId>' . $this->defvalutaiso . '</currencyId>

@@ -11,12 +11,12 @@ function treegenerator($array, $i, $parent) {
     $del = '&brvbar;&nbsp;&nbsp;&nbsp;&nbsp;';
     $tree = $tree_select = $check = false;
     $del = str_repeat($del, $i);
-    if (is_array($array['sub'])) {
+    if (!empty($array['sub']) and is_array($array['sub'])) {
         foreach ($array['sub'] as $k => $v) {
 
-            $check = treegenerator($tree_array[$k], $i + 1, $k);
+            $check = treegenerator(@$tree_array[$k], $i + 1, $k);
 
-            if ($k == $_GET['cat'])
+            if (!empty($_GET['cat']) and $k == $_GET['cat'])
                 $selected = 'selected';
             else
                 $selected = null;
@@ -53,6 +53,7 @@ function actionStart() {
     // Начальные данные
     $data = array();
     $data['num'] = 1;
+    $data = $PHPShopGUI->valid($data,'name','servers','menu','icon','title','description','keywords','content','parent_to');
 
     $PHPShopGUI->setActionPanel($TitlePage, false, array('Создать и редактировать', 'Сохранить и закрыть'));
 
@@ -72,9 +73,9 @@ function actionStart() {
             foreach ($v as $cat) {
                 $tree_array[$k]['sub'][$cat] = $CategoryArray[$cat]['name'];
             }
-            $tree_array[$k]['name'] = $CategoryArray[$k]['name'];
+            $tree_array[$k]['name'] = @$CategoryArray[$k]['name'];
             $tree_array[$k]['id'] = $k;
-            if ($k == $data['parent_to'])
+            if (!empty($data['parent_to']) and $k == $data['parent_to'])
                 $tree_array[$k]['selected'] = true;
         }
 
@@ -82,12 +83,12 @@ function actionStart() {
     $_GET['parent_to'] = $data['parent_to'];
 
     $tree_select = '<select class="selectpicker show-menu-arrow hidden-edit" data-container=""  data-style="btn btn-default btn-sm" name="parent_to_new" data-width="100%"><option value="0">' . $CategoryArray[0]['name'] . '</option>';
-    $tree = '<table class="tree table table-hover">';
+    $tree = '<table class="table table-hover">';
     if ($k == $data['parent_to'])
         $selected = 'selected';
     if (is_array($tree_array[0]['sub']))
         foreach ($tree_array[0]['sub'] as $k => $v) {
-            $check = treegenerator($tree_array[$k], 1, $k);
+            $check = treegenerator(@$tree_array[$k], 1, $k);
 
             $tree.='<tr class="treegrid-' . $k . ' data-tree">
 		<td><a href="?path=page.catalog&id=' . $k . '">' . $v . '</a></td>
@@ -110,7 +111,7 @@ function actionStart() {
     </script>';
 
     // Выбор каталога
-    $Tab_info.= $PHPShopGUI->setField("Размещение", $tree_select);
+    //$Tab_info.= $PHPShopGUI->setField("Размещение", $tree_select);
 
     $Tab_info.=$PHPShopGUI->setField("Приоритет", $PHPShopGUI->setInputText(false, 'num_new', $data['num'], '100'));
     
@@ -120,7 +121,7 @@ function actionStart() {
     $Tab1 = $PHPShopGUI->setCollapse('Информация', $Tab_info);
     
         // Иконка
-    $Tab_icon .= $PHPShopGUI->setField("Изображение", $PHPShopGUI->setIcon($data['icon'], "icon_new", false));
+    $Tab_icon = $PHPShopGUI->setField("Изображение", $PHPShopGUI->setIcon($data['icon'], "icon_new", false));
     $Tab1 .= $PHPShopGUI->setCollapse('Иконка', $Tab_icon);
 
     // SEO
@@ -144,7 +145,7 @@ function actionStart() {
     $PHPShopGUI->setTab(array("Основное", $Tab1), array("Описание", $Tab2));
 
     // Левый сайдбар
-    $sidebarleft[] = array('title' => 'Категории', 'content' => $tree, 'title-icon' => '<span class="glyphicon glyphicon-plus addNewElement" data-toggle="tooltip" data-placement="top" title="' . __('Добавить каталог') . '"></span>&nbsp;<span class="glyphicon glyphicon-chevron-down" data-toggle="tooltip" data-placement="top" title="' . __('Развернуть') . '"></span>&nbsp;<span class="glyphicon glyphicon-chevron-up" data-toggle="tooltip" data-placement="top" title="'.__('Свернуть').'"></span>');
+    $sidebarleft[] = array('title' => 'Категории', 'content' => $tree, 'title-icon' => '<span class="glyphicon glyphicon-plus addNewElement" data-toggle="tooltip" data-placement="top" title="' . __('Добавить каталог') . '"></span>');
     $PHPShopGUI->setSidebarLeft($sidebarleft, 3);
     $PHPShopGUI->sidebarLeftCell = 3;
 

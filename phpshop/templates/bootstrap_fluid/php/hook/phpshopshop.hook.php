@@ -9,6 +9,15 @@ function template_CID_Product($obj, $data, $rout) {
         // Виртуальные каталоги
         $obj->cat_template = 'sortсattemplatehook';
 
+        if (empty($_GET['gridChange']))
+            $_GET['gridChange'] = null;
+
+        if (empty($_GET['s']))
+            $_GET['s'] = null;
+
+        if (empty($_GET['f']))
+            $_GET['f'] = null;
+
         switch ($_GET['gridChange']) {
             case 1:
                 $obj->set('gridSetAactive', 'active');
@@ -47,7 +56,7 @@ function template_CID_Product($obj, $data, $rout) {
 }
 
 /**
- * Вывод подтипов в подробном описании 
+ * Вывод подтипов в подробном описании
  */
 function template_parent($obj, $dataArray, $rout) {
 
@@ -122,7 +131,7 @@ function template_parent($obj, $dataArray, $rout) {
                     $obj->set('parentId', $val['id']);
                     $obj->set('parentPrice', $val['price']);
                     $obj->set('parentImage', $size_color_array[$val['id']]['image']);
-                    
+
                     // Склад
                     if ($obj->PHPShopSystem->getSerilizeParam('admoption.sklad_enabled') == 1)
                         $obj->set('parentItems', $obj->lang('product_on_sklad') . " " . $val['items'] . " " . $val['ed_izm']);
@@ -355,7 +364,7 @@ function template_image_gallery($obj, $array) {
             $bxpager = null;
 
 
-        $obj->set('productFotoList', '<img itemprop="image" content="http://' . $_SERVER['SERVER_NAME'] . $array['pic_big'] . '" class="bxslider-pre" alt="' . $array['name'] . '" title="' . $array['name'] . '" src="' . $array['name_s'] . '" /><div class="bxslider hide">' . $bxslider . '</div><div class="bx-pager">' . $bxpager . '</div>');
+        $obj->set('productFotoList', '<img itemprop="image" content="http://' . $_SERVER['SERVER_NAME'] . $array['pic_big'] . '" class="bxslider-pre" alt="' . $array['name'] . '" title="' . $array['name'] . '" src="' . @$array['name_s'] . '" /><div class="bxslider hide">' . $bxslider . '</div><div class="bx-pager">' . $bxpager . '</div>');
         $obj->set('productFotoListBig', '<ul class="bxsliderbig" data-content="' . $bxsliderbig . '" data-page="' . $bxpager . '"></ul><div class="bx-pager-big">' . $bxpager . '</div>');
         return true;
     }

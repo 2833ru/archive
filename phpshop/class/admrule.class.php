@@ -59,9 +59,13 @@ class PHPShopAdminRule {
         $session_id = session_id();
         if (!$session_id)
             session_start();
+        
+        if(!empty($_SESSION['idPHPSHOP']))
+           $idPHPSHOP = $_SESSION['idPHPSHOP'];
+        else $idPHPSHOP=null;
 
         $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['users']);
-        $data = $PHPShopOrm->select(array('*'), array('enabled' => "='1'", 'id' => "='" . intval($_SESSION['idPHPSHOP']) . "'"), false, array('limit' => 1));
+        $data = $PHPShopOrm->select(array('*'), array('enabled' => "='1'", 'id' => "='" . intval($idPHPSHOP) . "'"), false, array('limit' => 1));
 
         if (is_array($data)) {
             $hasher = new PasswordHash(8, false);

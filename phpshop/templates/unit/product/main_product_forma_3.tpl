@@ -11,9 +11,9 @@
          <a class=" addToWishList @elementCartOptionHide@" href="/shop/UID_@productUid@.html"><span class="icons icons-green icons-small icons-wishlist"></span></a>
          <button class=" addToWishList @elementCartHide@" data-uid="@productUid@"><span class="icons icons-green icons-small icons-wishlist"></span></button></div>
         <div class="caption ">
-        <a href="/shop/UID_@productUid@.html" title="@productName@">
+        <a href="/shop/UID_@productUid@.html" title="@productNameClean@">
             <div class="product-image position-relative">
-                <img data-src="@productImg@" alt="@productName@" class="swiper-lazy" src="@productImg@">
+                <img data-src="@productImg@" alt="@productNameClean@" class="swiper-lazy" src="@productImg@">
             </div>
 
             <div class="product-name">@productName@</div>

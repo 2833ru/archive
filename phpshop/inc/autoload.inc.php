@@ -70,10 +70,6 @@ if ($PHPShopNav->notPath(array('order', 'done')))
     $PHPShopPageCatalogElement->init('pageCatal');
 $PHPShopPageCatalogElement->init('getLastPages');
 
-// Опрос
-$PHPShopOprosElement = new PHPShopOprosElement();
-$PHPShopOprosElement->init('oprosDisp');
-
 // Мини-новости
 $PHPShopNewsElement = new PHPShopNewsElement();
 $PHPShopNewsElement->init('miniNews');
@@ -85,12 +81,11 @@ $PHPShopGbookElement->init('miniGbook');
 // Слайдер
 $PHPShopSliderElement = new PHPShopSliderElement();
 $PHPShopSliderElement->init('imageSlider');
-$PHPShopSliderElement = new PHPShopSliderElement();
-$PHPShopSliderElement->init('imageSliderMobile');
 
-// Баннер
+// Баннеры
 $PHPShopBannerElement = new PHPShopBannerElement();
 $PHPShopBannerElement->init('banersDisp');
+$PHPShopBannerElement->init('banersDispHorizontal');
 
 // Аналитика
 $PHPShopAnalitica = new PHPShopAnalitica();
@@ -123,14 +118,6 @@ PHPShopParser::set('pricemail_captcha', $PHPShopRecaptchaElement->captcha('price
 PHPShopParser::set('notice_captcha', $PHPShopRecaptchaElement->captcha('notice'));
 PHPShopParser::set('review_captcha', $PHPShopRecaptchaElement->captcha('review'));
 PHPShopParser::set('forma_captcha', $PHPShopRecaptchaElement->captcha('forma'));
-
-// Очистка скрытых элементов
-if(PHPShopString::is_mobile()){
-  unset($GLOBALS['SysValue']['other']['imageSlider']);
-  unset($GLOBALS['SysValue']['other']['banersDisp']);
-} else {
-    unset($GLOBALS['SysValue']['other']['imageSliderMobile']);
-}
 
 // Диалоги
 $PHPShopDialogElement = new PHPShopDialogElement();

@@ -46,6 +46,7 @@
         </div>
         <header>
             <div class="container ">
+
                 <div class="d-flex align-items-center justify-content-between">
                     <div class="logo">
                         <a href="/"><img src="@logo@" alt="@name@"></a>
@@ -174,31 +175,25 @@
             </div>
         </div>
         <!--/ Notification -->
-        <div class="container d-flex catalog-list flex-wrap main-catalog ">    @leftCatalTable@ </div>
-
-
-
-
+        
+        <div class="container d-flex catalog-list flex-wrap main-catalog ">    @leftCatalTable@
+        	<!-- Стикер-полоска -->
+	        <div class="top-banner @php __hide('sticker_close','cookie'); php@">
+				<div class="sticker-text">@sticker_top@</div>
+				<span class="close sticker-close"><i class="fal fa-times" aria-hidden="true"></i></span>
+			</div>
+			<!-- /Стикер-полоска -->
+	        
+	    </div>
+        
         <div class=" @php __hide('imageSlider'); php@ main-slider slider-desktop" >
 
             <div class="  main-slider">
                 <div class="container owl-nav-block position-relative">
                     <div class="row"></div></div>
                 @imageSlider@
-
             </div>
-
         </div>
-        <div class="slider  @php __hide('imageSliderMobile'); php@">
-            <div class="  main-slider">
-                <div class="container owl-nav-block position-relative">
-                    <div class="row"></div></div>
-                @imageSliderMobile@
-
-            </div>
-
-        </div>		
-
 
         <section class="specMain @php __hide('specMain'); php@">
 
@@ -311,8 +306,8 @@
                 </div>
             </div>
         </section>
-        <section class="specMain brands position-relative @php __hide('brandsList'); php@">
-            <div class="">
+        <section class=" brands position-relative @php __hide('brandsList'); php@">
+            <div class="container">
                 <div class="swiper-slider-wrapper">
                     <div class="position-absolute brand-wrapper">
                         <div class="container position-relative">
@@ -345,9 +340,9 @@
         </div>
         <!--/ toTop -->
         <div class="container">
-            <div class="visible-lg visible-md text-center banner">@sticker_banner@<br></div>
+            <div class="banner">@banersDispHorizontal@</div>
         </div>
-        <footer class="footer  ">
+        <footer class="footer">
             <div class="container">
                 <div class="col-md-3 col-sm-4 col-xs-12" itemscope itemtype="http://schema.org/Organization">
                     <div class="logo">

@@ -68,26 +68,26 @@ function actionStart() {
 
     // Выборка
     $data = $PHPShopOrm->select(array('*'), array('id' => '=' . intval($_GET['id'])));
-
-
-    $Tab1 = $PHPShopGUI->setField('Название:', $PHPShopGUI->setInputText(false, 'name_new', $data['name'], 300));
-    $Tab1.=$PHPShopGUI->setField('Маркер:', $PHPShopGUI->setInputText('@sticker_', 'path_new', $data['path'], 200, '@'));
-    $Tab1.=$PHPShopGUI->setField('Опции:', $PHPShopGUI->setCheckbox('enabled_new', 1, 'Вывод на сайте', $data['enabled']));
-    $Tab1.=$PHPShopGUI->setField('Привязка к страницам:', $PHPShopGUI->setInputText(false, 'dir_new', $data['dir']) . $PHPShopGUI->setHelp('Пример: /page/about.html,/page/company.html'));
-    $Tab1.=$PHPShopGUI->setField('Дизайн', GetSkinList($data['skin']));
-
-
-    $PHPShopGUI->setEditor($PHPShopSystem->getSerilizeParam("admoption.editor"), true);
+    $PHPShopGUI->field_col = 3;
+    
+    $PHPShopGUI->setEditor('ace', true);
     $oFCKeditor = new Editor('content_new', true);
     $oFCKeditor->Height = '320';
     $oFCKeditor->ToolbarSet = 'Normal';
     $oFCKeditor->Value = $data['content'];
 
-    $Tab2 = $oFCKeditor->AddGUI();
+    $Tab1 = $PHPShopGUI->setCollapse('Содержание', $oFCKeditor->AddGUI());
 
+    $Tab_info = $PHPShopGUI->setField('Название:', $PHPShopGUI->setInputText(false, 'name_new', $data['name'], '100%'));
+    $Tab_info.=$PHPShopGUI->setField('Маркер:', $PHPShopGUI->setInputText('@sticker_', 'path_new', $data['path'], '100%', '@'));
+    $Tab_info.=$PHPShopGUI->setField('Опции:', $PHPShopGUI->setCheckbox('enabled_new', 1, 'Вывод на сайте', $data['enabled']));
+    $Tab_info.=$PHPShopGUI->setField('Привязка к страницам:', $PHPShopGUI->setInputText(false, 'dir_new', $data['dir']) . $PHPShopGUI->setHelp('Пример: /page/about.html,/page/company.html'));
+    $Tab_info.=$PHPShopGUI->setField('Дизайн', GetSkinList($data['skin']));
+    
+    $Tab1 .= $PHPShopGUI->setCollapse('Информация', $Tab_info);
 
     // Вывод формы закладки
-    $PHPShopGUI->setTab(array("Основное", $Tab1, true), array("Содержание", $Tab2, true));
+    $PHPShopGUI->setTab(array("Основное", $Tab1,true,false,true));
 
     // Вывод кнопок сохранить и выход в футер
     $ContentFooter =

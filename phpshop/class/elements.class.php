@@ -127,6 +127,7 @@ class PHPShopElements {
      * @return string
      */
     function get($name) {
+        if(isset($this->SysValue['other'][$name]))
         return $this->SysValue['other'][$name];
     }
 
@@ -137,7 +138,7 @@ class PHPShopElements {
      */
     function getValue($param) {
         $param = explode(".", $param);
-        if (@!empty($this->SysValue[$param[0]][$param[1]]))
+        if (isset($this->SysValue[$param[0]][$param[1]]))
             return $this->SysValue[$param[0]][$param[1]];
     }
 
@@ -372,9 +373,10 @@ class PHPShopElements {
      * @param string $class_name имя класса
      */
     function setHtmlOption($class_name) {
-        $html = $GLOBALS['SysValue']['html'][strtolower($class_name)];
-
-        if (!empty($html)) {
+        
+        if (!empty($GLOBALS['SysValue']['html'][strtolower($class_name)])) {
+            
+            $html = $GLOBALS['SysValue']['html'][strtolower($class_name)];
 
             // Назначение сетки
             if (strstr($html, '-')) {

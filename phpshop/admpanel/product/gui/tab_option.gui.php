@@ -13,19 +13,19 @@ function tab_option($data) {
     $PHPShopInterface->action_title['value-delete'] = 'Удалить';
 
     PHPShopObj::loadClass("sort");
-    $PHPShopParentNameArray = new PHPShopParentNameArray(array('id' => '=' . $CategoryArray[$data['category']]['parent_title']));
-    $parent_title = $PHPShopParentNameArray->getParam($CategoryArray[$data['category']]['parent_title'] . ".name");
-    $parent_color = $PHPShopParentNameArray->getParam($CategoryArray[$data['category']]['parent_title'] . ".color");
+    $PHPShopParentNameArray = new PHPShopParentNameArray(array('id' => '=' . @$CategoryArray[$data['category']]['parent_title']));
+    $parent_title = $PHPShopParentNameArray->getParam(@$CategoryArray[$data['category']]['parent_title'] . ".name");
+    $parent_color = $PHPShopParentNameArray->getParam(@$CategoryArray[$data['category']]['parent_title'] . ".color");
 
     if (empty($parent_title))
-        $parent_title = __("Наименование подтипа или размер");
+        $parent_title = __("Размер");
 
     if (empty($parent_color))
         $parent_color = __("Цвет");
 
     $PHPShopInterface->dropdown_action_form = false;
     $PHPShopInterface->checkbox_action = false;
-    $PHPShopInterface->setCaption(array("Иконка", "5%", array('sort' => 'none')), array($parent_title . ' <a class="glyphicon glyphicon glyphicon-cog" href="?path=catalog&id=' . $data['category'] . '&tab=3" title="'.__('Изменить').'" style="cursor:pointer;"></a>', "35%",array('locale'=>false)), array($parent_color . ' <a class="glyphicon glyphicon glyphicon-cog" href="?path=catalog&id=' . $data['category'] . '&tab=3" title="'.__('Изменить').'" style="cursor:pointer;"></a>', "20%",array('locale'=>false)), array("Кол-во", "10%"), array("Цена", "15%"), array(null, "10%"), array("Вывод", "5%", array('align' => 'right')));
+    $PHPShopInterface->setCaption(array("Иконка", "5%", array('sort' => 'none')), array($parent_title . ' <a class="glyphicon glyphicon glyphicon-cog" href="?path=catalog&id=' . $data['category'] . '&tab=3" target="_blank" title="'.__('Изменить').'" style="cursor:pointer;"></a>', "35%",array('locale'=>false)), array($parent_color . ' <a class="glyphicon glyphicon glyphicon-cog" href="?path=catalog&id=' . $data['category'] . '&tab=3" title="'.__('Изменить').'" style="cursor:pointer;"></a>', "20%",array('locale'=>false)), array("Кол-во", "10%"), array("Цена", "15%"), array(null, "10%"), array("Вывод", "5%", array('align' => 'right')));
 
     // Таблица с данными
     $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['products']);
@@ -47,7 +47,7 @@ function tab_option($data) {
             $data_option = $PHPShopOrm->select(array('*'), array('id' => ' IN ("' . @implode('","', $parent_array_true) . '")', 'parent_enabled' => "='1'"), array('order' => 'num,name DESC'), array('limit' => 100));
     }
 
-    if (is_array($data_option))
+    if (!empty($data_option) and is_array($data_option))
         foreach ($data_option as $row) {
 
             // Иконка
@@ -62,7 +62,7 @@ function tab_option($data) {
 
             // Название
             if (empty($row['parent']) and empty($row['parent2']) and ! empty($row['name']))
-                $row['parent'] = $row['name'];
+                $row['parent'] = htmlentities($row['name'], ENT_COMPAT, $GLOBALS['PHPShopBase']->codBase);
 
             // Вывод
             if (empty($row['enabled']) or ! empty($row['sklad']))

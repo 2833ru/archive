@@ -198,11 +198,13 @@ function actionEnter() {
                 $PHPShopOrm->insert(array('user' => $_POST['log'], 'datas' => time(), 'flag' => 0, 'ip' => PHPShopSecurity::TotalClean($_SERVER['REMOTE_ADDR'])), '');
 
                 // Смена цветовой темы
-                $theme = PHPShopSecurity::TotalClean($_POST['theme']);
-                if (!file_exists('./css/bootstrap-theme-' . $theme . '.css'))
-                    $theme = 'default';
-                else
-                    $_SESSION['admin_theme'] = $theme;
+                if (!empty($_POST['theme'])) {
+                    $theme = PHPShopSecurity::TotalClean($_POST['theme']);
+                    if (!file_exists('./css/bootstrap-theme-' . $theme . '.css'))
+                        $theme = 'default';
+                    else
+                        $_SESSION['admin_theme'] = $theme;
+                }
 
                 header('Location: ./admin.php' . $return);
                 return true;
@@ -230,11 +232,10 @@ function actionStart() {
 
     if ($License['License']['Pro'] == 'Start')
         $_SESSION['mod_limit'] = 5;
-    elseif ($License['License']['Pro'] == 'Enabled'){
+    elseif ($License['License']['Pro'] == 'Enabled') {
         $_SESSION['mod_pro'] = true;
         $_SESSION['mod_limit'] = 100;
-    }
-    else
+    } else
         $_SESSION['mod_limit'] = 50;
 
     if (getenv("COMSPEC"))
@@ -295,6 +296,11 @@ $_REQUEST['actionList']['logout'] = 'actionLogout';
 // Обработка событий
 $PHPShopGUI->getAction();
 
+if (!empty($_GET['logout']))
+    $logout = $_GET['logout'];
+else
+    $logout = null;
+
 // Вывод формы при старте
-$PHPShopGUI->setLoader($_GET['logout'], 'actionStart');
+$PHPShopGUI->setLoader($logout, 'actionStart');
 ?>

@@ -27,7 +27,7 @@ function index_seourl_hook($obj, $row, $rout) {
             $result = $PHPShopOrm->select(array('id, name, page_cat_seo_name'), array('page_cat_seo_name' => "='" . PHPShopSecurity::TotalClean($seo_name[0]) . "'"));
 
             // Каталог
-            if ($result['id']) {
+            if (!empty($result['id'])) {
                 
                 // Навигация SEO
                 $obj->navigation_seourl_array[$result['id']]=$result['page_cat_seo_name'];
@@ -217,7 +217,7 @@ function navigation_seourl($obj, $name) {
     if (is_array($obj->navigation_array))
         $arrayPath = array_reverse($obj->navigation_array);
 
-    if (is_array($arrayPath)) {
+    if (!empty($arrayPath) and is_array($arrayPath)) {
         foreach ($arrayPath as $v) {
             $seo = $PHPShopSeoPageCategoryArray->getParam($v['id'].'.page_cat_seo_name');
             $obj->set('breadcrumbElemTitle', $v['name']);

@@ -14,6 +14,7 @@ function actionStart() {
     $data['name'] = __('Новый склад');
     $data['enabled'] = 1;
     $data['num'] = 1;
+    $data = $PHPShopGUI->valid($data, 'uid', 'description', 'servers');
 
     $Tab1 = $PHPShopGUI->setField("Название", $PHPShopGUI->setInputText(null, "name_new", $data['name']));
     $Tab1 .= $PHPShopGUI->setField("Внешний код", $PHPShopGUI->setInputText(null, "uid_new", $data['uid']), 2, 'Код склада в 1С');
@@ -23,12 +24,12 @@ function actionStart() {
 
     // Витрина
     $Tab1.=$PHPShopGUI->setField("Витрины", $PHPShopGUI->loadLib('tab_multibase', $data, 'catalog/'));
-
+    
     // Запрос модуля на закладку
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $data);
 
     // Вывод формы закладки
-    $PHPShopGUI->setTab(array("Основное", $Tab1, true));
+    $PHPShopGUI->setTab(array("Основное", $Tab1, true,false,true));
 
     // Вывод кнопок сохранить и выход в футер
     $ContentFooter = $PHPShopGUI->setInput("submit", "saveID", "ОК", "right", 70, "", "but", "actionInsert.servers.create");

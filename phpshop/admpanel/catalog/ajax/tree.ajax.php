@@ -55,7 +55,7 @@ if (is_array($tree_array[0]['sub']))
             'text' => PHPShopString::win_utf8($v)
         );
 
-        $nodes = treegenerator($tree_array[$k], 100);
+        $nodes = treegenerator(@$tree_array[$k], 100);
 
         if (is_array($nodes)) {
             $result[$i]['nodes'] = $nodes;
@@ -83,11 +83,13 @@ function treegenerator($array, $m) {
 
     if (empty($i))
         $i = $m;
+    
+    $result=null;
 
-    if (is_array($array['sub'])) {
+    if (!empty($array['sub']) and is_array($array['sub'])) {
         foreach ($array['sub'] as $k => $v) {
 
-            $nodes = treegenerator($tree_array[$k], $i);
+            $nodes = treegenerator(@$tree_array[$k], $i);
 
             $result[$i] = array(
                 'text' => PHPShopString::win_utf8($v) . '<span class="hide">' . $k . '</span>'
@@ -143,6 +145,10 @@ if (!empty($addNodes)) {
         )
     );
 }
+
+if(empty($_GET['sub']))
+    $_GET['sub']=null;
+
 
 if (in_array($_GET['cat'], array(1000001, 1000002, 1000004)) or $_GET['sub'] == 'csv') {
     if ($_GET['sub'] == 'csv')

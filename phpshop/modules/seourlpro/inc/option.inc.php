@@ -4,12 +4,12 @@ if (!defined("OBJENABLED"))
     exit(header('Location: /?error=OBJENABLED'));
 
 // Заглушка на 404 ошибку при пустом пути для SEO Pro
-if(!isset($PHPShopNav) && is_null($PHPShopNav)) {
+if (empty($PHPShopNav)) {
     PHPShopObj::loadClass('nav');
     $PHPShopNav = new PHPShopNav();
 }
 
-if ($PHPShopNav->notPath(array('page')) and !strpos($PHPShopNav->getName(true), '/', 1))
+if ($PHPShopNav->notPath(array('page')) and ! strpos($PHPShopNav->getName(true), '/', 1))
     $SysValue['nav']['path'] = 'index';
 
 class PHPShopCategorySeoProArray extends PHPShopArray {
@@ -55,8 +55,12 @@ class PHPShopSeoPro {
 
     function __construct() {
 
-        $this->memory = $GLOBALS['modules']['seourlpro']['map'];
-        $this->memory_prod = $GLOBALS['modules']['seourlpro']['map_prod'];
+        if (!empty($GLOBALS['modules']['seourlpro']['map']))
+            $this->memory = $GLOBALS['modules']['seourlpro']['map'];
+
+        if (!empty($GLOBALS['modules']['seourlpro']['map_prod']))
+            $this->memory_prod = $GLOBALS['modules']['seourlpro']['map_prod'];
+
         $url = explode("?", $_SERVER["REQUEST_URI"]);
         $this->url = pathinfo($url[0]);
     }
@@ -96,7 +100,9 @@ class PHPShopSeoPro {
     function getCID() {
         $getNav = $this->getNav();
         $array_true = array_flip($this->memory);
-        return str_replace($this->cat_pre, '', $array_true[$getNav['file']]);
+
+        if (!empty($array_true[$getNav['file']]))
+            return str_replace($this->cat_pre, '', $array_true[$getNav['file']]);
     }
 
     /**
@@ -112,7 +118,7 @@ class PHPShopSeoPro {
         $getNav = $this->getNav();
         $file = $getNav['file'];
         $page = $getNav['page'];
-        //$name = $getNav['name'];
+        $true_id = null;
 
         if ($page == 'ALL')
             $GLOBALS['PHPShopNav']->objNav['page'] = $page;
@@ -124,7 +130,9 @@ class PHPShopSeoPro {
 
             $array_true = array_flip($this->memory);
             $GLOBALS['PHPShopNav']->objNav['name'] = 'CID';
-            $true_id = str_replace($this->cat_pre, '', $array_true[$file]);
+
+            if (!empty($array_true[$file]))
+                $true_id = str_replace($this->cat_pre, '', $array_true[$file]);
         } elseif ($mode == 2) {
 
             //$array_true = array_flip($this->memory_prod);
@@ -143,8 +151,7 @@ class PHPShopSeoPro {
 
             if (strstr($name, '/')) {
                 $this->memory['./CID_' . $id . '_1'] = '/' . $this->setLatin($name . '-1', $latin);
-            }
-            else
+            } else
                 $this->memory['CID_' . $id . '_1'] = $this->setLatin($name . '-1', $latin);
 
             //$this->memory['CID_' . $key . '_1'] = $this->setLatin($val['name'] . '-1');
@@ -259,9 +266,8 @@ class PHPShopSeoPro {
         echo $result;
     }
 
-    public function getSettings()
-    {
-        if(is_array($this->settings)) {
+    public function getSettings() {
+        if (is_array($this->settings)) {
             return $this->settings;
         }
 
@@ -272,8 +278,10 @@ class PHPShopSeoPro {
 
         return $this->settings;
     }
+
 }
-if(is_null($GLOBALS['PHPShopSeoPro'])) {
+
+if (empty($GLOBALS['PHPShopSeoPro'])) {
     $GLOBALS['PHPShopSeoPro'] = new PHPShopSeoPro();
 }
 ?>

@@ -167,11 +167,13 @@ function actionStart() {
     unset($baseArray['phpshop_users']);
     unset($baseArray['phpshop_valuta']);
     unset($baseArray['phpshop_modules_key']);
+    unset($baseArray['phpshop_payment_systems']);
 
 
     $TRUNCATE = null;
 
     foreach ($baseArray as $val) {
+        if(!strstr($val,'_modules')) 
         $TRUNCATE .= 'TRUNCATE `' . $val . '`;
 ';
     }
@@ -183,12 +185,12 @@ function actionStart() {
     $PHPShopGUI->addJSFiles('./exchange/gui/exchange.gui.js', './tpleditor/gui/ace/ace.js');
 
     $PHPShopGUI->_CODE = $result_message;
-    $help = '<p class="text-muted">' . __('Для очистки демо-базы и демо-товаров следует выбрать SQL команду <kbd>Очистить базу</kbd></p> <p class="text-muted">Для увелечения производительности сайта вызвать SQL команду <kbd>Оптимизировать базу</kbd></p> <p class="text-muted">Справочник полезных SQL команд для пакетной обработки товаров доступен в <a href="https://help.phpshop.ru/knowledgebase/article/398" target="_blank" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-book"></span> Базе знаний</a>') . '</p>';
+    $help = '<p class="text-muted">' . __('Для очистки демо-базы и демо-товаров следует выбрать SQL команду <kbd>Очистить базу</kbd></p> <p class="text-muted">Для увеличения производительности сайта вызвать SQL команду <kbd>Оптимизировать базу</kbd></p> <p class="text-muted">Справочник полезных SQL команд для пакетной обработки товаров доступен в <a href="https://help.phpshop.ru/knowledgebase/article/398" target="_blank" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-book"></span> Базе знаний</a>') . '</p>';
 
 
     $PHPShopGUI->setActionPanel($TitlePage, false, array('Выполнить'));
 
-    if ($_GET['query'] == 'optimize')
+    if (!empty($_GET['query']) and $_GET['query'] == 'optimize')
         $optimize_sel = 'selected';
     else
         $optimize_sel = null;
@@ -217,11 +219,11 @@ TRUNCATE ' . $GLOBALS['SysValue']['base']['citylist_city'].';', '');
 
 
     $query_value[] = array('Очистить базу', $TRUNCATE, '');
-    $query_value[] = array('Уничтожить базу (!)', $DROP, '');
+    //$query_value[] = array('Уничтожить базу (!)', $DROP, '');
 
 
     // Оптимизация по ссылке
-    if ($_GET['query'] == 'optimize')
+    if (!empty($_GET['query']) and $_GET['query'] == 'optimize')
         $result_error_tracert = 'OPTIMIZE TABLE ' . $bases;
 
     // Тема

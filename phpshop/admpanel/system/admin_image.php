@@ -49,7 +49,7 @@ function actionStart() {
 
     $PHPShopGUI->setActionPanel($TitlePage, false, array('Сохранить'));
 
-    $PHPShopGUI->_CODE = '<p></p>' . $PHPShopGUI->setField('Макс. ширина оригинала', $PHPShopGUI->setInputText(false, 'option[img_w]', $option['img_w'], 100, 'px'), 1, 'Изображение товара в подробном описании товара') .
+    $PHPShopGUI->_CODE = $PHPShopGUI->setField('Макс. ширина оригинала', $PHPShopGUI->setInputText(false, 'option[img_w]', $option['img_w'], 100, 'px'), 1, 'Изображение товара в подробном описании товара') .
             $PHPShopGUI->setField('Макс. высота оригинала', $PHPShopGUI->setInputText(false, 'option[img_h]', $option['img_h'], 100, 'px'), 1, 'Изображение товара в подробном описании товара') .
             $PHPShopGUI->setField('Качество оригинала', $PHPShopGUI->setInputText(false, 'option[width_podrobno]', $option['width_podrobno'], 100, '%'), 1, 'Изображение товара в подробном описании товара') .
             $PHPShopGUI->setField('Исходное изображение', $PHPShopGUI->setCheckbox('option[image_save_source]', 1, 'Сохранять исходное изображение при ресайзинге', $option['image_save_source']), 1, 'Используется для увеличения фото в карточке товара') .
@@ -63,6 +63,8 @@ function actionStart() {
             $PHPShopGUI->setField('Макс. ширина тумбнейла', $PHPShopGUI->setInputText(false, 'option[img_tw]', $option['img_tw'], 100, 'px'), 1, 'Изображение товара в кратком описании товара') .
             $PHPShopGUI->setField('Макс. высота тумбнейла', $PHPShopGUI->setInputText(false, 'option[img_th]', $option['img_th'], 100, 'px'), 1, 'Изображение товара в кратком описании товара') .
             $PHPShopGUI->setField('Качество тумбнейла', $PHPShopGUI->setInputText(false, 'option[width_kratko]', $option['width_kratko'], 100, '%'), 1, 'Изображение товара в кратком описании товара');
+    
+    $PHPShopGUI->_CODE = $PHPShopGUI->setCollapse('Основные', $PHPShopGUI->_CODE);
 
     if (empty($option['watermark_text_size']))
         $option['watermark_text_size'] = 20;
@@ -93,7 +95,7 @@ function actionStart() {
     if (empty($option['img_th_c']))
         $option['img_th_c'] = 200;
 
-    $PHPShopGUI->_CODE .= $PHPShopGUI->setCollapse('Иконки для каталогов', $PHPShopGUI->setField('Обработка изображений', $PHPShopGUI->setCheckbox('option[image_cat]', 1, 'Включить', $option['image_cat'])) .
+    $PHPShopGUI->_CODE .= $PHPShopGUI->setCollapse('Иконки для каталогов', $PHPShopGUI->setField('Обработка изображений', $PHPShopGUI->setCheckbox('option[image_cat]', 1, null, $option['image_cat'])) .
             $PHPShopGUI->setField('Максимальная ширина', $PHPShopGUI->setInputText(false, 'option[img_tw_c]', $option['img_tw_c'], 100, 'px')) .
             $PHPShopGUI->setField('Максимальная высота', $PHPShopGUI->setInputText(false, 'option[img_th_c]', $option['img_th_c'], 100, 'px')).
             $PHPShopGUI->setField('Адаптивность', $PHPShopGUI->setCheckbox('option[image_cat_adaptive]', 1, 'Оптимизировать изображение точно под указанные размеры', $option['image_cat_adaptive'])) 
@@ -105,7 +107,7 @@ function actionStart() {
     if (empty($option['img_th_s']))
         $option['img_th_s'] = 300;
 
-    $PHPShopGUI->_CODE .= $PHPShopGUI->setCollapse('Слайдер', $PHPShopGUI->setField('Обработка изображений', $PHPShopGUI->setCheckbox('option[image_slider]', 1, 'Включить', $option['image_slider'])) .
+    $PHPShopGUI->_CODE .= $PHPShopGUI->setCollapse('Слайдер', $PHPShopGUI->setField('Обработка изображений', $PHPShopGUI->setCheckbox('option[image_slider]', 1, null, $option['image_slider'])) .
             $PHPShopGUI->setField('Максимальная ширина', $PHPShopGUI->setInputText(false, 'option[img_tw_s]', $option['img_tw_s'], 100, 'px')) .
             $PHPShopGUI->setField('Максимальная высота', $PHPShopGUI->setInputText(false, 'option[img_th_s]', $option['img_th_s'], 100, 'px')).
             $PHPShopGUI->setField('Адаптивность', $PHPShopGUI->setCheckbox('option[image_slider_adaptive]', 1, 'Оптимизировать изображение точно под указанные размеры', $option['image_slider_adaptive'])) 

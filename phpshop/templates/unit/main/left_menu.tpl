@@ -2,7 +2,7 @@
   <div class="block-heading">
     <h3 class="block-title">@leftMenuName@</h3>
   </div>
-  <div class="block-body">
+  <div style="margin-top: 0.3125rem;">
     @leftMenuContent@
   </div>
 </div>

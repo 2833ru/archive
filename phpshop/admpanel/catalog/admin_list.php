@@ -97,7 +97,7 @@ function actionStart() {
        </div>
        <div class="col-md-3 col-xs-6">
           <div class="panel panel-default">
-             <div class="panel-heading"><span class="glyphicon glyphicon-open"></span> ' . __('Товары Яндекс и Google') . '</div>
+             <div class="panel-heading"><span class="glyphicon glyphicon-open"></span> ' . __('Товары Яндекс') . '</div>
                 <div class="panel-body text-right panel-intro">
                  <a href="?path=catalog&where[yml]=1">' . $PHPShopBase->getNumRows('products', "where yml='1'") . '</a>
                </div>

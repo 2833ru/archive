@@ -10,9 +10,7 @@ html, body {
 }
 
 body#form-signin{
-    -padding-top: 40px;
-    -padding-bottom: 40px;
-    background: #F0F0F0 url(images/default.png) top center repeat;
+    background: #F0F0F0;
 }
 
 
@@ -29,6 +27,10 @@ body#form-signin{
     z-index: 999999;
 }
 
+.btn-lg{
+   border-radius: 4px; 
+}
+
 .form-signin {
     max-width: 330px;
     padding: 15px;
@@ -38,7 +40,7 @@ body#form-signin{
     width: 330px;
     -moz-border-radius: 8px;
     -webkit-border-radius: 8px;
-    border-radius: 8px;
+    border-radius: 5px;
     box-shadow: 0 0 3px rgba(122,122,122,0.3);
 }
 .form-signin .form-signin-heading,

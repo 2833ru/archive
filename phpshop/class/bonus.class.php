@@ -60,7 +60,7 @@ class PHPShopBonus {
             $bonus = 0;
 
         $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['shopusers']);
-        $PHPShopOrm->update(array('bonus_new' => $bonus, array('id' => $this->user_id)));
+        $PHPShopOrm->update(array('bonus_new' => $bonus), array('id' => '=' . (int) $this->user_id));
     }
 
     /**

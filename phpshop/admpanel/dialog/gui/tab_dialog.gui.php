@@ -4,6 +4,7 @@ function tab_dialog() {
     global $PHPShopInterface;
 
     $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['dialog']);
+    $tab=$where=$limit=$data_notview=null;
 
     if (empty($_GET['search']) and empty($_GET['uid']) and empty($_GET['id'])) {
         $limit = array('limit' => 50);
@@ -27,7 +28,7 @@ function tab_dialog() {
 
     $PHPShopOrm->debug = false;
 
-    if (is_array($whereisnotview))
+    if (!empty($whereisnotview) and is_array($whereisnotview))
         $data_notview = $PHPShopOrm->select(array('chat_id,id,message,name,time,bot,user_id,name,isview'), $whereisnotview, array('group' => 'chat_id order by id desc'), $limit);
 
     $data_view = $PHPShopOrm->select(array('chat_id,id,message,name,time,bot,user_id,name,isview'), $where, array('group' => 'chat_id order by id desc'), $limit);
@@ -39,26 +40,33 @@ function tab_dialog() {
 
         foreach ($data_view as $row) {
 
-            if (!is_array($data[$row['chat_id']]))
+            if (!empty($data[$row['chat_id']]) and !is_array($data[$row['chat_id']]))
                 $data[$row['chat_id']] = $row;
         }
     }
-    elseif (is_array($data_notview) and ! is_array($data_view))
+    elseif (is_array($data_notview) and !is_array($data_view))
         $data = $data_notview;
     else
         $data = $data_view;
 
-
-    if (is_array($data)) {
+    if(empty($_GET['id']))
+        $_GET['id']=null;
+    
+    if(!empty($data['chat_id']))
+        $data_res[]=$data;
+    elseif(is_array($data)) $data_res = $data;
+    
+    
+    if (is_array($data_res)) {
         $tab = '<ul class="nav nav-pills nav-stacked">';
-        foreach ($data as $row) {
+        foreach ($data_res as $row) {
 
             if ($row['chat_id'] == $_GET['id'] and empty($_GET['user_id']))
                 $class = 'active';
             else
                 $class = null;
 
-            $data_chat = $PHPShopOrm->select(array('chat_id,id,message,name,time,bot,user_id'), array('staffid' => "='1'", 'isview' => "='0'", 'chat_id' => '=' . intval($row['chat_id'])), array('order' => 'id desc'), array('limit' => '50'));
+            $data_chat = $PHPShopOrm->select(array('chat_id,id,message,name,time,bot,user_id'), array('staffid' => "='1'", 'isview' => "='0'", 'chat_id' => '=' . intval($row['chat_id'])), array('order' => 'id desc'), array('limit' => 50));
 
 
             if (is_array($data_chat))

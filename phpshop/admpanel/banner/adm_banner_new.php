@@ -41,10 +41,10 @@ function treegenerator($array, $i, $curent, $dop_cat_array) {
     $tree_select = $tree_select_dop = $check = false;
 
     $del = str_repeat($del, $i);
-    if (is_array($array['sub'])) {
+    if (!empty($array['sub']) and is_array($array['sub'])) {
         foreach ($array['sub'] as $k => $v) {
 
-            $check = treegenerator($tree_array[$k], $i + 1, $curent, $dop_cat_array);
+            $check = treegenerator(@$tree_array[$k], $i + 1, $curent, $dop_cat_array);
 
             if ($k == $curent)
                 $selected = 'selected';
@@ -67,9 +67,9 @@ function treegenerator($array, $i, $curent, $dop_cat_array) {
 
                 $i = 1;
             } else {
-                $tree_select .= '<option value="' . $k . '" ' . $selected . ' disabled>' . $del . $v . '</option>';
+                $tree_select .= '<option value="' . $k . '" ' . $selected . ' >' . $del . $v . '</option>';
                 if ($k < 1000000)
-                    $tree_select_dop .= '<option value="' . $k . '" ' . $selected_dop . ' disabled >' . $del . $v . '</option>';
+                    $tree_select_dop .= '<option value="' . $k . '" ' . $selected_dop . '  >' . $del . $v . '</option>';
             }
 
             $tree_select .= $check['select'];
@@ -86,28 +86,25 @@ function actionStart() {
     // Выборка
     $data['flag'] = 1;
     $data['name'] = __('Реклама');
-    $PHPShopGUI->field_col = 1;
+    $data = $PHPShopGUI->valid($data, 'content', 'dir', 'dop_cat', 'category', 'servers', 'skin', 'type', 'display', 'size', 'description', 'image', 'mobile');
+
+
+    $PHPShopGUI->field_col = 3;
     $PHPShopGUI->setActionPanel(__("Создание Баннера"), false, array('Сохранить и закрыть'));
 
-    // Содержание закладки 1
-    $Tab1 = $PHPShopGUI->setField("Имя", $PHPShopGUI->setInput("text", "name_new", $data['name'], false, 500)) .
-            $PHPShopGUI->setField("Статус", $PHPShopGUI->setRadio("flag_new", 1, "Включить", $data['flag']) . $PHPShopGUI->setRadio("flag_new", 0, "Выключить", $data['flag']));
+    $Tab1 = $PHPShopGUI->setField("Название", $PHPShopGUI->setInput("text", "name_new", $data['name'])) .
+            $PHPShopGUI->setField("Статус", $PHPShopGUI->setRadio("flag_new", 1, "Включить", $data['flag']) .
+                    $PHPShopGUI->setRadio("flag_new", 0, "Выключить", $data['flag'])) .
+            $PHPShopGUI->setField("Мобильный", $PHPShopGUI->setCheckbox("mobile_new", 1, "Отображать только на мобильных устройствах", $data['mobile']).$PHPShopGUI->setHelp('По умолчанию, баннер выводится только на PC')) .
+            $PHPShopGUI->setField("Тип вывода", $PHPShopGUI->setRadio("type_new", 0, "В колонке", $data['type']) .
+                    $PHPShopGUI->setRadio("type_new", 2, "Горизонтальный", $data['type']) .
+                    $PHPShopGUI->setRadio("type_new", 1, "Всплывающее окно", $data['type']));
 
-    // Редактор 
-    $PHPShopGUI->setEditor($PHPShopSystem->getSerilizeParam("admoption.editor"));
-    $oFCKeditor = new Editor('content_new');
-    $oFCKeditor->Height = '300';
-    $oFCKeditor->Value = $data['content'];
-
-    // Содержание закладки 1
-    $Tab1 .= $PHPShopGUI->setField("Содержание", $oFCKeditor->AddGUI());
-
-    $Tab2 = $PHPShopGUI->setField("Таргетинг:", $PHPShopGUI->setInput("text", "dir_new", $data['dir']) . $PHPShopGUI->setHelp('* Пример: /,page,news. Можно указать несколько адресов через запятую.'));
+    $Tab2 = $PHPShopGUI->setField("Таргетинг:", $PHPShopGUI->setInput("text", "dir_new", $data['dir']) . $PHPShopGUI->setHelp('/ - главная, /page/page.html - страница. Пример ввода: /, /page/dostavka.html'));
 
     $PHPShopCategoryArray = new PHPShopCategoryArray();
     $CategoryArray = $PHPShopCategoryArray->getArray();
 
-    $CategoryArray[0]['name'] = '- ' . __('Выбрать каталог') . ' -';
     $tree_array = array();
 
     foreach ($PHPShopCategoryArray->getKey('parent_to.id', true) as $k => $v) {
@@ -123,12 +120,13 @@ function actionStart() {
 
     // Допкаталоги
     $dop_cat_array = preg_split('/#/', $data['dop_cat'], -1, PREG_SPLIT_NO_EMPTY);
+    $tree_select_dop = null;
 
-    if (is_array($tree_array[0]['sub']))
+    if (!empty($tree_array[0]['sub']) and is_array($tree_array[0]['sub']))
         foreach ($tree_array[0]['sub'] as $k => $v) {
-            $check = treegenerator($tree_array[$k], 1, $data['category'], $dop_cat_array);
+            $check = treegenerator(@$tree_array[$k], 1, @$data['category'], $dop_cat_array);
 
-            if ($k == $data['category'])
+            if ($k == @$data['category'])
                 $selected = 'selected';
             else
                 $selected = null;
@@ -147,38 +145,61 @@ function actionStart() {
                 $disabled = ' disabled';
 
 
-            $tree_select_dop .= '<option value="' . $k . '" ' . $selected_dop . $disabled . '>' . $v . '</option>';
+            $tree_select_dop .= '<option value="' . $k . '" ' . $selected_dop . '>' . $v . '</option>';
 
             $tree_select_dop .= $check['select_dop'];
         }
 
-    $tree_select_dop = '<select class="selectpicker show-menu-arrow hidden-edit" data-live-search="true" data-container=""  data-style="btn btn-default btn-sm" name="dop_cat[]" data-width="100%" multiple><option value="0">' . $CategoryArray[0]['name'] . '</option>' . $tree_select_dop . '</select>';
+    $tree_select_dop = '<select class="selectpicker show-menu-arrow hidden-edit" data-live-search="true" data-container="body"  data-style="btn btn-default btn-sm" name="dop_cat[]" data-width="100%" multiple><option value="0">' . $CategoryArray[0]['name'] . '</option>' . $tree_select_dop . '</select>';
 
     // Дополнительные каталоги
     $Tab2 .= $PHPShopGUI->setField('Каталоги', $tree_select_dop . $PHPShopGUI->setHelp('Баннер выводится только в заданных каталогах.'));
 
-    // Витрина
-    $Tab2 .= $PHPShopGUI->setField("Витрины", $PHPShopGUI->loadLib('tab_multibase', $data, 'catalog/'));
-    $Tab2 .= $PHPShopGUI->setField('Дизайн', GetSkinList($data['skin']));
 
-    // Условия показа
-    $Tab2 .= $PHPShopGUI->setField("Тип", $PHPShopGUI->setRadio("type_new", 0, "Баннер", $data['type']) . $PHPShopGUI->setRadio("type_new", 1, "Всплывающее окно", $data['type']));
+    // Описание 
+    $Tab1 .= $PHPShopGUI->setField("Описание", $PHPShopGUI->setTextarea('description_new', $data['description']));
 
-    $Tab2 .= $PHPShopGUI->setField("Условия показа окна", $PHPShopGUI->setRadio("display_new", 0, "Показывать всегда", $data['display']) .
+    // Цель
+    $Tab1 .= $PHPShopGUI->setField("Цель", $PHPShopGUI->setInput("text", "link_new", $data['link']) . $PHPShopGUI->setHelp("Пример: /pages/info.html или https://google.com"));
+
+    // Иконка
+    $Tab1 .= $PHPShopGUI->setField("Изображение для фона", $PHPShopGUI->setIcon($data['image'], "image_new", false));
+
+    $Tab1 = $PHPShopGUI->setCollapse('Информация', $Tab1);
+
+    // Редактор 
+    $PHPShopGUI->setEditor($PHPShopSystem->getSerilizeParam("admoption.editor"));
+    $oFCKeditor = new Editor('content_new');
+    $oFCKeditor->Height = '400';
+    $oFCKeditor->Value = $data['content'];
+
+
+    $Tab_tip1 = $PHPShopGUI->setField("Условия показа", $PHPShopGUI->setRadio("display_new", 0, "Показывать всегда", $data['display']) .
             $PHPShopGUI->setRadio("display_new", 1, "Первый заход на сайт", $data['display'])
     );
 
-    $size_value[]=array('Маленькое', 0, $data['size']);
-    $size_value[]=array('Среднее', 1, $data['size']);
-    $size_value[]=array('Большое', 2, $data['size']);
+    $size_value[] = array('Маленькое', 0, $data['size']);
+    $size_value[] = array('Среднее', 1, $data['size']);
+    $size_value[] = array('Большое', 2, $data['size']);
 
-    $Tab2 .= $PHPShopGUI->setField("Размер окна", $PHPShopGUI->setSelect('size_new', $size_value, 300));
+    $Tab_tip1 .= $PHPShopGUI->setField("Размер окна", $PHPShopGUI->setSelect('size_new', $size_value, 150));
+
+    // Витрина
+    $Tab2 .= $PHPShopGUI->setField("Витрины", $PHPShopGUI->loadLib('tab_multibase', $data, 'catalog/'));
+
+    $Tab2_help = $PHPShopGUI->setHelp('Оставьте поля пустыми, если нужен вывод на всех страницах/каталогах, или укажите точную страницу/каталог:');
+    $Tab1 .= $PHPShopGUI->setCollapse("Точечный вывод", $Tab2_help.$Tab2);
+    
+    // Содержание 
+    $Tab1 .= $PHPShopGUI->setCollapse("Содержание", '<div>'.$oFCKeditor->AddGUI().'</div>');
+
+    $Tab1 .= $PHPShopGUI->setCollapse('Всплывающее окно', $Tab_tip1);
 
     // Запрос модуля на закладку
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $data);
 
     // Вывод формы закладки
-    $PHPShopGUI->setTab(array("Основное", $Tab1, true), array("Дополнительно", $Tab2, true));
+    $PHPShopGUI->setTab(array("Основное", $Tab1, true, false, true));
 
     // Вывод кнопок сохранить и выход в футер
     $ContentFooter = $PHPShopGUI->setInput("submit", "saveID", "ОК", "right", 70, "", "but", "actionInsert.banner.create");
@@ -209,6 +230,12 @@ function actionInsert() {
                 $_POST['dop_cat_new'] .= $v . "#";
     }
 
+    if (empty($_POST['mobile_new']))
+        $_POST['mobile_new'] = 0;
+
+    // Изображение
+    $_POST['image_new'] = iconAdd('image_new');
+
     // Перехват модуля
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $_POST);
 
@@ -217,11 +244,45 @@ function actionInsert() {
     return $action;
 }
 
-// Вывод формы при старте
-$PHPShopGUI->setLoader($_POST['editID'], 'actionStart');
+// Добавление изображения 
+function iconAdd($name = 'icon_new') {
+    global $PHPShopSystem;
+
+    // Папка сохранения
+    $path = '/UserFiles/Image/' . $PHPShopSystem->getSerilizeParam('admoption.image_result_path');
+
+    // Копируем от пользователя
+    if (!empty($_FILES['file']['name'])) {
+        $_FILES['file']['ext'] = PHPShopSecurity::getExt($_FILES['file']['name']);
+        $_FILES['file']['name'] = PHPShopString::toLatin(str_replace('.' . $_FILES['file']['ext'], '', PHPShopString::utf8_win1251($_FILES['file']['name']))) . '.' . $_FILES['file']['ext'];
+        if (in_array($_FILES['file']['ext'], array('gif', 'png', 'jpg', 'svg'))) {
+            if (move_uploaded_file($_FILES['file']['tmp_name'], $_SERVER['DOCUMENT_ROOT'] . $GLOBALS['dir']['dir'] . $path . $_FILES['file']['name'])) {
+                $file = $GLOBALS['dir']['dir'] . $path . $_FILES['file']['name'];
+            }
+        }
+    }
+
+    // Читаем файл из URL
+    elseif (!empty($_POST['furl'])) {
+        $file = $_POST[$name];
+    }
+
+    // Читаем файл из файлового менеджера
+    elseif (!empty($_POST[$name])) {
+        $file = $_POST[$name];
+    }
+
+    if (empty($file))
+        $file = '';
+
+    return $file;
+}
 
 // Обработка событий
 $PHPShopGUI->getAction();
+
+// Вывод формы при старте
+$PHPShopGUI->setLoader($_POST['editID'], 'actionStart');
 ?>
 
 

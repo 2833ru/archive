@@ -13,7 +13,7 @@
         <link rel="mask-icon" href="@icon@" >
         <link rel="icon" href="@icon@" type="image/x-icon">
         <link rel="mask-icon" href="@icon@" >
-        
+
         <!-- OpenGraph -->
         <meta property="og:title" content="@ogTitle@">
         <meta property="og:image" content="http://@serverName@@ogImage@">
@@ -44,6 +44,13 @@
 
         <!-- Theme -->
         <link id="bootstrap_theme" data-name="@php echo $_SESSION['skin']; php@" href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@css/@diggi_theme@.css" rel="stylesheet">
+
+        <!-- Стикер-полоска -->
+        <div class="top-banner @php __hide('sticker_close','cookie'); php@">
+            <div class="sticker-text">@sticker_top@</div>
+            <span class="close sticker-close">x</span>
+        </div>
+        <!-- /Стикер-полоска -->
 
         <!-- Header Section Starts -->
         <header id="header-area" class="header-wrap inner">
@@ -141,7 +148,7 @@
                                             @leftCatal@
                                         </ul>
                                     </li>
-                                   @topBrands@
+                                    @topBrands@
                                     @topcatMenu@
                                     @topMenu@
                                 </ul>
@@ -193,27 +200,19 @@
 
                     <!-- jQuery -->
                     <script src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@js/jquery-1.11.0.min.js"></script>
-
+                    <br>
                     @productDay@
                 </div>
                 <div class="col-md-9">
+                    
                     <!-- Slider Section Starts -->
                     <!-- Nested Container Starts -->
                     <!-- Carousel Starts -->
-                    <div class="slider hidden-xs">
-
+                    <div class="slider">
                         @imageSlider@
                     </div>
 
-                    <div class="slider col-xs-12 hidden-lg hidden-md hidden-sm">
-                        <div class="banner text-center hidden-lg hidden-md hidden-sm">
-                            @sticker_mobile_slider@
-                        </div>
-
-                        <!-- Carousel Ends -->
-                        <!-- Nested Container Ends -->
-                    </div>
-					<div class="clearfix"></div>
+                    <div class="clearfix"><br></div>
                     <!-- Slider Section Ends -->
                     <div class="page-header  product-head">
                         <h1>@mainContentTitle@</h1>
@@ -248,7 +247,7 @@
                     </section>
                     <!-- Featured Products Ends -->
                     <!-- Banners Starts -->
-                    <div class="top-col-banners">@sticker_banner@</div>
+                    <div class="top-col-banners">@banersDispHorizontal@</div>
                     <!-- Banners Ends -->
                     <!-- Latest Products Starts -->
                     <section class="products-list @php __hide('specMain'); php@">
@@ -365,11 +364,11 @@
                             <li class="footer-email">@adminMail@</li>                              
                         </ul>
                         <h4 class="lead">
-                     <span>@telNum@<br>
-                     @telNum2@<br>
-                     @workingTime@
-                     </span>
-                    </h4>
+                            <span>@telNum@<br>
+                                @telNum2@<br>
+                                @workingTime@
+                            </span>
+                        </h4>
                         @sticker_socfooter@
                     </div>
                     <!-- Contact Us Ends -->
@@ -396,19 +395,19 @@
         <div class="bar-padding-fix visible-xs"> </div>
         <nav class="navbar navbar-default navbar-fixed-bottom bar bar-tab visible-xs visible-sm">
             <a class="tab-item active" href="/">
-               
+
                 <span class="tab-label">{Домой}</span>
             </a>
             <a class="tab-item @user_active@" @user_link@ data-target="#userModal">
-               
+
                 <span class="tab-label">{Кабинет}</span>
             </a>
             <a class="tab-item @cart_active@" href="/order/" id="bar-cart">
-               <span class="badge badge-positive" id="mobilnum">@cart_active_num@</span>
+                <span class="badge badge-positive" id="mobilnum">@cart_active_num@</span>
                 <span class="tab-label">{Корзина}</span>
             </a>
             <a class="tab-item" href="#" data-toggle="modal" data-target="#searchModal">
-              
+
                 <span class="tab-label">{Поиск}</span>
             </a>
         </nav>
@@ -465,47 +464,47 @@
             </div>
         </div>
         <!--/ Модальное окно авторизации-->
-        
-        
-<!-- Модальное окно returncall-->
-<div class="modal fade bs-example-modal-sm return-call" id="returnCallModal" tabindex="-1" role="dialog"  aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                <h4 class="modal-title">{Обратный звонок}</h4>
-            </div>
-            <form method="post" name="user_forma" action="@ShopDir@/returncall/">
-                <div class="modal-body">
 
-                    <div class="form-group">
-                       
-                        <input type="text" name="returncall_mod_name" class="form-control" placeholder="{Имя}" required="">
+
+        <!-- Модальное окно returncall-->
+        <div class="modal fade bs-example-modal-sm return-call" id="returnCallModal" tabindex="-1" role="dialog"  aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                        <h4 class="modal-title">{Обратный звонок}</h4>
                     </div>
-                    <div class="form-group">
-                        
-                        <input type="text" name="returncall_mod_tel" class="form-control phone" placeholder="{Телефон}" required="">
-                    </div>
-                    <div class="form-group">
-                      
-                        <input class="form-control" type="text" placeholder="{Время звонка}" name="returncall_mod_time_start">
-                    </div>
-                    <div class="form-group">
-                        
-                        <textarea class="form-control" name="returncall_mod_message" placeholder="{Сообщение}"></textarea>
-                    </div>
-                    @returncall_captcha@
-<p class="small"><label><input type="checkbox" value="on" name="rule" class="req" checked="checked">  {Я согласен} <a href="/page/soglasie_na_obrabotku_personalnyh_dannyh.html">{на обработку моих персональных данных}</a></label></p>
+                    <form method="post" name="user_forma" action="@ShopDir@/returncall/">
+                        <div class="modal-body">
+
+                            <div class="form-group">
+
+                                <input type="text" name="returncall_mod_name" class="form-control" placeholder="{Имя}" required="">
+                            </div>
+                            <div class="form-group">
+
+                                <input type="text" name="returncall_mod_tel" class="form-control phone" placeholder="{Телефон}" required="">
+                            </div>
+                            <div class="form-group">
+
+                                <input class="form-control" type="text" placeholder="{Время звонка}" name="returncall_mod_time_start">
+                            </div>
+                            <div class="form-group">
+
+                                <textarea class="form-control" name="returncall_mod_message" placeholder="{Сообщение}"></textarea>
+                            </div>
+                            @returncall_captcha@
+                            <p class="small"><label><input type="checkbox" value="on" name="rule" class="req" checked="checked">  {Я согласен} <a href="/page/soglasie_na_obrabotku_personalnyh_dannyh.html">{на обработку моих персональных данных}</a></label></p>
+                        </div>
+                        <div class="modal-footer">
+                            <input type="hidden" name="returncall_mod_send" value="1">
+
+                            <button type="submit" class="btn btn-main">{Заказать звонок}</button>
+                        </div>
+                    </form>
                 </div>
-                <div class="modal-footer">
-                    <input type="hidden" name="returncall_mod_send" value="1">
-                   
-                    <button type="submit" class="btn btn-main">{Заказать звонок}</button>
-                </div>
-            </form>
+            </div>
         </div>
-    </div>
-</div>
 
 
         <!-- Модальное окно мобильного поиска -->

@@ -56,13 +56,12 @@
 
 <div id="ajaxInProgress"></div>
 <div class="product-scroll-init"></div>
-
-@productPageNav@
-
+<div id="pagination-block">@productPageNav@</div>
 <script type="text/javascript">
 
     var max_page = new Number('@max_page@');
     var current = '@productPageThis@';
+    var catalogFirstPage = '@catalogFirstPage@';
     if (current !== 'ALL')
         var count = new Number('@productPageThis@');
     else
@@ -83,22 +82,23 @@
                 type: "POST",
                 url: url,
                 data: {
-                    ajax: true
+                    ajax: true,
+                    json: true
                 },
                 success: function(data)
                 {
                     // Анимация загрузки
                     $('#ajaxInProgress').removeClass('progress-scroll');
 
+                    $("#pagination-block").html(data['pagination']);
+
                     // Добавляем товары в общему списку
-                    $(".template-product-list").append(data);
+                    $(".template-product-list").append(data['products']);
 
                     // Выравнивание ячеек товара
                     setEqualHeight($(".products-list .description"));
 
                     count = next_page;
-                    $('.pagination li').removeClass('active');
-                    $('#paginator-' + count).addClass('active');
 
                     // lazyLoad
                     setTimeout(function() {

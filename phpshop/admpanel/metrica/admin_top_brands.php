@@ -62,7 +62,7 @@ function actionStart() {
                 $date_end = date('Y-m-d');
                 break;
         }
-    }
+    }else $_GET['group_date']=null;
 
     $TitlePage.=' с ' . $date_start . ' по ' . $date_end;
 
@@ -86,6 +86,8 @@ function actionStart() {
         CURLOPT_URL => $url,
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_HTTPHEADER => array('Authorization: OAuth ' . $metrica_token),
+        CURLOPT_SSL_VERIFYHOST => false,
+            CURLOPT_SSL_VERIFYPEER => false
     ));
 
     $json_data = json_decode(curl_exec($сurl), true);
@@ -97,24 +99,24 @@ function actionStart() {
     $PHPShopInterface->setActionPanel($TitlePage, $select_name, array('Показать в Метрике'));
     $PHPShopInterface->setCaption(array("Название товара", "50%"), array("В корзине", "10%", array('align' => 'center')), array("Куплено", "10%", array('align' => 'center')));
 
-    if (is_array($json_data)) {
+    if (!empty($json_data['data']) and is_array($json_data['data'])) {
 
-        $PHPShopInterface->setRow('Итого и средние', array('name' => round($json_data[totals][2], 2), 'align' => 'center'), array('name' => round($json_data[totals][3], 2), 'align' => 'center'));
+        $PHPShopInterface->setRow('Итого и средние', array('name' => round($json_data['totals'][2], 2), 'align' => 'center'), array('name' => round($json_data['totals'][3], 2), 'align' => 'center'));
 
-        $json_data = $json_data[data];
+        $json_data = $json_data['data'];
         foreach ($json_data as $value) {
 
-            $name = $value[dimensions][0][name] . ' &rarr; ' . $value[dimensions][2][name];
-            $visits = $value[metrics][1];
-            $users = $value[metrics][0];
-            $cart = $value[metrics][2];
-            $order = $value[metrics][3];
+            $name = $value['dimensions'][0]['name'] . ' &rarr; ' . $value['dimensions'][2]['name'];
+            //$visits = $value[metrics][1];
+            //$users = $value[metrics][0];
+            $cart = $value['metrics'][2];
+            $order = $value['metrics'][3];
 
             $PHPShopInterface->setRow(array('name' => PHPShopString::utf8_win1251($name)), array('name' => $cart, 'align' => 'center'), array('name' => $order, 'align' => 'center'));
         }
     }
 
-    $searchforma.=$PHPShopInterface->setInputDate("date_start", $date_start, 'margin-bottom:10px', null, 'Дата начала отбора');
+    $searchforma=$PHPShopInterface->setInputDate("date_start", $date_start, 'margin-bottom:10px', null, 'Дата начала отбора');
     $searchforma.=$PHPShopInterface->setInputDate("date_end", $date_end, false, null, 'Дата конца отбора');
     $searchforma.= $PHPShopInterface->setInputArg(array('type' => 'hidden', 'name' => 'path', 'value' => $_GET['path']));
 
@@ -129,7 +131,7 @@ function actionStart() {
 
     $searchforma.=$PHPShopInterface->setButton('Показать', 'search', 'btn-order-search pull-right');
 
-    if ($clean)
+    if (!empty($clean))
         $searchforma.=$PHPShopInterface->setButton('Сброс', 'remove', 'btn-order-cancel pull-left visible-lg');
 
 

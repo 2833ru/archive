@@ -31,7 +31,9 @@ $memory = $PHPShopInterface->getProductTableFields();
 // Мобильная версия
 if (PHPShopString::is_mobile()) {
     $PHPShopInterface->mobile = true;
+    $product_class = null;
 }
+else $product_class = ' adminModal';
 
 // Характеристики
 if (!empty($memory['catalog.option']['sort'])) {
@@ -46,6 +48,9 @@ if (!empty($memory['catalog.option']['sort'])) {
 
 if (isset($_GET['where']['category']))
     unset($_GET['cat']);
+
+if (empty($_GET['core']))
+    $_GET['core'] = null;
 
 // Тип поиска
 switch ($_GET['core']) {
@@ -62,6 +67,8 @@ switch ($_GET['core']) {
 if (!empty($_GET['where']['id']))
     $core = ' = ';
 
+if (empty($_GET['sub']))
+    $_GET['sub'] = null;
 
 $where = false;
 
@@ -112,7 +119,7 @@ if (is_array($_GET['order']) and ! empty($_SESSION['jsort'][$_GET['order']['0'][
 }
 
 // Расширенный поиск
-if (is_array($_GET['where'])) {
+if (!empty($_GET['where']) and is_array($_GET['where'])) {
     foreach ($_GET['where'] as $k => $v) {
 
         if (isset($v) and $v != '') {
@@ -161,6 +168,9 @@ else
 // Таблица с данными
 $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['products']);
 $PHPShopOrm->debug = false;
+
+if (empty($_GET['from']))
+    $_GET['from'] = null;
 
 // Быстрый поиск
 if ($_GET['from'] == 'header') {
@@ -221,6 +231,16 @@ if (!empty($_GET['parents'])) {
             $where = array('id' => ' IN ("' . @implode('","', $parent_array_true) . '")', 'parent_enabled' => "='1'");
     }
 }
+
+    // Убираем меню если много полей
+    $count_view=0;
+    if(is_array($memory['catalog.option']))
+        foreach($memory['catalog.option'] as $view)
+            if(!empty($view))
+                $count_view++;
+    
+    if($count_view>8)
+        unset($memory['catalog.option']['menu']);
 
 $PHPShopOrm->mysql_error = false;
 $sklad_enabled = $PHPShopSystem->getSerilizeParam('admoption.sklad_enabled');
@@ -288,7 +308,7 @@ if (is_array($data))
         $sort = unserialize($row['vendor_array']);
         if (is_array($sort))
             foreach ($sort as $scat => $sorts) {
-                if (is_array($PHPShopSortCategory[$scat])) {
+                if (!empty($PHPShopSortCategory[$scat]) and is_array($PHPShopSortCategory[$scat])) {
                     if (is_array($sorts))
                         foreach ($sorts as $s)
                             if (!empty($PHPShopSort[$s]['name']))
@@ -302,7 +322,8 @@ if (is_array($data))
             $row['id'],
             array(
                 'name' => $icon,
-                'link' => '?path=product&return=catalog.' . $row['category'] . '&id=' . $row['id'],
+                'link' => '../../shop/UID_' . $row['id'].'.html',
+                'target' =>'_blank',
                 'align' => 'left',
                 'view' => intval($memory['catalog.option']['icon'])
             ),
@@ -312,7 +333,8 @@ if (is_array($data))
                 'link' => '?path=product&return=catalog.' . $row['category'] . '&id=' . $row['id'],
                 'align' => 'left',
                 'addon' => $uid,
-                'class' => $enabled,
+                'class' => $enabled.$product_class,
+                'id' => $row['id'],
                 'view' => intval($memory['catalog.option']['name'])
             ),
             array(
@@ -370,21 +392,21 @@ if (is_array($data))
                 'view' => intval($memory['catalog.option']['item'])
             ),
             array(
-                'name' => $row['items1'],
+                'name' => @$row['items1'],
                 'sort' => 'items1',
                 'align' => 'center',
                 'editable' => 'items1_new',
                 'view' => intval($memory['catalog.option']['items1'])
             ),
             array(
-                'name' => $row['items2'],
+                'name' => @$row['items2'],
                 'sort' => 'items2',
                 'align' => 'center',
                 'editable' => 'items2_new',
                 'view' => intval($memory['catalog.option']['items2'])
             ),
             array(
-                'name' => $row['items3'],
+                'name' => @$row['items3'],
                 'sort' => 'items3',
                 'align' => 'center',
                 'editable' => 'items3_new',

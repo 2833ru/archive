@@ -11,6 +11,9 @@ function addModOption_panorama360($data) {
 
     $PHPShopGUI->addJSFiles('../modules/panorama360/admpanel/js/liteuploader.js', '../modules/panorama360/admpanel/js/js.js', '../modules/panorama360/lib/jquery.mobile.custom.min.js', '../modules/panorama360/lib/main.js');
     $PHPShopGUI->addCSSFiles('../modules/panorama360/admpanel/css/adm.css', '../modules/panorama360/css/style.css');
+    
+    if(empty($data['img_panorama360']))
+        $data['img_panorama360']=null;
 
     if (trim($data['img_panorama360']))
         $data['img_panorama360'] = '../../../..' . $data['img_panorama360'];

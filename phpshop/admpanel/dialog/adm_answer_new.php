@@ -36,7 +36,7 @@ function actionStart() {
     $Select1 = setSelectChek($data['num']);
 
     // Содержание закладки 1
-    $Tab1 = $PHPShopGUI->setField("Название", $PHPShopGUI->setInput("text", "name_new", $data['name'], "none", 500)) .
+    $Tab1 = $PHPShopGUI->setField("Название", $PHPShopGUI->setInput("text", "name_new", $data['name'])) .
             $PHPShopGUI->setField("Статус", $PHPShopGUI->setRadio("enabled_new", 1, "Включить", $data['enabled']) . $PHPShopGUI->setRadio("enabled_new", 0, "Выключить", $data['enabled'])) .
             $PHPShopGUI->setField("Подсказка в чате", $PHPShopGUI->setRadio("view_new", 1, "Включить", $data['view']) . $PHPShopGUI->setRadio("view_new", 2, "Выключить", $data['view'])) .
             $PHPShopGUI->setField("Позиция", $PHPShopGUI->setSelect("num_new", $Select1, 50));
@@ -49,7 +49,7 @@ function actionStart() {
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $data);
 
     // Вывод формы закладки
-    $PHPShopGUI->setTab(array("Основное", $Tab1, true));
+    $PHPShopGUI->setTab(array("Основное", $Tab1, true,false,true));
 
     // Вывод кнопок сохранить и выход в футер
     $ContentFooter = $PHPShopGUI->setInput("submit", "saveID", "ОК", "right", 70, "", "but", "actionInsert.shopusers.create");

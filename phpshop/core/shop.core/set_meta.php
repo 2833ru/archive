@@ -73,6 +73,7 @@ function catalog_meta($array,$flag) {
     }
     
     if($tip !=1) {
+        
         if($cat != 0) {
             $Catalog=$parent_row['name'];
             $Podcatalog=$row['name'];
@@ -83,6 +84,7 @@ function catalog_meta($array,$flag) {
         }
         else {
             $Catalog=$row['name'];
+            $Podcatalog = null;
             $Title=$PHPShopSystem->getParam($flag);
             $Shablon=str_replace("@Catalog@", $Catalog, $Shablon);
             $Shablon=str_replace("@Podcatalog@", $Podcatalog, $Shablon);

@@ -10,6 +10,9 @@ function actionStart() {
     $PHPShopGUI->setActionPanel($TitlePage, false, array('Сохранить и закрыть'));
     // Размер названия поля
     $PHPShopGUI->field_col = 3;
+    $data=$bank=[];
+    $data = $PHPShopGUI->valid($data,'name');
+    $bank =  $PHPShopGUI->valid($bank ,'org_ur_adre','org_adres','nds','org_inn','org_kpp','org_ogrn','org_schet','org_bank','org_bic','org_bank_schet','org_stamp','org_sig','org_sig_buh','org_logo','org_ur_adres');
 
     $forma_value[] = array("Индивидуальный предприниматель", 1, 0);
     $forma_value[] = array("Общество с ограниченной ответственностью", 2, 2);

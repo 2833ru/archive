@@ -11,13 +11,13 @@ function treegenerator($array, $i, $parent) {
     $del = '&brvbar;&nbsp;&nbsp;&nbsp;&nbsp;';
     $tree = $tree_select = $check = false;
     $del = str_repeat($del, $i);
-    if (is_array($array['sub'])) {
+    if (!empty($array) and is_array($array['sub'])) {
         foreach ($array['sub'] as $k => $v) {
 
-            $check = treegenerator($tree_array[$k], $i + 1, $k);
+            $check = treegenerator(@$tree_array[$k], $i + 1, $k);
 
 
-            if ($k == $_GET['parent_to'])
+            if (!empty($_GET['parent_to']) and $k == $_GET['parent_to'])
                 $selected = 'selected';
             else
                 $selected = null;
@@ -49,15 +49,19 @@ function actionStart() {
     global $PHPShopGUI, $PHPShopModules, $TitlePage, $PHPShopSystem;
 
     // Размер названия поля
-    $PHPShopGUI->field_col = 2;
+    $PHPShopGUI->field_col = 3;
     $PHPShopGUI->addJSFiles('./js/jquery.treegrid.js', './photo/gui/photo.gui.js');
+    
+    if(empty($_GET['cat']))
+        $_GET['cat']=null;
 
     // Начальные данные
     $data = array();
     $data['num'] = 1;
     $data['count'] = 2;
     $data['enabled'] = 1;
-    //$data['name'] = __('Новый каталог');
+    $data['name'] = __('Новый каталог');
+    $data['content'] = $data['parent_to'] = $data['page'] = null;
 
     $PHPShopGUI->setActionPanel($TitlePage, false, array('Создать и редактировать', 'Сохранить и закрыть'),false);
 
@@ -87,12 +91,12 @@ function actionStart() {
     $_GET['parent_to'] = $data['parent_to'];
 
     $tree_select = '<select class="selectpicker show-menu-arrow hidden-edit" data-container=""  data-style="btn btn-default btn-sm" name="parent_to_new" data-width="100%"><option value="0">' . $CategoryArray[0]['name'] . '</option>';
-    $tree = '<table class="tree table table-hover">';
-    if ($k == $data['parent_to'])
+    $tree = '<table class="table table-hover">';
+    if (!empty($data['parent_to']) and $k == $data['parent_to'])
         $selected = 'selected';
-    if (is_array($tree_array[0]['sub']))
+    if (!empty($tree_array[0]['sub']) and is_array($tree_array[0]['sub']))
         foreach ($tree_array[0]['sub'] as $k => $v) {
-            $check = treegenerator($tree_array[$k], 1, $k);
+            $check = treegenerator(@$tree_array[$k], 1, $k);
 
             $tree.='<tr class="treegrid-' . $k . ' data-tree">
 		<td><a href="?path=photo.catalog&id=' . $k . '">' . $v . '</a></td>
@@ -114,20 +118,17 @@ function actionStart() {
     var cat="' . intval($_GET['cat']) . '";
     </script>';
 
-    // Выбор каталога
-    $Tab_info.= $PHPShopGUI->setField("Размещение", $tree_select);
-
     $Tab_info.=$PHPShopGUI->setField("Количество фото в превью", $PHPShopGUI->setInputText(false, 'count_new', $data['count'], '100'));
     $Tab_info.=$PHPShopGUI->setField("Приоритет", $PHPShopGUI->setInputText(false, 'num_new', $data['num'], '100'));
     $Tab_info.=$PHPShopGUI->setField("Таргетинг:", $PHPShopGUI->setInput("text", "page_new", $data['page']) .
                     $PHPShopGUI->setHelp('* Пример: /,/page/,/shop/UID_1.html. Можно указать несколько адресов через запятую.'));
-
-    $Tab1 = $PHPShopGUI->setCollapse('Информация', $Tab_info);
-
+    
     $SelectValue[] = array('Вывод в каталоге', 1, $data['enabled']);
     $SelectValue[] = array('Заблокировать', 0, $data['enabled']);
 
-    $Tab1.= $PHPShopGUI->setField("Опции вывода:", $PHPShopGUI->setSelect("enabled_new", $SelectValue, 300,true));
+    $Tab_info.= $PHPShopGUI->setField("Опции вывода:", $PHPShopGUI->setSelect("enabled_new", $SelectValue));
+    
+    $Tab1 = $PHPShopGUI->setCollapse('Информация', $Tab_info);
 
     // Редактор
     $PHPShopGUI->setEditor($PHPShopSystem->getSerilizeParam("admoption.editor"));
@@ -135,17 +136,17 @@ function actionStart() {
     $editor->Height = '550';
     $editor->ToolbarSet = 'Normal';
     $editor->Value = $data['content'];
-    $Tab2 = $editor->AddGUI();
+    $Tab1 .= $PHPShopGUI->setCollapse('Описание', $editor->AddGUI());
 
     // Запрос модуля на закладку
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $data);
 
     // Вывод формы закладки
-    $PHPShopGUI->setTab(array("Основное", $Tab1), array("Описание", $Tab2));
+    $PHPShopGUI->setTab(array("Основное", $Tab1));
 
 
     // Левый сайдбар
-    $sidebarleft[] = array('title' => 'Категории', 'content' => $tree, 'title-icon' => '<span class="glyphicon glyphicon-plus new" data-toggle="tooltip" data-placement="top" title="'.__('Добавить каталог').'"></span>&nbsp;<span class="glyphicon glyphicon-chevron-down" data-toggle="tooltip" data-placement="top" title="'.__('Развернуть').'"></span>&nbsp;<span class="glyphicon glyphicon-chevron-up" data-toggle="tooltip" data-placement="top" title="'.__('Свернуть').'"></span>');
+    $sidebarleft[] = array('title' => 'Категории', 'content' => $tree, 'title-icon' => '<span class="glyphicon glyphicon-plus new" data-toggle="tooltip" data-placement="top" title="'.__('Добавить каталог').'"></span>');
     $PHPShopGUI->setSidebarLeft($sidebarleft, 3);
     $PHPShopGUI->sidebarLeftCell = 3;
 
@@ -173,7 +174,7 @@ function actionInsert() {
     if ($_POST['saveID'] == 'Создать и редактировать')
         header('Location: ?path=photo.catalog&id=' . $action);
     else
-        header('Location: ?path=photo.catalog&cat=' . $_POST['category_new']);
+        header('Location: ?path=photo.catalog&cat=' . $action);
 
     return $action;
 }

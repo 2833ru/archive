@@ -27,15 +27,15 @@ function addSeoUrlPro($data) {
     if ($PHPShopNav->objNav['query']['path'] == 'catalog') {
 
         // Добавление /cat/ для сложных ссылок
-        $true_link = str_replace('cat/', '', $data['cat_seo_name']);
+        $true_link = str_replace('cat/', '', @$data['cat_seo_name']);
         if (stristr($true_link, '/')) {
             $data['cat_seo_name'] = 'cat/' . $true_link;
         }
 
-        $Tab3 = $PHPShopGUI->setField("SEO ссылка:", $PHPShopGUI->setInput("text", "cat_seo_name_new", $data['cat_seo_name'], "left", false, false, false, false, '/', '.html'), 1, 'Можно использовать вложенные ссылки /sony/plazma/televizor');
+        $Tab3 = $PHPShopGUI->setField("Ссылка:", $PHPShopGUI->setInput("text", "cat_seo_name_new", @$data['cat_seo_name'], "left", false, false, false, false, '/', '.html'), 1, 'Можно использовать вложенные ссылки /sony/plazma/televizor');
 
         if ($PHPShopSeourlOption->getParam('redirect_enabled') == 2)
-            $Tab3.= $PHPShopGUI->setField("Старая ссылка:", $PHPShopGUI->setInput("text", "cat_seo_name_old_new", $data['cat_seo_name_old'], "left", false, false, false,false), 1, 'Старая ссылка для 301 редиректа');
+            $Tab3.= $PHPShopGUI->setField("Старая ссылка:", $PHPShopGUI->setInput("text", "cat_seo_name_old_new", @$data['cat_seo_name_old'], "left", false, false, false,false), 1, 'Старая ссылка для 301 редиректа');
 
         $PHPShopGUI->addTab(array("SEO", $Tab3, 450));
     }
@@ -45,10 +45,10 @@ function addSeoUrlPro($data) {
         if (empty($data['page_cat_seo_name']))
             $data['news_seo_name'] = PHPShopString::toLatin($data['name']);
 
-        $Tab3 = $PHPShopGUI->setField("SEO ссылка:", $PHPShopGUI->setInput("text", "page_cat_seo_name_new", $data['page_cat_seo_name'], "left", false, false, false, false, $_SERVER['SERVER_NAME'].'/', '.html'), 1);
+        $Tab3 = $PHPShopGUI->setField("SEO ссылка:", $PHPShopGUI->setInput("text", "page_cat_seo_name_new", @$data['page_cat_seo_name'], "left", false, false, false, false, $_SERVER['SERVER_NAME'].'/', '.html'), 1);
 
         if ($PHPShopSeourlOption->getParam('redirect_enabled') == 2)
-            $Tab3.= $PHPShopGUI->setField("Старая ссылка:", $PHPShopGUI->setInput("text", "cat_seo_name_old_new", $data['cat_seo_name_old'], "left", false, false, false,false), 1, 'Старая ссылка для 301 редиректа');
+            $Tab3.= $PHPShopGUI->setField("Старая ссылка:", $PHPShopGUI->setInput("text", "cat_seo_name_old_new", @$data['cat_seo_name_old'], "left", false, false, false,false), 1, 'Старая ссылка для 301 редиректа');
 
         $PHPShopGUI->addTab(array("SEO", $Tab3, 450));
     }

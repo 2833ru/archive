@@ -16,10 +16,10 @@ function treegenerator($array, $i, $curent, $dop_cat_array) {
     $tree_select = $tree_select_dop = $check = false;
 
     $del = str_repeat($del, $i);
-    if (is_array($array['sub'])) {
+    if (!empty($array) and is_array($array['sub'])) {
         foreach ($array['sub'] as $k => $v) {
 
-            $check = treegenerator($tree_array[$k], $i + 1, $k, $dop_cat_array);
+            $check = treegenerator(@$tree_array[$k], $i + 1, $k, $dop_cat_array);
 
             if ($k == $_GET['parent_to'])
                 $selected = 'selected';
@@ -64,10 +64,10 @@ function treegenerator($array, $i, $curent, $dop_cat_array) {
  * Экшен загрузки форм редактирования
  */
 function actionStart() {
-    global $PHPShopGUI, $PHPShopModules, $PHPShopOrm, $PHPShopSystem, $PHPShopBase,$isFrame;
+    global $PHPShopGUI, $PHPShopModules, $PHPShopOrm, $PHPShopSystem, $PHPShopBase, $isFrame;
 
     // Размер названия поля
-    $PHPShopGUI->field_col = 2;
+    $PHPShopGUI->field_col = 3;
     $PHPShopGUI->addJSFiles('./js/jquery.treegrid.js', './catalog/gui/catalog.gui.js', './js/bootstrap-treeview.min.js');
     $PHPShopGUI->addCSSFiles('./css/bootstrap-treeview.min.css');
 
@@ -100,8 +100,6 @@ function actionStart() {
     );
 
 
-    $PHPShopGUI->setActionPanel('<span class="'.$isFrame.'">'.__("Каталог") . ': </span>' . $data['name'] . ' [ID ' . $data['id'] . ']', array('Товары', 'Создать', 'Предпросмотр', '|', 'Удалить каталог'), array('Сохранить', 'Сохранить и закрыть'));
-
     // Наименование
     $Tab_info = $PHPShopGUI->setField("Название", $PHPShopGUI->setInputText(false, 'name_new', $data['name'], '100%'));
 
@@ -132,14 +130,27 @@ function actionStart() {
     $GLOBALS['tree_array'] = &$tree_array;
     $_GET['parent_to'] = $data['parent_to'];
 
+    // Блокировка ссылки на товары
+    if (!empty($GLOBALS['tree_array'][$data['id']]['sub'])) {
+        $PHPShopGUI->action_select['Товары'] = array(
+            'name' => 'Товары в каталоге',
+            'url' => '?path=' . $_GET['path'] . '&cat=' . intval($_GET['id']),
+            'class' => 'viewproduct disabled',
+        );
+    }
+
+    $PHPShopGUI->setActionPanel('<span class="' . $isFrame . '">' . __("Каталог") . ': </span>' . $data['name'] . ' [ID ' . $data['id'] . ']', array('Товары', 'Создать', 'Предпросмотр', '|', 'Удалить каталог'), array('Сохранить', 'Сохранить и закрыть'));
+
     // Допкаталоги
     $dop_cat_array = preg_split('/#/', $data['dop_cat'], -1, PREG_SPLIT_NO_EMPTY);
 
+    $tree_select = $tree_select_dop = null;
+
     if ($k == $data['parent_to'])
         $selected = 'selected';
-    if (is_array($tree_array[0]['sub']))
+    if (!empty($tree_array) and is_array($tree_array[0]['sub']))
         foreach ($tree_array[0]['sub'] as $k => $v) {
-            $check = treegenerator($tree_array[$k], 1, $k, $dop_cat_array);
+            $check = treegenerator(@$tree_array[$k], 1, $k, $dop_cat_array);
 
 
             if ($k == $data['parent_to'])
@@ -186,10 +197,10 @@ function actionStart() {
     $Tab_info .= $PHPShopGUI->setField("Товаров в длину", $num_row_area, 'left');
 
 
-    $vid = $PHPShopGUI->setCheckbox('vid_new', 1, 'Не выводить внутренние подкаталоги в меню', $data['vid']);
-    $vid .= $PHPShopGUI->setCheckbox('skin_enabled_new', 1, 'Скрыть каталог', $data['skin_enabled']);
-    $vid .= $PHPShopGUI->setCheckbox('menu_new', 1, 'Главное меню', $data['menu']);
-    $vid .= $PHPShopGUI->setCheckbox('tile_new', 1, 'Плитка на главной', $data['tile']);
+    $vid = $PHPShopGUI->setCheckbox('vid_new', 1, 'Не выводить внутренние подкаталоги в меню', $data['vid']) . '<br>';
+    $vid .= $PHPShopGUI->setCheckbox('skin_enabled_new', 1, 'Скрыть каталог', $data['skin_enabled']) . '<br>';
+    $vid .= $PHPShopGUI->setCheckbox('menu_new', 1, 'Главное меню', $data['menu']) . '<br>';
+    $vid .= $PHPShopGUI->setCheckbox('tile_new', 1, 'Плитка на главной', $data['tile']) . '<br>';
     $Tab_info .= $PHPShopGUI->setField("Опции вывода", $vid);
 
     // Товаров на странице
@@ -210,7 +221,7 @@ function actionStart() {
     $Tab1 = $PHPShopGUI->setCollapse('Информация', $Tab_info);
 
     // Иконка
-    $Tab_icon .= $PHPShopGUI->setField("Изображение", $PHPShopGUI->setIcon($data['icon'], "icon_new", false));
+    $Tab_icon = $PHPShopGUI->setField("Изображение", $PHPShopGUI->setIcon($data['icon'], "icon_new", false));
     $Tab1 .= $PHPShopGUI->setCollapse('Иконка', $Tab_icon);
 
     // Редактор
@@ -237,8 +248,9 @@ function actionStart() {
         $cache = $PHPShopGUI->setCheckbox('reset_cache', 1, __('Очистить кэш характеристик фильтра отбора по параметрам'), false);
         $Tab8 = $PHPShopGUI->setCollapse(__('Кэширование характеристик'), $cache, 'in', false);
     }
-
-    $Tab8 .= $PHPShopGUI->setCollapse('Характеристики', $PHPShopGUI->loadLib('tab_sorts', $data), 'in', false);
+    
+    $help_sort = $PHPShopGUI->setHelp('Не забудьте выбрать значение этих характеристик в товарах во вкладке Характеристики. Можно это сделать пакетно <a href="https://docs.phpshop.ru/rabota-s-bazoi/import-i-eksport#csv" target="_blank" title="Перейти">через csv файл</a>');
+    $Tab8 = $PHPShopGUI->setCollapse('Характеристики', $PHPShopGUI->loadLib('tab_sorts', $data).$help_sort, 'in', false);
 
     if (!is_array($subcategory_data))
         $Tab8 .= $PHPShopGUI->setCollapse('Варианты подтипов', tab_parent($data) . $PHPShopGUI->setHelp('Управление вариантами подтипов товаров находится в разделе <a href="?path=sort.parent" title="Перейти">Варианты подтипов</a>'), 'in', true);
@@ -262,6 +274,8 @@ function actionStart() {
     <span class="sr-only">' . __("Загрузка") . '..</span>
   </div>
 </div>';
+    else
+        $treebar = null;
 
     // Поиск категорий
     $search = '<div class="none" id="category-search" style="padding-bottom:5px;"><div class="input-group input-sm">
@@ -467,21 +481,17 @@ function actionDelete() {
 
     $category = new PHPShopCategory((int) $_POST['rowID']);
     $categories = array_column($category->getChildrenCategories(1000, ['id'], false), 'id');
-    if(count($categories) > 0) {
-        $orm = new PHPShopOrm($GLOBALS['SysValue']['base']['products']);
-        $count = $orm->select(["COUNT('id') as count"], ['category' => sprintf(' IN (%s)', implode(',', $categories))]);
-        if((int) $count['count'] > 0) {
-            if($_POST['products_operation'] === 'delete') {
-                $orm->delete(['category' => sprintf(' IN (%s)', implode(',', $categories))]);
-            } else {
-                $orm->update(['category_new' => 1000004, 'datas_new' => time()], ['category' => sprintf(' IN (%s)', implode(',', $categories))]);
-            }
-        }
-    } else {
-        $count['count'] = 0;
-    }
-
     $categories[] = (int) $_POST['rowID'];
+
+    $orm = new PHPShopOrm($GLOBALS['SysValue']['base']['products']);
+    $count = $orm->select(["COUNT('id') as count"], ['category' => sprintf(' IN (%s)', implode(',', $categories))]);
+    if ((int) $count['count'] > 0) {
+        if ($_POST['products_operation'] === 'delete') {
+            $orm->delete(['category' => sprintf(' IN (%s)', implode(',', $categories))]);
+        } else {
+            $orm->update(['category_new' => 1000004, 'datas_new' => time()], ['category' => sprintf(' IN (%s)', implode(',', $categories))]);
+        }
+    }
 
     $action = $PHPShopOrm->delete(['id' => sprintf(' IN (%s)', implode(',', $categories))]);
 

@@ -121,6 +121,11 @@ class Elastic
 
     public function getProducts($from, $size)
     {
+        $hook = $this->setHook(__CLASS__, __FUNCTION__, null, 'START');
+        if (!empty($hook)) {
+            return $hook;
+        }
+
         $orm = new PHPShopOrm('phpshop_products');
         $products = $orm->select(['*'], ['parent_enabled' => '="0"'], ['order'=>'id ASC'], ['limit' => $from . ', ' . $size]);
 
@@ -155,7 +160,7 @@ class Elastic
             }
 
             if(!empty($product['name'])) {
-                $data[] = [
+                $import = [
                     'id'                => $product['elastic_id'],
                     'title'             => $product['name'],
                     'description'       => $content,
@@ -185,7 +190,19 @@ class Elastic
                     'available'         => (int) $product['sklad'] !== 1,
                     'attributes'        => $atts
                 ];
+
+                $hook = $this->setHook(__CLASS__, __FUNCTION__, ['product' => $product, 'import' => $import], 'MIDDLE');
+                if (!empty($hook)) {
+                    $import = $hook;
+                }
+
+                $data[] = $import;
             }
+        }
+
+        $hook = $this->setHook(__CLASS__, __FUNCTION__, $data, 'END');
+        if (!empty($hook)) {
+            return $hook;
         }
 
         return $data;
@@ -276,5 +293,23 @@ class Elastic
         }
 
         return ElasticAjaxSearchFilter::getCategoriesFilter($query, $limit, $categories);
+    }
+
+    public static function isFuzziness($misprints, $queryLength)
+    {
+        if ($misprints === 0) {
+            return false;
+        }
+
+        return (int) Elastic::getOption('misprints_from_cnt') === 0 || ($queryLength >= (int) Elastic::getOption('misprints_from_cnt'));
+    }
+
+    public function setHook($class_name, $function_name, $data = false, $route = false) {
+        global $PHPShopModules;
+
+        if ($PHPShopModules instanceof PHPShopModules)
+            return $PHPShopModules->setHookHandler($class_name, $function_name, [&$this], $data, $route);
+        else
+            return false;
     }
 }

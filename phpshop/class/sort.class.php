@@ -19,6 +19,7 @@ class PHPShopSort {
      */
     var $debug = false;
     var $disp;
+    var $catdisp;
 
     /**
      * Вывод фильтра характеристик
@@ -196,7 +197,7 @@ class PHPShopSort {
 
         // Показать выбрать все
         if (!empty($all) and empty($template)) {
-            $value[] = array($title, '', $all_sel);
+            $value[] = array($title, '', null);
         }
 
         $all_sel = 'selected';
@@ -218,7 +219,7 @@ class PHPShopSort {
                     }
                 }
 
-            if (is_array($this->sort_cache['filter_cache'][$n]) && $this->filter_cache_enabled) {
+            if (!empty($this->sort_cache['filter_cache'][$n]) and is_array($this->sort_cache['filter_cache'][$n]) && $this->filter_cache_enabled) {
                 if (!in_array($id, $this->sort_cache['filter_cache'][$n])) {
                     if (!empty($this->sort_cache['products'][$n][$id]) && $this->count_products) {
                         $value[$i] = array($name, $id, $sel, $this->sort_cache['products'][$n][$id], $row['icon']);

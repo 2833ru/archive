@@ -143,7 +143,7 @@ if ($delivery_price!=0) {
                         </form>
 
                         <script>
-                            document.querySelector("#pay_form").submit();
+                            $("#pay_form").submit();
                         </script>';  
 
                         $obj->set('orderMesage', $form.'<br><br>');

@@ -12,16 +12,19 @@ function actionStart() {
     $data['enabled'] = 1;
     $data['day_num'] = 1;
     $data['news_num'] = 3;
+    
+    $data = $PHPShopGUI->valid($data,'name','color');
 
-    $PHPShopGUI->field_col = 2;
+    $PHPShopGUI->field_col = 4;
     $PHPShopGUI->setActionPanel($TitlePage, false, array('Сохранить и закрыть'));
 
     $Tab1 = $PHPShopGUI->setField("Наименование подтипа", $PHPShopGUI->setInputArg(array('type' => 'text.required', 'name' => "name_new", 'value' => $data['name'], 'placeholder' => 'Размер'))) .
             $PHPShopGUI->setField("Наименование цвета", $PHPShopGUI->setInputArg(array('type' => 'text', 'name' => "color_new", 'value' => $data['color'], 'placeholder' => 'Цвет'))) .
-            $PHPShopGUI->setField("Статус", $PHPShopGUI->setRadio("enabled_new", 1, "Вкл.", $data['enabled']) . $PHPShopGUI->setRadio("enabled_new", 0, "Выкл.", $data['enabled']) . '&nbsp;&nbsp;');
+            $PHPShopGUI->setField("Статус", $PHPShopGUI->setCheckbox("enabled_new", 1, null, $data['enabled']));
+
 
     // Вывод формы закладки
-    $PHPShopGUI->setTab(array("Основное", $Tab1,true));
+    $PHPShopGUI->setTab(array("Основное", $Tab1,true,false,'block-grid'));
 
     // Запрос модуля на закладку
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $data);

@@ -64,8 +64,6 @@ $().ready(function() {
             alert(locale.select_no);
     });
 
-
-
     // Настройка центрирования
     $('[name="option[watermark_center_enabled]"]').prop('checked', function(_, checked) {
         if (checked) {
@@ -78,7 +76,6 @@ $().ready(function() {
         $('[name="option[watermark_right]"]').attr('disabled', this.checked);
         $('[name="option[watermark_bottom]"]').attr('disabled', this.checked);
     });
-
 
     // Настройка почты
     $('[name="option[mail_smtp_enabled]"]').prop('checked', function(_, checked) {
@@ -112,7 +109,6 @@ $().ready(function() {
         $('[name="option[filter_cache_period]"]').attr('disabled', !cache_disabled);
     });
 
-
     // Применение темы оформления
     $('#theme_new').on('changed.bs.select', function() {
         theme_new = true;
@@ -124,7 +120,6 @@ $().ready(function() {
             $('#body').fadeIn('slow');
         });
     });
-
 
     // Перезагрузка страницы при смене темы
     $("button[name=editID]").on('click', function(event) {

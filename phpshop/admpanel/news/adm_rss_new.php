@@ -12,6 +12,7 @@ function actionStart() {
     $data['enabled'] = 1;
     $data['day_num'] = 1;
     $data['news_num'] = 3;
+    $data = $PHPShopGUI->valid($data,'link','servers');
 
     $PHPShopGUI->field_col = 2;
 
@@ -29,9 +30,10 @@ function actionStart() {
             $PHPShopGUI->setField("Витрины", $PHPShopGUI->loadLib('tab_multibase', $data, 'catalog/')).
             $PHPShopGUI->setField("Статус", $PHPShopGUI->setRadio("enabled_new", 1, "Вкл.", $data['enabled']) . $PHPShopGUI->setRadio("enabled_new", 0, "Выкл.", $data['enabled']) . '&nbsp;&nbsp;');
 
+    $Tab1 = $PHPShopGUI->setCollapse('Информация', $Tab1);
 
     // Вывод формы закладки
-    $PHPShopGUI->setTab(array("Основное", $Tab1,true));
+    $PHPShopGUI->setTab(array("Основное", $Tab1,true,false,true));
 
     // Запрос модуля на закладку
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $data);

@@ -36,6 +36,12 @@
 
         <!-- Header -->
         <header class="container-fluid ">
+	        <!-- Стикер-полоска -->
+	        <div class="top-banner @php __hide('sticker_close','cookie'); php@">
+				<div class="sticker-text">@sticker_top@</div>
+				<span class="close sticker-close">x</span>
+			</div>
+			<!-- /Стикер-полоска -->
             <div class="row">
                 <div class="col-md-12 hidden-xs">
                     <ul class="nav nav-pills pull-right">
@@ -181,12 +187,6 @@
                     @productDay@
                     <!--/ ProductDay Mod -->
 
-                    <div class="list-group left-block hidden-xs @php __hide('pageCatal'); php@"> 
-                        <span class="list-group-item active">{Это интересно}</span>
-                        <ul class="left-block-list">
-                            @pageCatal@
-                        </ul>
-                    </div>
 
                     @leftMenu@
                     <div class="visible-lg visible-md text-center banner">@banersDisp@</div>
@@ -208,19 +208,10 @@
                         <!-- Slider Section Starts -->
                         <!-- Nested Container Starts -->
                         <!-- Carousel Starts -->
-                        <div class="template-slider hidden-xs">
-
+                        <div class="template-slider ">
                             @imageSlider@
                         </div>
 
-                        <div class="slider col-xs-12 hidden-lg hidden-md hidden-sm">
-                            <div class="text-center">
-                                @sticker_mobile_slider@
-                            </div>
-
-                            <!-- Carousel Ends -->
-                            <!-- Nested Container Ends -->
-                        </div>
                         <!-- Slider Section Ends -->
 
                     </div>
@@ -248,6 +239,12 @@
                         <h2>{Новости}</h2>
 
                     </div>
+                    <div class="list-group left-block hidden-xs @php __hide('pageCatal'); php@"> 
+                        <span class="list-group-item active">{Это интересно}</span>
+                        <ul class="left-block-list">
+                            @pageCatal@
+                        </ul>
+                    </div>
                     <div class="news-list row">
                         @miniNews@
                     </div>
@@ -257,7 +254,7 @@
             </div>
 
 
-            <div class="visible-lg visible-md text-center banner">@sticker_banner@<br></div>
+            <div class="banner">@banersDispHorizontal@</div>
 
             <!-- toTop -->
             <div class="visible-lg visible-md">

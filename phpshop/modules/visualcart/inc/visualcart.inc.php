@@ -49,28 +49,34 @@ class AddToTemplateVisualCart extends PHPShopElements {
      * Учет реферала
      */
     function referal() {
-        $url = parse_url($_SERVER['HTTP_REFERER']);
-        $referal = $url["host"];
 
-        // Поиск UTM меток
-        parse_str($url['query'], $query);
-        $q = null;
+        if (!empty($_SERVER['HTTP_REFERER'])) {
 
-        if (is_array($query))
-            foreach ($query as $k => $v)
-                if (in_array($k, array('utm_source', 'utm_medium', 'utm_campaign')))
-                    $q .= $k . '=' . PHPShopSecurity::TotalClean ($v) . '&';
+            $url = parse_url($_SERVER['HTTP_REFERER']);
+            $referal = $url["host"];
+            $query = null;
 
-        if (!empty($q))
-            $referal .= '?' . substr($q, 0, strlen($q) - 1);
+            // Поиск UTM меток
+            if (!empty($url['query']))
+                parse_str($url['query'], $query);
+            $q = null;
 
-        if (isset($_COOKIE['ps_referal']))
-            $partner = base64_encode(base64_decode($_COOKIE['ps_referal']) . "," . $referal);
-        else
-            $partner = base64_encode($referal);
+            if (is_array($query))
+                foreach ($query as $k => $v)
+                    if (in_array($k, array('utm_source', 'utm_medium', 'utm_campaign')))
+                        $q .= $k . '=' . PHPShopSecurity::TotalClean($v) . '&';
 
-        if (strlen($_SERVER['HTTP_REFERER']) > 5 and ! strpos($_SERVER['HTTP_REFERER'], $_SERVER['SERVER_NAME']))
-            setcookie("ps_referal", $partner, time() + 60 * 60 * 24 * 90, "/", $_SERVER['SERVER_NAME'], 0);
+            if (!empty($q))
+                $referal .= '?' . substr($q, 0, strlen($q) - 1);
+
+            if (isset($_COOKIE['ps_referal']))
+                $partner = base64_encode(base64_decode($_COOKIE['ps_referal']) . "," . $referal);
+            else
+                $partner = base64_encode($referal);
+
+            if (strlen($_SERVER['HTTP_REFERER']) > 5 and ! strpos($_SERVER['HTTP_REFERER'], $_SERVER['SERVER_NAME']))
+                setcookie("ps_referal", $partner, time() + 60 * 60 * 24 * 90, "/", $_SERVER['SERVER_NAME'], 0);
+        }
     }
 
     /**
@@ -98,10 +104,16 @@ class AddToTemplateVisualCart extends PHPShopElements {
      * Проверка на авторизацию пользователя
      */
     function check_user_memory() {
-        if (empty($_SESSION['cart']) and PHPShopSecurity::true_num($_SESSION['UsersId'])) {
+
+        if (!empty($_SESSION['UsersId']))
+            $UsersId = $_SESSION['UsersId'];
+        else
+            $UsersId = null;
+
+        if (empty($_SESSION['cart']) and PHPShopSecurity::true_num($UsersId)) {
             $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['visualcart']['visualcart_memory']);
             $PHPShopOrm->debug = $this->debug;
-            $data = $PHPShopOrm->select(array('memory'), array('user' => "=" . $_SESSION['UsersId']), array('order' => 'date'), array('limit' => 1));
+            $data = $PHPShopOrm->select(array('memory'), array('user' => "=" . $UsersId), array('order' => 'date'), array('limit' => 1));
             if (is_array($data)) {
                 $this->memory = $data['memory'];
                 $this->add_cookie();
@@ -192,28 +204,28 @@ class AddToTemplateVisualCart extends PHPShopElements {
 
         if (!empty($_SESSION['UsersTel']))
             $insert['tel_new'] = $_SESSION['UsersTel'];
-        else
+        elseif(!empty($this->data['tel']))
             $insert['tel_new'] = $this->data['tel'];
 
         if (!empty($_SESSION['UsersLogin']))
             $insert['mail_new'] = $_SESSION['UsersLogin'];
-        else
+        elseif(!empty($this->data['mail']))
             $insert['mail_new'] = $this->data['mail'];
 
         if (!empty($_SESSION['UsersName']))
             $insert['name_new'] = $_SESSION['UsersName'];
-        else
+        elseif(!empty($this->data['name']))
             $insert['name_new'] = $this->data['name'];
 
         if (isset($_COOKIE['ps_referal']))
             $insert['referal_new'] = base64_decode($_COOKIE['ps_referal']);
         else
             $insert['referal_new'] = $this->data['referal'];
-        
-         if (defined("HostID"))
+
+        if (defined("HostID"))
             $insert['server_new'] = HostID;
-         
-        $insert['sendmail_new']=0;
+
+        $insert['sendmail_new'] = 0;
 
         $PHPShopOrm->insert($insert);
     }

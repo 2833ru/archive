@@ -16,12 +16,14 @@ function actionStart() {
     $PHPShopGUI->addJSFiles('./js/jquery.waypoints.min.js', './system/gui/system.gui.js', './system/gui/headers.gui.js');
     $PHPShopGUI->setActionPanel($TitlePage, false, array('Сохранить'));
 
-    $PHPShopGUI->_CODE .= '<p></p>' . $PHPShopGUI->setField('Основной заголовок (Title)', $PHPShopGUI->setTextarea('title_new', $data['title'], false, false, 100));
+    $PHPShopGUI->_CODE .= $PHPShopGUI->setField('Основной заголовок (Title)', $PHPShopGUI->setTextarea('title_new', $data['title'], false, false, 100));
     $PHPShopGUI->_CODE .= $PHPShopGUI->setField('Основное описание (Description)', $PHPShopGUI->setTextarea('descrip_new', $data['descrip'], false, false, 100));
     $PHPShopGUI->_CODE .= $PHPShopGUI->setField('Основные ключевые слова (Keywords)', $PHPShopGUI->setTextarea('keywords_new', $data['keywords'], false, false, 100));
-    $PHPShopGUI->_CODE .=$PHPShopGUI->setField("Ссылочная масса", $PHPShopGUI->setCheckbox('option[safe_links]', 1, 'Показывать отключенные товары по прямым ссылкам для поисковиков вместо 404 ошибки', $option['safe_links']));
-    
-   $PHPShopGUI->_CODE .=$PHPShopGUI->setField("Заголовок HSTS", $PHPShopGUI->setCheckbox('option[hsts]', 1, 'Открытие сайта только по протоколу HTTPS', $option['hsts']));
+    $PHPShopGUI->_CODE .= $PHPShopGUI->setField("Ссылочная масса", $PHPShopGUI->setCheckbox('option[safe_links]', 1, 'Показывать отключенные товары по прямым ссылкам для поисковиков вместо 404 ошибки', $option['safe_links']));
+
+    $PHPShopGUI->_CODE .= $PHPShopGUI->setField("Заголовок HSTS", $PHPShopGUI->setCheckbox('option[hsts]', 1, 'Открытие сайта только по протоколу HTTPS', $option['hsts']));
+
+    $PHPShopGUI->_CODE = $PHPShopGUI->setCollapse('Основные', $PHPShopGUI->_CODE);
 
     $PHPShopGUI->_CODE .= $PHPShopGUI->setCollapse('Шаблон каталога', $PHPShopGUI->loadLib('tab_headers', $data, './system/', 'catalog'));
     $PHPShopGUI->_CODE .= $PHPShopGUI->setCollapse('Шаблон подкаталога', $PHPShopGUI->loadLib('tab_headers', $data, './system/', 'podcatalog'));
@@ -33,8 +35,7 @@ function actionStart() {
 
 
     // Вывод кнопок сохранить и выход в футер
-    $ContentFooter =
-            $PHPShopGUI->setInput("hidden", "rowID", $data['id'], "right", 70, "", "but") .
+    $ContentFooter = $PHPShopGUI->setInput("hidden", "rowID", $data['id'], "right", 70, "", "but") .
             $PHPShopGUI->setInput("submit", "editID", "Сохранить", "right", 70, "", "but", "actionUpdate.system.edit") .
             $PHPShopGUI->setInput("submit", "saveID", "Применить", "right", 80, "", "but", "actionSave.system.edit");
 
@@ -66,15 +67,15 @@ function actionUpdate() {
     // Выборка
     $data = $PHPShopOrm->select();
     $option = unserialize($data['admoption']);
-    
+
     // Корректировка пустых значений
-    $PHPShopOrm->updateZeroVars('option.safe_links','option.hsts');
-    
+    $PHPShopOrm->updateZeroVars('option.safe_links', 'option.hsts');
+
     if (is_array($_POST['option']))
         foreach ($_POST['option'] as $key => $val)
             $option[$key] = $val;
-    
-   
+
+
     $_POST['admoption_new'] = serialize($option);
 
 

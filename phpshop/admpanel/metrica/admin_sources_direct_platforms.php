@@ -61,7 +61,7 @@ function actionStart() {
                 $date_end = date('Y-m-d');
                 break;
         }
-    }
+    }else $_GET['group_date']=null;
 
     $TitlePage.=' с ' . $date_start . ' по ' . $date_end;
 
@@ -85,6 +85,8 @@ function actionStart() {
         CURLOPT_URL => $url,
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_HTTPHEADER => array('Authorization: OAuth ' . $metrica_token),
+        CURLOPT_SSL_VERIFYHOST => false,
+            CURLOPT_SSL_VERIFYPEER => false
     ));
 
     $json_data = json_decode(curl_exec($сurl), true);
@@ -96,22 +98,22 @@ function actionStart() {
     $PHPShopInterface->setActionPanel($TitlePage, $select_name, array('Показать в Метрике'));
     $PHPShopInterface->setCaption(array("Платформа", "40%"), array("Визиты", "10%"), array("Посетители", "10%"), array("Отказы", "10%"), array("Глубина", "10%"), array("Время", "10%", array('align' => 'left')));
 
-    if (is_array($json_data)) {
+    if (!empty($json_data['data']) and is_array($json_data['data'])) {
 
-        $PHPShopInterface->setRow('Итого и средние', $json_data[totals][0], $json_data[totals][1], round($json_data[totals][2], 2) . '%', round($json_data[totals][3], 2), round($json_data[totals][4] / 60, 2));
+        $PHPShopInterface->setRow('Итого и средние', $json_data['totals'][0], $json_data['totals'][1], round($json_data['totals'][2], 2) . '%', round($json_data['totals'][3], 2), round($json_data['totals'][4] / 60, 2));
 
-        $json_data = $json_data[data];
+        $json_data = $json_data['data'];
 
         foreach ($json_data as $value) {
 
-            $name = PHPShopString::utf8_win1251($value[dimensions][1][name]);
-            $name_1 = PHPShopString::utf8_win1251($value[dimensions][0][name]);
-            $visits = $value[metrics][0];
-            $users = $value[metrics][1];
-            $bounceRate = $value[metrics][2];
-            $pageDepth = $value[metrics][3];
-            $avgVisitDurationSeconds = $value[metrics][4] / 60;
-            $icon = '<img src="//favicon.yandex.net/favicon/' . $value[dimensions][1][favicon] . '/" style="padding-right:5px;width:21px" />';
+            $name = PHPShopString::utf8_win1251($value['dimensions'][1]['name']);
+            $name_1 = PHPShopString::utf8_win1251($value['dimensions'][0]['name']);
+            $visits = $value['metrics'][0];
+            $users = $value['metrics'][1];
+            $bounceRate = $value['metrics'][2];
+            $pageDepth = $value['metrics'][3];
+            $avgVisitDurationSeconds = $value['metrics'][4] / 60;
+            $icon = '<img src="//favicon.yandex.net/favicon/' . $value['dimensions'][1]['favicon'] . '/" style="padding-right:5px;width:21px" />';
 
             if (!empty($name_1))
                 $name = $name_1 . ' &rarr; ' . $name;
@@ -120,7 +122,7 @@ function actionStart() {
         }
     }
 
-    $searchforma.=$PHPShopInterface->setInputDate("date_start", $date_start, 'margin-bottom:10px', null, 'Дата начала отбора');
+    $searchforma=$PHPShopInterface->setInputDate("date_start", $date_start, 'margin-bottom:10px', null, 'Дата начала отбора');
     $searchforma.=$PHPShopInterface->setInputDate("date_end", $date_end, false, null, 'Дата конца отбора');
     $searchforma.= $PHPShopInterface->setInputArg(array('type' => 'hidden', 'name' => 'path', 'value' => $_GET['path']));
 
@@ -141,7 +143,7 @@ function actionStart() {
 
     $searchforma.=$PHPShopInterface->setButton('Показать', 'search', 'btn-order-search pull-right');
 
-    if ($clean)
+    if (!empty($clean))
         $searchforma.=$PHPShopInterface->setButton('Сброс', 'remove', 'btn-order-cancel pull-left visible-lg');
 
 

@@ -82,7 +82,7 @@ class PHPShopCron {
 
     // Запуск
     function start() {
-        if (is_array($this->job))
+        if (!empty($this->job) and is_array($this->job))
             foreach ($this->job as $job) {
                 if ($job['enabled'] and empty($job['used'])) {
                     if ($this->date - $job['last_execute'] > (86400 / $job['execute_day_num'])) {

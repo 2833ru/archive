@@ -26,6 +26,11 @@
     text-align: center
 }
 
+
+html {
+	overflow-y: scroll;
+}
+
 .top-banner img {
     width: 100%;
     height: auto
@@ -793,10 +798,6 @@
 }
 @media (max-width: 768px) {
     .header-search {
-        display: none
-    }
-
-    .template-slider {
         display: none
     }
 
@@ -7389,6 +7390,9 @@ form[name="users_password"]{max-width:420px}
     .controlHolder {
         display: none!important;
     }
+ }
+
+    
 }
 #allspec {margin-bottom:30px}
 .template-product-list .row{margin-bottom:20px!important;
@@ -7419,4 +7423,78 @@ form[name="users_password"]{max-width:420px}
 #admin-modal {
     width: 100%;
     height: 600px
+}
+
+.banner-header {
+padding: 1rem 0.825rem;
+color: #454444;
+margin-top: 0.5rem;
+text-align: left;
+margin-bottom: 1rem;
+padding-left: 1rem;
+}
+
+.banner-list {
+padding: 1rem 1rem;
+color: white;
+margin: 1rem 1rem;
+text-fill-color: !important;
+}
+
+.otz {
+display: inline-block;
+color: #3F3E3E;
+padding: 6px 12px;
+margin-bottom: 0;
+font-size: 14px;
+transition: all 0.3s;
+border-radius: 0px;
+border: 0px;
+
+}
+
+.carousel-caption {
+	text-align: left;
+	color: #333;
+	text-shadow: none;
+	left: 5%;
+    bottom: 26%;
+ }
+
+ .slider-icon {
+    font-size: small;
+    background: #f8f8f8;
+    padding: 3px;
+    color: #333;
+    border-radius: 0px;
+	border: 0px;
+     }
+     
+ 
+ h2 {
+	 font-size: calc(3.375rem + 1.5vw);
+ }
+ 
+@media (max-width: 600px) {
+	
+	.carousel-caption {
+		bottom: 10%;
+	}
+	
+     .carousel-caption h2 {
+	 font-size: 20px;
+	 }
+}
+
+.block-dark {
+    background-color: #515151;
+    border-radius: 0px;
+    background-size: cover;
+}
+
+.block {
+    border-radius: 0px;
+    background-size: cover;
+    background-color: #fafafa;
+
 }

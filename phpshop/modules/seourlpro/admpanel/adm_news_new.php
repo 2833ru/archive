@@ -3,7 +3,7 @@
 function addSeoUrlPro($data) {
     global $PHPShopGUI;
 
-    $Tab3 = $PHPShopGUI->setField("SEO ссылка:", $PHPShopGUI->setInput("text", "news_seo_name_new", $data['news_seo_name'], "left", false, false, false, false, '/',  '.html'), 1);
+    $Tab3 = $PHPShopGUI->setField("SEO ссылка:", $PHPShopGUI->setInput("text", "news_seo_name_new", @$data['news_seo_name'], "left", false, false, false, false, '/',  '.html'), 1);
 
     $PHPShopGUI->addTab(array("SEO", $Tab3, 450));
 }

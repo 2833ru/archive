@@ -59,6 +59,7 @@ function actionStart() {
 
     // Проверка обновлений
     $PHPShopUpdate->checkUpdate();
+    $version=null;
 
     foreach (str_split($PHPShopUpdate->version) as $w)
         $version.=$w . '.';

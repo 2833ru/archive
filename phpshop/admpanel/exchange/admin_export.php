@@ -123,6 +123,9 @@ if ($GLOBALS['PHPShopBase']->codBase == 'utf-8')
 // Стоп лист
 $key_stop = array('password', 'wishlist', 'sort', 'yml_bid_array', 'vendor', 'files', 'vid', 'name_rambler', 'skin', 'skin_enabled', 'secure_groups', 'icon_description', 'title_enabled', 'title_shablon', 'descrip_shablon', 'descrip_enabled', 'productsgroup_check', 'productsgroup_product', 'keywords_enabled', 'keywords_shablon', 'rate_count');
 
+if(empty($subpath[2]))
+    $subpath[2]=null;
+
 switch ($subpath[2]) {
     case 'catalog':
         $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['categories']);
@@ -283,7 +286,7 @@ function actionSave() {
     }
 
     // Удалить настройки
-    if (is_array($_POST['exchanges_remove'])) {
+    if (!empty($_POST['exchanges_remove']) and is_array($_POST['exchanges_remove'])) {
         $PHPShopOrmExchanges = new PHPShopOrm($GLOBALS['SysValue']['base']['exchanges']);
         foreach ($_POST['exchanges_remove'] as $v)
             $data = $PHPShopOrmExchanges->delete(array('id' => '=' . intval($v)));
@@ -311,6 +314,9 @@ function actionSave() {
         default: $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['products']);
             break;
     }
+    
+    if(empty($_POST['export_gzip']))
+        $_POST['export_gzip']=null;
 
     $PHPShopOrm->debug = false;
     $PHPShopOrm->mysql_error = false;
@@ -332,7 +338,7 @@ function actionSave() {
     if (empty($select_action_path))
         $select_action_path = 'product';
 
-    if (is_array($_SESSION['select'][$select_action_path])) {
+    if (!empty($_SESSION['select']) and is_array($_SESSION['select'][$select_action_path])) {
         $val = array_values($_SESSION['select'][$select_action_path]);
         $where = array('id' => ' IN (' . implode(',', $val) . ')');
     } else
@@ -340,8 +346,11 @@ function actionSave() {
 
     // Память выбранных полей
     if (is_array($_POST['pattern_cols'])) {
+        
+        if(!empty($_COOKIE['check_memory'])){
         $memory = json_decode($_COOKIE['check_memory'], true);
         unset($memory[$_GET['path']]);
+        }
         foreach ($_POST['pattern_cols'] as $k => $v) {
             $memory[$_GET['path']][$v] = 1;
 
@@ -537,7 +546,7 @@ function actionSave() {
         }
 
         // Дописываем поля для характеристик
-        if (is_array($GLOBALS['sort_col_name'])) {
+        if (!empty($GLOBALS['sort_col_name']) and is_array($GLOBALS['sort_col_name'])) {
             foreach ($GLOBALS['sort_col_name'] as $k => $v)
                 $csv_title .= '"@' . $k . '"' . $delim;
         }
@@ -708,22 +717,23 @@ function actionStart() {
 
     $Tab1 = $PHPShopGUI->setField('CSV-разделитель', $PHPShopGUI->setSelect('export_delim', $delim_value, 150)) .
             $PHPShopGUI->setField('Разделитель для характеристик', $PHPShopGUI->setSelect('export_sortdelim', $delim_sortvalue, 150), 1, 'Колонка с характеристиками только для общего каталога', $class) .
-            $PHPShopGUI->setField('Полный путь для изображений', $PHPShopGUI->setCheckbox('export_imgpath', 1, 'Включить', 0), 1, 'Добавляет к изображениям адрес сайта', $class) .
+            $PHPShopGUI->setField('Полный путь для изображений', $PHPShopGUI->setCheckbox('export_imgpath', 1, null, 0), 1, 'Добавляет к изображениям адрес сайта', $class) .
             $PHPShopGUI->setField('Разделитель для изображений', $PHPShopGUI->setSelect('export_imgdelim', $delim_imgvalue, 150), 1, 'Дополнительные изображения', $class) .
             $PHPShopGUI->setField('Кодировка текста', $PHPShopGUI->setSelect('export_code', $code_value, 150)) .
             $PHPShopGUI->setField('Формат файла', $PHPShopGUI->setSelect('export_format', $format_value, 150), 1, false, $class_xml) .
-            $PHPShopGUI->setField('GZIP сжатие', $PHPShopGUI->setCheckbox('export_gzip', 1, 'Включить', 0), 1, 'Сокращает размер создаваемого файла') .
+            $PHPShopGUI->setField('GZIP сжатие', $PHPShopGUI->setCheckbox('export_gzip', 1, null, 0), 1, 'Сокращает размер создаваемого файла') .
             $PHPShopGUI->setField('Лимит строк', $PHPShopGUI->setInputText(null, 'export_limit', '0,10000', 150), 1, 'Запись c 1 по 10000');
 
     // Закладка 3
     $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['exchanges']);
     $data = $PHPShopOrm->select(array('*'), array('type' => '="export"'), array('order' => 'id DESC'), array("limit" => "1000"));
     $exchanges_value[] = array(__('Создать новую настройку'), 'new');
-    if (is_array($data))
+    if (is_array($data)){
         foreach ($data as $row) {
             $exchanges_value[] = array($row['name'], $row['id']);
             $exchanges_remove_value[] = array($row['name'], $row['id']);
         }
+    }else $exchanges_remove_value=null;
 
     $Tab3 = $PHPShopGUI->setField('Выбрать настройку', $PHPShopGUI->setSelect('exchanges', $exchanges_value, 300, false));
     $Tab3 .= $PHPShopGUI->setField('Сохранить настройку', $PHPShopGUI->setInputArg(array('type' => 'text', 'placeholder' => 'Имя настройки', 'size' => '300', 'name' => 'exchanges_new', 'class' => 'vendor_add')));
@@ -737,7 +747,7 @@ function actionStart() {
 
 
     // Вывод кнопок сохранить и выход в футер
-    $ContentFooter = $PHPShopGUI->setInput("hidden", "rowID", $data['id'], "right", 70, "", "but") .
+    $ContentFooter = $PHPShopGUI->setInput("hidden", "rowID", true, "right", 70, "", "but") .
             $PHPShopGUI->setInput("submit", "editID", "Сохранить", "right", 70, "", "but", "actionUpdate.exchange.edit") .
             $PHPShopGUI->setInput("submit", "saveID", "Применить", "right", 80, "", "but", "actionSave.exchange.edit");
 
@@ -747,7 +757,7 @@ function actionStart() {
     $select_action_path = $subpath[2];
     if (empty($select_action_path))
         $select_action_path = 'product';
-    if (is_array($_SESSION['select'][$select_action_path])) {
+    if (!empty($_SESSION['select']) and is_array($_SESSION['select'][$select_action_path])) {
 
         if (!empty($_GET['return']))
             $select_path = $_GET['return'];

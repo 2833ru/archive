@@ -64,6 +64,13 @@
                 <li class=""><a href="/map/">{Карта сайта}</a></li>
             </ul>
         </div>
+        	        <!-- Стикер-полоска -->
+	        <div class="top-banner @php __hide('sticker_close','cookie'); php@">
+				<div class="sticker-text">@sticker_top@</div>
+				<span class="close sticker-close">x</span>
+			</div>
+			<!-- /Стикер-полоска -->
+
         <!-- Header Section Starts -->
         <header>
             <div class="header-top">
@@ -167,13 +174,6 @@
             </div>
         </div>
 
-        <div class="slider col-xs-12 hidden-lg hidden-md hidden-sm">
-            <div class="container">
-                <div class="banner-block text-center hidden-lg hidden-md hidden-sm">
-                    @sticker_mobile_slider@
-                </div>
-            </div>
-
             <!-- Carousel Ends -->
             <!-- Nested Container Ends -->
         </div>
@@ -200,7 +200,7 @@
                     @productDay@
 
                     <div class="col-xs-12">
-                        <div class="hidden-xs banner-block">@sticker_banner@</div>
+                        <div class="banner-block">@banersDispHorizontal@</div>
                     </div>
 
                     <div class="col-xs-12 @php __hide('specMain'); php@">

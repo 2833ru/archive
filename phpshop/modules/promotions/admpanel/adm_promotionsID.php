@@ -50,7 +50,7 @@ function actionStart() {
     $PHPShopGUI->addJSFiles('./js/jquery.tagsinput.min.js', './js/bootstrap-datetimepicker.min.js', './promotions/gui/promotions.gui.js', '../modules/promotions/admpanel/gui/promotions.gui.js');
     $PHPShopGUI->addCSSFiles('./css/jquery.tagsinput.css', './css/bootstrap-datetimepicker.min.css');
 
-    $PHPShopGUI->field_col = 2;
+    $PHPShopGUI->field_col = 3;
 
     $Tab1 = $PHPShopGUI->setCollapse('Основное', $PHPShopGUI->setField('Название', $PHPShopGUI->setInputText('', 'name_new', $data['name'], 300)) .
             $PHPShopGUI->setField('Статус', $PHPShopGUI->setRadio("enabled_new[]", 1, "Показывать", $data['enabled']) . $PHPShopGUI->setRadio("enabled_new[]", 0, "Скрыть", $data['enabled']))
@@ -182,8 +182,8 @@ function actionStart() {
                     $PHPShopGUI->setRadio("code_tip_new", 0, "Многоразово", $data['code_tip']), 'left')
     );
 
-    // Заголовок
-    $kupon .= $PHPShopGUI->setField('Тема письма', $PHPShopGUI->setInputText('', 'header_mail_new', $data['header_mail']) . $PHPShopGUI->setHelp('Письмо будет отправлено пользователю при успешном введении промокода.'));
+       // Заголовок
+    $kupon = $PHPShopGUI->setInputText('', 'header_mail_new', $data['header_mail']) . $PHPShopGUI->setHelp('Письмо будет отправлено пользователю при успешном введении промокода.');
 
     $PHPShopGUI->setEditor($PHPShopSystem->getSerilizeParam("admoption.editor"), true);
     $oFCKeditor = new Editor('content_mail_new', true);
@@ -191,20 +191,17 @@ function actionStart() {
     $oFCKeditor->ToolbarSet = 'Normal';
     $oFCKeditor->Value = $data['content_mail'];
 
-    $kupon .= $PHPShopGUI->setField('Содержимое письма', $oFCKeditor->AddGUI());
-
-    $Tab2 = $PHPShopGUI->setCollapse('Уведомление', $kupon);
+    $Tab2 .= $PHPShopGUI->setCollapse('Содержимое письма', $oFCKeditor->AddGUI());
+    $Tab2 .= $PHPShopGUI->setCollapse('Тема письма уведомления', $kupon);
 
     $oFCKeditor = new Editor('description_new', true);
-    $oFCKeditor->Height = '120';
+    $oFCKeditor->Height = '230';
     $oFCKeditor->ToolbarSet = 'Normal';
     $oFCKeditor->Value = $data['description'];
 
-    $Tab2 .= $PHPShopGUI->setField('Описание акции на сайте', $oFCKeditor->AddGUI());
-
-
+    $Tab2 .= $PHPShopGUI->setCollapse('Описание акции на сайте', '<div>'.$oFCKeditor->AddGUI().'</div>');
     // Вывод формы закладки
-    $PHPShopGUI->setTab(array("Основное", $Tab1), array("Дополнительно", $Tab2));
+    $PHPShopGUI->setTab(array("Основное", $Tab1,true,false,true), array("Дополнительно", $Tab2,true,false,true));
 
     // Вывод кнопок сохранить и выход в футер
     $ContentFooter = $PHPShopGUI->setInput("hidden", "rowID", $data['id'], "right", 70, "", "but") .

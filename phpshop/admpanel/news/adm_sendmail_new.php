@@ -11,7 +11,8 @@ function actionStart() {
 
     // Выборка
     $data = array();
-    $PHPShopGUI->field_col = 2;
+    $PHPShopGUI->field_col = 3;
+    $data = $PHPShopGUI->valid($data,'name','content','servers');
 
 
 
@@ -27,13 +28,6 @@ function actionStart() {
     $PHPShopGUI->action_select['Разослать'] = array(
         'name' => 'Разослать пользователям',
         'action' => 'send-user'
-    );
-
-    $PHPShopGUI->action_select['Предпросмотр'] = array(
-        'name' => 'Предпросмотр',
-        'url' => '../../news/ID_' . $data['id'] . '.html',
-        'action' => 'front',
-        'target' => '_blank'
     );
 
     // Имя товара
@@ -55,10 +49,9 @@ function actionStart() {
     $oFCKeditor->Value = $data['content'];
 
     // Содержание закладки 1
-    $Tab1.=$PHPShopGUI->setField("Тема", $PHPShopGUI->setInput("text.requared", "name_new", $data['name']));
+    $Tab1=$PHPShopGUI->setField("Тема", $PHPShopGUI->setInput("text.requared", "name_new", $data['name']));
 
-    $Tab1.=$PHPShopGUI->setField("Текст письма", $oFCKeditor->AddGUI() . $PHPShopGUI->setHelp('Переменные: <code>@url@</code> - адрес сайта, <code>@user@</code> - имя подписчика, <code>@email@</code> - email подписчика, <code>@name@</code> - название магазина, <code>@tel@</code> - телефон компании'));
-
+  
     // Новости
     $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['news']);
     $data_page = $PHPShopOrm->select(array('*'), false, array('order' => 'id desc'), array('limit' => 10));
@@ -71,12 +64,16 @@ function actionStart() {
         }
 
     $Tab1.=$PHPShopGUI->setField('Содержание из новости', $PHPShopGUI->setSelect('template', $value, '100%', false, false, false, false, false, false));
+    
+    $Tab1= $PHPShopGUI->setCollapse('Информация',$Tab1);
+    
+    $Tab1.=$PHPShopGUI->setCollapse("Текст письма", $oFCKeditor->AddGUI() . $PHPShopGUI->setHelp('Переменные: <code>@url@</code> - адрес сайта, <code>@user@</code> - имя подписчика, <code>@email@</code> - email подписчика, <code>@name@</code> - название магазина, <code>@tel@</code> - телефон компании'));
 
     // Запрос модуля на закладку
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $data);
     
     // Вывод формы закладки
-    $PHPShopGUI->setTab(array("Основное", $Tab1,true));
+    $PHPShopGUI->setTab(array("Основное", $Tab1,true,false,true));
 
     // Вывод кнопок сохранить и выход в футер
     $ContentFooter = $PHPShopGUI->setInput("submit", "saveID", "ОК", "right", 70, "", "but", "actionInsert.news.create");

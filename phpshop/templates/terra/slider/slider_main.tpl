@@ -1,4 +1,3 @@
-
 <div id="main-carousel" class="carousel slide carousel-fade" data-ride="carousel">
      <!-- Indicators -->
     <ol class="carousel-indicators">

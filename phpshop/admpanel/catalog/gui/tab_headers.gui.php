@@ -9,7 +9,6 @@ function tab_headers($row) {
     
     global $PHPShopGUI;
 
-
     $title = $row['title'];
     $title_enabled = $row['title_enabled'];
     $title_shablon = $row['title_shablon'];
@@ -19,12 +18,9 @@ function tab_headers($row) {
     $keywords = $row['keywords'];
     $keywords_enabled = $row['keywords_enabled'];
     $keywords_shablon = $row['keywords_shablon'];
-
-    if (empty($row['skin']))
-        $skin = $GetSystems['skin'];
-    else
-        $skin = $row['skin'];
-
+    
+    $t1=$t2=$t3=$d1=$d2=$d3=$k1=$k2=$k3=null;
+    
     if ($title_enabled == 0) {
         $t1 = "checked";
         $t2_enabled = "none";
@@ -70,6 +66,7 @@ function tab_headers($row) {
 
     $disp = '
 <script src="./catalog/gui/headers.gui.js"></script>';
+    
     
     
     $disp.=$PHPShopGUI->setCollapse("Title",'

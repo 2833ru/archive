@@ -3,7 +3,7 @@ $().ready(function() {
     $.fn.datetimepicker.dates['ru'] = locale;
 
     // Выбрать все категории
-    $("body").on('click', "#categories_all", function() {
+    $('body').on('change', '#categories_all', function () {
         if (this.checked)
             $('[name="categories[]"]').selectpicker('selectAll');
         else

@@ -163,6 +163,7 @@ $().ready(function() {
             success: function(json) {
                 if (json['success'] != '') {
                     parent.before('<tr class="data-row" data-row="' + json['success'] + '"><td style="text-align:left"><input style="width:100%" class="form-control input-sm" name="num_value" value="' + parseInt(0 + num) + '"></td><td style="text-align:left"><input style="width:100%" data-id="' + json['success'] + '" data-edit="name_value" class="form-control input-sm editable" value="' + name + '"></td><td style="text-align:center"><div class="dropdown" id="dropdown_action"><a href="#" class="dropdown-toggle btn btn-default btn-sm" data-toggle="dropdown" role="button" aria-expanded="false"><span class="glyphicon glyphicon-cog"></span> <span class="caret"></span></a><ul class="dropdown-menu" role="menu" ><li><a href="#" data-id="' + json['success'] + '" class="value-edit">Редактировать</a></li><li class="divider"></li><li><a href="#" data-id="' + json['success'] + '" class="remove">Удалить <span class="glyphicon glyphicon-trash"></span></a></li></ul></div></td><td><span data-original-title="Удалить" class="glyphicon glyphicon-remove remove" data-id="' + json['success'] + '" data-toggle="tooltip" data-placement="top" title="Удалить"></span></td></tr>');
+                    $('.editable-add').val(null);
                     showAlertMessage(locale.save_done);
 
                 } else

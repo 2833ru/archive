@@ -18,9 +18,15 @@ function index_visyalcart_hook($obj, $row, $rout) {
         $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['visualcart']['visualcart_memory']);
         $data = $PHPShopOrm->select(array('*'), array('memory' => "='" . $_COOKIE['visualcart_memory'] . "'"), false, array('limit' => 1));
         if (is_array($data)) {
-            $_POST['mail']=$data['mail'];
-            $_POST['name_new']=$data['name'];
-            $_POST['tel_new']=$data['tel'];
+
+            if (!empty($data['mail']))
+                $_POST['mail'] = $data['mail'];
+
+            if (!empty($data['name']))
+                $_POST['name_new'] = $data['name'];
+
+            if (!empty($data['tel']))
+                $_POST['tel_new'] = $data['tel'];
         }
     }
 }

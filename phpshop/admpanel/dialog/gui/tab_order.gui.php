@@ -12,7 +12,7 @@ function tab_order() {
     if (is_array($data)) {
         $tab = '<ul class="nav nav-pills nav-stacked">';
         foreach ($data as $row) {
-            $tab .= '<li><a href="?path=order&id=' . $row['id'] . '&return=dialog" data-toggle="tooltip" data-placement="top" title="' . $row['sum'] . $currency. '">' . $row['uid'] . '<span class="pull-right text-muted" >' . PHPShopDate::get($row['datas'], false, false, '.') . '</span></a></li>';
+            $tab .= '<li><a href="?path=order&id=' . $row['id'] . '&return='.$_GET['path'].'" data-toggle="tooltip" data-placement="top" title="' . $row['sum'] . $currency. '">' . $row['uid'] . '<span class="pull-right text-muted" >' . PHPShopDate::get($row['datas'], false, false, '.') . '</span></a></li>';
         }
         $tab .= '</ul>';
     } else

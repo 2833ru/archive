@@ -32,6 +32,8 @@ class PHPShopOrderFunction extends PHPShopObj {
 
             // Содержание корзины
             $paramOrder = parent::unserializeParam("orders");
+            
+            if(!empty($paramOrder['Person']['order_metod']))
             $this->order_metod_id = $paramOrder['Person']['order_metod'];
         }
 
@@ -189,7 +191,13 @@ class PHPShopOrderFunction extends PHPShopObj {
 
         // Бонусы
         PHPShopObj::loadClass('bonus');
-        $PHPShopBonus = new PHPShopBonus($_SESSION['UsersId']);
+
+        if (!empty($_SESSION['UsersId']))
+            $UsersId = $_SESSION['UsersId'];
+        else
+            $UsersId = null;
+
+        $PHPShopBonus = new PHPShopBonus($UsersId);
         $this->bonus_minus = $PHPShopBonus->getUserBonus($sum);
         $this->bonus_plus = $PHPShopBonus->setUserBonus($sum);
 
@@ -234,7 +242,7 @@ class PHPShopOrderFunction extends PHPShopObj {
         $maxsum = 0;
         $maxdiscount = 0;
         $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['discount']);
-        $row = $PHPShopOrm->select(array('*'), array('sum' => "<=".intval($mysum), 'enabled' => "='1'"), array('order' => 'sum desc'), array('limit' => 1));
+        $row = $PHPShopOrm->select(array('*'), array('sum' => "<=" . intval($mysum), 'enabled' => "='1'"), array('order' => 'sum desc'), array('limit' => 1));
         if (is_array($row)) {
             $sum = $row['sum'];
             if ($sum > $maxsum) {
@@ -489,9 +497,11 @@ class PHPShopOrderFunction extends PHPShopObj {
     function getSerilizeParam($param) {
         $param = explode(".", $param);
         $val = parent::unserializeParam($param[0]);
-        if (count($param) > 2)
-            return $val[$param[1]][$param[2]];
-        return $val[$param[1]];
+        if (!empty($param) and is_array($param) and count($param) > 2){
+            if(!empty($val[$param[1]][$param[2]]))
+              return $val[$param[1]][$param[2]];
+        }
+        else return $val[$param[1]];
     }
 
     /**
@@ -541,7 +551,7 @@ class PHPShopOrderFunction extends PHPShopObj {
             foreach ($order['Cart']['cart'] as $val) {
                 $product = new PHPShopProduct((int) $val['id']);
                 if (is_array($product->objRow)) {
-                    $product->removeFromWarehouse($val['num'], (int) $val['parent'], $warehouseID);
+                    $product->removeFromWarehouse($val['num'], (int) @$val['parent'], $warehouseID);
                 }
             }
         }
@@ -621,7 +631,7 @@ class PHPShopOrderFunction extends PHPShopObj {
         $serializedStatus['time'] = PHPShopDate::dataV();
         $update = [
             'statusi_new' => $statusId,
-            'status_new'  => serialize($serializedStatus)
+            'status_new' => serialize($serializedStatus)
         ];
         // Если статус "Оплачено платежными системами" - отмечаем заказ оплаченным
         if ($statusId === 101) {

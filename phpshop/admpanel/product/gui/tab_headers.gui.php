@@ -69,9 +69,9 @@ function tab_headers($row) {
 
 
     $disp.=$PHPShopGUI->setCollapse("Title", '
-<label><input type="radio" value="0" name="title_enabled_new" onclick="document.getElementById(\'titleForma\').style.display=\'none\';document.getElementById(\'titleShablon\').style.display=\'none\'" ' . $t1 . '> '.__('Автоматическая генерация').'</label>&nbsp;&nbsp;&nbsp;
-<label><input type="radio" value="2" name="title_enabled_new" onclick="document.getElementById(\'titleShablon\').style.display=\'block\';document.getElementById(\'titleForma\').style.display=\'none\'" ' . $t3 . '> '.__('Мой шаблон').'</label> &nbsp;&nbsp;&nbsp;
-<label><input type="radio" value="1" name="title_enabled_new"  onclick="document.getElementById(\'titleForma\').style.display=\'block\';document.getElementById(\'titleShablon\').style.display=\'none\'" ' . $t2 . '> '.__('Ручная настройка').'</label><br>
+<label><input type="radio" value="0" name="title_enabled_new" onclick="document.getElementById(\'titleForma\').style.display=\'none\';document.getElementById(\'titleShablon\').style.display=\'none\'" ' . @$t1 . '> '.__('Автоматическая генерация').'</label>&nbsp;&nbsp;&nbsp;
+<label><input type="radio" value="2" name="title_enabled_new" onclick="document.getElementById(\'titleShablon\').style.display=\'block\';document.getElementById(\'titleForma\').style.display=\'none\'" ' . @$t3 . '> '.__('Мой шаблон').'</label> &nbsp;&nbsp;&nbsp;
+<label><input type="radio" value="1" name="title_enabled_new"  onclick="document.getElementById(\'titleForma\').style.display=\'block\';document.getElementById(\'titleShablon\').style.display=\'none\'" ' . @$t2 . '> '.__('Ручная настройка').'</label><br>
     
 <div id="titleShablon" style="display:' . $t3_enabled . '">
 <textarea class="form-control" name="title_shablon_new" id="Shablon">' . $title_shablon . '</textarea>
@@ -94,9 +94,9 @@ function tab_headers($row) {
 </div>');
 
     $disp.=$PHPShopGUI->setCollapse("Description", '<label>
-<input type="radio" value="0" name="descrip_enabled_new" onclick="document.getElementById(\'titleFormaD\').style.display=\'none\';document.getElementById(\'titleShablonD\').style.display=\'none\'" ' . $d1 . '> '.__('Автоматическая генерация').'</label>&nbsp;&nbsp;&nbsp;
-<label><input type="radio" value="2" name="descrip_enabled_new" onclick="document.getElementById(\'titleShablonD\').style.display=\'block\';document.getElementById(\'titleFormaD\').style.display=\'none\'" ' . $d3 . '> '.__('Мой шаблон').'</label>&nbsp;&nbsp;&nbsp;
-<label><input type="radio" value="1" name="descrip_enabled_new"  onclick="document.getElementById(\'titleFormaD\').style.display=\'block\';document.getElementById(\'titleShablonD\').style.display=\'none\'" ' . $d2 . '> '.__('Ручная настройка').'</label><br>
+<input type="radio" value="0" name="descrip_enabled_new" onclick="document.getElementById(\'titleFormaD\').style.display=\'none\';document.getElementById(\'titleShablonD\').style.display=\'none\'" ' . @$d1 . '> '.__('Автоматическая генерация').'</label>&nbsp;&nbsp;&nbsp;
+<label><input type="radio" value="2" name="descrip_enabled_new" onclick="document.getElementById(\'titleShablonD\').style.display=\'block\';document.getElementById(\'titleFormaD\').style.display=\'none\'" ' . @$d3 . '> '.__('Мой шаблон').'</label>&nbsp;&nbsp;&nbsp;
+<label><input type="radio" value="1" name="descrip_enabled_new"  onclick="document.getElementById(\'titleFormaD\').style.display=\'block\';document.getElementById(\'titleShablonD\').style.display=\'none\'" ' . @$d2 . '> '.__('Ручная настройка').'</label><br>
     
 <div id="titleShablonD" style="display:' . $d3_enabled . '">
 <textarea class="form-control" name="descrip_shablon_new" id="ShablonD">' . $descrip_shablon . '</textarea>
@@ -121,9 +121,9 @@ function tab_headers($row) {
     $disp.=$PHPShopGUI->setCollapse("Keywords", '
 
 <label>
-<input type="radio" value="0" name="keywords_enabled_new" onclick="document.getElementById(\'titleFormaK\').style.display=\'none\';document.getElementById(\'titleShablonK\').style.display=\'none\'" ' . $k1 . '> '.__('Автоматическая генерация').'</label>&nbsp;&nbsp;&nbsp;
-<label><input type="radio" value="2" name="keywords_enabled_new" onclick="document.getElementById(\'titleShablonK\').style.display=\'block\';document.getElementById(\'titleFormaK\').style.display=\'none\'" ' . $k3 . '> '.__('Мой шаблон').'</label> &nbsp;&nbsp;&nbsp;
-<label><input type="radio" value="1" name="keywords_enabled_new"  onclick="document.getElementById(\'titleFormaK\').style.display=\'block\';document.getElementById(\'titleShablonK\').style.display=\'none\'" ' . $k2 . '> '.__('Ручная настройка').'</label><br>
+<input type="radio" value="0" name="keywords_enabled_new" onclick="document.getElementById(\'titleFormaK\').style.display=\'none\';document.getElementById(\'titleShablonK\').style.display=\'none\'" ' . @$k1 . '> '.__('Автоматическая генерация').'</label>&nbsp;&nbsp;&nbsp;
+<label><input type="radio" value="2" name="keywords_enabled_new" onclick="document.getElementById(\'titleShablonK\').style.display=\'block\';document.getElementById(\'titleFormaK\').style.display=\'none\'" ' . @$k3 . '> '.__('Мой шаблон').'</label> &nbsp;&nbsp;&nbsp;
+<label><input type="radio" value="1" name="keywords_enabled_new"  onclick="document.getElementById(\'titleFormaK\').style.display=\'block\';document.getElementById(\'titleShablonK\').style.display=\'none\'" ' . @$k2 . '> '.__('Ручная настройка').'</label><br>
 <div id="titleShablonK" style="display:' . $k3_enabled . '">
 <textarea class="form-control" name="keywords_shablon_new" id="ShablonK">' . $keywords_shablon . '</textarea>
      <div class="btn-group" role="group" aria-label="...">

@@ -20,6 +20,7 @@
                 </div>
 
                 <div class="col-md-9 col-xs-12 main">
+	                @banersDispHorizontal@
                     @DispShop@
                     @getPhotos@
                 </div>

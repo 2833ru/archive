@@ -11,9 +11,10 @@ CREATE TABLE `phpshop_modules_marketplaces_system` (
   `id` int(11) NOT NULL auto_increment,
   `password` varchar(64),
   `use_params` enum('0','1') DEFAULT '0',
+  `description_template` varchar(255),
   `version` varchar(64) default '1.0',
   `options` BLOB,
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=cp1251 ;
+) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
 
-INSERT INTO `phpshop_modules_marketplaces_system` VALUES (1,'', 0, '1.0', '');
+INSERT INTO `phpshop_modules_marketplaces_system` VALUES (1,'', 0, '', '1.1', '');

@@ -21,7 +21,7 @@ function tab_userorders($data, $option) {
     if (is_array($data))
         foreach ($data as $row) {
 
-            if (empty($row['fio'])) {
+            if (empty($row['fio']) and !empty($row['mail'])) {
                 $row['fio'] = $row['mail'];
             }
 
@@ -46,6 +46,8 @@ function tab_userorders($data, $option) {
             
             $total+=$row['sum'];
             $i++;
+           
+            $color[0]['color']=null;
 
             $PHPShopInterface->setRow(array('name' => $uid, 'link' => '?path=order&return=intro&id=' . $row['id']),array('name' => '<span class="hidden-xs" style="color:' . $color[$row['statusi']]['color'] . '">' . $status_name . '</span>', 'link' => '?path=order&return=intro&id=' . $row['id'], 'class' => 'label-link'),  array('name' => $datas),array('name' => $PHPShopOrder->getDiscount().' %'),  array('name' => $row['sum'] . ' ' . $currency, 'align' => 'right', 'class' => ''));
         }

@@ -1,11 +1,43 @@
 // Переопределение функции
 var STATUS_EVENT = true;
+var TABLE_EVENT = true;
 
+$().ready(function () {
 
-$().ready(function() {
+    if (typeof ($.cookie('data_length')) == 'undefined')
+        var data_length = [10, 25, 50];
+    else
+        var data_length = [parseInt($.cookie('data_length')), 10, 25, 50];
+
+    var table = $('#data').dataTable({
+        "lengthMenu": data_length,
+        "paging": true,
+        "ordering": true,
+        "info": false,
+        "language": locale.dataTable,
+        "aaSorting": [],
+        "columnDefs": [
+            {"orderable": false, "targets": 0}
+        ],
+        "fnDrawCallback": function () {
+
+            // Активация из списка dropdown
+            $('.data-row').hover(
+                    function () {
+                        $(this).find('#dropdown_action').show();
+                    },
+                    function () {
+                        $(this).find('#dropdown_action').hide();
+                    });
+                    
+            // Toggle
+            $('.toggle-event').bootstrapToggle();
+        },
+
+    });
 
     // Загрузка модуля
-    $('body').on('click', '.load-module', function() {
+    $('body').on('click', '.load-module', function () {
         var file = prompt('URL');
         if (file.length > 0) {
 
@@ -13,13 +45,13 @@ $().ready(function() {
             data.push({name: 'ajax', value: 1});
             data.push({name: 'url', value: file});
             $.ajax({
-                mimeType: 'text/html; charset='+locale.charset,
+                mimeType: 'text/html; charset=' + locale.charset,
                 url: '?path=modules.load&id=load',
                 type: 'post',
                 data: data,
                 dataType: "json",
                 async: false,
-                success: function(json) {
+                success: function (json) {
                     if (json['success'] == 1) {
                         showAlertMessage(json['result']);
                     } else
@@ -29,33 +61,26 @@ $().ready(function() {
         }
     });
 
-
-    // Есть идеи развития?
-    $(".idea").on('click', function(event) {
-        event.preventDefault();
-        window.open($(this).attr('data-option'));
-    });
-
     // Выключение из настроек модуля
-    $(".select-action .off").on('click', function(event) {
+    $(".select-action .off").on('click', function (event) {
         event.preventDefault();
 
         $.MessageBox({
             buttonDone: "OK",
             buttonFail: locale.cancel,
             message: locale.confirm_off
-        }).done(function() {
+        }).done(function () {
 
             var data = [];
             data.push({action: 0, ajax: 1, id: 'button'});
             $.ajax({
-                mimeType: 'text/html; charset='+locale.charset,
+                mimeType: 'text/html; charset=' + locale.charset,
                 url: '?path=modules.action&id=' + $.getUrlVar('id'),
                 type: 'post',
                 data: data,
                 dataType: "html",
                 async: false,
-                success: function() {
+                success: function () {
                     window.location.href = '?path=modules';
                 }
             });
@@ -63,7 +88,7 @@ $().ready(function() {
     });
 
     // Выключение с выбранными модулями
-    $(".select-action .module-off-select").on('click', function(event) {
+    $(".select-action .module-off-select").on('click', function (event) {
         event.preventDefault();
 
         if ($('input:checkbox:checked').length) {
@@ -72,9 +97,9 @@ $().ready(function() {
                 buttonDone: "OK",
                 buttonFail: locale.cancel,
                 message: locale.confirm_off
-            }).done(function() {
+            }).done(function () {
 
-                $('input:checkbox:checked').each(function() {
+                $('input:checkbox:checked').each(function () {
                     var id = $(this).attr('data-id');
                     var parent = $(this).closest('.data-row');
 
@@ -83,7 +108,7 @@ $().ready(function() {
 
                     $('.list_edit_' + id).append('<input type="hidden" name="action" value="0">');
                     $('.list_edit_' + id).ajaxSubmit({
-                        success: function(json) {
+                        success: function (json) {
                             var data = $.parseJSON(json);
 
                             parent.removeClass('success');
@@ -100,6 +125,7 @@ $().ready(function() {
 
                             // Статус меню
                             parent.find('#dropdown_status_' + id).html(locale.off);
+                            parent.find('.toggle-event').bootstrapToggle('back');
 
                             // Экшен меню
                             parent.find('.dropdown-menu .off').html('Включить <span class="glyphicon glyphicon-play"></span>');
@@ -113,13 +139,12 @@ $().ready(function() {
                     });
                 });
             })
-        }
-        else
+        } else
             alert(locale.select_no);
     });
 
     // Включение с выбранными модулями
-    $(".select-action .module-on-select").on('click', function(event) {
+    $(".select-action .module-on-select").on('click', function (event) {
         event.preventDefault();
 
         if ($('input:checkbox:checked').length) {
@@ -128,9 +153,9 @@ $().ready(function() {
                 buttonDone: "OK",
                 buttonFail: locale.cancel,
                 message: locale.confirm_on
-            }).done(function() {
+            }).done(function () {
 
-                $('input:checkbox:checked').each(function() {
+                $('input:checkbox:checked').each(function () {
                     var id = $(this).attr('data-id');
                     var parent = $(this).closest('.data-row');
 
@@ -139,7 +164,7 @@ $().ready(function() {
 
                     $('.list_edit_' + id).append('<input type="hidden" name="action" value="1">');
                     $('.list_edit_' + id).ajaxSubmit({
-                        success: function(json) {
+                        success: function (json) {
                             var data = $.parseJSON(json);
 
                             parent.addClass('success');
@@ -155,6 +180,7 @@ $().ready(function() {
 
                             // Статус меню
                             parent.find('#dropdown_status_' + id).html(locale.on);
+                            parent.find('.toggle-event').bootstrapToggle('back');
 
                             // Акшион меню
                             parent.find('.dropdown-menu .on').html('Выключить <span class="glyphicon glyphicon-stop"></span>');
@@ -168,40 +194,41 @@ $().ready(function() {
                 });
             })
 
-        }
-        else
+        } else
             alert(locale.select_no);
     });
 
     // Быстрое изменение статуса модуля
-    $("body").on('click', ".data-row .status", function(event) {
-        event.preventDefault();
+    $('body').on('change', '.toggle-event', function () {
+
         var id = $(this).attr('data-id');
+        var element = $(this);
+
+        if ($(this).prop('checked') === true)
+            var val = 1;
+        else
+            var val = 0;
+
         var caption = $(this).html();
-        var val = $(this).attr('data-val');
         var parent = $(this).closest('.data-row');
         var message;
-
-        // Выделение выбранного элемента
-        $(this).closest('ul').find('li').removeClass('disabled');
-        $(this).parent('li').addClass('disabled');
 
         if (val == 0)
             message = locale.confirm_off;
         else
             message = locale.confirm_on;
 
-        var data_val = $(this).attr('data-val');
-
         $.MessageBox({
             buttonDone: "OK",
             buttonFail: locale.cancel,
             message: message
-        }).done(function() {
+        }).fail(function () {
+            element.bootstrapToggle('back');
+        }).done(function () {
 
-            $('.status_edit_' + id).append('<input type="hidden" name="action" value="' + data_val + '">');
+            $('.status_edit_' + id).append('<input type="hidden" name="action" value="' + val + '">');
             $('.status_edit_' + id).ajaxSubmit({
-                success: function(json) {
+                success: function (json) {
                     var data = $.parseJSON(json);
 
                     $("#dropdown_status_" + id).html(caption);
@@ -227,8 +254,7 @@ $().ready(function() {
 
                         // Меню настройка добавление
                         parent.find('.dropdown-menu .divider').before('<li><a href="' + parent.find('.modules-list>a').attr('href') + '">Настройки</a></li>');
-                    }
-                    else {
+                    } else {
                         $('#modules-menu').find('a[href="' + parent.find('.modules-list>a').attr('href') + '"]').parent('li').empty();
 
                         parent.find('.dropdown-menu .off').html('Включить <span class="glyphicon glyphicon-play"></span>');
@@ -240,26 +266,25 @@ $().ready(function() {
 
                 }
             });
-        })
-
+        });
     });
 
     // Управление модулями из списка dropmenu
-    $("body").on('click', ".data-row .on", function(event) {
+    $("body").on('click', ".data-row #dropdown_action .on", function (event) {
         event.preventDefault();
         var parent = $(this).closest('.data-row');
         var id = $(this);
-        var data_id=$(this).attr('data-id');
+        var data_id = $(this).attr('data-id');
 
         $.MessageBox({
             buttonDone: "OK",
             buttonFail: locale.cancel,
             message: locale.confirm_on
-        }).done(function() {
+        }).done(function () {
 
             $('.list_edit_' + data_id).append('<input type="hidden" name="action" value="1">');
             $('.list_edit_' + data_id).ajaxSubmit({
-                success: function(json) {
+                success: function (json) {
 
                     var data = $.parseJSON(json);
 
@@ -284,10 +309,10 @@ $().ready(function() {
 
                         // Статус меню
                         parent.find('#dropdown_status_' + id.attr('data-id')).html('Вкл.');
+                        parent.find('.toggle-event').bootstrapToggle('back');
 
                         showAlertMessage(locale.module_done);
-                    }
-                    else
+                    } else
                         showAlertMessage(locale.save_false, true);
                 }
             });
@@ -295,21 +320,21 @@ $().ready(function() {
 
     });
 
-    $("body").on('click', ".data-row .off", function(event) {
+    $("body").on('click', ".data-row #dropdown_action .off", function (event) {
         event.preventDefault();
         var parent = $(this).closest('.data-row');
         var id = $(this);
-        var data_id=$(this).attr('data-id');
-        
+        var data_id = $(this).attr('data-id');
+
         $.MessageBox({
             buttonDone: "OK",
             buttonFail: locale.cancel,
             message: locale.confirm_on
-        }).done(function() {
+        }).done(function () {
 
             $('.list_edit_' + data_id).append('<input type="hidden" name="action" value="0">');
             $('.list_edit_' + data_id).ajaxSubmit({
-                success: function(json) {
+                success: function (json) {
                     parent.toggleClass('success');
 
                     id.html('Включить <span class="glyphicon glyphicon-play"></span>');
@@ -330,21 +355,22 @@ $().ready(function() {
 
                     // Статус меню
                     parent.find('#dropdown_status_' + id.attr('data-id')).html('<span class="text-muted">Выкл</span>');
+                    parent.find('.toggle-event').bootstrapToggle('back');
 
                     showAlertMessage(locale.module_done);
                 }
             });
         })
 
-      
+
     });
 
     // Иконки оформления меню
-    $(".data-row .off, .select-action .off").append(' <span class="glyphicon glyphicon-stop"></span>');
-    $(".data-row .on").append(' <span class="glyphicon glyphicon-play"></span>');
+    $(".data-row .dropdown-menu .off, .select-action .off").append(' <span class="glyphicon glyphicon-stop"></span>');
+    $(".data-row .dropdown-menu .on").append(' <span class="glyphicon glyphicon-play"></span>');
 
     // Установленные модули
-    $('table#data tr').each(function(key, value) {
+    $('table#data tr').each(function (key, value) {
         if (key > 0) {
             if ($(value).find('.install-date').html() != '') {
                 $(value).addClass('success');
@@ -353,24 +379,23 @@ $().ready(function() {
     });
 
     // Ссылка на модуль или инструкцию
-    $(".modules-list > a").on('click', function(event) {
+    $("body").on('click', ".modules-list > a", function (event) {
         event.preventDefault();
         if ($(this).closest('.data-row').find('.install-date').html() == '') {
             if ($(this).attr('data-wiki') != "")
                 window.open($(this).attr('data-wiki'));
-        }
-        else
+        } else
             window.location.href = $(this).attr('href');
     });
 
     // Инструкция из списка
-    $(".data-row .manual").on('click', function(event) {
+    $(".data-row .manual").on('click', function (event) {
         event.preventDefault();
         window.open($(this).closest('.data-row').find('.modules-list > a').attr('data-wiki'));
     });
 
     // Настройка из списка
-    $(".data-row .option").on('click', function(event) {
+    $(".data-row .option").on('click', function (event) {
         event.preventDefault();
         window.location.href = $(this).closest('.data-row').find('.modules-list > a').attr('href');
     });
@@ -380,11 +405,10 @@ $().ready(function() {
         $('.treegrid-' + modcat).addClass('treegrid-active');
 
     // Дерево категорий
-    if (typeof(TREEGRID_LOAD) != 'undefined')
+    if (typeof (TREEGRID_LOAD) != 'undefined')
         $('.tree').treegrid({
             saveState: true,
             expanderExpandedClass: 'glyphicon glyphicon-triangle-bottom',
             expanderCollapsedClass: 'glyphicon glyphicon-triangle-right'
         });
-
 });

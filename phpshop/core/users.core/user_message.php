@@ -59,15 +59,19 @@ function user_message($obj) {
         $bot = $obj->PHPShopSystem->getSerilizeParam('admoption.telegram_bot');
         $telegram_enabled =null;
         $telegram_path = 'https://telegram.me/' . $bot . '?start=' . $_SESSION['UsersBot'];
-    } else
+    } else{
         $telegram_enabled='hidden';
+        $telegram_path = null;
+    }
 
     if ($obj->PHPShopSystem->ifSerilizeParam('admoption.vk_enabled', 1)) {
         $bot = $obj->PHPShopSystem->getSerilizeParam('admoption.vk_bot');
         $vk_path= 'https://vk.me/' . $bot . '?ref=' . $_SESSION['UsersBot'];
         $vk_enabled = null;
-    } else
+    } else{
         $vk_enabled= 'hidden';
+        $vk_path=null;
+    }
 
     $disp .= '
           <div id="message-list">' . $message . '</div>
@@ -98,6 +102,7 @@ function user_message($obj) {
 function viewMessage($data) {
     global $chat_ids;
 
+    $message=null;
     if (is_array($data)) {
         foreach ($data as $row) {
 

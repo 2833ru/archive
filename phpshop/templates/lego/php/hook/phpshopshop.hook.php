@@ -12,21 +12,22 @@ function template_CID_Product($obj, $data, $rout) {
         // Âèðòóàëüíûå êàòàëîãè
         $obj->cat_template = 'sortñattemplatehook';
 
-
-        switch ($_GET['gridChange']) {
-            case 1:
-                $obj->set('gridSetAactive', 'active');
-                break;
-            case 2:
-                $obj->set('gridSetBactive', 'active');
-                break;
-            default: if ($obj->cell == 1)
+        if (!empty($_GET['gridChange']))
+            switch ($_GET['gridChange']) {
+                case 1:
                     $obj->set('gridSetAactive', 'active');
-                else
+                    break;
+                case 2:
                     $obj->set('gridSetBactive', 'active');
-        }
+                    break;
+                default: if ($obj->cell == 1)
+                        $obj->set('gridSetAactive', 'active');
+                    else
+                        $obj->set('gridSetBactive', 'active');
+            }
 
 
+        if (!empty($_GET['s']))
         switch ($_GET['s']) {
             case 1:
                 $obj->set('sSetAactive', 'active');
@@ -38,6 +39,7 @@ function template_CID_Product($obj, $data, $rout) {
         }
 
 
+        if (!empty($_GET['f']))
         switch ($_GET['f']) {
             case 1:
                 $obj->set('fSetAactive', 'active');
@@ -256,7 +258,7 @@ function template_UID($obj, $dataArray, $rout) {
         else
             $obj->set('newtipIcon', '');
 
-        if(!empty($dataArray['sklad']) || ($obj->user_price_activate == 1 and empty($_SESSION['UsersId']))) {
+        if (!empty($dataArray['sklad']) || ($obj->user_price_activate == 1 and empty($_SESSION['UsersId']))) {
             $obj->set('legoPurchaseDisabled', 'hide hidden');
         } else {
             $obj->set('legoPurchaseDisabled', '');
@@ -297,7 +299,7 @@ function sorttemplatehook($value, $n, $title, $vendor) {
     $limit = 5;
     $disp = null;
     $num = 0;
-    
+
     if (is_array($value)) {
         foreach ($value as $p) {
 
@@ -359,10 +361,10 @@ function template_image_gallery($obj, $array) {
     $productTitle = str_replace(array('"', "'"), '', $array['name']);
 
     // Íåò äàííûõ â ãàëåðåå
-    if(count($data) === 0 and !empty($array['pic_big']))
+    if (count($data) === 0 and ! empty($array['pic_big']))
         $data[] = array('name' => $array['pic_big']);
 
-    if(count($data) === 0) {
+    if (count($data) === 0) {
         $data[] = array('name' => sprintf('phpshop/templates/%s/images/no_photo.png', SkinName));
     }
 
@@ -381,9 +383,9 @@ function template_image_gallery($obj, $array) {
         $small = str_replace(".", "s.", $original);
         $big = str_replace(".", "_big.", $original);
 
-        if (!$obj->PHPShopSystem->ifSerilizeParam('admoption.image_save_source') or !file_exists($_SERVER['DOCUMENT_ROOT'] . $big))
+        if (!$obj->PHPShopSystem->ifSerilizeParam('admoption.image_save_source') or ! file_exists($_SERVER['DOCUMENT_ROOT'] . $big))
             $big = $original;
-        if(!file_exists($_SERVER['DOCUMENT_ROOT'] . $small)) {
+        if (!file_exists($_SERVER['DOCUMENT_ROOT'] . $small)) {
             $small = $big;
         }
 
@@ -403,7 +405,7 @@ function template_image_gallery($obj, $array) {
     $obj->set('productSliderSlides', $slides);
     $obj->set('productSliderThumbs', $thumbs);
     $obj->set('productSliderControls', $controls);
-    $obj->set('productSliderOneImage', sprintf('<img class="one-image-slider" data-src="%s" alt="%s" title="%s"/>', !empty($array['pic_big']) ? $array['pic_big'] : $data[0]['name'] , $productTitle, $productTitle));
+    $obj->set('productSliderOneImage', sprintf('<img class="one-image-slider" data-src="%s" alt="%s" title="%s"/>', !empty($array['pic_big']) ? $array['pic_big'] : $data[0]['name'], $productTitle, $productTitle));
 
     return true;
 }

@@ -9,30 +9,31 @@ function actionStart() {
     global $PHPShopGUI, $TitlePage, $PHPShopModules;
 
     // Начальные данные
-    $data['enabled'] = 1;
+    $data['enabled'] = $data['warehouse'] = 1;
+    $data = $PHPShopGUI->valid($data, 'name', 'discount', 'price', 'cumulative_discount', 'cumulative_discount_check','warehouse');
 
     // Размер названия поля
-    $PHPShopGUI->field_col = 2;
+    $PHPShopGUI->field_col = 4;
     $PHPShopGUI->addJSFiles('./shopusers/gui/shopusers.gui.js');
-    $PHPShopGUI->setActionPanel(__("Покупатели") . ' / ' .$TitlePage, false, array('Сохранить и закрыть', 'Создать и редактировать'));
+    $PHPShopGUI->setActionPanel(__("Покупатели") . ' / ' . $TitlePage, false, array('Сохранить и закрыть', 'Создать и редактировать'));
     // Содержание закладки 1
     $Tab1 = $PHPShopGUI->setCollapse('Информация', $PHPShopGUI->setField("Название", $PHPShopGUI->setInput('text.required', "name_new", $data['name'])) .
             $PHPShopGUI->setField("Скидка", $PHPShopGUI->setInputText('%', "discount_new", $data['discount'], 100)) .
             $PHPShopGUI->setField("Колонка цен", $PHPShopGUI->setSelect('price_new', $PHPShopGUI->setSelectValue($data['price'], 5), 100)) .
-            $PHPShopGUI->setField("Статус", $PHPShopGUI->setRadio("enabled_new", 1, "Вкл.", $data['enabled']) . $PHPShopGUI->setRadio("enabled_new", 0, "Выкл.", $data['enabled'])
-    ));
+            $PHPShopGUI->setField("Статус", $PHPShopGUI->setRadio("enabled_new", 1, "Вкл.", $data['enabled']) . $PHPShopGUI->setRadio("enabled_new", 0, "Выкл.", $data['enabled'])) .
+            $PHPShopGUI->setField("Склад", $PHPShopGUI->setRadio("warehouse_new", 1, "Вкл.", $data['warehouse']) . $PHPShopGUI->setRadio("warehouse_new", 0, "Выкл.", $data['warehouse']))
+    );
 
-    $Tab1.= $PHPShopGUI->setCollapse('Накопительные скидки', 
-            $PHPShopGUI->setField(null,'<p class="text-muted hidden-xs">'.__('Для учета мгновенной скидки от текущей стоимости заказа без привязки к статусу пользователя и накопления перейдите в раздел').' <a href="?path=shopusers.discount"><span class="glyphicon glyphicon-share-alt"></span> '.__('Скидки от заказа').'</a>.<br>'. __('Для учета накопительной скидки требуется включить опцию учета скидки покупателя в нужном статусе заказа, например "Выполнен"').'.</p>').
-            $PHPShopGUI->setField("Скидки от суммы заказов", $PHPShopGUI->setCheckbox('cumulative_discount_check_new', 1, 'Использование накопительной скидки', $data['cumulative_discount_check']) .
-                    $PHPShopGUI->loadLib('tab_discount', $data['cumulative_discount'], 'shopusers/'))
+    $Tab1 .= $PHPShopGUI->setCollapse('Накопительные скидки', '<p class="text-muted hidden-xs">' . __('Для учета мгновенной скидки от текущей стоимости заказа без привязки к статусу пользователя и накопления перейдите в раздел') . ' <a href="?path=shopusers.discount"><span class="glyphicon glyphicon-share-alt"></span> ' . __('Скидки от заказа') . '</a>.<br>' . __('Для учета накопительной скидки требуется включить опцию учета скидки покупателя в нужном статусе заказа, например "Выполнен"') . '.</p>' .
+            $PHPShopGUI->setCheckbox('cumulative_discount_check_new', 1, 'Использование накопительной скидки', $data['cumulative_discount_check']) .
+            $PHPShopGUI->loadLib('tab_discount', $data['cumulative_discount'], 'shopusers/')
     );
 
     // Запрос модуля на закладку
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $data);
 
     // Вывод формы закладки
-    $PHPShopGUI->setTab(array("Основное", $Tab1));
+    $PHPShopGUI->setTab(array("Основное", $Tab1,true,false,true));
 
     // Вывод кнопок сохранить и выход в футер
     $ContentFooter = $PHPShopGUI->setInput("submit", "saveID", "ОК", "right", 70, "", "but", "actionInsert.shopusers.create");
@@ -58,7 +59,7 @@ function actionInsert() {
 
     // Сериализация
     $_POST['cumulative_discount_new'] = serialize($cumulative_array);
-    
+
     // Корректировка пустых значений
     $PHPShopOrm->updateZeroVars('cumulative_discount_check_new');
 

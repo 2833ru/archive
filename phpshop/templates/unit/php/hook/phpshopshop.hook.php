@@ -8,6 +8,15 @@ function template_CID_Product($obj, $data, $rout) {
 
         // Виртуальные каталоги
         $obj->cat_template = 'sortсattemplatehook';
+        
+        if(empty($_GET['gridChange']))
+            $_GET['gridChange']=null;
+        
+        if(empty($_GET['s']))
+            $_GET['s']=null;
+        
+        if(empty($_GET['f']))
+            $_GET['f']=null;
 
         switch ($_GET['gridChange']) {
             case 1:
@@ -329,6 +338,7 @@ function template_image_gallery($obj, $array) {
     $data = $PHPShopOrm->select(array('*'), array('parent' => '=' . $array['id']), array('order' => 'num'), array('limit' => 100));
     $i = 0;
     $s = 1;
+    $productTitle = str_replace(array('"', "'"), '', $array['name']);
 
     // Нет данных в галерее
     if (!is_array($data) and ! empty($array['pic_big']))
@@ -371,8 +381,7 @@ function template_image_gallery($obj, $array) {
 
         if ($i < 2)
             $bxpager = null;
-
-
+        
         $obj->set('productFotoList', '<img itemprop="image" content="http://' . $_SERVER['SERVER_NAME'] . $array['pic_big'] . '" class="bxslider-pre" alt="' . $array['name'] . '" src="' . $array['pic_big'] . '" /><div class="bxslider hide bigslider">' . $bxslider . '</div><div class="bx-pager">' . $bxpager . '</div>');
         $obj->set('productFotoListBig', '<ul class="bxsliderbig" data-content="' . $bxsliderbig . '" data-page="' . $bxpager . '"></ul><div class="bx-pager-big">' . $bxpager . '</div>');
         $obj->set('productSliderOneImage', sprintf('<img class="one-image-slider" src="%s" alt="%s" title="%s"/>', !empty($array['pic_big']) ? $array['pic_big'] : $data[0]['name'], $productTitle, $productTitle));

@@ -2,13 +2,15 @@
 	<div class="product-col">
 
 		<div class="image product-img-centr">
-			<a href="/shop/UID_@productUid@.html" title="@productName@"> <img data-src="@productImg@" alt="@productName@" class="img-responsive img-center-sm" ></a>
+			<a href="/shop/UID_@productUid@.html" title="@productNameClean@">
+				<img data-src="@productImg@" alt="@productNameClean@" class="img-responsive img-center-sm" >
+			</a>
 		</div>
 
 		<div class="rating">@rateCid@</div>
 		
 		<div class="caption">
-			<h4><a href="/shop/UID_@productUid@.html" title="@productName@">@productName@</a></h4>
+			<h4><a href="/shop/UID_@productUid@.html" title="@productNameClean@">@productName@</a></h4>
 			<div class="price">
 				<span class="price-new">@productPrice@ <span class="rubznak">@productValutaName@</span></span> 
 				<span class="price-old">@productPriceOld@</span>

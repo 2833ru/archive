@@ -190,7 +190,7 @@ function actionSelect() {
                     }
                 }
 
-                $PHPShopGUI->_CODE .= '<div class="pull-left" style="width:200px;>' . $PHPShopGUI->setCheckBox($key, 1, ucfirst($name), $select) . '</div>';
+                $PHPShopGUI->_CODE .= '<div class="pull-left" style="width:200px;>' . $PHPShopGUI->setCheckBox($key, 1, ucfirst($name), $select, null, true, false) . '</div>';
             }
         }
 
@@ -265,6 +265,35 @@ function actionSave() {
                             $PHPShopOrm->update(array('category_new' => $_POST['category_new']), array('id' => ' IN ("' . @implode('","', $parent) . '")', 'parent_enabled' => "='1'"));
                         }
                     }
+                }
+            }
+    }
+
+    // Сохранение характеристик при смене каталога
+    if (!empty($_POST['category_new'])) {
+
+        if (is_array($val))
+            foreach ($val as $id) {
+
+                $PHPShopProduct = new PHPShopProduct($id);
+                $category = $PHPShopProduct->getParam('category');
+
+                $PHPShopCategory = new PHPShopCategory($category);
+                $sort_old = $PHPShopCategory->unserializeParam('sort');
+
+                if (is_array($sort_old)) {
+                    $PHPShopCategory = new PHPShopCategory($_POST['category_new']);
+                    $sort_new = $PHPShopCategory->unserializeParam('sort');
+
+                    if (is_array($sort_new)) {
+                        foreach ($sort_old as $val) {
+                            if (!in_array($val, $sort_new))
+                                $sort_new[] = $val;
+                        }
+                    } else
+                        $sort_new = $sort_old;
+
+                    $PHPShopCategory->updateParam(array('sort_new' => serialize($sort_new)));
                 }
             }
     }
@@ -368,8 +397,8 @@ function actionSave() {
             if ($v != 'null' and ! strstr($v, ','))
                 $_POST['dop_cat_new'] .= $v . "#";
     }
-    else if(isset($_POST['dop_cat']))
-        $_POST['dop_cat_new']='';
+    else if (isset($_POST['dop_cat']))
+        $_POST['dop_cat_new'] = '';
 
     // Файлы
     if (is_array($_POST['files_new'])) {
@@ -383,7 +412,10 @@ function actionSave() {
     $_POST['datas_new'] = time();
 
     if (is_array($where) and $PHPShopOrm->update($_POST, $where)) {
-        header('Location: ?path=catalog&cat=' . intval($_GET['cat']));
+        if (!empty($_GET['cat']))
+            header('Location: ?path=catalog&cat=' . intval($_GET['cat']));
+        else
+            header('Location: ?path=catalog');
         return true;
     } else
         return true;
@@ -613,7 +645,7 @@ function actionOption() {
     }
 
     $message = '<p class="text-muted">' . __('Вы можете изменить перечень полей в таблице отображения товаров в категориях') . '.</p>';
-    
+
     $searchforma = $message .
             $PHPShopInterface->setCheckbox('icon', 1, 'Иконка', $memory['catalog.option']['icon']) .
             $PHPShopInterface->setCheckbox('name', 1, 'Название', $memory['catalog.option']['name']) .
@@ -630,15 +662,15 @@ function actionOption() {
             $PHPShopInterface->setCheckbox('num', 1, 'Сортировка', $memory['catalog.option']['num']) . '<br>' .
             $PHPShopInterface->setCheckbox('label', 1, 'Лейблы статусов', $memory['catalog.option']['label']) .
             $PHPShopInterface->setCheckbox('sort', 1, 'Характеристики', $memory['catalog.option']['sort']);
-    
-    
+
+
     // Дополнительный склад
     $PHPShopOrmWarehouse = new PHPShopOrm($GLOBALS['SysValue']['base']['warehouses']);
     $dataWarehouse = $PHPShopOrmWarehouse->select(array('*'), array('enabled' => "='1'"), array('order' => 'num DESC'), array('limit' => 100));
     if (is_array($dataWarehouse)) {
         $searchforma .= '<br>';
         foreach ($dataWarehouse as $row) {
-            $searchforma .= $PHPShopInterface->setCheckbox('items' . $row['id'], 1, $row['name'], $memory['catalog.option']['items'. $row['id']]);
+            $searchforma .= $PHPShopInterface->setCheckbox('items' . $row['id'], 1, $row['name'], $memory['catalog.option']['items' . $row['id']]);
         }
     }
 

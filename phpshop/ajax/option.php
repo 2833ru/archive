@@ -102,7 +102,7 @@ $_RESULT = array(
 );
 
 // Не показывать склад
-if($PHPShopSystem->getSerilizeParam('admoption.sklad_enabled') == 0 or ($PHPShopSystem->getSerilizeParam('admoption.user_items_activate') == 1 and empty($_SESSION['UsersId'])))
+if(!$PHPShopSystem->isDisplayWarehouse())
   $_RESULT['items'] = null;
 
 

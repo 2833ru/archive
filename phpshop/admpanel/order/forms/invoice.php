@@ -31,7 +31,7 @@ $ouid = $row['uid'];
 $order = unserialize($row['orders']);
 $status = unserialize($row['status']);
 $nds = $LoadItems['System']['nds'];
-$dis = $this_nds_summa = $sum = $num = null;
+$dis = $this_nds_summa = $sum = $num = $weight = $adr_info = null;
 foreach ($order['Cart']['cart'] as $val) {
     $this_price = ($PHPShopOrder->returnSumma(number_format($val['price'], "2", ".", ""), $order['Person']['discount']));
     $this_nds = number_format($this_price * $nds / (100 + $nds), "2", ".", "");
@@ -114,7 +114,7 @@ $sum = number_format($sum, "2", ".", "");
 
 $name_person = $order['Person']['name_person'];
 
-if ($row['org_name'] or $order['Person']['org_name'])
+if ($row['org_name'] or @$order['Person']['org_name'])
     $org_name = $order['Person']['org_name'] . $row['org_name'];
 else
     $org_name = $row['fio'];
@@ -139,8 +139,8 @@ if ($row['city'])
     $adr_info .= ", " . __("город") . ": " . $row['city'];
 if ($row['index'])
     $adr_info .= ", " . __("индекс") . ": " . $row['index'];
-if ($row['street'] OR $order['Person']['adr_name'])
-    $adr_info .= ", " . __("улица") . ": " . $row['street'] . $order['Person']['adr_name'];
+if ($row['street'] OR !empty($order['Person']['adr_name']))
+    $adr_info .= ", " . __("улица") . ": " . $row['street'] . @$order['Person']['adr_name'];
 if ($row['house'])
     $adr_info .= ", " . __("дом") . ": " . $row['house'];
 if ($row['porch'])

@@ -18,6 +18,7 @@ class PHPShopCategory extends PHPShopObj {
     private $cachedCategories = [];
     public $search_id;
     public $found;
+    public $search;
 
     /**
      * Конструктор

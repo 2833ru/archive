@@ -48,6 +48,13 @@
 
         <!-- Theme -->
         <link id="bootstrap_theme" data-name="@php echo $_SESSION['skin']; php@" href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@css/@diggi_theme@.css" rel="stylesheet">
+	
+                <!-- Стикер-полоска -->
+        <div class="top-banner @php __hide('sticker_close','cookie'); php@">
+            <div class="sticker-text">@sticker_top@</div>
+            <span class="close sticker-close">x</span>
+        </div>
+        <!-- /Стикер-полоска -->
 
         <!-- Header Section Starts -->
         <header id="header-area" class="header-wrap inner">
@@ -277,7 +284,9 @@
             <!-- Primary Content Starts -->
             <div class="col-md-9 col-xs-12 middle-content-block">
                 @DispShop@
-                <section class="products-list @php __hide('now_buying'); php@">
+                <div class="col-md-12">
+                    <div class="row">
+                        <section class="products-list @php __hide('now_buying'); php@">
                     <div class="swiper-slider-wrapper">
                         <!-- Heading Starts -->
                         <h2 class="product-head page-header swiper-title">{Сейчас покупают}</h2>
@@ -301,11 +310,12 @@
                         <!-- Products Row Ends -->
                     </div>     
                 </section>
-
+                    </div>
+                </div>
             </div>
             <div class="col-xs-12">
                 <div class="banner-block">
-                    @sticker_banner@
+                    @banersDispHorizontal@
                 </div>
             </div>
 

@@ -3,7 +3,7 @@
 function template_slider_hook($obj, $row, $rout) {
 
     if ($rout == 'END') {
-        if(is_null($obj->index)) {
+        if(empty($obj->index)) {
             $obj->index = 0;
         }
 

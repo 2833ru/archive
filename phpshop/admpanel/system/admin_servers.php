@@ -9,7 +9,7 @@ function actionStart() {
 
     $PHPShopInterface->action_select['Инструкция'] = array(
         'name' => 'Инструкция',
-        'url' => 'http://faq.phpshop.ru/page/showcase.html',
+        'url' => 'https://docs.phpshop.ru/tovary/vitriny',
         'target' => '_blank'
     );
 

@@ -226,7 +226,7 @@ $().ready(function () {
     $("body").on('click', ".select-action .select", function (event) {
         event.preventDefault();
 
-        var chk = $('input:checkbox:checked').length;
+        var chk = $('input[name="items"]:checkbox:checked').length;
         var i = 0;
 
         if (chk > 0) {
@@ -237,7 +237,7 @@ $().ready(function () {
                 message: locale.confirm_delete
             }).done(function () {
 
-                $('input:checkbox:checked').each(function () {
+                $('input[name="items"]:checkbox:checked').each(function () {
                     var id = $(this).closest('.data-row');
                     $('.list_edit_' + $(this).attr('data-id')).ajaxSubmit({
                         dataType: "json",
@@ -269,6 +269,7 @@ $().ready(function () {
     // Создать новый из карточки
     $(".addNewElement").on('click', function (event) {
         event.preventDefault();
+
         cat = $('[name="addNew"]').attr('data-cat') || $.getUrlVar('id');
         if (cat > 0)
             window.location.href += '&action=new&cat=' + cat;
@@ -308,6 +309,39 @@ $().ready(function () {
         }
     });
 
+    // Быстрое изменение статуса Toogle
+    $('body').on('change', '.toggle-event', function () {
+
+        // Проверка на переопределение функции
+        if (typeof (STATUS_EVENT) == 'undefined') {
+            
+            var id = $(this).attr('data-id');
+
+            if ($(this).prop('checked') === true){
+                var val = 1;
+                $(this).closest('.data-row').find('a').removeClass('text-muted');
+            }
+            else{
+                var val = 0;
+                $(this).closest('.data-row').find('a').addClass('text-muted');
+            }
+
+            // Возможные варианты переключателей
+            $('.status_edit_' + id + ' input[name=enabled_new]').val(val);
+            $('.status_edit_' + id + ' input[name=flag_new]').val(val);
+            $('.status_edit_' + id + ' input[name=statusi_new]').val(val);
+            $('.status_edit_' + id).ajaxSubmit({
+                dataType: "json",
+                success: function (json) {
+                    if (json['success'] == 1) {
+                        showAlertMessage(locale.save_done);
+                    } else
+                        showAlertMessage(locale.save_false, true);
+                }
+            });
+        }
+    });
+
     // Сообщение валидатора
     if (typeof (VALIDATOR_LOAD) != 'undefined')
         $('#product_edit').validator().on('submit', function (event) {
@@ -337,11 +371,6 @@ $().ready(function () {
 
                 if (json['success'] == 1) {
                     showAlertMessage(locale.save_done);
-
-                    if ($.getUrlVar('frame') !== undefined) {
-                        parent.window.$('#adminModal').modal('hide');
-                        parent.window.location.reload();
-                    }
 
                 } else
                     showAlertMessage(locale.save_false, true);
@@ -464,9 +493,10 @@ $().ready(function () {
     $(".go2front").on('click', function () {
         if ($('.front').length) {
             $(this).attr('href', $('.front').attr('href'));
-        } else if ($.cookie('cat') !== 'null') {
+        } else if ($.cookie('cat') !== 'null' && $.cookie('cat') !== 'undefined') {
             $(this).attr('href', '../../shop/CID_' + $.cookie('cat') + '.html');
         }
+        else $(this).attr('href','../../');
     });
 
     // Открытие страницы в Action Panel
@@ -484,20 +514,24 @@ $().ready(function () {
     if (typeof (TABLE_EVENT) == 'undefined') {
 
         if (typeof ($.cookie('data_length')) == 'undefined')
-            var data_length = [10, 25, 50, 75, 100, 500, 1000];
+            var data_length = [10, 25, 50];
         else
-            var data_length = [parseInt($.cookie('data_length')), 10, 25, 50, 75, 100, 500, 1000];
+            var data_length = [parseInt($.cookie('data_length')), 10, 25, 50];
 
         var table = $('#data').dataTable({
             "lengthMenu": data_length,
-            "paging": true,
+            "paging": false,
             "ordering": true,
             "info": false,
+            "searching": false,
             "language": locale.dataTable,
             "aaSorting": [],
             "columnDefs": [
                 {"orderable": false, "targets": 0}
-            ]
+            ],
+            "fnDrawCallback": function () {
+                    $('.toggle-event').bootstrapToggle();
+                },
 
         });
 
@@ -591,18 +625,17 @@ $().ready(function () {
                 var old_num = (Number($('#dialog-check').text()) || 0);
                 $('#dialog-check').text(json['num']);
                 $('#dialog-mobile-check').text(json['num']);
-                
-                if(json['num'] > 0){
-                  $('#dialog-mobile-check').removeClass('hide');  
+
+                if (json['num'] > 0) {
+                    $('#dialog-mobile-check').removeClass('hide');
+                } else {
+                    $('#dialog-mobile-check').addClass('hide');
                 }
-                else {
-                  $('#dialog-mobile-check').addClass('hide');  
-                }
-                
+
                 if (old_num < json['num']) {
                     $('#play-chat').trigger("play");
                     //$('#dialog-check').parent('.navbar-btn').removeClass('hide');
-                } 
+                }
             }
         });
 
@@ -633,13 +666,26 @@ $().ready(function () {
         });
 
     }, 30000);
-    
-    
-    // Отображение пароля
-    $(".password-view").on('click', function(event) {
+
+    // Сгенерировать пароль
+    $(".password-gen").on('click',function (event) {
         event.preventDefault();
-        $('input:password').attr("type","text");
+        $('input[name=password_new],input[name=password2_new]').val($(this).attr('data-password'));
+        $('input:password').attr("type", "text");
+        $.MessageBox({
+            buttonDone: "OK",
+            message: $(this).attr('data-text') + $(this).attr('data-password')
+        });
     });
+
+    // Отображение пароля
+    $(".password-view").on('click', function (event) {
+        event.preventDefault();
+        $('input:password').attr("type", "text");
+    });
+
+    // Preloader
+    $('.main').removeClass('transition');
 });
 
 // GET переменные из URL страницы

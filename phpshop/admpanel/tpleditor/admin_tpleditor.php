@@ -11,7 +11,9 @@ function _tpl($file) {
     // Описание файлов
     $TemplateHelper = array(
         'banner' => 'Баннер',
-        'baner_list_forma.tpl' => 'Форма баннера',
+        'baner_list_forma.tpl' => 'Форма баннера в колонке',
+        'banner_horizontal_forma.tpl' => 'Форма горизонтального баннера',
+        'banner_window_forma.tpl' => 'Форма всплывающего баннера',
         'catalog' => 'Каталог',
         'catalog_forma.tpl' => 'Форма каталога товаров',
         'catalog_forma_2.tpl' => 'Форма каталога товаров Б',
@@ -80,16 +82,16 @@ function _tpl($file) {
         'page_forma.tpl' => 'Форма страницы в списке',
         'page_mini.tpl' => 'Форма страницы в превью',
         'page_top_menu.tpl' => 'Форма страницы в главном меню',
-        'main_product_forma_full_1.tpl'=>'Форма подробного описания товара 1',
-        'main_product_forma_full_2.tpl'=>'Форма подробного описания товара 2',
-        'main_product_forma_full_3.tpl'=>'Форма подробного описания товара 3',
-        'main_product_forma_full_ajax.tpl' =>'Форма ajax описания товара',
-        'product_catalog_content.tpl' =>'Описание каталога в списке товаров',
-        'promoIcon.tpl' =>'Стикер промоакции',
-        'product_odnotip_product_parent_one_color.tpl'=>'Форма подчиненного товара параметр 2',
-        'product_odnotip_product_parent_one_value.tpl'=>'Форма значения подчиненного товара',
-        'preview_sort_one.tpl'=>'Вид характеристики в превью',
-        'preview_sorts.tpl'=>'Форма блока характеристик в превью'
+        'main_product_forma_full_1.tpl' => 'Форма подробного описания товара 1',
+        'main_product_forma_full_2.tpl' => 'Форма подробного описания товара 2',
+        'main_product_forma_full_3.tpl' => 'Форма подробного описания товара 3',
+        'main_product_forma_full_ajax.tpl' => 'Форма ajax описания товара',
+        'product_catalog_content.tpl' => 'Описание каталога в списке товаров',
+        'promoIcon.tpl' => 'Стикер промоакции',
+        'product_odnotip_product_parent_one_color.tpl' => 'Форма подчиненного товара параметр 2',
+        'product_odnotip_product_parent_one_value.tpl' => 'Форма значения подчиненного товара',
+        'preview_sort_one.tpl' => 'Вид характеристики в превью',
+        'preview_sorts.tpl' => 'Форма блока характеристик в превью'
     );
 
     if ($_GET['option'] != 'pro' && !empty($TemplateHelper[$file]))
@@ -118,11 +120,12 @@ function actionStart() {
         $option_str = '&option=' . $_GET['option'];
     }
 
-    $PHPShopGUI->action_select['Режим 1'] = array(
-        'name' => 'Упрощенный режим',
-        'url' => '?path=tpleditor&name=' . $_GET['name'] . '&option=lite',
-        'class' => $lite_class
-    );
+    if (!empty($_GET['name']))
+        $PHPShopGUI->action_select['Режим 1'] = array(
+            'name' => 'Упрощенный режим',
+            'url' => '?path=tpleditor&name=' . $_GET['name'] . '&option=lite',
+            'class' => $lite_class
+        );
 
 
     $PHPShopGUI->action_select['Режим 2'] = array(
@@ -145,7 +148,7 @@ function actionStart() {
 
     $PHPShopGUI->action_select['Магазин'] = array(
         'name' => 'Архивные шаблоны',
-        'url' => 'http://template.phpshop.ru/?old' ,
+        'url' => 'http://template.phpshop.ru/?old',
         'icon' => '',
         'target' => '_blank'
     );
@@ -177,7 +180,9 @@ function actionStart() {
             $content = null;
         }
     }
-
+    
+    if(empty($_GET['mod']))
+        $_GET['mod']=true;
 
     switch ($_GET['mod']) {
         case 'html':
@@ -196,21 +201,21 @@ function actionStart() {
             $theme = 'dawn';
 
         $wysiwyg = xml2array('./tpleditor/gui/wysiwyg.xml', "template", true);
-        $var_list = $selectModalBody = null;
+        $var_list = $selectModalBody = $selectModal = null;
         if (is_array($wysiwyg))
             foreach ($wysiwyg as $template) {
                 if ('/' . $template['path'] == $_GET['file']) {
 
                     // Заголовок
-                    if (!empty($_GET['name']) and $_GET['option'] == 'pro')
-                        $TitlePage.=': ' . $_GET['name'] . $_GET['file'];
+                    if (!empty($_GET['option']) and $_GET['option'] == 'pro')
+                        $TitlePage .= ': ' . $_GET['name'] . $_GET['file'];
                     else
-                        $TitlePage.=': ' . __($template['description']);
+                        $TitlePage .= ': ' . __($template['description']);
 
                     if (is_array($template['var']))
                         if (empty($template['var'][1])) {
-                            $var_list.='<button class="btn btn-xs btn-info editor_var" data-insert="@' . $template['var']['name'] . '@" type="button" data-toggle="tooltip" data-placement="top" title="' . __($template['var']['description']) . '"><span class="glyphicon glyphicon-tag"></span> ' . $template['var']['name'] . '</button>';
-                            $selectModal.='<tr><td>@' . $template['var']['name'] . '@</td><td>' . $template['var']['description'] . '</td></tr>';
+                            $var_list .= '<button class="btn btn-xs btn-info editor_var" data-insert="@' . $template['var']['name'] . '@" type="button" data-toggle="tooltip" data-placement="top" title="' . __($template['var']['description']) . '"><span class="glyphicon glyphicon-tag"></span> ' . $template['var']['name'] . '</button>';
+                            $selectModal .= '<tr><td>@' . $template['var']['name'] . '@</td><td>' . $template['var']['description'] . '</td></tr>';
                         } else {
                             foreach ($template['var'] as $var) {
 
@@ -223,9 +228,9 @@ function actionStart() {
                                     $class_icon = 'glyphicon-plus';
                                 }
 
-                                $var_list.='<button class="btn btn-xs ' . $class_btn . ' editor_var" data-insert="@' . $var['name'] . '@" type="button" data-toggle="tooltip" data-placement="top" title="' . __($var['description']) . '"><span class="glyphicon ' . $class_icon . '"></span> ' . $var['name'] . '</button>';
+                                $var_list .= '<button class="btn btn-xs ' . $class_btn . ' editor_var" data-insert="@' . $var['name'] . '@" type="button" data-toggle="tooltip" data-placement="top" title="' . __($var['description']) . '"><span class="glyphicon ' . $class_icon . '"></span> ' . $var['name'] . '</button>';
 
-                                $selectModal.='<tr><td><kbd>@' . $var['name'] . '@</kbd></td><td>' . __($var['description']) . '</td></tr>';
+                                $selectModal .= '<tr><td><kbd>@' . $var['name'] . '@</kbd></td><td>' . __($var['description']) . '</td></tr>';
                             }
                         }
                 }
@@ -239,14 +244,14 @@ function actionStart() {
             $selectModalBody = '<table class="table table-striped"><tr><th>' . __('Переменная') . '</th><th>' . __('Описание') . '</th></tr>' . $selectModal . '</table>';
         }
 
-        $PHPShopGUI->_CODE.= '<textarea class="hide hidden-edit" id="editor_src" name="editor_src" data-mod="' . $mod . '" data-theme="' . $theme . '">' . $content . '</textarea><pre id="editor">' . __('Загрузка...') . '</pre>';
+        $PHPShopGUI->_CODE .= '<textarea class="hide hidden-edit" id="editor_src" name="editor_src" data-mod="' . $mod . '" data-theme="' . $theme . '">' . $content . '</textarea><pre id="editor">' . __('Загрузка...') . '</pre>';
     } else {
         $PHPShopGUI->_CODE = '<p class="text-muted hidden-xs data-row">' . __('Выберите установленный шаблон и файл для редактирования в левом меню.  
             Установка шаблона для отображения на сайте производится в основных системных настройках, закладка') . ' <a href="?path=system#1"><span class="glyphicon glyphicon-share-alt"></span>' . __('Настройка дизайна') . '</a>. ' . __('Цветовая тема подсветки синтаксиса меняется в основных системных настройках, закладка') . ' <a href="?path=system#4"><span class="glyphicon glyphicon-share-alt"></span>' . __('Настройка управления') . '</a>.</p>';
 
         // Карта шаблона
         if (!empty($_GET['name']))
-            $PHPShopGUI->_CODE.= $PHPShopGUI->loadLib('tab_map', $root);
+            $PHPShopGUI->_CODE .= $PHPShopGUI->loadLib('tab_map', false);
     }
 
     $PHPShopGUI->setActionPanel(PHPShopSecurity::TotalClean($TitlePage), array('Режим 1', 'Режим 2', 'Учебник', '|', 'Урок'), array('Размер', 'Учебник', 'Выполнить'));
@@ -265,26 +270,26 @@ function actionStart() {
     if (empty($_GET['name'])) {
 
         // Левый сайдбар дерева шаблонов
-        $tree = '<table class="table table-hover" id="template-tree">';
+        $tree = '<div><table class="table table-hover" id="template-tree">';
 
         $root = glob("../templates/*", GLOB_ONLYDIR);
         if (is_array($root)) {
             foreach ($root as $dir) {
                 $path_parts = pathinfo($dir);
-                $tree.='<tr class="treegrid-all"><td><a href="?path=' . $_GET['path'] . '&name=' . $path_parts['basename'] . $option_str . '">' . ucfirst($path_parts['basename']) . '</a></td></tr>';
+                $tree .= '<tr class="treegrid-all"><td><a href="?path=' . $_GET['path'] . '&name=' . $path_parts['basename'] . $option_str . '">' . ucfirst($path_parts['basename']) . '</a></td></tr>';
             }
         }
         $title_icon = null;
 
         // Дополнительные шаблоны
-        $PHPShopGUI->_CODE.= $PHPShopGUI->loadLib('tab_base', $root);
+        $PHPShopGUI->_CODE .= $PHPShopGUI->loadLib('tab_base', $root);
     } else {
 
         // Левый сайдбар дерева шаблонов
-        $tree = '<table class="table tree table-hover" id="template-tree">';
+        $tree = '<div id="template-tree-block"><table class="table tree table-hover" id="template-tree">';
 
         // Левый сайдбар дерева шаблонов
-        $tree.= '<tr class="treegrid-all">
+        $tree .= '<tr class="treegrid-all">
            <td><a href="?path=' . $_GET['path'] . $option_str . '" class="btn btn-default btn-sm">' . __('Все шаблоны') . '</a> <span class="glyphicon glyphicon-triangle-right"></span> <span class="btn btn-info btn-sm" id="templatename">' . @ucfirst(PHPShopSecurity::TotalClean($_GET['name'], 4)) . '</span></td>
 	</tr>';
 
@@ -299,7 +304,7 @@ function actionStart() {
                 if (!in_array($path_parts1['basename'], $stop_array)) {
 
                     $k++;
-                    $tree.='<tr class="treegrid-' . $k . '"><td><a href="#" class="treegrid-parent" data-parent="treegrid-' . $k . '">' . _tpl($path_parts1['basename']) . '</a></td></tr>';
+                    $tree .= '<tr class="treegrid-' . $k . '"><td><a href="#" class="treegrid-parent" data-parent="treegrid-' . $k . '">' . _tpl($path_parts1['basename']) . '</a></td></tr>';
 
                     $root2 = glob($dir1 . "/*.tpl");
                     if (is_array($root2)) {
@@ -311,14 +316,13 @@ function actionStart() {
                                 $k++;
 
                                 $link = str_replace($dir, '', $dir2);
-                                if ($link == $_GET['file']) {
+                                if (!empty($_GET['file']) and $link == $_GET['file']) {
                                     $active = ' treegrid-active';
                                     $active_icon = '<span class="glyphicon glyphicon-edit text-warning"></span>';
-                                }
-                                else
+                                } else
                                     $active = $active_icon = null;
 
-                                $tree.='<tr class="treegrid-parent-' . $parent2 . $active . ' "><td class="data-row"><a href="?path=' . $_GET['path'] . '&name=' . $_GET['name'] . '&file=' . $link . '&mod=html' . $option_str . '" title="' . $path_parts2['basename'] . '">' . $active_icon . _tpl($path_parts2['basename']) . '</a></td></tr>';
+                                $tree .= '<tr class="treegrid-parent-' . $parent2 . $active . ' "><td class="data-row"><a href="?path=' . $_GET['path'] . '&name=' . $_GET['name'] . '&file=' . $link . '&mod=html' . $option_str . '" title="' . $path_parts2['basename'] . '">' . $active_icon . _tpl($path_parts2['basename']) . '</a></td></tr>';
                             }
                         }
                     }
@@ -328,13 +332,13 @@ function actionStart() {
 
         if (!empty($parent2)) {
             $dir2 = str_replace($dir, '', $dir . '/style.css');
-            $tree.='<tr class="treegrid-parent-' . $parent1 . ' data-row"><td><span class="glyphicon glyphicon-text-width"></span> <a href="?path=' . $_GET['path'] . '&name=' . $_GET['name'] . '&file=' . $dir2 . '&mod=css' . $option_str . '" title="style.css">' . _tpl('style.css') . '</a></td></tr>';
+            $tree .= '<tr class="treegrid-parent-' . $parent1 . ' data-row"><td><span class="glyphicon glyphicon-text-width"></span> <a href="?path=' . $_GET['path'] . '&name=' . $_GET['name'] . '&file=' . $dir2 . '&mod=css' . $option_str . '" title="style.css">' . _tpl('style.css') . '</a></td></tr>';
         }
 
         $title_icon = '<span class="glyphicon glyphicon-chevron-down" data-toggle="tooltip" data-placement="top" title="' . __('Развернуть все') . '"></span>&nbsp;<span class="glyphicon glyphicon-chevron-up" data-toggle="tooltip" data-placement="top" title="' . __('Свернуть') . '"></span>';
     }
 
-    $tree.='</table>';
+    $tree .= '</table></div>';
 
     // Вывод кнопок сохранить и выход в футер
     $ContentFooter = $PHPShopGUI->setInput("submit", "editID", "Применить", "right", 80, "", "but", "actionSave.system.edit");
@@ -380,8 +384,7 @@ function actionSave() {
             $action = true;
         else
             $action = false;
-    }
-    else
+    } else
         $action = false;
 
     return array("success" => $action);
@@ -403,8 +406,7 @@ function actionLoad() {
                 $load = $skin_base_path . '/templates-archive/' . $_POST['template_load'] . '/' . $_POST['template_load'] . '.zip';
             elseif ($_POST['template_type'] == "default")
                 $load = $skin_base_path . '/templates5/' . $_POST['template_load'] . '/' . $_POST['template_load'] . '.zip';
-        }
-        else
+        } else
             $load = null;
 
         // Включаем таймер
@@ -444,11 +446,9 @@ function actionLoad() {
                         $sql = "INSERT INTO " . $GLOBALS['SysValue']['base']['templates_key'] . "  VALUES ('" . $_POST['template_load'] . "'," . $date_end . ",'" . $key . "','" . md5($_POST['template_load'] . $date_end . $_SERVER['SERVER_NAME'] . $key) . "')";
                         mysqli_query($PHPShopBase->link_db, $sql);
                     }
-                }
-                else
+                } else
                     $result = __('Ошибка распаковки файла') . ' ' . $_POST['template_load'] . '.zip, ' . __('нет прав записи в папку') . ' phpshop/templates/';
-            }
-            else
+            } else
                 $result = __('Ошибка записи файла') . ' ' . $_POST['template_load'] . '.zip, ' . __('нет прав записи в папку') . ' /UserFiles/Files/';
         }
         else {

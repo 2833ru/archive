@@ -55,7 +55,7 @@ function marketplacesAddLabels($product) {
     if (isset($product['aliexpress']) && (int) $product['aliexpress'] === 1 && (int) $memory['catalog.option']['label_aliexpress'] === 1)
         $PHPShopInterface->productTableRowLabels[] = '<a class="label label-success" title="' . __('Вывод в AliExpress') . '" href="?path=catalog' . $postfix . '&where[aliexpress]=1">' . __('Ali') . '</a> ';
 
-    if (isset($product['google_merchant']) && (int) $product['google_merchant'] === 1 && (int) $memory['catalog.option']['google_merchant'] === 1)
+    if (isset($product['google_merchant']) && (int) $product['google_merchant'] === 1 && (int) $memory['catalog.option']['label_google_merchant'] === 1)
         $PHPShopInterface->productTableRowLabels[] = '<a class="label label-success" title="' . __('Вывод в Google Merchant') . '" href="?path=catalog' . $postfix . '&where[google_merchant]=1">' . __('GM') . '</a> ';
 }
 

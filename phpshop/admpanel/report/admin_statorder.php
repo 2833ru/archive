@@ -44,6 +44,9 @@ function actionStart() {
         $currency = ' <span class="rubznak hidden-xs">p</span>';
     else
         $currency = $PHPShopSystem->getDefaultValutaCode();
+    
+    if(empty($_GET['where']['statusi']))
+        $_GET['where']['statusi']=null;
 
     $order_status_value[] = array(__('Все заказы'), 0, $_GET['where']['statusi']);
     if (is_array($status_array))
@@ -140,13 +143,13 @@ function actionStart() {
             );
 
             if (empty($array_order_date[$d_array['d'] . '.' . $d_array['m']])) {
-                $array_order_date[$d_array['d'] . ' ' . $Months[$d_array['m']]] += $row['sum'];
+                @$array_order_date[$d_array['d'] . ' ' . $Months[$d_array['m']]] += $row['sum'];
             }
             else
-                $array_order_date[$d_array['d'] . ' ' . $Months[$d_array['m']]]+=$row['sum'];
+                @$array_order_date[$d_array['d'] . ' ' . $Months[$d_array['m']]]+=$row['sum'];
         }
 
-    if (is_array($array_order_date))
+    if (!empty($array_order_date) and is_array($array_order_date))
         foreach ($array_order_date as $date => $sum) {
             $canvas_value.='"' . $sum . '",';
             $canvas_label.='"' . $date . '",';
@@ -177,7 +180,11 @@ function actionStart() {
     PHPShopObj::loadClass('user');
     $PHPShopUserStatus = new PHPShopUserStatusArray();
     $PHPShopUserStatusArray = $PHPShopUserStatus->getArray();
-    $user_status_value[] = array(__('Все пользователи'), '', $data['status']);
+    $user_status_value[] = array(__('Все пользователи'), '', @$data['status']);
+    
+    if(empty($_GET['where']['b.status']))
+        $_GET['where']['b.status']=null;
+    
     if (is_array($PHPShopUserStatusArray))
         foreach ($PHPShopUserStatusArray as $user_status)
             $user_status_value[] = array($user_status['name'], $user_status['id'], $_GET['where']['b.status']);
@@ -185,18 +192,18 @@ function actionStart() {
 
     // Статус заказа
     $PHPShopInterface->field_col = 1;
-    $searchforma.=$PHPShopInterface->setInputDate("date_start", $date_start, 'margin-bottom:10px', null, 'Дата начала отбора');
+    $searchforma=$PHPShopInterface->setInputDate("date_start", $date_start, 'margin-bottom:10px', null, 'Дата начала отбора');
     $searchforma.=$PHPShopInterface->setInputDate("date_end", $date_end, false, null, 'Дата конца отбора');
 
     $searchforma.= $PHPShopInterface->setSelect('where[statusi]', $order_status_value, '100%');
-    $searchforma.= $PHPShopInterface->setInputArg(array('type' => 'text', 'name' => 'where[a.fio]', 'placeholder' => 'ФИО Покупателя', 'value' => $_GET['where']['a.fio']));
+    $searchforma.= $PHPShopInterface->setInputArg(array('type' => 'text', 'name' => 'where[a.fio]', 'placeholder' => 'ФИО Покупателя', 'value' => @$_GET['where']['a.fio']));
 
     $searchforma.=$PHPShopInterface->setSelect('where[b.status]', $user_status_value, '100%');
 
-    $searchforma.= $PHPShopInterface->setInputArg(array('type' => 'text', 'name' => 'where[b.mail]', 'placeholder' => 'E-mail', 'value' => $_GET['where']['b.mail']));
-    $searchforma.= $PHPShopInterface->setInputArg(array('type' => 'text', 'name' => 'where[a.tel]', 'placeholder' => 'Телефон', 'value' => $_GET['where']['a.tel']));
-    $searchforma.= $PHPShopInterface->setInputArg(array('type' => 'text', 'name' => 'where[a.city]', 'placeholder' => 'Город', 'value' => $_GET['where']['a.city']));
-    $searchforma.= $PHPShopInterface->setInputArg(array('type' => 'text', 'name' => 'where[a.street]', 'placeholder' => 'Улица', 'value' => $_GET['where']['a.street']));
+    $searchforma.= $PHPShopInterface->setInputArg(array('type' => 'text', 'name' => 'where[b.mail]', 'placeholder' => 'E-mail', 'value' => @$_GET['where']['b.mail']));
+    $searchforma.= $PHPShopInterface->setInputArg(array('type' => 'text', 'name' => 'where[a.tel]', 'placeholder' => 'Телефон', 'value' => @$_GET['where']['a.tel']));
+    $searchforma.= $PHPShopInterface->setInputArg(array('type' => 'text', 'name' => 'where[a.city]', 'placeholder' => 'Город', 'value' => @$_GET['where']['a.city']));
+    $searchforma.= $PHPShopInterface->setInputArg(array('type' => 'text', 'name' => 'where[a.street]', 'placeholder' => 'Улица', 'value' => @$_GET['where']['a.street']));
 
     $searchforma.= $PHPShopInterface->setInputArg(array('type' => 'hidden', 'name' => 'path', 'value' => $_GET['path']));
     $searchforma.=$PHPShopInterface->setButton('Показать', 'search', 'btn-order-search pull-right');

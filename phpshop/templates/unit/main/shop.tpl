@@ -197,7 +197,15 @@
         <script src="java/jqfunc.js"></script>
 
         <div class="container  main-block-content ">
-            <div class="visible-lg visible-md text-center banner banner-top">@sticker_banner@</div>
+            <div class="text-center banner banner-top">@banersDispHorizontal@</div>
+                    	        <!-- Стикер-полоска -->
+	        <div class="top-banner @php __hide('sticker_close','cookie'); php@">
+				<div class="sticker-text">@sticker_top@</div>
+				<span class="close sticker-close"><i class="fal fa-times" aria-hidden="true"></i></span>
+			</div>
+			<!-- /Стикер-полоска -->
+
+
             <div class="row">
                 <div class="head-block "></div>
                 <div class="clearfix"></div>
@@ -318,16 +326,16 @@
 
                     <div class="swiper-slider-wrapper">
                         <div class="swiper-button-prev-block">
-                            <div class="swiper-button-prev btn-prev3">
+                            <div class="swiper-button-prev btn-prev-odnotip">
                                 <i class="fa fa-angle-left" aria-hidden="true"></i>
                             </div>
                         </div>
                         <div class="swiper-button-next-block">
-                            <div class="swiper-button-next btn-next3">
+                            <div class="swiper-button-next btn-next-odnotip">
                                 <i class="fa fa-angle-right" aria-hidden="true"></i>
                             </div>
                         </div>
-                        <div class="swiper-container last-slider3">
+                        <div class="swiper-container last-slider-odnotip">
                             <div class="swiper-wrapper">
                                 @productOdnotipList@
                             </div>

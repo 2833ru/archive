@@ -39,6 +39,7 @@ function getFileInfo($file) {
 
         $i++;
         $stat = stat("../../backup/backups/" . $file . '/files.zip');
+        $version=null;
 
         foreach (str_split($file) as $w)
             $version .= $w . '.';

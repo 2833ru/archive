@@ -8,7 +8,7 @@ if (!defined("OBJENABLED")) {
 /**
  * Библиотека данных по товарам
  * @author PHPShop Software
- * @version 1.3
+ * @version 1.4
  * @package PHPShopObj
  */
 class PHPShopProduct extends PHPShopObj {
@@ -88,7 +88,7 @@ class PHPShopProduct extends PHPShopObj {
     {
         // Склад
         if (!empty($warehouseId)) {
-            $this->objRow['items' . $warehouseId] -= $count;
+            @$this->objRow['items' . $warehouseId] -= $count;
         }
         $this->objRow['items'] -= $count;
 
@@ -282,15 +282,23 @@ class PHPShopProductFunction {
     }
 
     /**
-     * Проверка на подтип товара из 1С
-     * @param string $str арткул товара
+     * Проверка на подтип товара из 1С или CML
+     * @param string $str артикул товара или список подтипов
      * @return bool
      */
     static function true_parent($str) {
-        if (strstr($str, '-'))
-            return preg_match("/^[a-zA-Z0-9]{8}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{12}$/", $str);
+        if (strstr($str, '-')){
+            if (strstr($str, ',')){
+                $str_array = explode(",",$str);
+                if(is_array($str_array))
+                    return preg_match("/^[a-zA-Z0-9]{8}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{12}$/", $str_array[0]);
+                
+            }
+            else return preg_match("/^[a-zA-Z0-9]{8}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{12}$/", $str);
+        }
         else
             return preg_match("/^[a-zA-Z0-9]{36}$/", $str);
+
     }
 
     /**

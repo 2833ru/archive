@@ -73,7 +73,7 @@ function actionStart() {
 
     // Поиск
     $where = null;
-    if (is_array($_GET['where'])) {
+    if (array_key_exists('where',$_GET) and is_array($_GET['where'])) {
         foreach ($_GET['where'] as $k => $v) {
             if (!empty($v))
                 $where .= ' ' . $k . ' = "' . $v . '" or';
@@ -348,7 +348,7 @@ function actionStart() {
    <div class="row intro-row">
        <div class="col-md-6">
            <div class="panel panel-default">
-             <div class="panel-heading"><span class="glyphicon glyphicon-shopping-cart"></span> ' . __('Последние заказы') . ' <a class="pull-right" href="?path=order">' . __('Показать больше') . '</a></div>
+             <div class="panel-heading"><span class="glyphicon glyphicon-shopping-cart"></span> ' . __('Заказы') . ' <a class="pull-right" href="?path=order">' . __('Показать больше') . '</a></div>
                    <table class="table table-hover intro-list">' . $order_list . '</table>
           </div>
        </div>
@@ -416,6 +416,8 @@ function actionStart() {
             CURLOPT_URL => $url,
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_HTTPHEADER => array('Authorization: OAuth ' . $metrica_token),
+            CURLOPT_SSL_VERIFYHOST => false,
+            CURLOPT_SSL_VERIFYPEER => false
         ));
 
         $json_data = json_decode(curl_exec($сurl), true);

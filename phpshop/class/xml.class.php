@@ -76,6 +76,7 @@ function readDatabase($filename, $keyName, $file = true) {
         $data = $filename;
     
     $xmlencode = 'UTF-8';
+    $tdb=null;
 
     // Hook PHP 5.3, 5.4
     if ($xmlencode == 'UTF-8') {

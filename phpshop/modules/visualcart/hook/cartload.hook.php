@@ -11,6 +11,8 @@ function cartload_visualcart_hook($obj, $data) {
 
     $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['visualcart']['visualcart_log']);
     $insert['date_new'] = time();
+    
+    if(!empty($_SESSION['UsersId']))
     $insert['user_new'] = $_SESSION['UsersId'];
 
     // Успешное добавлени в корзину

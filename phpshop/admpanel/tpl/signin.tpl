@@ -41,11 +41,11 @@
 
                 <div class="input-group @error@">
                     <span class="input-group-addon" id="input-group-addon1"><span class="glyphicon glyphicon-user"></span></span>
-                    <input type="text" name="log" class="form-control" value="@user@" placeholder="{Пользователь}" required @autofocus@ @readonly@>
+                    <input autocomplete="off" type="text" name="log" class="form-control" value="@user@" placeholder="{Пользователь}" required @autofocus@ @readonly@>
                 </div>
                 <div class="input-group @error@">
                     <span class="input-group-addon" id="input-group-addon2"><span class="glyphicon glyphicon-lock"></span></span>
-                    <input type="password" name="pas" class="form-control" value="@password@" placeholder="{Пароль}"  required @readonly@>
+                    <input autocomplete="off" type="password" name="pas" class="form-control" value="@password@" placeholder="{Пароль}"  required @readonly@>
                 </div>
 
                 <div class="checkbox">

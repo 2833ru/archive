@@ -31,6 +31,7 @@ class PHPShopArray {
     var $debug = false;
     var $cache = true;
     var $ignor_select = false;
+    var $objArray = null;
 
     /**
      * вывод ошибок mysql
@@ -152,7 +153,8 @@ class PHPShopArray {
                     }
         }
 
-        $this->objArray = $array;
+        if (!empty($array))
+            $this->objArray = $array;
     }
 
     /**
@@ -204,6 +206,7 @@ class PHPShopArray {
     function getKey($param, $type = false) {
         $param = explode(".", $param);
         $array = $this->objArray;
+        $newArray=null;
         if (is_array($array))
             foreach ($array as $val)
                 foreach ($val as $key => $v)

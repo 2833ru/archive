@@ -65,16 +65,11 @@
 <div class="clearfix"></div>
 <div id="ajaxInProgress"></div>
 <div class="product-scroll-init"></div>
-
-
-@productPageNav@
-
+<div id="pagination-block">@productPageNav@</div>
 <script type="text/javascript">
-    AJAX_SCROLL = true;
-var AJAX_SCROLL_HIDE_PAGINATOR = true;
-
     var max_page = new Number('@max_page@');
     var current = '@productPageThis@';
+    var catalogFirstPage = '@catalogFirstPage@';
     if (current !== 'ALL')
         var count = new Number('@productPageThis@');
     else
@@ -95,15 +90,18 @@ var AJAX_SCROLL_HIDE_PAGINATOR = true;
                 type: "POST",
                 url: url,
                 data: {
-                    ajax: true
+                    ajax: true,
+                    json: true
                 },
                 success: function(data)
                 {
                     // Анимация загрузки
                     $('#ajaxInProgress').removeClass('progress-scroll');
 
+                    $("#pagination-block").html(data['pagination']);
+
                     // Добавляем товары в общему списку
-                    $(".template-product-list").append(data);
+                    $(".template-product-list").append(data['products']);
 
                     // Выравнивание ячеек товара
                     setEqualHeight(".thumbnail .description");
@@ -114,8 +112,6 @@ var AJAX_SCROLL_HIDE_PAGINATOR = true;
                     }, 50);
 
                     count = next_page;
-                    $('.pagination li').removeClass('active');
-                    $('#paginator-' + count).addClass('active');
 
                     Waypoint.refreshAll();
                 },

@@ -22,46 +22,13 @@ class ElasticSearchFilter implements ElasticSearchFilterInterface
             'size'    => $size,
             'query' => [
                 'bool' => [
-                    'should' => [
-                        [
-                            'bool' => [
-                                'must' => [
-                                    'multi_match' => [
-                                        'query'  => strtolower($query),
-                                        'fields' => $fields
-                                    ]
-                                ],
-                                'filter' => self::$filterActive,
-                                'boost'  => 3.0
-                            ]
-                        ],
-                        [
-                            'bool' => [
-                                'must' => [
-                                    'multi_match' => [
-                                        'query'     => strtolower($query),
-                                        'fields'    => $fields,
-                                        'fuzziness' => 1
-                                    ]
-                                ],
-                                'filter' => self::$filterActive,
-                                'boost'  => 2.0
-                            ]
-                        ],
-                        [
-                            'bool' => [
-                                'must' => [
-                                    'multi_match' => [
-                                        'query'     => strtolower($query),
-                                        'fields'    => $fields,
-                                        'fuzziness' => 2
-                                    ]
-                                ],
-                                'filter' => self::$filterActive,
-                                'boost'  => 1.0
-                            ]
-                        ],
-                    ]
+                    'must' => [
+                        'multi_match' => [
+                            'query'  => strtolower($query),
+                            'fields' => $fields
+                        ]
+                    ],
+                    'filter' => self::$filterActive
                 ]
             ],
             'highlight' => [
@@ -82,16 +49,19 @@ class ElasticSearchFilter implements ElasticSearchFilterInterface
             'aggregations' => [
                 'categories' => [
                     'terms' => [
-                        'field' => 'main_category'
+                        'field' => (int) Elastic::getOption('use_additional_categories') === 1 ? 'categories' : 'main_category',
+                        'size'  => (int) Elastic::getOption('max_categories') > 0 ? (int) Elastic::getOption('max_categories') : 10
                     ]
                 ]
             ]
         ];
 
-        if(isset($categories)) {
-            $filter['query']['bool']['should'][0]['bool']['filter']['bool']['must'][1]['terms']['categories'] = $categories;
-            $filter['query']['bool']['should'][1]['bool']['filter']['bool']['must'][1]['terms']['categories'] = $categories;
-            $filter['query']['bool']['should'][2]['bool']['filter']['bool']['must'][1]['terms']['categories'] = $categories;
+        if(!empty($categories)) {
+            $filter['query']['bool']['filter']['bool']['must'][1]['terms']['categories'] = $categories;
+        }
+
+        if (Elastic::isFuzziness((int) Elastic::getOption('misprints'), strlen($query))) {
+            $filter['query']['bool']['must']['multi_match']['fuzziness'] = (int) Elastic::getOption('misprints');
         }
 
         if ((int) Elastic::getOption('available_sort') === 1) {

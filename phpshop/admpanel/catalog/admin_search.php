@@ -95,11 +95,12 @@ function actionSearch() {
     $PHPShopInterface->_CODE.= $PHPShopInterface->setInputArg(array('type' => 'text', 'name' => 'search_name', 'size' => '280px', 'placeholder' => 'Наименование товара, атикул или ID', 'class' => 'pull-left', 'value' => PHPShopSecurity::true_search($_REQUEST['words'])));
     $PHPShopInterface->_CODE.= $PHPShopInterface->set_(3);
     $PHPShopInterface->_CODE.= $PHPShopInterface->setInputArg(array('type' => 'text', 'name' => 'search_price_start', 'size' => '100px', 'placeholder' => 'Цена от', 'class' => 'pull-left', 'value' => $_REQUEST['price_start']));
-    $PHPShopInterface->_CODE.= $PHPShopInterface->set_(2);
+    $PHPShopInterface->_CODE.= $PHPShopInterface->set_(3);
     $PHPShopInterface->_CODE.= $PHPShopInterface->setInputArg(array('type' => 'text', 'name' => 'search_price_end', 'size' => '100px', 'placeholder' => 'Цена до', 'class' => 'pull-left', 'value' => $_REQUEST['price_end']));
     $PHPShopInterface->_CODE.= $PHPShopInterface->set_(3);
-    $PHPShopInterface->_CODE.= '<div class="pull-left">' . viewCatalog() . '</div>';
-    $PHPShopInterface->_CODE.=$PHPShopInterface->setInput("button", "search_action", __("Найти"), "right", 70, "", "btn-sm btn-success pull-right search-action");
+    $PHPShopInterface->_CODE.= '<div class="pull-left">' . viewCatalog() . '</div> ';
+    $PHPShopInterface->_CODE.= $PHPShopInterface->set_(3);
+    $PHPShopInterface->_CODE.=$PHPShopInterface->setInput("button", "search_action", __("Найти"), "right", 70, "", "btn-sm btn-success pull-left search-action");
     $PHPShopInterface->_CODE.= '<p class="clearfix"> </p>';
 
     // Заказы

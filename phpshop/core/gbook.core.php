@@ -8,7 +8,7 @@
  */
 class PHPShopGbook extends PHPShopCore {
     
-    var $empty_index_action = false;
+    var $empty_index_action = true;
 
     /**
      * Конструктор
@@ -112,7 +112,7 @@ class PHPShopGbook extends PHPShopCore {
     function ID() {
 
         // Перехват модуля
-        if ($this->setHook(__CLASS__, __FUNCTION__, $row, 'START'))
+        if ($this->setHook(__CLASS__, __FUNCTION__, null, 'START'))
             return true;
 
         // Безопасность

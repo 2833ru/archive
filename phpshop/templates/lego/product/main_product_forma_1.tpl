@@ -1,10 +1,13 @@
 <div class="product-block-list">
     <div class="media">
-        <div class="product-line-img"><a href="/shop/UID_@productUid@.html" title="@productName@"><img src="@productImg@" alt="@productName@"></a></div>
+        <div class="product-line-img">
+            <a href="/shop/UID_@productUid@.html" title="@productNameClean@">
+                <img src="@productImg@" alt="@productNameClean@"></a>
+        </div>
         <div class="product-block-body">
            <div class="rating">@rateCid@</div> 
 			
-            <h3 class="media-heading"><a href="/shop/UID_@productUid@.html" title="@productName@">@productName@</a></h3>
+            <h3 class="media-heading"><a href="/shop/UID_@productUid@.html" title="@productNameClean@">@productName@</a></h3>
             <span class="sale-icon-content rel-icon">
 					@specIcon@
 					@newtipIcon@

@@ -8,17 +8,23 @@ function actionStart() {
     global $PHPShopGUI, $PHPShopModules,$TitlePage;
 
     $PHPShopGUI->setActionPanel($TitlePage, false, array('Сохранить и закрыть'));
+    $PHPShopGUI->field_col = 3;
 
     $data['enabled'] = 1;
+    $data = $PHPShopGUI->valid($data,'image','link','mobile','num','alt','servers','link_text','name');
 
     // Содержание закладки 1
-    $Tab1 = $PHPShopGUI->setField("Изображение", $PHPShopGUI->setIcon($data['image'], "image_new", false, array('load' => true, 'server' => true, 'url' => false, 'multi' => false, 'view' => false))) .
-            $PHPShopGUI->setField("Цель", $PHPShopGUI->setInput("text", "link_new", $data['link'], "none", 300) . $PHPShopGUI->setHelp("Пример: /pages/info.html или http://google.com")) .
+    $Tab1 = $PHPShopGUI->setField("Название", $PHPShopGUI->setInput("text", "name_new", $data['name'],null,500));
+    $Tab1 .= $PHPShopGUI->setField("Изображение", $PHPShopGUI->setIcon($data['image'], "image_new", false, array('load' => true, 'server' => true, 'url' => false, 'multi' => false, 'view' => false))) .
+            $PHPShopGUI->setField("Цель", $PHPShopGUI->setInput("text", "link_new", $data['link'], "none", 500) . $PHPShopGUI->setHelp("Пример: /pages/info.html или http://google.com")) .
+             $PHPShopGUI->setField("Текст ссылки", $PHPShopGUI->setInput("text", "link_text_new", $data['link_text'],null,500)).
             $PHPShopGUI->setField("Статус", $PHPShopGUI->setRadio("enabled_new", 1, "Включить", $data['enabled']) . $PHPShopGUI->setRadio("enabled_new", 0, "Выключить", $data['enabled'])) .
             $PHPShopGUI->setField("Мобильный", $PHPShopGUI->setCheckbox("mobile_new", 1, "Отображать только на мобильных устройствах", $data['mobile'])) .
             $PHPShopGUI->setField("Приоритет", $PHPShopGUI->setInputText(false, 'num_new', $data['num'], 100)) .
-            $PHPShopGUI->setField("Описание", $PHPShopGUI->setTextarea("alt_new", $data['alt'])) .
+            $PHPShopGUI->setField("Описание", $PHPShopGUI->setTextarea("alt_new", $data['alt'],true,500)) .
             $PHPShopGUI->setField("Витрины", $PHPShopGUI->loadLib('tab_multibase', $data, 'catalog/'));
+    
+    $Tab1= $PHPShopGUI->setCollapse('Информация',$Tab1);
 
     // Запрос модуля на закладку
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, null);

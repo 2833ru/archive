@@ -9,7 +9,7 @@ class PHPShopOrderDelivery {
 
     public function __construct()
     {
-        if($_REQUEST['type'] === 'json') {
+        if(!empty($_REQUEST['type']) and $_REQUEST['type'] === 'json') {
             $this->isAjaxRequest = true;
         }
 
@@ -187,6 +187,7 @@ class PHPShopOrderDelivery {
 
     private function servers()
     {
+        $servers=null;
         if (defined("HostID")) {
             $servers = " and servers REGEXP 'i" . HostID . "i'";
         } elseif (defined("HostMain"))

@@ -12,9 +12,13 @@ function actionStart() {
 
     $PHPShopCategoryArray = new PHPShopPhotoCategoryArray();
     $CategoryArray = $PHPShopCategoryArray->getArray();
+    
+    if(empty($_GET['cat']))
+        $_GET['cat']=null;
 
     if (!empty($CategoryArray[$_GET['cat']]['name']))
         $catname = " / " . $CategoryArray[$_GET['cat']]['name'];
+    else $catname=null;
 
     $PHPShopInterface->action_select['Предпросмотр'] = array(
         'name' => 'Предпросмотр',
@@ -22,8 +26,8 @@ function actionStart() {
         'action' => 'front enabled',
         'target' => '_blank'
     );
-
-
+    
+    
     $PHPShopInterface->action_select['Редактировать каталог'] = array(
         'name' => 'Редактировать каталог',
         'url' => '?path=' . $_GET['path'] . '&id=' . intval($_GET['cat'])
@@ -107,20 +111,20 @@ function actionStart() {
 
     $PHPShopInterface->path = 'photo';
 
-    $tree = '<table class="tree table table-hover">
+    $tree = '<table class="table table-hover">
          <tr class="treegrid-0">
            <td><a href="?path=' . $_GET['path'] . '">'.__('Все фотогалереи').'</a></td>
 	</tr>';
-    if (is_array($tree_array[0]['sub']))
+    if (!empty($tree_array[0]['sub']) and is_array($tree_array[0]['sub']))
         foreach ($tree_array[0]['sub'] as $k => $v) {
-            $check = treegenerator($tree_array[$k], $k);
+            $check = treegenerator(@$tree_array[$k], $k);
             if (empty($check))
                 $tree.='<tr class="treegrid-' . $k . ' data-tree">
-		<td><a href="?path=' . $_GET['path'] . '&cat=' . $k . '">' . $v . '</a><span class="pull-right">' . $PHPShopInterface->setDropdownAction(array('edit', '|','delete', 'id' => $k)) . '</span></td>
+		<td><a href="?path=' . $_GET['path'] . '&cat=' . $k . '">' . $v . '</a></td>
 	</tr>';
             else
                 $tree.='<tr class="treegrid-' . $k . ' data-tree">
-		<td><a href="#" class="treegrid-parent" data-parent="treegrid-' . $k . '">' . $v . '</a><span class="pull-right">' . $PHPShopInterface->setDropdownAction(array('edit', '|','delete', 'id' => $k)) . '</span></td>
+		<td><a href="#" class="treegrid-parent" data-parent="treegrid-' . $k . '">' . $v . '</a></td>
 	</tr>';
             $tree.=$check;
         }
@@ -130,7 +134,7 @@ function actionStart() {
     var cat="' . intval($_GET['cat']) . '";
     </script>';
 
-    $sidebarleft[] = array('title' => 'Категории', 'content' => $tree, 'title-icon' => '<span class="glyphicon glyphicon-plus new" data-toggle="tooltip" data-placement="top" title="'.__('Добавить каталог').'"></span>&nbsp;<span class="glyphicon glyphicon-chevron-down" data-toggle="tooltip" data-placement="top" title="'.__('Развернуть все').'"></span>&nbsp;<span class="glyphicon glyphicon-chevron-up" data-toggle="tooltip" data-placement="top" title="'.__('Свернуть').'"></span>');
+    $sidebarleft[] = array('title' => 'Категории', 'content' => $tree, 'title-icon' => '<span class="glyphicon glyphicon-plus addNewElement" data-toggle="tooltip" data-placement="top" title="'.__('Добавить каталог').'"></span>');
     $PHPShopInterface->setSidebarLeft($sidebarleft, 3);
 
     $PHPShopInterface->Compile(3);
@@ -141,17 +145,17 @@ function treegenerator($array, $parent) {
     global $PHPShopInterface, $tree_array;
     $tree = $check = false;
     $PHPShopInterface->path = $_GET['path'];
-    if (is_array($array['sub'])) {
+    if (!empty($array['sub']) and is_array($array['sub'])) {
         foreach ($array['sub'] as $k => $v) {
-            $check = treegenerator($tree_array[$k], $k);
+            $check = treegenerator(@$tree_array[$k], $k);
 
             if (empty($check))
                 $tree.='<tr class="treegrid-' . $k . ' treegrid-parent-' . $parent . ' data-tree">
-		<td><a href="?path=' . $_GET['path'] . '&cat=' . $k . '">' . $v . '</a><span class="pull-right">' . $PHPShopInterface->setDropdownAction(array('edit','|', 'delete', 'id' => $k)) . '</span></td>
+		<td><a href="?path=' . $_GET['path'] . '&cat=' . $k . '">' . $v . '</a></td>
 	</tr>';
             else
                 $tree.='<tr class="treegrid-' . $k . ' treegrid-parent-' . $parent . ' data-tree">
-		<td><a href="#" class="treegrid-parent" data-parent="treegrid-' . $k . '">' . $v . '</a><span class="pull-right">' . $PHPShopInterface->setDropdownAction(array('edit', '|', 'delete', 'id' => $k)) . '</span></td>
+		<td><a href="#" class="treegrid-parent" data-parent="treegrid-' . $k . '">' . $v . '</a></td>
 	</tr>';
 
             $tree.=$check;

@@ -11,28 +11,10 @@ function actionStart() {
     // Начальные данные
     $data['enabled'] = 1;
 
-    // Нет данных
-    if (!is_array($data)) {
-        header('Location: ?path=' . $_GET['path']);
-    }
-
-    $PHPShopGUI->action_select['Создать заказ'] = array(
-        'name' => 'Создать заказ',
-        'url' => '?path=order&action=new&where[user]=' . $data['id']
-    );
-
-    $PHPShopGUI->action_select['Заказы пользователя'] = array(
-        'name' => 'Заказы пользователя',
-        'url' => '?path=order&where[user]=' . $data['id']
-    );
-
-    $PHPShopGUI->action_select['Отправить письмо'] = array(
-        'name' => 'Отправить письмо',
-        'url' => 'mailto:' . $data['login']
-    );
+    $data = $PHPShopGUI->valid($data, 'status', 'name', 'login', 'tel', 'dialog_ban', 'cumulative_discount', 'data_adres');
 
     // Размер названия поля
-    $PHPShopGUI->field_col = 2;
+    $PHPShopGUI->field_col = 3;
     $PHPShopGUI->setActionPanel($TitlePage, false, array('Сохранить и закрыть', 'Создать и редактировать'));
     $PHPShopGUI->addJSFiles('./js/validator.js');
 
@@ -44,16 +26,18 @@ function actionStart() {
         foreach ($PHPShopUserStatusArray as $user_status)
             $user_status_value[] = array($user_status['name'], $user_status['id'], $data['status']);
 
+    $pasgen = substr(md5(date("U")), 0, 8);
+    
     // Содержание закладки 1
     $Tab1 = $PHPShopGUI->setCollapse('Информация', $PHPShopGUI->setField("Имя", $PHPShopGUI->setInput('text.required', "name_new", $data['name'])) .
             $PHPShopGUI->setField("E-mail", $PHPShopGUI->setInput('email.required.6', "login_new", $data['login'])) .
             $PHPShopGUI->setField("Телефон", $PHPShopGUI->setInput('tel', "tel_new", $data['tel'])) .
-             $PHPShopGUI->setField("Пароль", $PHPShopGUI->setInput("password.required.4", "password_new", null,null, false, false, false, false, false, '<a href="#" class="password-view"  data-toggle="tooltip" data-placement="top" title="'.__('Показать пароль').'"><span class="glyphicon glyphicon-eye-open"></span></a>')) .
+            $PHPShopGUI->setField("Пароль", $PHPShopGUI->setInput("password.required.6", "password_new", '', null, false, false, false, false, false, '<a href="#" class="password-gen" data-password="u' . $pasgen . '" data-text="' . __('Сгенерирован пароль: ') . '"  data-toggle="tooltip" data-placement="top" title="' . __('Сгенерировать пароль') . '"><span class="glyphicon glyphicon-cog"></span></a>')) .
             $PHPShopGUI->setField("Подтверждение пароля", $PHPShopGUI->setInput("password.required.4", "password2_new", null)) .
-            $PHPShopGUI->setField("Статус", $PHPShopGUI->setRadio("enabled_new", 1, "Вкл.", $data['enabled']) . $PHPShopGUI->setRadio("enabled_new", 0, "Выкл.", $data['enabled']) . '&nbsp;&nbsp;' . $PHPShopGUI->setCheckbox('sendActivationEmail', 1, 'Оповестить пользователя', 0)) .
-            $PHPShopGUI->setField("Диалоги", $PHPShopGUI->setRadio("dialog_ban_new", 0, "Вкл.", $data['dialog_ban']). $PHPShopGUI->setRadio("dialog_ban_new", 1, "Выкл.", $data['dialog_ban'])) .
-            $PHPShopGUI->setField("Статус", $PHPShopGUI->setSelect('status_new', $user_status_value)).
-            $PHPShopGUI->setField("Накопительная скидка", $PHPShopGUI->setInput('text', "cumulative_discount_new", $data['cumulative_discount'],null,100,false, false, false, '%')) 
+            $PHPShopGUI->setField("Статус",$PHPShopGUI->setCheckbox("enabled_new", 1, null, $data['enabled']). '<br>' . $PHPShopGUI->setCheckbox('sendActivationEmail', 1, 'Оповестить пользователя', 0)) .
+            $PHPShopGUI->setField("Блокировка диалогов", $PHPShopGUI->setCheckbox("dialog_ban_new", 1, null, $data['dialog_ban'])) .
+            $PHPShopGUI->setField("Статус", $PHPShopGUI->setSelect('status_new', $user_status_value)) .
+            $PHPShopGUI->setField("Накопительная скидка", $PHPShopGUI->setInput('text', "cumulative_discount_new", $data['cumulative_discount'], null, 100, false, false, false, '%'))
     );
 
     // Адреса доставок
@@ -63,7 +47,7 @@ function actionStart() {
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $data);
 
     // Вывод формы закладки
-    $PHPShopGUI->setTab(array("Основное", $Tab1), array("Доставка и реквизиты", $Tab2));
+    $PHPShopGUI->setTab(array("Основное", $Tab1, true,false,true), array("Доставка и реквизиты", $Tab2, true));
 
     // Вывод кнопок сохранить и выход в футер
     $ContentFooter = $PHPShopGUI->setInput("submit", "saveID", "ОК", "right", 70, "", "but", "actionInsert.shopusers.create");
@@ -75,15 +59,35 @@ function actionStart() {
 
 // Функция записи
 function actionInsert() {
-    global $PHPShopOrm, $PHPShopModules,$PHPShopSystem;
+    global $PHPShopOrm, $PHPShopModules, $PHPShopSystem;
 
     $_POST['password_new'] = base64_encode($_POST['password_new']);
-    $_POST['mail_new']=$_POST['login_new'];
-    $_POST['bot_new']=md5($_POST['login_new'].time());
-    
+    $_POST['mail_new'] = $_POST['login_new'];
+    $_POST['bot_new'] = md5($_POST['login_new'] . time());
+
+    if (is_array($_POST['mass']))
+        foreach ($_POST['mass'] as $k => $v) {
+
+            // Кодировка windows 1251
+            $mass_decode[$k] = @array_map("urldecode", $v);
+
+            // Управление адресами
+            if (!empty($_POST['mass'][$k]['default']))
+                $_POST['data_adres_new']['main'] = $k;
+
+            if (!empty($_POST['mass'][$k]['delete']))
+                unset($mass_decode[$k]);
+        }
+
+    if (!empty($mass_decode))
+        $_POST['data_adres_new']['list'] = $mass_decode;
+
+    if (is_array($_POST['data_adres_new']))
+        $_POST['data_adres_new'] = serialize($_POST['data_adres_new']);
+
 
     // Оповещение пользователя
-    if (!empty($_POST['enabled_new']) and !empty($_POST['sendActivationEmail'])) {
+    if (!empty($_POST['enabled_new']) and ! empty($_POST['sendActivationEmail'])) {
 
         PHPShopObj::loadClass("parser");
         PHPShopObj::loadClass("mail");

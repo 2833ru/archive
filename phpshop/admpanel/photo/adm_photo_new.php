@@ -12,10 +12,10 @@ function treegenerator($array, $i, $curent) {
     $tree_select = $check = false;
 
     $del = str_repeat($del, $i);
-    if (is_array($array['sub'])) {
+    if (!empty($array) and is_array($array['sub'])) {
         foreach ($array['sub'] as $k => $v) {
 
-            $check = treegenerator($tree_array[$k], $i + 1, $curent);
+            $check = treegenerator(@$tree_array[$k], $i + 1, $curent);
 
             if ($k == $curent)
                 $selected = 'selected';
@@ -23,14 +23,14 @@ function treegenerator($array, $i, $curent) {
                 $selected = null;
 
             if (empty($check['select'])) {
-                $tree_select.='<option value="' . $k . '" ' . $selected . '>' . $del . $v . '</option>';
+                $tree_select .= '<option value="' . $k . '" ' . $selected . '>' . $del . $v . '</option>';
                 $i = 1;
             } else {
-                $tree_select.='<option value="' . $k . '" ' . $selected . '>' . $del . $v . '</option>';
+                $tree_select .= '<option value="' . $k . '" ' . $selected . '>' . $del . $v . '</option>';
                 //$i++;
             }
 
-            $tree_select.=$check['select'];
+            $tree_select .= $check['select'];
         }
     }
     return array('select' => $tree_select);
@@ -55,10 +55,14 @@ function actionStart() {
     // получаем ИД будущего создаваемого изображения
     $newId = getLastID();
 
+    if (empty($_GET['cat']))
+        $_GET['cat'] = null;
+
     // Начальные данные
     $data['num'] = 1;
     $data['enabled'] = 1;
     $data['category'] = $_GET['cat'];
+    $data['name'] = $data['info'] = null;
 
     $PHPShopGUI->action_select['Урок'] = array(
         'name' => 'Обучение',
@@ -67,7 +71,7 @@ function actionStart() {
     );
 
     $PHPShopGUI->field_col = 2;
-    $PHPShopGUI->setActionPanel($TitlePage, array('Урок'), array('Сохранить и закрыть'),false);
+    $PHPShopGUI->setActionPanel($TitlePage, array('Урок'), array('Сохранить и закрыть'), false);
     $PHPShopGUI->addJSFiles('./js/bootstrap-tour.min.js', './photo/gui/tour.gui.js', './photo/gui/photo.gui.js');
 
     $PHPShopCategoryArray = new PHPShopPhotoCategoryArray();
@@ -90,11 +94,11 @@ function actionStart() {
 
     $GLOBALS['tree_array'] = &$tree_array;
 
-    $tree_select = '<select class="selectpicker show-menu-arrow hidden-edit" data-container=""  data-style="btn btn-default btn-sm" name="category_new" data-width="100%">';
+    $tree_select = '<select class="selectpicker show-menu-arrow hidden-edit" data-container=""  data-style="btn btn-default btn-sm" name="category_new" data-width="300px">';
 
-    if (is_array($tree_array[0]['sub']))
+    if (!empty($tree_array[0]['sub']) and is_array($tree_array[0]['sub']))
         foreach ($tree_array[0]['sub'] as $k => $v) {
-            $check = treegenerator($tree_array[$k], 1, $data['category']);
+            $check = treegenerator(@$tree_array[$k], 1, $data['category']);
 
             if ($k == $data['category'])
                 $selected = 'selected';
@@ -102,23 +106,25 @@ function actionStart() {
                 $selected = null;
 
 
-            $tree_select.='<option value="' . $k . '" ' . $selected . '>' . $v . '</option>';
+            $tree_select .= '<option value="' . $k . '" ' . $selected . '>' . $v . '</option>';
 
-            $tree_select.=$check['select'];
+            $tree_select .= $check['select'];
         }
-    $tree_select.='</select>';
+    $tree_select .= '</select>';
 
 
     // Содержание закладки 1
     $Tab1 = $PHPShopGUI->setField("Размещение", $tree_select) .
             $PHPShopGUI->setField("Изображение", $PHPShopGUI->setIcon($data['name'], "name_new", false, array('load' => true, 'server' => true, 'url' => true, 'multi' => true)), 1, 'Загрузите сюда фото. Превью фото будет создано автоматически.') .
-            $PHPShopGUI->setField("Описание", $PHPShopGUI->setInput("text", "info_new", $data['info'])) .
+            $PHPShopGUI->setField("Описание", $PHPShopGUI->setTextarea("info_new", $data['info'],true,300)) .
             $PHPShopGUI->setField("Сортировка", $PHPShopGUI->setInputText("№", "num_new", $data['num'], 150));
 
     $SelectValue[] = array('Вывод в каталоге', 1, $data['enabled']);
     $SelectValue[] = array('Заблокировать', 0, $data['enabled']);
 
-    $Tab1.= $PHPShopGUI->setField("Опции вывода:", $PHPShopGUI->setSelect("enabled_new", $SelectValue, 300,true));
+    $Tab1 .= $PHPShopGUI->setField("Опции вывода:", $PHPShopGUI->setSelect("enabled_new", $SelectValue));
+    
+    $Tab1 = $PHPShopGUI->setCollapse('Информация', $Tab1);
 
     // Запрос модуля на закладку
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $data);
@@ -275,7 +281,7 @@ function fotoAdd() {
             }
         }
 
-        if (!$PHPShopSystem->ifSerilizeParam('admoption.image_save_name') and !empty($tmp_file))
+        if (!$PHPShopSystem->ifSerilizeParam('admoption.image_save_name') and ! empty($tmp_file))
             unlink($tmp_file);
 
         // Добавление в таблицу фотогалереи

@@ -9,17 +9,17 @@ function actionStart() {
     // Выборка
     $data = $PHPShopOrm->select(array('*'), array('id' => '=' . intval($_GET['id'])));
 
-    $PHPShopGUI->field_col = 2;
+    $PHPShopGUI->field_col = 4;
     
     $PHPShopGUI->setActionPanel(__("Варианты подтипов") . '<span class="hidden-xs"> / ' . $data['name'] . '</span>', array('Удалить'), array('Сохранить', 'Сохранить и закрыть'));
 
     $Tab1 = $PHPShopGUI->setField("Наименование подтипа", $PHPShopGUI->setInputArg(array('type' => 'text.required','locale'=>false, 'name' => "name_new", 'value' => $data['name'], 'placeholder' => 'Размер'))) .
             $PHPShopGUI->setField("Наименование цвета", $PHPShopGUI->setInputArg(array('type' => 'text', 'name' => "color_new", 'value' => $data['color'], 'placeholder' => 'Цвет'))) .
-            $PHPShopGUI->setField("Статус", $PHPShopGUI->setRadio("enabled_new", 1, "Вкл.", $data['enabled']) . $PHPShopGUI->setRadio("enabled_new", 0, "Выкл.", $data['enabled']) . '&nbsp;&nbsp;');
+            $PHPShopGUI->setField("Статус", $PHPShopGUI->setCheckbox("enabled_new", 1, null, $data['enabled']));
 
 
     // Вывод формы закладки
-    $PHPShopGUI->setTab(array("Основное", $Tab1,true));
+    $PHPShopGUI->setTab(array("Основное", $Tab1,true,false,'block-grid'));
 
     // Запрос модуля на закладку
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $data);
@@ -51,8 +51,7 @@ function actionSave() {
 function actionUpdate() {
     global $PHPShopOrm, $PHPShopModules;
 
-    
-        // Корректировка пустых значений
+    // Корректировка пустых значений
     $PHPShopOrm->updateZeroVars('enabled_new');
 
     // Перехват модуля

@@ -14,6 +14,7 @@ function actionStart() {
     $data['name']=__('Новая валюта');
     $data['kurs']=1;
     $data['enabled']=1;
+    $data = $PHPShopGUI->valid($data,'code','iso','num');
 
     $Tab1 = $PHPShopGUI->setField("Название", $PHPShopGUI->setInputText(null, "name_new", $data['name'], 300));
     $Tab1 .= $PHPShopGUI->setField("Обозначение", $PHPShopGUI->setInputText(null, "code_new", $data['code'], 300));

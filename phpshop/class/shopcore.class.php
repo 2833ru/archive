@@ -99,8 +99,6 @@ class PHPShopShopCore extends PHPShopCore {
         // Настройки
         $this->parent_price_enabled = $this->PHPShopSystem->getSerilizeParam('admoption.parent_price_enabled');
         $this->user_price_activate = $this->PHPShopSystem->getSerilizeParam('admoption.user_price_activate');
-        $this->user_items_activate = $this->PHPShopSystem->getSerilizeParam('admoption.user_items_activate');
-        $this->sklad_enabled = $this->PHPShopSystem->getSerilizeParam('admoption.sklad_enabled');
         $this->sklad_status = $this->PHPShopSystem->getSerilizeParam('admoption.sklad_status');
         $this->format = intval($this->PHPShopSystem->getSerilizeParam("admoption.price_znak"));
         $this->warehouse_sum = $this->PHPShopSystem->getSerilizeParam('admoption.sklad_sum_enabled');
@@ -159,6 +157,7 @@ class PHPShopShopCore extends PHPShopCore {
         $percent = $this->PHPShopSystem->getValue('percent');
 
         // Форма вывода
+        if(!empty($_GET['gridChange']))
         switch ($_GET['gridChange']) {
             case 1:
                 $this->set('gridSetAactive', 'active');
@@ -300,7 +299,10 @@ class PHPShopShopCore extends PHPShopCore {
         $PHPShopOrm->debug = $this->debug;
         $PHPShopOrm->cache = $cache;
         $PHPShopOrm->mysql_error = $mysql_error;
+        
+        if(!empty($cache_format))
         $PHPShopOrm->cache_format = $cache_format;
+        
         $result = $PHPShopOrm->select($select, $where, $order, $option, __CLASS__, $function_name);
 
         return $result;
@@ -375,6 +377,7 @@ class PHPShopShopCore extends PHPShopCore {
             $template_location = "./phpshop/lib/templates/";
             $template_location_bool = true;
         }
+        else $template_location = $template_location_bool = null;
 
         // Кол-во данных
         $this->count = $count;
@@ -423,7 +426,7 @@ class PHPShopShopCore extends PHPShopCore {
         $this->num_page = $row['count'];
 
         $i = 1;
-        $navigat = $delim;
+        $navigat = $nav = null;
 
         // Кол-во страниц в навигации
         $num = @ceil($this->num_page / $this->num_row);
@@ -466,6 +469,7 @@ class PHPShopShopCore extends PHPShopCore {
                 if ($i != $this->page) {
                     if ($i == 1) {
                         $this->set("paginLink", $GLOBALS['SysValue']['dir']['dir'] . substr($this->objPath, 0, strlen($this->objPath) - 1) . '.html' . $sort);
+                        $this->set("catalogFirstPage", $GLOBALS['SysValue']['dir']['dir'] . substr($this->objPath, 0, strlen($this->objPath) - 1) . '.html');
                         $navigat .= parseTemplateReturn($template_location . "paginator/paginator_one_link.tpl", $template_location_bool);
                     } else {
                         if ($i > ($this->page - $this->nav_len) and $i < ($this->page + $this->nav_len)) {
@@ -678,14 +682,9 @@ class PHPShopShopCore extends PHPShopCore {
             $row['price_n'] = $promotions['price_n'];
             $row['promo_label'] = $promotions['label'];
         }
-        
-        // Если склад показывать только после авторизации
-        if ($this->user_items_activate == 1 and empty($_SESSION['UsersId'])) {
-            $this->sklad_enabled = false;
-        }
 
         // Показывать состояние склада
-        if ($this->sklad_enabled == 1) {
+        if ($this->PHPShopSystem->isDisplayWarehouse()) {
 
             // Проверка дополнительных складов
             $this->getStore($row);
@@ -759,7 +758,7 @@ class PHPShopShopCore extends PHPShopCore {
         if (empty($row['price_n'])) {
 
             $this->set('productPrice', $price);
-            $this->set('productLabelDiscount', null);
+            $this->set('productLabelDiscount', $this->lang('specprod'));
             $this->set('productPriceOld', null);
         }
 
@@ -1091,6 +1090,7 @@ function product_grid($dataArray, $cell = 2, $template = false) {
 
             // Название
             $this->set('productName', $row['name']);
+            $this->set('productNameClean', str_replace(['"', "'"], '', strip_tags($row['name'])));
 
             // Артикул
             $this->set('productArt', $row['uid']);

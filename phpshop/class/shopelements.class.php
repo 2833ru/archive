@@ -14,6 +14,7 @@ class PHPShopProductElements extends PHPShopElements {
      */
     var $cache = false;
     var $template_debug = true;
+    var $price_max = null;
 
     /**
      * @var array чистка элементов кэша
@@ -79,9 +80,7 @@ class PHPShopProductElements extends PHPShopElements {
 
         // Настройки
         $this->user_price_activate = $this->PHPShopSystem->getSerilizeParam('admoption.user_price_activate');
-        $this->user_items_activate = $this->PHPShopSystem->getSerilizeParam('admoption.user_items_activate');
         $this->format = intval($this->PHPShopSystem->getSerilizeParam("admoption.price_znak"));
-        $this->sklad_enabled = $this->PHPShopSystem->getSerilizeParam('admoption.sklad_enabled');
         $this->warehouse_sum = $this->PHPShopSystem->getSerilizeParam('admoption.sklad_sum_enabled');
 
         // HTML опции верстки
@@ -305,14 +304,9 @@ class PHPShopProductElements extends PHPShopElements {
             $row['price_n'] = $promotions['price_n'];
             $row['promo_label'] = $promotions['label'];
         }
-        
-        // Если склад показывать только после авторизации
-        if ($this->user_items_activate == 1 and empty($_SESSION['UsersId'])) {
-            $this->sklad_enabled = false;
-        }
 
         // Показывать состояние склада
-        if ($this->sklad_enabled == 1) {
+        if ($this->PHPShopSystem->isDisplayWarehouse()) {
 
             // Проверка дополнительных складов
             $this->getStore($row);
@@ -385,7 +379,7 @@ class PHPShopProductElements extends PHPShopElements {
         // Если нет новой цены
         if (empty($row['price_n'])) {
             $this->set('productPrice', $price);
-            $this->set('productLabelDiscount', null);
+            $this->set('productLabelDiscount', $this->lang('specprod'));
             $this->set('productPriceOld', null);
         }
 
@@ -604,6 +598,7 @@ function product_grid($dataArray, $cell, $template = false, $line = true, $mod =
 
             // Определяем переменные
             $this->set('productName', $row['name']);
+            $this->set('productNameClean', str_replace(['"', "'"], '', strip_tags($row['name'])));
             $this->set('productArt', $row['uid']);
             $this->set('productDes', $row['description']);
             $this->set('productPageThis', $this->PHPShopNav->getPage());

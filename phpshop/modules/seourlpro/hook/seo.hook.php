@@ -38,6 +38,8 @@ function setPaginator_seourl_hook($obj, $nav, $rout) {
 
         $nav = strtr($nav, array_combine($replace_old, $replace_new));
         $obj->set('productPageNav', $nav);
+        $obj->set('catalogFirstPage', strtr($obj->get('catalogFirstPage'), array_combine($replace_old, $replace_new)));
+
         $count++;
     }
 }

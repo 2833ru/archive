@@ -42,9 +42,14 @@
         <link href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@css/responsive.css" rel="stylesheet">
 
         <div id="bootstrap_theme" data-name="@php echo $_SESSION['skin']; php@"></div>
+	        <!-- Стикер-полоска -->
+	        <div class="top-banner @php __hide('sticker_close','cookie'); php@">
+				<div class="sticker-text">@sticker_top@</div>
+				<span class="close sticker-close">x</span>
+			</div>
+			<!-- /Стикер-полоска -->
 
         <header>
-
             <div class="header-top">
                 <div class="container">
                     <div class="row">
@@ -151,20 +156,13 @@
                     <!-- Slider Section Starts -->
                     <!-- Nested Container Starts -->
                     <!-- Carousel Starts -->
-                    <div class="slider hidden-xs">
+                    <div class="slider">
                         <div class="container">
                             <div class="row">
                                 @imageSlider@
                             </div>
                         </div>
                     </div>
-
-                    <div class="slider col-xs-12 hidden-lg hidden-md hidden-sm">
-                        <div class="container">
-                            <div class="row text-center">
-                                @sticker_mobile_slider@
-                            </div>
-                        </div>
 
                         <!-- Carousel Ends -->
                         <!-- Nested Container Ends -->
@@ -203,7 +201,7 @@
                     <div class="products-list nowbuy-list">
                         @nowBuy@
                     </div>
-                    <div class="top-col-banners text-center">@sticker_banner@</div>
+                    <div class="top-col-banners text-center">@banersDispHorizontal@</div>
 
                     <!-- Popular Products Ends -->
                     <div class="row">

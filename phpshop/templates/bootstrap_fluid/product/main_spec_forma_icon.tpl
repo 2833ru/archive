@@ -7,9 +7,11 @@
                @promotionsIcon@
             </span>
     <div class="thumbnail">
-        <a href="/shop/UID_@productUid@.html" target="_blank" getParams="null" title="@productName@"><img data-src="@productImg@" alt="@productName@"></a>
+        <a href="/shop/UID_@productUid@.html" target="_blank" getParams="null" title="@productNameClean@">
+            <img data-src="@productImg@" alt="@productNameClean@">
+        </a>
         <div class="caption">
-            <h5><a href="/shop/UID_@productUid@.html" title="@productName@">@productName@</a></h5>
+            <h5><a href="/shop/UID_@productUid@.html" title="@productNameClean@">@productName@</a></h5>
            
             <h4 class="product-price">@productPrice@<span class="rubznak">@productValutaName@</span><span class=" price-old">@productPriceOld@</span></h4>
 

@@ -6785,6 +6785,5 @@ button.close {
 }
 
 #body,#form-signin{
-    background: #F0F0F0 url(images/retro.png) top center repeat !important;
-    background-attachment: fixed !important;
+    background: #F0F0F0;
 }

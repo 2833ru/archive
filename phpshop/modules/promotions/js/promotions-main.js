@@ -36,7 +36,7 @@ function UpdatePromotion(promo) {
                 if (json['status'] == 1) {
 
                     //Сравним итоговые суммы
-                    var totalsum = parseFloat($("#TotalSumma").html());
+                    var totalsum = parseFloat($("#TotalSumma").html().replace(/ /g, ''));
                     var totalajax = parseFloat(json['total']);
 
                     if (parseInt(totalsum) >= parseInt(totalajax)) {

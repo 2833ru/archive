@@ -22,35 +22,14 @@ class ElasticAjaxSearchFilter implements ElasticAjaxSearchFilterInterface
             'size'    => $limit,
             'query' => [
                 'bool' => [
-                    'should' => [
-                        [
-                            'bool' => [
-                                'must' => [
-                                    'multi_match' => [
-                                        'query'  => strtolower($query),
-                                        'fields' => [ 'title.autocomplete^3', 'article^2', 'keywords' ],
-                                        'operator'  =>  'and'
-                                    ]
-                                ],
-                                'filter' => self::$filterActive,
-                                'boost'  => 2.0
-                            ]
-                        ],
-                        [
-                            'bool' => [
-                                'must' => [
-                                    'multi_match' => [
-                                        'query'  => strtolower($query),
-                                        'fields' => [ 'title.autocomplete^3', 'article^2', 'keywords' ],
-                                        'operator'  =>  'and',
-                                        'fuzziness' => 1
-                                    ]
-                                ],
-                                'filter' => self::$filterActive,
-                                'boost'  => 1.0
-                            ]
+                    'must' => [
+                        'multi_match' => [
+                            'query'  => strtolower($query),
+                            'fields' => [ 'title.autocomplete^3', 'article^2', 'keywords' ],
+                            'operator'  =>  'and'
                         ]
                     ],
+                    'filter' => self::$filterActive
                 ],
             ],
             'highlight' => [
@@ -76,10 +55,13 @@ class ElasticAjaxSearchFilter implements ElasticAjaxSearchFilterInterface
             ]
         ];
 
-        if(isset($categories)) {
-            $filter['query']['bool']['should'][0]['bool']['filter']['bool']['must'][1]['terms']['categories'] = $categories;
-            $filter['query']['bool']['should'][1]['bool']['filter']['bool']['must'][1]['terms']['categories'] = $categories;
+        if(!empty($categories)) {
+            $filter['query']['bool']['filter']['bool']['must'][1]['terms']['categories'] = $categories;
             $filter['highlight']['fields']['title.autocomplete']['highlight_query']['bool']['filter']['bool']['must'][1]['terms']['categories'] = $categories;
+        }
+
+        if (Elastic::isFuzziness((int) Elastic::getOption('misprints_ajax'), strlen($query))) {
+            $filter['query']['bool']['must']['multi_match']['fuzziness'] = (int) Elastic::getOption('misprints_ajax');
         }
 
         if ((int) Elastic::getOption('available_sort') === 1) {
@@ -156,7 +138,7 @@ class ElasticAjaxSearchFilter implements ElasticAjaxSearchFilterInterface
                 ]
             ]
         ];
-        if(isset($categories)) {
+        if(!empty($categories)) {
             $filter['query']['bool']['should'][0]['bool']['filter']['bool']['must'][1]['terms']['categories'] = $categories;
             $filter['query']['bool']['should'][1]['bool']['filter']['bool']['must'][1]['terms']['categories'] = $categories;
             $filter['highlight']['fields']['title.autocomplete']['highlight_query']['bool']['filter']['bool']['must'][1]['terms']['categories'] = $categories;

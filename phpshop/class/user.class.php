@@ -40,6 +40,8 @@ class PHPShopUser extends PHPShopObj {
         $data_adres = unserialize(parent::getParam('data_adres'));
         if (!is_array($data_adres) OR !count($data_adres['list']))
             return "";
+        
+        $disp = null;
 
         foreach ($data_adres['list'] as $index => $data_adres_one) {
             $dis = "";
@@ -182,6 +184,10 @@ class PHPShopUserStatus extends PHPShopObj {
         return $discount;
     }
 
+    public function isDisplayWarehouse()
+    {
+        return (int) $this->getParam('warehouse') === 1;
+    }
 }
 
 /**

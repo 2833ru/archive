@@ -29,6 +29,7 @@ class PHPShopSecurity {
      */
     static function getExt($sFileName) {
         $sTmp = $sFileName;
+        $sExt = null;
         while ($sTmp != "") {
             $sTmp = strstr($sTmp, ".");
             if ($sTmp != "") {

@@ -37,6 +37,12 @@
 
         <!-- Header -->
         <header class="container ">
+	        <!-- Стикер-полоска -->
+	        <div class="top-banner @php __hide('sticker_close','cookie'); php@">
+				<div class="sticker-text">@sticker_top@</div>
+				<span class="close sticker-close">x</i></span>
+			</div>
+			<!-- /Стикер-полоска -->
             <div class="row">
                 <div class="col-md-12 hidden-xs">
                     <ul class="nav nav-pills pull-right">
@@ -204,26 +210,12 @@
 
 
                     <div class="bar-padding-top-fix visible-md"></div>
-                    <!-- Slider Section Starts -->
-                    <!-- Nested Container Starts -->
-                    <!-- Carousel Starts -->
-                    <div class="template-slider hidden-xs">
+                        <!-- Slider Section Starts -->
+                        <!-- Nested Container Starts -->
+                        <!-- Carousel Starts -->
+                            @imageSlider@
+                        <!-- Slider Section Ends -->
 
-                        @imageSlider@
-
-                    </div>
-
-                    <div class="slider col-xs-12 hidden-lg hidden-md hidden-sm">
-
-                        <div class="text-center">
-                            @sticker_mobile_slider@
-
-                        </div>
-
-                        <!-- Carousel Ends -->
-                        <!-- Nested Container Ends -->
-                    </div>
-                    <!-- Slider Section Ends -->
 
 
                     <div class="page-header">
@@ -248,7 +240,7 @@
                 <a href="#" id="toTop"><span id="toTopHover"></span>{Наверх}</a>
             </div>
             <!--/ toTop -->
-            <div class="visible-lg visible-md text-center banner">@sticker_banner@<br></div>
+            <div class="banner">@banersDispHorizontal@</div>
 
             <footer class="footer well ">
                 <div class="row">

@@ -8,11 +8,10 @@ function getFileInfo($file) {
 
     if ($f['License']['Pro'] == 'Start')
         $_SESSION['mod_limit'] = 5;
-    elseif ($f['License']['Pro'] == 'Enabled'){
+    elseif ($f['License']['Pro'] == 'Enabled') {
         $_SESSION['mod_pro'] = true;
         $_SESSION['mod_limit'] = 100;
-    }
-    else
+    } else
         $_SESSION['mod_limit'] = 50;
 
     return $f['License']['SupportExpires'];
@@ -39,6 +38,10 @@ function ChekInstallModule($path, $num = false) {
 
     $result = mysqli_query($link_db, $sql);
     $row = mysqli_fetch_array($result);
+
+    if (empty($row['key']))
+        $row['key'] = null;
+
     if (mysqli_num_rows($result) > 0) {
         $return[0] = "#C0D2EC";
         $return[1] = array('status' => array('enable' => 1, 'align' => 'right', 'caption' => array('Выкл', 'Вкл')));
@@ -105,7 +108,8 @@ function actionStart() {
     $where = false;
     if (!empty($_GET['cat'])) {
         $where = array('category' => '=' . intval($_GET['cat']));
-    }
+    } else
+        $_GET['cat'] = null;
 
     // Количество установленных модулей
     if (empty($_GET['install'])) {
@@ -182,6 +186,8 @@ function actionStart() {
             }
     } elseif (@$dh = opendir($path)) {
 
+
+
         $active_tree_menu = $_GET['cat'];
 
         while (($file = readdir($dh)) !== false) {
@@ -196,6 +202,12 @@ function actionStart() {
                         $new = '<span class="label label-primary">' . $Info['status'] . '</span>';
                     else
                         $new = null;
+
+                    if (empty($Info['sign']))
+                        $Info['sign'] = null;
+
+                    if (empty($Info['pro']))
+                        $Info['pro'] = null;
 
                     // Если выбрана категория
                     if (isset($_GET['cat']) and @ strstr($Info['category'], $_GET['cat']) and empty($Info['hidden'])) {
@@ -264,6 +276,7 @@ function actionStart() {
                         else
                             $wikiPath = null;
 
+
                         // Дата установки
                         if (!empty($ChekInstallModule[2])) {
                             $InstallDate = date("d-m-Y", $ChekInstallModule[2]);
@@ -312,7 +325,7 @@ function actionStart() {
 
     $tree = '<table class="table table-hover">
         <tr class="treegrid-all">
-           <td><a href="?path=modules" class="treegrid-parent" data-parent="treegrid-all">' . __('Все модули') . '</a> <span class="label label-primary pull-right">102</span></td>
+           <td><a href="?path=modules" class="treegrid-parent" data-parent="treegrid-all">' . __('Все модули') . '</a> <span class="label label-primary pull-right">103</span></td>
 	</tr>
         <tr class="treegrid-template">
            <td><a href="?path=modules&cat=template" class="treegrid-parent" data-parent="treegrid-template">' . __('Дизайн') . '</a> <span class="label label-primary pull-right">8</span></td>
@@ -324,7 +337,7 @@ function actionStart() {
            <td><a href="?path=modules&cat=seo" class="treegrid-parent" data-parent="treegrid-seo">SEO</a> <span class="label label-primary pull-right">6</span></td>
 	</tr>
         <tr class="treegrid-delivery">
-           <td><a href="?path=modules&cat=delivery" class="treegrid-parent" data-parent="treegrid-delivery">' . __('Доставка') . '</a> <span  class="label label-primary pull-right">12</span></td>
+           <td><a href="?path=modules&cat=delivery" class="treegrid-parent" data-parent="treegrid-delivery">' . __('Доставка') . '</a> <span  class="label label-primary pull-right">13</span></td>
 	</tr>
         <tr class="treegrid-chat">
            <td><a href="?path=modules&cat=chat" class="treegrid-parent" data-parent="treegrid-delivery">' . __('Чаты и звонки') . '</a> <span class="label label-primary pull-right">7</span></td>

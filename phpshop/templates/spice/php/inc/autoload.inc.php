@@ -36,6 +36,8 @@ function create_theme_menu($file) {
         'default' => '#ffb400'
     );
     if (preg_match("/^bootstrap-theme-([a-zA-Z0-9_]{1,30}).css$/", $file, $match)) {
+        
+        if(!empty($color[$match[1]]))
         $icon = $color[$match[1]];
         if (empty($icon))
             $icon = $match[1];
@@ -65,12 +67,14 @@ if ($GLOBALS['SysValue']['template_theme']['user'] == 'true'  or !empty($GLOBALS
     $PHPShopGUI->addJSFiles($GLOBALS['SysValue']['dir']['templates'] . chr(47) . $_SESSION['skin'] . '/js/bootstrap-colorpicker.min.js', $GLOBALS['SysValue']['dir']['templates'] . chr(47) . $_SESSION['skin'] . '/js/editor.js');
 
     $option = xml2array($GLOBALS['SysValue']['dir']['templates'] . chr(47) . $_SESSION['skin'] . '/editor/style.xml', false, true);
-    $css_edit.=$PHPShopGUI->includeJava . $PHPShopGUI->includeCss;
+    $css_edit=$PHPShopGUI->includeJava . $PHPShopGUI->includeCss;
+    
+    $css_edit_add = $admin_edit=$css_edit_theme=$theme_menu='<br>';
 
     if (is_array($option))
         foreach ($option['element'] as $id => $element) {
 
-            if (is_array($element['var'][0]))
+            if (!empty($element['var'][0]) and is_array($element['var'][0]))
                 $element_var = $element['var'];
             else
                 $element_var[0] = $element['var'];
@@ -81,7 +85,7 @@ if ($GLOBALS['SysValue']['template_theme']['user'] == 'true'  or !empty($GLOBALS
                     // Цвет
                     if ($var['type'] == 'color') {
 
-                        if ($var['important'] == 'true')
+                        if (!empty($var['important']) and $var['important'] == 'true')
                             $var['important'] = '!important';
                         else
                             $var['important'] = null;
@@ -147,7 +151,7 @@ if ($GLOBALS['SysValue']['template_theme']['user'] == 'true'  or !empty($GLOBALS
         }
         
         $PHPShopGUI->nav_style = 'nav-tabs';
-        $css_edit.=$PHPShopGUI->setTab(array('Темы', $css_edit_theme),array('Стили', $css_edit_add));
+        $css_edit.=$PHPShopGUI->setTab(array('Темы', $css_edit_theme,false),array('Стили', $css_edit_add,false));
 
     // Сохранить
     if (!empty($_SESSION['logPHPSHOP'])) {
@@ -245,7 +249,7 @@ if ($GLOBALS['SysValue']['template_theme']['user'] == 'true'  or !empty($GLOBALS
 
     // Редактор CSS
     $theme_menu = '
-        <div id="style-selector" style="width: 280px; right: ' . $editor['right'] . 'px;" class="hidden-xs hidden-sm">
+        <div id="style-selector" style="width: 280px; right: ' . $editor['right'] . 'px;">
         <div class="style-toggle ' . $editor['close'] . '" title="{Панель оформления}"></div>
            <div id="style-selector-container">
               <div class="style-selector-wrapper">

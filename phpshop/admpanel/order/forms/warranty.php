@@ -46,8 +46,8 @@ if ($LoadItems['System']['nds_enabled']) {
 }
 $sum = number_format($sum, "2", ".", "");
 
-$name_person = $order['Person']['name_person'];
-$org_name = $order['Person']['org_name'];
+$name_person = @$order['Person']['name_person'];
+$org_name = @$order['Person']['org_name'];
 $datas = PHPShopDate::dataV($datas, false);
 
 // Генерим номер товарного чека

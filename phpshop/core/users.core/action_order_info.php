@@ -34,7 +34,8 @@ function action_order_info($obj, $tip) {
 
         // Статусы заказов
         $PHPShopOrderStatusArray = new PHPShopOrderStatusArray();
-
+        
+        $files = null;
 
         if (is_array($row)) {
 
@@ -193,21 +194,20 @@ function usercartforma($val, $option) {
 function userdeleveryforma($val, $option) {
     global $PHPShopModules;
 
-    echo $option->objID;
-
     // Перехват модуля в начале функции
     $hook = $PHPShopModules->setHookHandler(__FUNCTION__, __FUNCTION__, $option, $val, 'START');
     if ($hook)
         return $hook;
 
+    $adres=null;
     $data_fields = unserialize($val['data_fields']);
     if (is_array($data_fields)) {
-        $num = $data_fields[num];
+        $num = $data_fields['num'];
         asort($num);
-        $enabled = $data_fields[enabled];
+        $enabled = $data_fields['enabled'];
         foreach ($num as $key => $value) {
-            if ($enabled[$key]['enabled'] == 1) {
-                $adres .= PHPShopText::b($enabled[$key][name] . ": ") . $option['row'][$key] . "<br>";
+            if (!empty($enabled[$key]['enabled']) and $enabled[$key]['enabled'] == 1) {
+                $adres .= PHPShopText::b($enabled[$key]['name'] . ": ") . $option['row'][$key] . "<br>";
             }
         }
     }
@@ -335,6 +335,7 @@ function userorderpaymentlink($obj, $PHPShopOrderFunction, $tip, $row) {
         default:
             $users_file = './payment/' . $path . '/users.php';
             $users_function = $path . '_users_repay';
+            $disp = null;
             if (is_file($users_file)) {
                 include_once($users_file);
                 if (function_exists($users_function)) {
@@ -355,11 +356,11 @@ function userorderpaymentlink($obj, $PHPShopOrderFunction, $tip, $row) {
 function userorderfiles($val, $obj) {
 
     $files = unserialize($val);
-    $dis.=PHPShopText::br();
-    $dis = $obj->caption(__('Документы'));
+    $dis=PHPShopText::br();
+    $dis.= $obj->caption(__('Документы'));
 
     if (is_array($files)) {
-        foreach ($files as $k => $cfile) {
+        foreach ($files as $cfile) {
 
             $dis.=PHPShopText::tr(PHPShopText::a(urldecode($cfile['path']), urldecode($cfile['name']), urldecode($cfile['name']), false, false, '_blank'));
         }

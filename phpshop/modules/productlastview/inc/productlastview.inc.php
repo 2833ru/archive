@@ -85,7 +85,6 @@ class ProductLastView extends PHPShopProductElements {
             "price_n" => PHPShopProductFunction::GetPriceValuta($objID, $objProduct->getParam("price_n"), $objProduct->getParam("baseinputvaluta"), true, false),
             "uid" => $objProduct->getParam("uid"),
             "pic_small" => $objProduct->getParam("pic_small"),
-            "parent" => intval($parentID)
         );
 
 
@@ -120,7 +119,12 @@ class ProductLastView extends PHPShopProductElements {
         $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['productlastview']['productlastview_memory']);
         $insert['memory_new'] = $this->memory;
         $insert['date_new'] = time();
-        $insert['user_new'] = $_SESSION['UsersId'];
+        
+        if(!empty($_SESSION['UsersId']))
+            $UsersId = $_SESSION['UsersId'];
+        else $UsersId=null;
+        
+        $insert['user_new'] = $UsersId;
         $insert['product_new'] = serialize($this->_PRODUCT);
         $insert['ip_new'] = $_SERVER["REMOTE_ADDR"];
         $PHPShopOrm->insert($insert);
@@ -161,6 +165,8 @@ class ProductLastView extends PHPShopProductElements {
             krsort($this->_PRODUCT);
             foreach ($this->_PRODUCT as $key => $val) {
                 $cart[$key]['price'] = $PHPShopOrder->ReturnSumma($val['price'], 0);
+
+                if(!empty($val['num']))
                 $cart[$key]['total'] = $PHPShopOrder->ReturnSumma($val['price'] * $val['num'], 0);
             }
         }
@@ -250,7 +256,7 @@ function productlastviewform($val, $option) {
 
     // Учет модуля SEOURLPRO
     if (!empty($GLOBALS['SysValue']['base']['seourlpro']['seourlpro_system'])) {
-        if(is_null($GLOBALS['PHPShopSeoPro'])) {
+        if(empty($GLOBALS['PHPShopSeoPro'])) {
             include_once dirname(dirname(dirname(__DIR__))) . '/modules/seourlpro/inc/option.inc.php';
             $GLOBALS['PHPShopSeoPro'] = new PHPShopSeoPro();
         }
@@ -280,6 +286,8 @@ function productlastviewform($val, $option) {
     PHPShopParser::set('productlastview_product_pic_small', !empty($val['pic_small']) ? $val['pic_small'] : 'images/shop/no_photo.gif');
     PHPShopParser::set('productlastview_product_price', $val['price']);
     PHPShopParser::set('productlastview_product_currency', $option['currency']);
+    
+    if(!empty($option['rate']))
     PHPShopParser::set('productlastview_product_rating', $option['rate']);
 
     // Товар в наличии

@@ -83,10 +83,10 @@ $ouid = $row['uid'];
 $order = unserialize($row['orders']);
 $status = unserialize($row['status']);
 $nds = $LoadItems['System']['nds'];
-$dis = null;
+$dis = $weight = $adr_info = null ;
 if (is_array($order['Cart']['cart']))
     foreach ($order['Cart']['cart'] as $val) {
-        $this_price = ($PHPShopOrder->returnSumma(number_format($val['price'], "2", ".", ""), $order['Person']['discount']));
+        $this_price = ($PHPShopOrder->returnSumma(number_format($val['price'], "2", ".", ""), @$order['Person']['discount']));
         $this_nds = number_format($this_price * $nds / (100 + $nds), "2", ".", "");
         $this_price_bez_nds = ($this_price - $this_nds) * $val['num'];
         $this_price_c_nds = number_format($this_price * $val['num'], "2", ".", "");
@@ -112,7 +112,7 @@ if (is_array($order['Cart']['cart']))
 
         @$total_summa_nds+=$this_price_bez_nds;
         @$total_summa_nds_taxe+=$this_nds_summa;
-        @$total_summa+=$PHPShopOrder->returnSumma(($val['price'] * $val['num']), $order['Person']['discount']);
+        @$total_summa+=$PHPShopOrder->returnSumma(($val['price'] * $val['num']), @$order['Person']['discount']);
 
 //Определение и суммирование веса
         $goodid = $val['id'];
@@ -154,7 +154,7 @@ if ($LoadItems['System']['nds_enabled']) {
 
 
 
-if ($row['org_name'] or $order['Person']['org_name'])
+if ($row['org_name'] or !empty($order['Person']['org_name']))
     $org_name = $order['Person']['org_name'] . $row['org_name'];
 else
     $org_name = $row['fio'];
@@ -184,7 +184,7 @@ if ($row['city'])
 if ($row['index'])
     $adr_info .= ", индекс: " . $row['index'];
 if ($row['street'] OR $order['Person']['adr_name'])
-    $adr_info .= ", улица: " . $row['street'] . $order['Person']['adr_name'];
+    $adr_info .= ", улица: " . $row['street'] . @$order['Person']['adr_name'];
 if ($row['house'])
     $adr_info .= ", дом: " . $row['house'];
 if ($row['porch'])
