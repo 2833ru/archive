@@ -1,4 +1,4 @@
-<div class="col-md-4 col-sm-4 product-block-wrapper product-block-wrapper-fix">
+<div class="col-md-4 col-sm-4 col-xs-6 product-block-wrapper product-block-wrapper-fix">
 	<span class="sale-icon-content">
                 @specIcon@
                 @newtipIcon@
@@ -22,10 +22,9 @@
             @previewSorts@
             <div class="description-link-wrapper">
                 <a class="description-link" href="/shop/UID_@productUid@.html" title="@productNameClean@"></a>
-
             </div>
             <div class="price">
-                <span class="price-new">@productPrice@<span class="rubznak">@productValutaName@</span></span> 
+                <span class="price-new">@productPrice@<span class="rubznak">@productValutaName@</span></span>
                 <span class="price-old">@productPriceOld@</span>
             </div>
           <div class="stock">  @ComStartNotice@
@@ -34,21 +33,20 @@
             <span class="product-sklad-list-block">@productSklad@</span>
 			</div>
             <div class="cart-button button-group">
-                <a class="btn btn-cart @elementCartOptionHide@" href="/shop/UID_@productUid@.html">
-                    <i class="fa fa-shopping-cart"></i>
-                    <span>@productSale@</span>
-                </a>
-                <button type="button" class="btn btn-cart addToCartList @elementCartHide@" data-num="1" data-uid="@productUid@" data-cart="@productSaleReady@">
+                <a class="btn btn-cart @elementCartOptionHide@" href="/shop/UID_@productUid@.html"  data-title="@productSale@" data-toggle="tooltip">
                     <i class="fa fa-shopping-cart"></i>                     
-                    <span>@productSale@</span>
+                </a>
+                <button type="button" class="btn btn-cart addToCartList @elementCartHide@" data-num="1" data-uid="@productUid@" data-cart="@productSaleReady@" data-title="@productSale@" data-toggle="tooltip">
+                    <i class="fa fa-shopping-cart"></i>                     
                 </button>
                 <button class="btn btn-wishlist addToWishList" data-uid="@productUid@" data-title="{Отложить}" data-placement="top" data-toggle="tooltip"><i class="fa fa-heart"></i></button>
-                <button class="btn btn-wishlist addToCompareList hidden-md" data-uid="@productUid@" data-title="{Сравнить}" data-placement="top" data-toggle="tooltip"><i class="fa fa-bar-chart-o"></i></button>
+                <button class="btn btn-wishlist addToCompareList" data-uid="@productUid@" data-title="{Сравнить}" data-placement="top" data-toggle="tooltip"><i class="fa fa-bar-chart-o"></i></button>
 
-                <a class="btn btn-cart @elementNoticeHide@" href="/users/notice.html?productId=@productUid@" title="@productNotice@">
+                <a class="btn btn-cart @elementNoticeHide@" href="/users/notice.html?productId=@productUid@" title="@productNotice@"  data-title="@productNotice@" data-placement="top" data-toggle="tooltip">
                     <i class="fa fa-envelope-o" aria-hidden="true"></i>                            
-                    {Уведомить}
                 </a>                                   
-            </div>        </div>
+         
+            </div>
+        </div>
     </div>
 </div>

@@ -9,7 +9,7 @@ PHPShopObj::loadClass('delivery');
 /**
  * Обработчик кабинета пользователя
  * @author PHPShop Software
- * @version 1.9
+ * @version 2.0
  * @package PHPShopCore
  */
 class PHPShopUsers extends PHPShopCore {
@@ -995,7 +995,7 @@ class PHPShopUsers extends PHPShopCore {
         // Перехват модуля
         $this->setHook(__CLASS__, __FUNCTION__, $_POST);
 
-        if (count($this->error) == 0)
+        if (!is_array($this->error))
             return true;
     }
 
@@ -1035,9 +1035,11 @@ class PHPShopUsers extends PHPShopCore {
             'kpp_new' => PHPShopSecurity::TotalClean($_POST['kpp_new']),
             'subscribe_new' => $subscribe,
             'tel_code_new' => PHPShopSecurity::TotalClean($_POST['tel_code_new']),
-            'servers_new' => HostID,
             'bot_new' => md5($_POST['login_new'] . time())
         );
+        
+        if(defined('HostID'))
+            $insert['servers_new'] = HostID;
 
         // Перехват модуля
         $hook = $this->setHook(__CLASS__, __FUNCTION__, $insert);

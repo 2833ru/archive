@@ -3,7 +3,7 @@
 /**
  * Элемент стандартных системных переменных
  * @author PHPShop Software
- * @version 1.5
+ * @version 1.6
  * @package PHPShopElements
  */
 class PHPShopCoreElement extends PHPShopElements {
@@ -1308,7 +1308,7 @@ class PHPShopNewsElement extends PHPShopElements {
                     $this->set('newsZag', $row['zag']);
                     $this->set('newsData', $row['datas']);
                     $this->set('newsKratko', $row['kratko']);
-                    $this->set('newsIcon', $row['icon']);
+                    $this->set('newsIcon', $this->setImage($row['icon']));
 
                     // Перехват модуля
                     $hook = $this->setHook(__CLASS__, __FUNCTION__, $row, 'MIDDLE');
@@ -1326,7 +1326,7 @@ class PHPShopNewsElement extends PHPShopElements {
 /**
  * Элемент вывода изображений в слайдер
  * @author PHPShop Software
- * @version 1.0
+ * @version 1.2
  * @package PHPShopElements
  */
 class PHPShopSliderElement extends PHPShopElements {
@@ -1398,7 +1398,7 @@ class PHPShopSliderElement extends PHPShopElements {
                 foreach ($data as $row) {
 
                     // Определяем переменные
-                    $this->set('image', $row['image']);
+                    $this->set('image', $this->setImage($row['image']));
                     $this->set('alt', $row['alt']);
                     $this->set('link', $row['link']);
                     $this->set('sliderID', $row['id']);
@@ -1425,7 +1425,7 @@ class PHPShopSliderElement extends PHPShopElements {
 /**
  * Элемент баннер
  * @author PHPShop Software
- * @version 2.3
+ * @version 2.4
  * @package PHPShopElements
  */
 class PHPShopBannerElement extends PHPShopElements {
@@ -1452,7 +1452,7 @@ class PHPShopBannerElement extends PHPShopElements {
         $this->set('banerTitle', $row['name']);
         $this->set('banerContent', $row['content']);
         $this->set('banerDescription', $row['description']);
-        $this->set('banerImage', $row['image']);
+        $this->set('banerImage', $this->setImage($row['image']));
         $this->set('banerLink', $row['link']);
         $this->set('banerColor', (int) $row['color']);
         $this->set('popupSize', $size_value[$row['size']]);
@@ -1539,18 +1539,18 @@ class PHPShopBannerElement extends PHPShopElements {
         } else
             $true_cid = $this->PHPShopNav->getId();
 
-        if (!empty($true_cid))
-            $where['flag'] .= " and ( dop_cat REGEXP '#" . $true_cid . "#' or dop_cat='') ";
-
+        $this->PHPShopOrm->debug=false;
         $data = $this->PHPShopOrm->select(array('*'), $where, array('order' => 'RAND()'), array("limit" => 100));
 
         if (is_array($data))
             foreach ($data as $row) {
                 if (empty($row['dir'])) {
-     
-                    if (!empty($true_cid) and empty($row['dop_cat']))
+                    
+                    // Привязка к каталогам
+                    if (!empty($true_cid) and !empty($row['dop_cat']) and !strstr($row['dop_cat'],"#" . $true_cid . "#")){
                         continue;
-
+                    }
+                            
                     // Шаблон
                     $this->template($row);
                 } else {
@@ -1566,10 +1566,6 @@ class PHPShopBannerElement extends PHPShopElements {
 
                                 if (!empty($true_cid) and empty($row['dop_cat']))
                                     continue;
-
-                                // Проверка индекса
-                                //if ($dir == '/' and $this->PHPShopNav->objNav['truepath'] != '/')
-                                   // continue;
 
                                 // Шаблон
                                 $this->template($row);

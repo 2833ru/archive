@@ -56,7 +56,7 @@
         </div>                   
     </div>
 <!-- Product Filter Ends -->
-<div class="template-product-list">@productPageDis@</div>
+<div class="row template-product-list">@productPageDis@</div>
 
 
 @productPageNav@

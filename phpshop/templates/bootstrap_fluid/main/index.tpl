@@ -222,8 +222,8 @@
                         <h3>{Спецпредложения}</h3>
                     </div>
                     <div class="bar-padding-top-fix visible-xs visible-sm"> </div>
-                    <div>@specMain@</div>
-                    <div class="row">@leftCatalTable@</div>
+                    <div class="row">@specMain@</div>
+                    <div class="catalog-block">@leftCatalTable@</div>
 
                 </div>
 

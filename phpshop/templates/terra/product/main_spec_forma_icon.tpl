@@ -1,4 +1,4 @@
-<div class="col-md-3 col-sm-6">
+<div class="col-auto col-sm-3 col-xs-6">
 	<div class="product-col">
 
 		<div class="image product-img-centr">
@@ -12,7 +12,7 @@
 		<div class="caption">
 			<h4><a href="/shop/UID_@productUid@.html" title="@productNameClean@">@productName@</a></h4>
 			<div class="price">
-				<span class="price-new">@productPrice@ <span class="rubznak">@productValutaName@</span></span> 
+				<span class="price-new">@parentLangFrom@ @productPrice@ <span class="rubznak">@productValutaName@</span></span> 
 				<span class="price-old">@productPriceOld@</span>
 			</div>
 			<div class="stock">

@@ -2,7 +2,7 @@
 <!-- Модальное окно Баннера-->
 <div class="modal" id="bannerModal" tabindex="-1" role="dialog"  aria-hidden="true">
     <div class="modal-dialog @popupSize@">
-        <div class="modal-content" style="background-image: url(@banerImage@);">
+        <div class="modal-content" style="background-image: url('@banerImage@');">
             <div class="modal-header">
                 <button type="button" class="close popup-close" data-id="@popupId@" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
                 <h3 class="modal-title">@banerTitle@</h3>

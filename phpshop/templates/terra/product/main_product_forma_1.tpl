@@ -13,7 +13,7 @@
             <div class="rating">@rateCid@</div>
 		<span class="previewsorts">@previewSorts@</span>
             <div class="price">
-                <span class="price-new">@productPrice@ <span class="rubznak">@productValutaName@</span></span> 
+                <span class="price-new">@parentLangFrom@ @productPrice@ <span class="rubznak">@productValutaName@</span></span> 
                 <span class="price-old">@productPriceOld@</span>
             </div>
 

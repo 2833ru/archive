@@ -71,7 +71,9 @@ function actionStart() {
     $PHPShopGUI->_CODE .= $PHPShopGUI->setCollapse('CommerceML', $PHPShopGUI->setField("Ключ обновления", $PHPShopGUI->setSelect('option[exchange_key]', $key_value, 300) . '<br>' .
                     $PHPShopGUI->setCheckbox('option[exchange_zip]', 1, 'Сжатие данных ZIP', $option['exchange_zip']) . '<br>' .
                     $PHPShopGUI->setCheckbox('option[exchange_create]', 1, 'Создавать новые товары', $option['exchange_create']) . '<br>' .
-                    $PHPShopGUI->setCheckbox('option[exchange_create_category]', 1, 'Создавать новые каталоги', $option['exchange_create_category']) . '<br>'
+                    $PHPShopGUI->setCheckbox('option[exchange_create_category]', 1, 'Создавать новые каталоги', $option['exchange_create_category']) . '<br>'.
+                    $PHPShopGUI->setCheckbox('option[exchange_image]', 1, 'Создавать новые изображения', $option['exchange_image']) . '<br>'.
+                    $PHPShopGUI->setCheckbox('option[exchange_log]', 1, 'Журнал соединений', $option['exchange_log']) . '<br>' 
             ) .
             $PHPShopGUI->setField("Авторизация", $PHPShopGUI->setSelect('option[exchange_auth]', $auth_value, 300)) .
             $PHPShopGUI->setField("Имя файла", $PHPShopGUI->setInputText($protocol.$_SERVER['SERVER_NAME'].'/1cManager/', 'option[exchange_auth_path]', $option['exchange_auth_path'], 400, '.php', false, false, 'secret_cml_path')));
@@ -113,10 +115,17 @@ function actionUpdate() {
     $data = $PHPShopOrm->select();
     $option = unserialize($data['1c_option']);
     $_POST['option']['exchange_auth_path']=substr($_POST['option']['exchange_auth_path'],0,10);
+    
+    if($_POST['option']['exchange_image'] == 1){
+        $_POST['option']['exchange_key'] = 'external';
+        $_POST['option']['exchange_zip'] = 1;
+    }
 
     if (is_array($_POST['option']))
         foreach ($_POST['option'] as $key => $val)
             $option[$key] = $val;
+    
+    
 
     // Поиск нулевых значений
     if (is_array($_POST['option']))

@@ -16,7 +16,7 @@
                 <div class="product-name"><a href="/shop/UID_@productUid@.html" title="@productNameClean@">@productName@</a></div>
                 <p>@productDes@</p>
                 @previewSorts@
-                <div class="h4 product-price">@productPrice@<span class="rubznak">@productValutaName@</span><sup class="text-muted">@productPriceOld@</sup></div>
+                <div class="h4 product-price">@parentLangFrom@ @productPrice@<span class="rubznak">@productValutaName@</span><sup class="text-muted">@productPriceOld@</sup></div>
                 <div class="d-flex justify-content-between"><div class="stock">
                         @ComStartNotice@
                         <div class="outStock">@productOutStock@</div>

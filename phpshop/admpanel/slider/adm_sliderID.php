@@ -14,21 +14,21 @@ function actionStart() {
     $PHPShopGUI->field_col = 3;
 
     // Содержание закладки 1
-    $Tab1 = $PHPShopGUI->setField("Название", $PHPShopGUI->setInput("text", "name_new", $data['name'],null,500));
-    
+    $Tab1 = $PHPShopGUI->setField("Название", $PHPShopGUI->setInput("text", "name_new", $data['name'], null, 500));
+
     // Цвет
-    $Tab1 .= $PHPShopGUI->setField("Инверсия цвета", $PHPShopGUI->setInputText(null, "color_new", (int)$data['color'], 100, '%'));
-    
+    $Tab1 .= $PHPShopGUI->setField("Инверсия цвета", $PHPShopGUI->setInputText(null, "color_new", (int) $data['color'], 100, '%'));
+
     $Tab1 .= $PHPShopGUI->setField("Изображение", $PHPShopGUI->setIcon($data['image'], "image_new", false, array('load' => true, 'server' => true, 'url' => false, 'multi' => false, 'view' => false))) .
-            $PHPShopGUI->setField("Ссылка", $PHPShopGUI->setInput("text", "link_new", $data['link'],null,500) . $PHPShopGUI->setHelp("Пример: /pages/info.html или http://google.com")) .
-            $PHPShopGUI->setField("Текст ссылки", $PHPShopGUI->setInput("text", "link_text_new", $data['link_text'],null,500)).
+            $PHPShopGUI->setField("Ссылка", $PHPShopGUI->setInput("text", "link_new", $data['link'], null, 500) . $PHPShopGUI->setHelp("Пример: /pages/info.html или http://google.com")) .
+            $PHPShopGUI->setField("Текст ссылки", $PHPShopGUI->setInput("text", "link_text_new", $data['link_text'], null, 500)) .
             $PHPShopGUI->setField("Статус", $PHPShopGUI->setRadio("enabled_new", 1, "Включить", $data['enabled']) . $PHPShopGUI->setRadio("enabled_new", 0, "Выключить", $data['enabled'])) .
             $PHPShopGUI->setField("Мобильный", $PHPShopGUI->setCheckbox("mobile_new", 1, "Отображать только на мобильных устройствах", $data['mobile'])) .
             $PHPShopGUI->setField("Приоритет", $PHPShopGUI->setInputText(false, 'num_new', $data['num'], 100)) .
-            $PHPShopGUI->setField("Описание", $PHPShopGUI->setTextarea("alt_new", $data['alt'],true,500)) .
+            $PHPShopGUI->setField("Описание", $PHPShopGUI->setTextarea("alt_new", $data['alt'], true, 500)) .
             $PHPShopGUI->setField("Витрины", $PHPShopGUI->loadLib('tab_multibase', $data, 'catalog/'));
-    
-     $Tab1= $PHPShopGUI->setCollapse('Информация',$Tab1);
+
+    $Tab1 = $PHPShopGUI->setCollapse('Информация', $Tab1);
 
     // Запрос модуля на закладку
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $data);
@@ -77,7 +77,7 @@ function actionUpdate() {
     // Перехват модуля
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $_POST);
 
-    if(empty($_POST['ajax'])) {
+    if (empty($_POST['ajax'])) {
         $_POST['image_new'] = iconAdd();
     }
 
@@ -147,6 +147,12 @@ function iconAdd() {
             $thumb->adaptiveResize($img_tw, $img_th);
         else
             $thumb->resize($img_tw, $img_th);
+
+        // Сохранение в webp
+        if ($PHPShopSystem->ifSerilizeParam('admoption.image_webp_save')) {
+            $thumb->setFormat('WEBP');
+            $file = str_replace(['.jpg', '.JPG', '.png', '.PNG', '.gif', '.GIF'], '.webp', $file);
+        }
 
         $thumb->save($_SERVER['DOCUMENT_ROOT'] . $file);
     }

@@ -176,7 +176,7 @@ $(document).ready(function () {
         $('.spec-main-icon-slider > .swiper-wrapper .col-md-3.col-sm-6').unwrap();
         $('.spec-main-icon-slider > .swiper-wrapper > div').addClass('swiper-slide');
         var swiper = new Swiper('.spec-main-icon-slider', {
-            slidesPerView: 4,
+            slidesPerView: 5,
             speed: 800,
             nextButton: '.btn-next1',
             prevButton: '.btn-prev1',
@@ -185,14 +185,17 @@ $(document).ready(function () {
             preventClicksPropagation: false,
             spaceBetween: 0,
             breakpoints: {
+	            558: {
+	                slidesPerView: 2
+	            },
                 768: {
-                    slidesPerView: 1
+                    slidesPerView: 3
                 },
                 991: {
-                    slidesPerView: 2
+                    slidesPerView: 4
                 },
                 1200: {
-                    slidesPerView: 3
+                    slidesPerView: 5
                 }
             }
         });
@@ -200,7 +203,7 @@ $(document).ready(function () {
         $('.spec-main-slider > .swiper-wrapper .col-md-3.col-sm-6').unwrap();
         $('.spec-main-slider > .swiper-wrapper > div').addClass('swiper-slide');
         var swiper = new Swiper('.spec-main-slider', {
-            slidesPerView: 4,
+            slidesPerView: 5,
             speed: 800,
             nextButton: '.btn-next2',
             prevButton: '.btn-prev2',
@@ -209,14 +212,17 @@ $(document).ready(function () {
             preventClicksPropagation: false,
             spaceBetween: 0,
             breakpoints: {
+	            558: {
+	                slidesPerView: 2
+	            },
                 768: {
-                    slidesPerView: 1
+                    slidesPerView: 3
                 },
                 991: {
-                    slidesPerView: 2
+                    slidesPerView: 4
                 },
                 1200: {
-                    slidesPerView: 3
+                    slidesPerView: 5
                 }
             }
         });
@@ -233,24 +239,18 @@ $(document).ready(function () {
 
         preventClicksPropagation: false,
         breakpoints: {
-            610: {
-                slidesPerView: 2
-            },
-            850: {
-                slidesPerView: 3
-            },
-            1000: {
-                slidesPerView: 4
-            },
-            1080: {
-                slidesPerView: 3
-            },
-            1200: {
-                slidesPerView: 3
-            },
-            1500: {
-                slidesPerView: 3
-            }
+	            520: {
+	                slidesPerView: 2
+	            },
+                768: {
+                    slidesPerView: 3
+                },
+                991: {
+                    slidesPerView: 4
+                },
+                1200: {
+                    slidesPerView: 4
+                }
         }
     });
 

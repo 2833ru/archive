@@ -37,26 +37,26 @@
 
             <form class="form-signin "  method="post" action="./">
 
-                <h3 class="form-signin-heading hidden-xs">{Авторизация}<a class="pull-right hidden-xs @hide_home@" href="../../" title="{Вернуться в магазин}"><span class="glyphicon glyphicon-home"></span></a> <div class="pull-right">@themeSelect@</div></h3>
+                <h3 class="form-signin-heading hidden-xs">{Авторизация}<a class="pull-right hidden-xs @hide_home@" href="../../" tabindex="-1" title="{Вернуться в магазин}"><span class="glyphicon glyphicon-home"></span></a> <div class="pull-right">@themeSelect@</div></h3>
 
                 <div class="input-group @error@">
                     <span class="input-group-addon" id="input-group-addon1"><span class="glyphicon glyphicon-user"></span></span>
-                    <input autocomplete="off" type="text" name="log" class="form-control" value="@user@" placeholder="{Пользователь}" required @autofocus@ @readonly@>
+                    <input autocomplete="off" type="text" name="log" class="form-control" value="@user@" placeholder="{Пользователь}" required @autofocus@ @readonly@ tabindex="1">
                 </div>
                 <div class="input-group @error@">
-                    <span class="input-group-addon" id="input-group-addon2"><a href="#" class="password-view"><span class="glyphicon glyphicon-eye-close"></span></a></span>
-                    <input autocomplete="off" type="password" name="pas" class="form-control" value="@password@" placeholder="{Пароль}"  required @readonly@>
+                    <span class="input-group-addon" id="input-group-addon2"><a href="#" class="password-view" tabindex="-1"><span class="glyphicon glyphicon-eye-close"></span></a></span>
+                    <input autocomplete="off" type="password" name="pas" class="form-control" value="@password@" placeholder="{Пароль}"  required @readonly@ tabindex="2">
                 </div>
 
                 <div class="checkbox">
                     <label  class="@hide@">
-                        <input type="checkbox" name="actionHash" value="true" id="remember-me" @disabled@> {Восстановить пароль}
+                        <input type="checkbox" name="actionHash" value="true" id="remember-me" @disabled@ tabindex="-1"> {Восстановить пароль}
                         
                     </label>
                     <small class="hidden-xs pull-right text-muted text-uppercase @hide@"><img src="../locale/@lang@/icon.png" /> @code@</small>
                     
                 </div>
-                <button class="btn btn-lg btn-primary btn-block" type="submit">{Вход}</button>
+                <button class="btn btn-lg btn-primary btn-block" type="submit" tabindex="3">{Вход}</button>
                 <input type="hidden" name="actionID" value="true">
                 <input type="hidden" name="actionList[actionHash]" value="actionHash">
                 <input type="hidden" name="actionList[actionID]" value="actionEnter">

@@ -55,6 +55,15 @@
         </div>
         <header>
             <div class="container ">
+            <!-- Стикер-полоска -->
+            <div class="top_banner_parent @php __hide('sticker_top'); php@">
+                <div class="top-banner @php __hide('sticker_close','cookie'); php@">
+                    <div class="sticker-text">@sticker_top@</div>
+                    <span class="close sticker-close">x</span>
+                </div>
+            </div>
+            <!-- /Стикер-полоска -->
+            
                 <div class="d-flex align-items-center justify-content-between">
                     <div class="logo">
                         <a href="/"><img src="@logo@" alt=""></a>
@@ -206,15 +215,6 @@
         <div class="container  main-block-content ">
             <div class="text-center banner banner-top">@banersDispHorizontal@</div>
 
-            <!-- Стикер-полоска -->
-            <div class="top_banner_parent @php __hide('sticker_top'); php@">
-                <div class="top-banner @php __hide('sticker_close','cookie'); php@">
-                    <div class="sticker-text">@sticker_top@</div>
-                    <span class="close sticker-close">x</span>
-                </div>
-            </div>
-            <!-- /Стикер-полоска -->
-
             <div class="row">
                 <div class="head-block "></div>
                 <div class="clearfix"></div>
@@ -263,7 +263,7 @@
                             </div>
 
                             @leftMenu@
-                            <div class="visible-lg visible-md text-center banner">@banersDisp@</div>
+                            <div class="text-center banner">@banersDisp@</div>
                             <div class="panel panel-default  hidden-xs   @php __hide('productlist_list'); php@">
                                 <div class="panel-heading">
                                     <div class="panel-title">{Похожие товары}</div>

@@ -355,6 +355,11 @@ function template_image_gallery($obj, $array) {
             if (!file_exists($_SERVER['DOCUMENT_ROOT'] . $name_s))
                 $name_s = $name;
 
+            // Поддержка Webp
+            $name = $obj->setImage($name);
+            $name_s = $obj->setImage($name_s);
+            $name_bigstr = $obj->setImage($name_bigstr);
+
             //$bxslider.= '<div><a class href="#"><img src="' . $name . '" title="'.$array['name'].'" alt="'.$array['name'].'" /></a></div>';
             //$bxsliderbig.= '<li><a class href=\'#\'><img src=\'' . $name_bigstr . '\' title=\''.$array['name'].'\' alt=\''.$array['name'].'\'></a></li>';
             $bxslider .= '<div><a class href="' . $name_bigstr . '" data-lightbox="product_img"><img src="' . $name . '" title="' . $array['name'] . '" alt="' . $array['name'] . '" /></a></div>';

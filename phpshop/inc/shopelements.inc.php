@@ -1363,7 +1363,7 @@ class PHPShopShopCatalogElement extends PHPShopProductElements {
                     $this->set('catalogId', $category['id']);
                     $this->set('catalogTitle', $category['name']);
                     $this->set('catalogName', $category['name']);
-                    $this->set('catalogIcon', $category['icon']);
+                    $this->set('catalogIcon', $this->setImage($category['icon']));
                     $this->set('catalogColor', (int)$category['color']);
                     $this->set('catalogContent', null);
 

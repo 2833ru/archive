@@ -1,5 +1,5 @@
 
-<div class="col-md-4 col-sm-4 product-block-wrapper">
+<div class="col-md-4 col-sm-4 col-xs-6 product-block-wrapper">
     <div class="product-block">
         <div class="product-block-top">
                         <div class="product-block-img">

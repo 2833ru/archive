@@ -22,16 +22,11 @@ PHPShopObj::loadClass("security");
 PHPShopObj::loadClass("user");
 
 // Подключаем библиотеку поддержки JsHttpRequest
-if ($_REQUEST['type'] != 'json') {
-    require_once $_classPath . "/lib/Subsys/JsHttpRequest/Php.php";
-    $JsHttpRequest = new Subsys_JsHttpRequest_Php("windows-1251");
-} else {
-    $_REQUEST['promocode'] = PHPShopString::utf8_win1251($_REQUEST['promocode']);
-    $_REQUEST['sum'] = PHPShopString::utf8_win1251($_REQUEST['sum']);
-    $_REQUEST['ssum'] = PHPShopString::utf8_win1251($_REQUEST['ssum']);
-    $_REQUEST['tipoplcheck'] = PHPShopString::utf8_win1251($_REQUEST['tipoplcheck']);
-    $_REQUEST['wsum'] = PHPShopString::utf8_win1251($_REQUEST['wsum']);
-}
+$_REQUEST['promocode'] = PHPShopString::utf8_win1251($_REQUEST['promocode']);
+$_REQUEST['sum'] = PHPShopString::utf8_win1251($_REQUEST['sum']);
+$_REQUEST['ssum'] = PHPShopString::utf8_win1251($_REQUEST['ssum']);
+$_REQUEST['tipoplcheck'] = PHPShopString::utf8_win1251($_REQUEST['tipoplcheck']);
+$_REQUEST['wsum'] = PHPShopString::utf8_win1251($_REQUEST['wsum']);
 
 
 // Подключаем библиотеку доставки
@@ -43,11 +38,12 @@ $PHPShopOrder = new PHPShopOrderFunction();
 // Модули
 $PHPShopModules = new PHPShopModules($_classPath . "modules/");
 
+// Системные настройки
+$PHPShopSystem = new PHPShopSystem();
+
 // Дополнительные функции из promotion/inc
 require_once($_classPath . 'modules/promotions/inc/promotionselement.inc.php');
 
-// Системные настройки
-$PHPShopSystem = new PHPShopSystem();
 $currency = $PHPShopSystem->getDefaultValutaCode();
 
 // Генератор кодов 10 знаков
@@ -383,9 +379,9 @@ $totalsummainput = number_format($totalsummainput, $PHPShopSystem->format, '.', 
 // Процент
 if (strstr($discountAll, '%')) {
     $discount = ($data['discount'] * $_REQUEST['sum'] / 100);
-    $discount = "-".number_format($discount, $PHPShopSystem->format, '.', '');
-}
-else $discount = $data['discount'];
+    $discount = "-" . number_format($discount, $PHPShopSystem->format, '.', '');
+} else
+    $discount = $data['discount'];
 
 // Результат
 $_RESULT = array(

@@ -1,6 +1,6 @@
-<div class="col-md-4 col-sm-4 product-block-wrapper">
+<div class="col-md-4 col-sm-6 product-block-wrapper">
 	<span class="sale-icon-content">
-                @specIcon@
+            @specIcon@
 			@newtipIcon@
 			@hitIcon@
 			@promotionsIcon@

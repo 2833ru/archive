@@ -26,12 +26,12 @@
                 <!-- Nav -->
                 <ul class="nav nav-segment" id="filter-wel-stat">
                     <li class="list-inline-item">
-                        <a class="nav-link @gridSetAactive@" href="?gridChange=1" data-toggle="tooltip" data-placement="top" title="{Товары сеткой}" name="gridChange" value="1">
+                        <a class="nav-link @gridSetAactive@" href="?gridChange=1" data-toggle="tooltip" data-placement="top" title="" name="gridChange" value="1">
                             <i class="fas fa-list"></i>
                         </a>
                     </li>
                     <li class="list-inline-item ">
-                        <a class="nav-link @gridSetBactive@" href="?gridChange=2" data-toggle="tooltip" data-placement="top" title="{Товары списком}" name="gridChange" value="2">
+                        <a class="nav-link @gridSetBactive@" href="?gridChange=2" data-toggle="tooltip" data-placement="top" title="" name="gridChange" value="2">
                             <i class="fas fa-th-large"></i>
                         </a>
                     </li>

@@ -89,8 +89,10 @@ class PHPShopBase {
     function selectBase() {
 
         if (!empty($_GET['base'])) {
-            if (is_array($this->SysValue['connect_' . $_GET['base']]))
+            if (is_array($this->SysValue['connect_' . $_GET['base']])){
                 $_SESSION['base'] = $_GET['base'];
+                unset($_SESSION['cart']);
+            }
             elseif ($_GET['base'] == 'default')
                 unset($_SESSION['base']);
         }

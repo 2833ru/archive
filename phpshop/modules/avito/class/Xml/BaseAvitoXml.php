@@ -138,7 +138,8 @@ class BaseAvitoXml
                 "ad_type"        => PHPShopString::win_utf8($product['ad_type_avito']),
                 "category_avito" => $this->categories[$product['category']]['category_avito'],
                 "oem"            => $product['oem_avito'],
-                "tiers"          => $product['tiers_avito']
+                "tiers"          => $product['tiers_avito'],
+                "items"          => $product['items'],
             );
         }
 

@@ -4,7 +4,7 @@ include_once dirname(__DIR__) . '/class/ThumbnailImages.php';
 
 // SQL
 $PHPShopOrm = new PHPShopOrm($PHPShopModules->getParam("base.thumbnailimages.thumbnailimages_system"));
-$PHPShopOrm->debug=false;
+$PHPShopOrm->debug = false;
 
 // Функция обновления
 function actionUpdate() {
@@ -22,34 +22,35 @@ function actionGenerateOriginal() {
     $thumbnailImages = new ThumbnailImages();
     $result = $thumbnailImages->generateOriginal();
 
-    if((int) $result['count'] < (int) $data['limit']) {
+    if ((int) $result['count'] < (int) $data['limit']) {
         $message = '<div class="alert alert-success" id="rules-message"  role="alert">' .
-            __(sprintf('Обработано изображений: с %s до %s. Все доступные изображения обработаны. Следующее нажатие кнопки запустит операцию с 0.', (int) $data['processed'], (int) $data['processed'] + (int) $result['count']))
-            . '</div>';
+                __(sprintf('Обработано изображений: с %s до %s. Все доступные изображения обработаны. Следующее нажатие кнопки запустит операцию с 0.', (int) $data['processed'], (int) $data['processed'] + (int) $result['count']))
+                . '</div>';
     }
 
-    if('original' !== $data['last_operation']) {
+    if ('original' !== $data['last_operation']) {
         $data['processed'] = 0;
     }
 
-    if(!isset($message)) {
+    if (!isset($message)) {
         $message = '<div class="alert alert-success" id="rules-message"  role="alert">' .
-            __(sprintf('Выполнено. Обработано изображений: с %s до %s', (int) $data['processed'], (int) $data['processed'] + (int) $result['count']))
-            . '</div>';
+                __(sprintf('Выполнено. Обработано изображений: с %s до %s', (int) $data['processed'], (int) $data['processed'] + (int) $result['count']))
+                . '</div>';
     }
 
     echo $message;
 
-    if(count($result['skipped']) > 0) {
+    if (count($result['skipped']) > 0) {
         $skipped = '';
         foreach ($result['skipped'] as $file) {
             $skipped .= 'Не найден файл: ' . $file . '<br>';
         }
         echo '<div class="alert alert-warning" id="rules-message"  role="alert">' .
-            $skipped
-            . '</div>';
+        $skipped
+        . '</div>';
     }
 }
+
 function actionGenerateThumbnail() {
     global $PHPShopOrm;
 
@@ -57,32 +58,32 @@ function actionGenerateThumbnail() {
     $thumbnailImages = new ThumbnailImages();
     $result = $thumbnailImages->generateThumbnail();
 
-    if((int) $result['count'] < (int) $data['limit']) {
+    if ((int) $result['count'] < (int) $data['limit']) {
         $message = '<div class="alert alert-success" id="rules-message"  role="alert">' .
-            __(sprintf('Обработано изображений: с %s до %s. Все доступные изображения обработаны. Следующее нажатие кнопки запустит операцию с 0.', (int) $data['processed'], (int) $data['processed'] + (int) $result['count']))
-            . '</div>';
+                __(sprintf('Обработано изображений: с %s до %s. Все доступные изображения обработаны. Следующее нажатие кнопки запустит операцию с 0.', (int) $data['processed'], (int) $data['processed'] + (int) $result['count']))
+                . '</div>';
     }
 
-    if('thumb' !== $data['last_operation']) {
+    if ('thumb' !== $data['last_operation']) {
         $data['processed'] = 0;
     }
 
-    if(!isset($message)) {
+    if (!isset($message)) {
         $message = '<div class="alert alert-success" id="rules-message"  role="alert">' .
-            __(sprintf('Выполнено. Обработано изображений: с %s до %s', (int) $data['processed'], (int) $data['processed'] + (int) $result['count']))
-            . '</div>';
+                __(sprintf('Выполнено. Обработано изображений: с %s до %s', (int) $data['processed'], (int) $data['processed'] + (int) $result['count']))
+                . '</div>';
     }
 
     echo $message;
 
-    if(count($result['skipped']) > 0) {
+    if (count($result['skipped']) > 0) {
         $skipped = '';
         foreach ($result['skipped'] as $file) {
             $skipped .= 'Не найден файл: ' . $file . '<br>';
         }
         echo '<div class="alert alert-warning" id="rules-message"  role="alert">' .
-            $skipped
-            . '</div>';
+        $skipped
+        . '</div>';
     }
 }
 
@@ -99,11 +100,12 @@ function actionBaseUpdate() {
 
 // Начальная функция загрузки
 function actionStart() {
-    global $PHPShopGUI,$PHPShopOrm, $TitlePage, $select_name;
-    
+    global $PHPShopGUI, $PHPShopOrm, $TitlePage, $select_name;
+
     // Выборка
     $data = $PHPShopOrm->select();
-
+    $PHPShopGUI->field_col = 4;
+    
     $PHPShopGUI->action_button['Сгенерировать превью'] = [
         'name' => 'Сгенерировать превью',
         'action' => 'saveIDthumb',
@@ -120,17 +122,30 @@ function actionStart() {
         'icon' => 'glyphicon glyphicon-import'
     ];
 
-    $PHPShopGUI->setActionPanel($TitlePage, $select_name, ['Сгенерировать превью','Сгенерировать большие', 'Сохранить и закрыть']);
+    $PHPShopGUI->setActionPanel($TitlePage, $select_name, ['Сгенерировать превью', 'Сгенерировать большие', 'Сохранить и закрыть']);
 
     $Tab1 = '<div class="alert alert-info" role="alert">' .
-               __('Пожалуйста, ознакомьтесь с информацией на вкладке <kbd>Описание</kbd> перед использованием модуля.')
+            __('Пожалуйста, ознакомьтесь с информацией на вкладке <kbd>Описание</kbd> перед использованием модуля.')
             . '</div>';
 
     $Tab1 .= $PHPShopGUI->setField('Генерировать изображений за шаг', $PHPShopGUI->setInputText(false, 'limit_new', $data['limit'], 150));
 
+    $e_value[] = array('Оригинальный', 1, $data['type']);
+    $e_value[] = array('JPG', 2, $data['type']);
+    $e_value[] = array('WEBP', 3, $data['type']);
+    
+
+    $Tab1 .= $PHPShopGUI->setField('Формат изображений для сохранения', $PHPShopGUI->setSelect('type_new', $e_value, 150, true));
+    
+    $d_value[] = array('Нет', 1, $data['delete']);
+    $d_value[] = array('Да', 2, $data['delete']);
+    
+
+    $Tab1 .= $PHPShopGUI->setField('Удалить старые изображения при смене формата', $PHPShopGUI->setSelect('delete_new', $d_value, 150, true));
+
     $Info = '<p>
         Модуль позволяет сгенерировать новые картинки по указанным в <kbd>Настройки</kbd> &rarr; <kbd>Изображения</kbd> параметрам.<br>
-        Превью картинки для товаров в каталоге генерируются по такому сценарию:
+        Превью для товаров в каталоге генерируются по такому сценарию:
         <ul>
             <li>Проверяется настройка <kbd>Сохранять исходное изображение при ресайзинге</kbd></li>
             <li>Если настройка включена - проверяется наличие файла картинки с суффиксом <code>_big</code>, это сохраненная картинка в оригинальном размере, для создания превью используется она.</li>
@@ -138,8 +153,11 @@ function actionStart() {
                 <kbd>Макс. ширина оригинала</kbd> и <kbd>Макс. высота оригинала</kbd>.
             </li>
             <li>Все изображения товаров с суффиксом <code>_s</code> будут заменены новыми сгенерированными изображениями.</li>
+            <li>Проверяется настройка <kbd>Сохранение в webp</kbd>.</li>
+            <li>Если настройка включена - все найденные изображения будут сохранены с расширением <kbd>webp</kbd> для оптимизации веса картинок. Для перехода на webp всех изображений следует запустить обе генерации маленьких и больших картинок.
+           </li>
         </ul>
-        
+
        Генерация больших изображений возможна только, если включена настройка <kbd>Сохранять исходное изображение при ресайзинге</kbd> или уменьшены размеры 
        <kbd>Макс. ширина оригинала</kbd> и <kbd>Макс. высота оригинала</kbd> и необходимо сгенерировать меньшие изображения.
         </p>';
@@ -154,10 +172,9 @@ function actionStart() {
     $PHPShopGUI->setTab(["Основное", $Tab1, true], ["Описание", $Tab2], ["О Модуле", $Tab3]);
 
     // Вывод кнопок сохранить и выход в футер
-    $ContentFooter =
-            $PHPShopGUI->setInput("hidden", "rowID", $data['id']) .
+    $ContentFooter = $PHPShopGUI->setInput("hidden", "rowID", $data['id']) .
             $PHPShopGUI->setInput("submit", "saveID", "Применить", "right", 80, "", "but", "actionUpdate.modules.edit") .
-            $PHPShopGUI->setInput("submit", "saveIDthumb", "Применить", "right", 80, "", "but", "actionGenerateThumbnail.modules.edit").
+            $PHPShopGUI->setInput("submit", "saveIDthumb", "Применить", "right", 80, "", "but", "actionGenerateThumbnail.modules.edit") .
             $PHPShopGUI->setInput("submit", "saveIDorig", "Применить", "right", 80, "", "but", "actionGenerateOriginal.modules.edit");
 
     $PHPShopGUI->setFooter($ContentFooter);

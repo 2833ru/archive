@@ -1,4 +1,4 @@
-<div class="col-md-2 col-sm-6 col-6">
+<div class="col-auto6 col-sm-4 col-xs-6">
     <div class="product-col">
 
         <div class="image product-img-centr">
@@ -12,7 +12,7 @@
         <div class="caption">
             <h4><a href="/shop/UID_@productUid@.html" title="@productNameClean@">@productName@</a></h4>
             <div class="price">
-                <span class="price-new">@productPrice@ <span class="rubznak">@productValutaName@</span></span> 
+                <span class="price-new">@parentLangFrom@ @productPrice@ <span class="rubznak">@productValutaName@</span></span> 
                 <span class="price-old">@productPriceOld@</span>
             </div>
             <div class="stock">
@@ -25,7 +25,7 @@
 
                 @ComStartCart@
 
-                <button type="button" class="btn btn-cart addToCartList" style="width:150px" data-num="1" data-uid="@productUid@" data-cart="@productSaleReady@">{Купить}</button>
+                <button type="button" class="btn btn-cart addToCartList" data-num="1" data-uid="@productUid@" data-cart="@productSaleReady@">{Купить}</button>
                 @ComEndCart@
 
                 @ComStartNotice@

@@ -1,6 +1,7 @@
 /* Large Devices Styles Starts */
-@media (min-width: 991px) {#logo{margin:15px 0 0px; display:block;}}
-@media (max-width: 991px) {#logo{margin:0px 0 0px; display:block;}
+@media (max-width: 991px) {
+#logo{margin:10px; display:block;}
+
 .header-contacts {
 
     margin: 25px 0;
@@ -383,8 +384,7 @@
 		top:15px;
 	}	
 	#logo{
-		width: 200px;
-	margin: 0 auto; float:none
+	float:none
 	}
 
 /* Cart Styles Starts */

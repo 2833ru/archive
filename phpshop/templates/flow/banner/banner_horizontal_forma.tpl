@@ -1,11 +1,13 @@
-<div class="bg-img-hero-center" style="background-image: url(@banerImage@);">
-    <div class="container space-2 space-lg-3">
-        <div class="w-md-65 w-lg-35">
-            <div class="mb-4">
-                <h3 class="h1" style="-webkit-filter: invert(@banerColor@%);filter: invert(@banerColor@%);">@banerTitle@</h3>
-                <p>@banerContent@</p>
+<div class="bg-img-hero-center mx-md-auto gradient-x-overlay-sm-white" style="background-image: url('@banerImage@'); ">
+	<a href="@banerLink@">
+    <div class="container row justify-content-between align-items-center w-xl-70 mx-md-auto pt-5">
+        <div class="col-5 mb-lg-0 p-2">
+            <div class="m-2">
+                <h3 class="h1 banner-title" style="-webkit-filter: invert(@banerColor@%);filter: invert(@banerColor@%);">@banerTitle@</h3>
             </div>
-            <a class="btn btn-light btn-pill transition-3d-hover px-5 @php __hide('banerDescription'); php@" href="@banerLink@">@banerDescription@</a>
+            <span class="m-2 font-size-1 transition-3d-hover font-weight-bold @php __hide('banerDescription'); php@">@banerDescription@ <i class="fas fa-angle-right fa-sm ml-1"></i></span>
         </div>
+        <div class="col-6 banner-image ">@banerContent@</div>
     </div>
+    </a>
 </div>

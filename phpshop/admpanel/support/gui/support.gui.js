@@ -55,7 +55,6 @@ $().ready(function () {
             handler: function (direction) {
                 $('.navbar-action').toggleClass('navbar-fixed-top');
             },
-            offset: '10%'
         });
 
 });

@@ -1,5 +1,6 @@
 <?php
 session_start();
+error_reporting(0);
 if (empty($_SESSION['idPHPSHOP']))
     exit('Неавторизованный запрос');
 
@@ -22,7 +23,7 @@ if (ini_get("mbstring.func_overload") > 0 and function_exists('ini_set')) {
 }
 
 // Локализация
-$locale = str_replace(array('russian','russian_utf','ukrainian','belarusian','english','english_utf'),array('ru','ru','uk','ru','en','en'),$_SESSION['lang']);
+$locale = str_replace(array('russian', 'russian_utf', 'ukrainian', 'belarusian', 'english', 'english_utf'), array('ru', 'ru', 'uk', 'ru', 'en', 'en'), $_SESSION['lang']);
 ?>
 <!DOCTYPE html>
 <html>
@@ -30,29 +31,19 @@ $locale = str_replace(array('russian','russian_utf','ukrainian','belarusian','en
         <meta charset="windows-1251">
         <title>Найти файл</title>
 
-        <!-- jQuery and jQuery UI (REQUIRED) -->
-        <link rel="stylesheet" type="text/css" media="screen" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.8.18/themes/smoothness/jquery-ui.css">
-        <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
-        <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jqueryui/1.8.18/jquery-ui.min.js"></script>
+        <script data-main="./main.default.js" src="//cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js"></script>
 
-        <!-- elFinder CSS (REQUIRED) -->
-        <link rel="stylesheet" type="text/css" media="screen" href="css/elfinder.min.css">
-        <link rel="stylesheet" type="text/css" media="screen" href="css/theme.css">
 
-        <!-- elFinder JS (REQUIRED) -->
-        <script type="text/javascript" src="js/elfinder.min.js"></script>
 
-        <!-- elFinder translation (OPTIONAL) -->
-        <script type="text/javascript" src="js/i18n/elfinder.<?php echo $locale ?>.js"></script>
 
         <!-- elFinder initialization (REQUIRED) -->
         <script>
 
             var FileBrowserDialogue = {
-                init: function() {
+                init: function () {
                     // Here goes your code for setting your custom things onLoad.
                 },
-                mySubmit: function(URL) {
+                mySubmit: function (URL) {
                     // pass selected file path to TinyMCE
                     parent.tinymce.activeEditor.windowManager.getParams().setUrl(URL);
 
@@ -65,15 +56,17 @@ $locale = str_replace(array('russian','russian_utf','ukrainian','belarusian','en
                 }
             }
 
-            $().ready(function() {
+            define('elFinderConfig', {
+                // elFinder options (REQUIRED)
+                // Documentation for client options:
+                // https://github.com/Studio-42/elFinder/wiki/Client-configuration-options
+                defaultOpts: {
+                    getFileCallback: function (data) {
+                        file = data.url;
 
-                var elf = $('#elfinder').elfinder({
-                    getFileCallback: function(file) {
-                        
-                        
-                         // Tinymce
-                        if(parent.tinymce && parent.tinymce.activeEditor.windowManager.getParams()){
-                             FileBrowserDialogue.mySubmit(file);
+                        // Tinymce
+                        if (parent.tinymce && parent.tinymce.activeEditor.windowManager.getParams()) {
+                            FileBrowserDialogue.mySubmit(file);
                         }
 
                         // Window
@@ -90,12 +83,12 @@ $locale = str_replace(array('russian','russian_utf','ukrainian','belarusian','en
                             parent.window.$('#elfinderModal').modal('hide');
                         }
                         // Quill
-                        else if(parent.quill<?php echo '_'.str_replace('-','',$_GET['return']); ?>){
-                             var range = parent.quill<?php echo '_'.str_replace('-','',$_GET['return']); ?>.getSelection();
-                             parent.quill<?php echo '_'.str_replace('-','',$_GET['return']); ?>.insertEmbed(range.index, 'image', file);
-                             parent.window.$('#elfinderModal').modal('hide');   
+                        else if (parent.quill<?php echo '_' . str_replace('-', '', $_GET['return']); ?>) {
+                            var range = parent.quill<?php echo '_' . str_replace('-', '', $_GET['return']); ?>.getSelection();
+                            parent.quill<?php echo '_' . str_replace('-', '', $_GET['return']); ?>.insertEmbed(range.index, 'image', file);
+                            parent.window.$('#elfinderModal').modal('hide');
                         }
-                        
+
                         // Modal
                         else if (parent.window) {
                             parent.window.$('[data-icon="<?php echo $_GET['return']; ?>"]').html(file);
@@ -104,8 +97,8 @@ $locale = str_replace(array('russian','russian_utf','ukrainian','belarusian','en
                             parent.window.$('[data-icon="<?php echo $_GET['return']; ?>"]').prev('.glyphicon').removeClass('hide');
                             parent.window.$('#elfinderModal').modal('hide');
                         }
-                        
-                       
+
+
                     },
                     resizable: <?php echo $resizable; ?>,
                     height: 500,
@@ -154,14 +147,36 @@ $locale = str_replace(array('russian','russian_utf','ukrainian','belarusian','en
                         // current directory file menu
                         files: [
                             'getfile', '|', 'open', 'quicklook', '|', 'download', '|', 'copy', 'cut', 'paste', 'duplicate', '|',
-                            'rm', '|', 'edit', 'resize', '|', 'archive', 'extract', '|', 'info'
+                            'rm', '|', 'resize', '|', 'archive', 'extract', '|', 'info'
                         ]
                     },
-                    onlyMimes: ["application/octet-stream", "image/webp","image/x-webp","image/png", "application/x-shockwave-flash", "application/zip", "text/x-comma-separated-values", "image/jpeg", "image/gif", "application/rar", 'application/vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'text/x-sql', 'application/x-gzip', 'text/x-tpl', 'application/pdf', 'application/x-rar','video/mp4','application/mp4','image/svg+xml','application/pdf','application/svg+xml']
-                }).elfinder('instance');
 
-
+                    // bootCalback calls at before elFinder boot up 
+                    bootCallback: function (fm, extraObj) {
+                        /* any bind functions etc. */
+                        fm.bind('init', function () {
+                            // any your code
+                        });
+                        // for example set document.title dynamically.
+                        var title = document.title;
+                        fm.bind('open', function () {
+                            var path = '',
+                                    cwd = fm.cwd();
+                            if (cwd) {
+                                path = fm.path(cwd.hash) || null;
+                            }
+                            document.title = path ? path + ':' + title : title;
+                        }).bind('destroy', function () {
+                            document.title = title;
+                        });
+                    }
+                },
+                managers: {
+                    // 'DOM Element ID': { /* elFinder options of this DOM Element */ }
+                    'elfinder': {}
+                }
             });
+
         </script>
     </head>
     <body>

@@ -24,6 +24,7 @@
         <link rel="preload" href="@pageCss@" as="style">
         <link rel="preload" href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@css/@astero_theme@.css" as="style">
         <link rel="preload" href="//fonts.googleapis.com/css?family=Roboto:300,400,700&display=swap&subset=cyrillic"  as="font" type="font/woff2" crossorigin>
+        <link rel="preload" href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@css/font-awesome.min.css"  as="font" type="font/woff2" crossorigin>
 
         <!-- Bootstrap -->
         <link href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@css/bootstrap.min.css" rel="stylesheet">
@@ -36,7 +37,9 @@
 
         <!-- Theme -->
         <link id="bootstrap_theme" data-name="@php echo $_SESSION['skin']; php@" href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@css/@astero_theme@.css" rel="stylesheet">
-            <!-- Стикер-полоска -->
+        <!-- Header Section Starts -->
+        <header id="header-area">
+	        <!-- Стикер-полоска -->
             <div class="@php __hide('sticker_top'); php@">
                 <div class="top-banner @php __hide('sticker_close','cookie'); php@">
                     <div class="sticker-text">@sticker_top@</div>
@@ -44,10 +47,10 @@
                 </div>
             </div>
             <!-- /Стикер-полоска -->
-        <!-- Header Section Starts -->
-        <header id="header-area">
+
             <!-- Nested Container Starts -->
             <div class="container">
+	            
                 <!-- Header Top Starts -->
                 <div class="header-top">
                     <!-- Row Starts -->
@@ -141,9 +144,6 @@
             </div>
             <!-- Nested Container Ends -->
 
-            <!-- Header Area Background Block Starts -->
-            <div class="header-area-background-block"></div>
-            <!-- Header Area Background Block Ends -->
         </header>
         <!-- Header Section Ends -->
         <!-- Main Menu Starts -->
@@ -151,7 +151,7 @@
             <!-- Nested Container Starts -->
             <div class="container">
                 <!-- Nav Header Starts -->
-                <div class="navbar-header">
+                <div class="navbar-header" style="z-index: 999999;">
 
                     <a class="navbar-brand visible-xs pull-right" href="tel:@telNumMobile@">
                         <span class="glyphicon glyphicon-phone"></span> @telNumMobile@
@@ -228,7 +228,7 @@
             <!-- Heading Ends -->
             <!-- Products Row Starts -->
             <!-- Product Starts -->
-            <div class="new-product-list">
+            <div class="row new-product-list">
                 @specMainIcon@
             </div>
             <!-- Product Ends -->
@@ -243,14 +243,14 @@
                 <h2 class="product-head page-header"><a href="/spec/" title="{Все спецпредложения}">{Спецпредложения}</a></h2>
                 <!-- Heading Ends -->
                 <!-- Products Row Starts -->
-                <div class="spec-main-list">
+                <div class="row new-product-list">
                     @specMain@
                 </div>
                 <!-- Products Row Ends -->
             </div>
         </section>
         <!-- Latest Products Ends -->
-        <div class="row">@leftCatalTable@</div>
+        <div class="catalog-block">@leftCatalTable@</div>
 
         <!-- News Starts -->
         <h2 class="product-head page-header @php __hide('miniNews'); php@"><a href="/news/" title="{Все новости}">{Новости}</a></h2>
@@ -277,7 +277,7 @@
     @editor@
 
     <!-- Footer Section Starts -->
-    <footer class="visible-sm visible-md visible-lg" id="footer-area">
+    <footer id="footer-area">
         <!-- Footer Links Starts -->
         <div class="footer-links">
             <!-- Container Starts -->
@@ -286,7 +286,9 @@
                 <div class="col-md-3 col-sm-4 col-xs-12">
                     <h5>{Информация}</h5>
                     <ul>
-                        @bottomMenu@                        </ul>
+                        @bottomMenu@
+                     </ul>
+                     @sticker_socfooter@
                 </div>
                 <!-- Information Links Ends -->
                 <!-- My Account Links Starts -->
@@ -499,6 +501,7 @@
     <link href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@css/responsive.css" rel="stylesheet">
     <link href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@css/animate.css" rel="stylesheet">
     <link href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@css/bar.css" rel="stylesheet">
+    <link href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@css/font-awesome.min.css" rel="stylesheet">
     <link href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@css/suggestions.min.css" rel="stylesheet">
     <script src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@js/bootstrap.min.js"></script>
     <script src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@js/jquery.lazyloadxt.min.js"></script>

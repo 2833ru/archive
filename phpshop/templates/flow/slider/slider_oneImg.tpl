@@ -1,4 +1,4 @@
-<div class="js-slide rounded bg-img-hero-center space-1 space-md-2" style="background-image: url(@image@);">
+<div class="js-slide rounded bg-img-hero-center space-1 space-md-2" style="background-image: url('@image@');">
     <div class="container">
         <div class="container space-1 space-lg-2">
             <div class="w-md-75 w-lg-45">

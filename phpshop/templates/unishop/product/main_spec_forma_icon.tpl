@@ -19,7 +19,7 @@
             </h3>
             <h4 class="product-block-price">
                 <span class="price-old">@productPriceOld@</span>
-                <span class="price-new">@productPrice@ <span class="rubznak">@productValutaName@</span></span>
+                <span class="price-new">@parentLangFrom@ @productPrice@ <span class="rubznak">@productValutaName@</span></span>
             </h4>
 
             <span class="product-sklad-list-block">@productSklad@

@@ -7,7 +7,7 @@ function template_category_select($obj, $data) {
     $dis = null;
     
     // Корректировка количества товара на странице поиска
-    //$obj->num_row=10;
+    $obj->num_row=10;
     
     // Задаем  сетку
     $obj->cell=3;

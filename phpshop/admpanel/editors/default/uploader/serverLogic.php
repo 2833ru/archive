@@ -58,9 +58,9 @@ function fotoAdd() {
         if (!is_dir($_SERVER['DOCUMENT_ROOT'] . $path))
             @mkdir($_SERVER['DOCUMENT_ROOT'] . $path, 0777, true);
     }
-    
+
     // Корекция
-    $path = str_replace('//','/',$path);
+    $path = str_replace('//', '/', $path);
 
     // Соль
     $RName = rand(10000, 99999);
@@ -68,7 +68,7 @@ function fotoAdd() {
     // Копируем от пользователя
     if (!empty($_FILES['file']['name'])) {
         $_FILES['file']['ext'] = PHPShopSecurity::getExt($_FILES['file']['name']);
-        if (in_array($_FILES['file']['ext'], array('gif', 'png', 'jpg', 'jpeg'))) {
+        if (in_array($_FILES['file']['ext'], array('gif', 'png', 'jpg', 'jpeg','webp'))) {
             if (move_uploaded_file($_FILES['file']['tmp_name'], $_SERVER['DOCUMENT_ROOT'] . $path . $_FILES['file']['name'])) {
                 $file = $_SERVER['DOCUMENT_ROOT'] . $path . $_FILES['file']['name'];
                 $file_name = $_FILES['file']['name'];
@@ -103,25 +103,22 @@ function fotoAdd() {
                 $file_big = $_SERVER['DOCUMENT_ROOT'] . $path . $name_big;
                 @copy($file, $file_big);
             }
-        } 
+        }
         // SEO название
         elseif ($PHPShopSystem->ifSerilizeParam('admoption.image_save_seo')) {
             PHPShopObj::loadClass("product");
             $PHPShopProduct = new PHPShopProduct($_POST['rowID']);
             $prod_seo_name = $PHPShopProduct->getParam('prod_seo_name');
-            if(!empty($prod_seo_name)){
-                $seo_name=$prod_seo_name;
+            if (!empty($prod_seo_name)) {
+                $seo_name = $prod_seo_name;
             } else {
                 PHPShopObj::loadClass("string");
                 $seo_name = str_replace(array("_", "+", '&#43;'), array("-", "", ""), PHPShopString::toLatin($PHPShopProduct->getParam('name')));
             }
-            $name_s = $seo_name .'-' . $_POST['rowID']  .'-' . $RName . 's.' . strtolower($thumb->getFormat());
-            $name = $seo_name .'-' . $_POST['rowID']  .'-' . $RName . '.' . strtolower($thumb->getFormat());
-            $name_big = $seo_name .'-' . $_POST['rowID']  .'-' . $RName . '_big.' . strtolower($thumb->getFormat());
-
-        } 
-        
-        else {
+            $name_s = $seo_name . '-' . $_POST['rowID'] . '-' . $RName . 's.' . strtolower($thumb->getFormat());
+            $name = $seo_name . '-' . $_POST['rowID'] . '-' . $RName . '.' . strtolower($thumb->getFormat());
+            $name_big = $seo_name . '-' . $_POST['rowID'] . '-' . $RName . '_big.' . strtolower($thumb->getFormat());
+        } else {
             $name_s = 'img' . $_POST['rowID'] . '_' . $RName . 's.' . strtolower($thumb->getFormat());
             $name = 'img' . $_POST['rowID'] . '_' . $RName . '.' . strtolower($thumb->getFormat());
             $name_big = 'img' . $_POST['rowID'] . '_' . $RName . '_big.' . strtolower($thumb->getFormat());
@@ -136,6 +133,12 @@ function fotoAdd() {
             // Text
             elseif (!empty($watermark_text))
                 $thumb->createWatermarkText($watermark_text, $PHPShopSystem->getSerilizeParam('admoption.watermark_text_size'), $_SERVER['DOCUMENT_ROOT'] . $GLOBALS['SysValue']['dir']['dir'] . '/phpshop/lib/font/' . $PHPShopSystem->getSerilizeParam('admoption.watermark_text_font') . '.ttf', $PHPShopSystem->getSerilizeParam('admoption.watermark_right'), $PHPShopSystem->getSerilizeParam('admoption.watermark_bottom'), $PHPShopSystem->getSerilizeParam('admoption.watermark_text_color'), $PHPShopSystem->getSerilizeParam('admoption.watermark_text_alpha'), 0, $PHPShopSystem->getSerilizeParam('admoption.watermark_center_enabled'));
+        }
+
+        // Сохранение в webp
+        if ($PHPShopSystem->ifSerilizeParam('admoption.image_webp_save')) {
+            $thumb->setFormat('WEBP');
+            $name_s = str_replace([".png", ".jpg", ".jpeg", ".gif", ".PNG", ".JPG", ".JPEG", ".GIF"], '.webp', $name_s);
         }
 
         $thumb->save($_SERVER['DOCUMENT_ROOT'] . $path . $name_s);
@@ -161,10 +164,22 @@ function fotoAdd() {
                 $thumb->createWatermarkText($watermark_text, $PHPShopSystem->getSerilizeParam('admoption.watermark_text_size'), $_SERVER['DOCUMENT_ROOT'] . $GLOBALS['SysValue']['dir']['dir'] . '/phpshop/lib/font/' . $PHPShopSystem->getSerilizeParam('admoption.watermark_text_font') . '.ttf', $PHPShopSystem->getSerilizeParam('admoption.watermark_right'), $PHPShopSystem->getSerilizeParam('admoption.watermark_bottom'), $PHPShopSystem->getSerilizeParam('admoption.watermark_text_color'), $PHPShopSystem->getSerilizeParam('admoption.watermark_text_alpha'), 0, $PHPShopSystem->getSerilizeParam('admoption.watermark_center_enabled'));
         }
 
+        // Сохранение в webp
+        if ($PHPShopSystem->ifSerilizeParam('admoption.image_webp_save')) {
+            $thumb->setFormat('WEBP');
+            $name = str_replace(['.jpg', '.JPG', '.png', '.PNG', '.gif', '.GIF'], '.webp', $name);
+        }
+
         $thumb->save($_SERVER['DOCUMENT_ROOT'] . $path . $name);
 
         // Исходное изображение
         if (!empty($image_save_source)) {
+            
+            // Сохранение в webp
+            if ($PHPShopSystem->ifSerilizeParam('admoption.image_webp_save')) {
+                $thumb->setFormat('WEBP');
+                $name_big = str_replace(['.jpg', '.JPG', '.png', '.PNG', '.gif', '.GIF'], '.webp', $name_big);
+            }
 
             if (!$PHPShopSystem->ifSerilizeParam('admoption.image_save_name')) {
                 $file_big = $_SERVER['DOCUMENT_ROOT'] . $path . $name_big;
@@ -189,7 +204,7 @@ function fotoAdd() {
             }
         }
 
-        if (!$PHPShopSystem->ifSerilizeParam('admoption.image_save_name') and !empty($tmp_file))
+        if (!$PHPShopSystem->ifSerilizeParam('admoption.image_save_name') and ! empty($tmp_file))
             unlink($tmp_file);
 
         switch ($_REQUEST['path']) {
@@ -225,7 +240,7 @@ header('Content-Type: application/json; charset=utf-8');
 if (!empty($_FILES) && !empty($_FILES['file'])) {
 
     $fileMeta = $_FILES['file']; // Key was defined in 'fieldName' option
-    if (in_array($fileMeta['type'], array('image/png', 'image/gif', 'image/jpg', 'image/jpeg'))) {
+    if (in_array($fileMeta['type'], array('image/png', 'image/gif', 'image/jpg', 'image/jpeg', 'image/webp'))) {
         // Добавление изображения в фотогалерею
         fotoAdd();
     }

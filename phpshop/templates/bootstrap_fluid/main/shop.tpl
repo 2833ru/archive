@@ -250,9 +250,11 @@
                     <div class="col-xs-12 @php __hide('now_buying'); php@">
                         <h2 class="page-header">@now_buying@</h2>
 
-                        @nowBuy@
+                <div class="row">@nowBuy@</div>
                     </div>
                 </div>
+                        <div class="visible-lg visible-md text-center banner">@banersDispHorizontal@<br></div>
+
 
 
             </div>
@@ -278,7 +280,6 @@
 
         </div>
 
-        <div class="visible-lg visible-md text-center banner">@banersDispHorizontal@<br></div>
 
         @editor@
 

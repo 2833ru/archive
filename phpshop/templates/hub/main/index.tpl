@@ -175,19 +175,18 @@
             </div>
         </header>
 
-
         <!-- Slider Section Starts -->
         <!-- Nested Container Starts -->
         <!-- Carousel Starts -->
-        <div class="slider">
-            <div class="container">
+        <div class="container">
+            <div class="slider">
                 <div class="row">
                     @imageSlider@
                 </div>
             </div>
         </div>
+					<div class="clearfix"></div>
 
-        <!-- Slider Section Ends -->
 
 
         <!-- jQuery -->
@@ -199,10 +198,7 @@
                     <div class="hidden-xs">
                         <h4 class="product-head page-header">{Наш каталог}</h4>
                     </div>
-                    <div class="col-xs-3 hidden-sm hidden-xs @php __hide('productDay'); php@ product-day-wrap">
-                        @productDay@
-                    </div>
-                    <div class="col-xs-9 catalog-table-wrapper">
+                    <div class="catalog-block catalog-table-wrapper">
                         @leftCatalTable@
                     </div>
                 </div>
@@ -301,7 +297,7 @@
         <!-- Top brands -->
 
         <!-- Footer Section Starts -->
-        <footer class="hidden-sm visible-md visible-lg" id="footer-field">
+        <footer  id="footer-field">
             <!-- Footer Links Starts -->
             <div class="footer-link">
                 <!-- Container Starts -->

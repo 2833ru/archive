@@ -4,7 +4,7 @@
  */
 
 // Включение для SSH Cron
-$enabled = true;
+$enabled = false;
 
 $_classPath="../../../";
 include_once($_classPath . "class/obj.class.php");
@@ -43,12 +43,14 @@ class CacheFilter
                     $values = $this->getSortValues((int) $sort);
                     foreach ($values as $value) {
                         $count = $this->countProducts((int) $value, (int) $sort, (int) $category['id']);
+                        
                         if($count === 0) {
                             $cache['filter_cache'][(int) $sort][] = (int) $value;
-                        } else {
-                            $cache['products'][(int) $sort][(int) $value] = $count;
-                        }
-                    }
+                        } 
+                        
+                        $cache['products'][(int) $sort][(int) $value] = $count;
+                        
+                    }$cache['products'][(int) $sort][(int) $value] = $count;
                 }
 
                 $orm = new PHPShopOrm('phpshop_categories');

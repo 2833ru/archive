@@ -94,7 +94,7 @@
         <header id="header" class="header left-aligned-navbar">
 
             <!-- Стикер-полоска -->
-            <div class="alert alert-soft-primary text-center alert-dismissible font-size-1 fade show @php __hide('sticker_close','cookie'); php@" role="alert">@sticker_top@<button type="button" class="close sticker-close" data-dismiss="alert" aria-label="Close"><svg aria-hidden="true" class="mb-0" width="14" height="14" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg"><path fill="currentColor" d="M11.5,9.5l5-5c0.2-0.2,0.2-0.6-0.1-0.9l-1-1c-0.3-0.3-0.7-0.3-0.9-0.1l-5,5l-5-5C4.3,2.3,3.9,2.4,3.6,2.6l-1,1 C2.4,3.9,2.3,4.3,2.5,4.5l5,5l-5,5c-0.2,0.2-0.2,0.6,0.1,0.9l1,1c0.3,0.3,0.7,0.3,0.9,0.1l5-5l5,5c0.2,0.2,0.6,0.2,0.9-0.1l1-1 c0.3-0.3,0.3-0.7,0.1-0.9L11.5,9.5z"/></svg></button>
+            <div class="alert alert-soft-primary text-center alert-dismissible font-size-1 fade show @php __hide('sticker_top');__hide('sticker_close','cookie'); php@" role="alert">@sticker_top@<button type="button" class="close sticker-close" data-dismiss="alert" aria-label="Close"><svg aria-hidden="true" class="mb-0" width="14" height="14" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg"><path fill="currentColor" d="M11.5,9.5l5-5c0.2-0.2,0.2-0.6-0.1-0.9l-1-1c-0.3-0.3-0.7-0.3-0.9-0.1l-5,5l-5-5C4.3,2.3,3.9,2.4,3.6,2.6l-1,1 C2.4,3.9,2.3,4.3,2.5,4.5l5,5l-5,5c-0.2,0.2-0.2,0.6,0.1,0.9l1,1c0.3,0.3,0.7,0.3,0.9,0.1l5-5l5,5c0.2,0.2,0.6,0.2,0.9-0.1l1-1 c0.3-0.3,0.3-0.7,0.1-0.9L11.5,9.5z"/></svg></button>
             </div>
             <!-- Конец Стикер-полоска -->
 
@@ -308,7 +308,7 @@
 
             <!-- Images Carousel Section -->
             <div class="container-fluid @php __hide('imageSlider'); php@">
-                <div class="js-slick-carousel slick"
+                <div class="js-slick-carousel slick slick-equal-height"
                      data-hs-slick-carousel-options='{
                      "autoplay": true,
                      "autoplaySpeed": 5000,
@@ -322,21 +322,21 @@
 
             <!-- Features Section -->
             <div class="border-bottom">
-                <div class="container space-2">
-                    <div class="row">
-                        <div class="col-md-4 mb-7 mb-md-0">
+                <div class="container">
+                    <div class="row justify-content-around">
+                        <div class="col-md-4 space-1  @php __hide('sticker_slogan1'); php@">
                             <!-- Contacts -->
                             @sticker_slogan1@
                             <!-- End Contacts -->
                         </div>
 
-                        <div class="col-md-4 mb-7 mb-md-0">
+                        <div class="col-md-4 space-1 @php __hide('sticker_slogan2'); php@">
                             <!-- Contacts -->
                             @sticker_slogan2@
                             <!-- End Contacts -->
                         </div>
 
-                        <div class="col-md-4">
+                        <div class="col-md-4 space-1 @php __hide('sticker_slogan3'); php@">
                             <!-- Contacts -->
                             @sticker_slogan3@
                             <!-- End Contacts -->
@@ -387,7 +387,7 @@
                 <!-- End Title -->
 
                 <!-- Спецпредложения -->
-                <div class="row">
+                <div class="row w-md-80 w-lg-80 text-center mx-md-auto">
                 @specMain@
                 </div>
                 <!-- End Спецпредложения -->
@@ -397,6 +397,8 @@
                 </div>
             </div>
             <!-- End Products Section -->
+            
+            
 
             <!-- News Section -->
             <div class="container space-bottom-2 @php __hide('miniNews'); php@">

@@ -235,7 +235,7 @@ $('.phone').on('keyup', function(event) {
         $('.spec-main-icon-slider > .swiper-wrapper .product-block-wrapper-fix').unwrap();
         $('.spec-main-icon-slider > .swiper-wrapper > div').addClass('swiper-slide');
         var swiper = new Swiper('.spec-main-icon-slider', {
-            slidesPerView: 4,
+            slidesPerView: 5,
             speed: 800,
             nextButton: '.btn-next1',
             prevButton: '.btn-prev1',
@@ -243,14 +243,17 @@ $('.phone').on('keyup', function(event) {
             effect: 'slide',
             preventClicksPropagation: false,
             breakpoints: {
+	            520: {
+	                slidesPerView: 2
+	            },
                 768: {
-                    slidesPerView: 1
+                    slidesPerView: 3
                 },
                 991: {
-                    slidesPerView: 2
+                    slidesPerView: 4
                 },
                 1200: {
-                    slidesPerView: 3
+                    slidesPerView: 4
                 }
             }
         });
@@ -258,7 +261,7 @@ $('.phone').on('keyup', function(event) {
         $('.spec-main-slider > .swiper-wrapper .product-block-wrapper-fix').unwrap();
         $('.spec-main-slider > .swiper-wrapper > div').addClass('swiper-slide');
         var swiper = new Swiper('.spec-main-slider', {
-            slidesPerView: 4,
+            slidesPerView: 5,
             speed: 800,
             nextButton: '.btn-next2',
             prevButton: '.btn-prev2',
@@ -266,14 +269,17 @@ $('.phone').on('keyup', function(event) {
             effect: 'slide',
             preventClicksPropagation: false,
             breakpoints: {
+            520: {
+                slidesPerView: 2
+            },
                 768: {
-                    slidesPerView: 1
+                    slidesPerView: 3
                 },
                 991: {
-                    slidesPerView: 2
+                    slidesPerView: 4
                 },
                 1200: {
-                    slidesPerView: 3
+                    slidesPerView: 4
                 }
             }
         });
@@ -290,7 +296,7 @@ $('.phone').on('keyup', function(event) {
     $('.nowBuy > .swiper-wrapper .product-block-wrapper-fix').unwrap();
     $('.nowBuy > .swiper-wrapper > div').addClass('swiper-slide');
     var swiper = new Swiper('.nowBuy', {
-        slidesPerView: 4,
+        slidesPerView: 5,
         speed: 800,
         nextButton: '.btn-next3',
         prevButton: '.btn-prev3',
@@ -298,21 +304,24 @@ $('.phone').on('keyup', function(event) {
         effect: 'slide',
         preventClicksPropagation: false,
         breakpoints: {
-            768: {
-                slidesPerView: 1
-            },
-            991: {
+            520: {
                 slidesPerView: 2
             },
-            1200: {
+            768: {
                 slidesPerView: 3
+            },
+            991: {
+                slidesPerView: 4
+            },
+            1200: {
+                slidesPerView: 4
             }
         }
     });
 	$('.navbar-brand img').remove()
 	$(".compare-wrapper .swiper-container > .swiper-wrapper > div").addClass("swiper-slide");
 		  var swiper5 = new Swiper(".compare-slider", {
-    slidesPerView: 4,
+    slidesPerView: 5,
     speed: 800,
     nextButton: ".btn-next10",
     prevButton: ".btn-prev10",
@@ -324,6 +333,9 @@ $('.phone').on('keyup', function(event) {
       450: {
         slidesPerView: 1
       },
+	520: {
+	    slidesPerView: 2
+	},
       610: {
         slidesPerView: 2
       },
@@ -334,13 +346,13 @@ $('.phone').on('keyup', function(event) {
         slidesPerView: 4
       },
       1080: {
-        slidesPerView: 3
+        slidesPerView: 4
       },
       1200: {
-        slidesPerView: 3
+        slidesPerView: 4
       },
       1500: {
-        slidesPerView: 3
+        slidesPerView: 5
       }
     }
   });

@@ -137,8 +137,7 @@ $().ready(function() {
             element: document.getElementById('fix-check'),
             handler: function(direction) {
                 $('.navbar-action').toggleClass('navbar-fixed-top');
-            },
-            offset: '10%'
+            }
         });
 
     $(".tree a[data-view]").on('click', function(event) {

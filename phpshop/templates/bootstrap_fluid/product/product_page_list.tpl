@@ -55,7 +55,7 @@
     </form>
 </div>
 
-<div class="template-product-list">@productPageDis@</div>
+<div class="row">@productPageDis@</div>
 
 <div id="ajaxInProgress"></div>
 <div class="product-scroll-init"></div>

@@ -7,7 +7,7 @@
 
     <!-- Виртуальный каталог -->
     <div class="@php __hide('empty_product_list','isset'); php@">
-        <div class="d-none d-sm-block">@vendorCatDisp@</div>
+        <div class="d-sm-block">@vendorCatDisp@</div>
     </div>
     <!--/ Виртуальный каталог -->
 
@@ -30,26 +30,26 @@
                         <option value="2&f=1" data-url="/shop/CID_@pcatalogId@.html?s=2&f=1" @flowPriceLowActive@>{Дешевые}</option>
                     </select>
 
-                    <!-- Nav -->
-                    <ul class="nav nav-segment float-right" id="filter-well">
-                        <li class="list-inline-item d-none d-sm-block">
-                            <a class="nav-link filter-item @gridSetAactive@" href="#" data-toggle="tooltip" data-placement="top" title="{Товары сеткой}" name="gridChange" value="1">
-                                <i class="fas fa-list"></i>
-                            </a>
-                        </li>
-                        <li class="list-inline-item d-none d-sm-block">
-                            <a class="nav-link filter-item @gridSetBactive@" href="#" data-toggle="tooltip" data-placement="top" title="{Товары списком}" name="gridChange" value="2">
-                                <i class="fas fa-th-large"></i>
-                            </a>
-                        </li>
-                        <li class="list-inline-item d-block d-sm-none @php __hide('vendorCatDisp','parser','d-block d-sm-none'); php@">
-                            <a class="nav-link" id="mobile-filter" href="#" data-toggle="modal" data-target="#MoreFiltersModal">
-                                <i class="fas fa-sliders-h dropdown-item-icon"></i>
-                            </a>
-                        </li>
-
-                    </ul>
-                    <!-- End Nav -->
+						<!-- Nav -->
+						<ul class="nav nav-segment float-right" id="filter-well">
+						<li class="list-inline-item d-none d-md-block">
+						<a class="nav-link filter-item @gridSetAactive@" href="#" data-toggle="tooltip" data-placement="top" title="" name="gridChange" value="1">
+						<i class="fas fa-list"></i>
+						</a>
+						</li>
+						<li class="list-inline-item d-none d-md-block">
+						<a class="nav-link filter-item @gridSetBactive@" href="#" data-toggle="tooltip" data-placement="top" title="" name="gridChange" value="2">
+						<i class="fas fa-th-large"></i>
+						</a>
+						</li>
+						<li class="list-inline-item d-block d-md-none @php __hide('vendorCatDisp','parser','d-block d-md-none'); php@">
+						<a class="nav-link" id="mobile-filter" href="#" data-toggle="modal" data-target="#MoreFiltersModal">
+						<i class="fas fa-sliders-h dropdown-item-icon"></i>
+						</a>
+						</li>                
+						</ul>
+						              
+						<!-- End Nav -->
                 </div>
                 <!-- End Select -->
             </div>

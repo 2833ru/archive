@@ -15,7 +15,7 @@ function actionStart() {
     if (is_array($data))
         foreach ($data as $row) {
 
-            $PHPShopInterface->setRow($row['id'], array('name' => $row['name'], 'link' => '?path=' . $_GET['path'] . '&id=' . $row['id'], 'align' => 'left'), $row['path'], PHPShopDate::get($row['date']), array('action' => array('edit', 'delete', 'id' => $row['id']), 'align' => 'center'), array('status' => array('enable' => $row['enabled'], 'align' => 'right', 'caption' => array('Выкл', 'Вкл'))));
+            $PHPShopInterface->setRow($row['id'], array('name' => $row['name'], 'link' => '?path=' . $_GET['path'] . '&id=' . $row['id'], 'align' => 'left'), $row['path'], PHPShopDate::get($row['date']), array('action' => array('edit', '|','delete', 'id' => $row['id']), 'align' => 'center'), array('status' => array('enable' => $row['enabled'], 'align' => 'right', 'caption' => array('Выкл', 'Вкл'))));
         }
 
     $PHPShopInterface->Compile();

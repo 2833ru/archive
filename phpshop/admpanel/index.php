@@ -11,7 +11,7 @@ include($_classPath . "class/obj.class.php");
 require_once $_classPath . '/lib/phpass/passwordhash.php';
 PHPShopObj::loadClass(array("base", "system", "admgui", "orm", "security", "modules", "mail", "lang"));
 
-if(isset($_POST['base']))
+if (isset($_POST['base']))
     $_GET['base'] = $_POST['base'];
 
 $PHPShopBase = new PHPShopBase($_classPath . "inc/config.ini", true, true);
@@ -290,7 +290,7 @@ function actionStart() {
         $theme = 'default';
 
     // Демо-режим
-    if ($PHPShopBase->getParam('template_theme.demo') == 'true') {
+    if ($PHPShopBase->getParam('template_theme.demo') == 'true' and ! isset($_GET['login'])) {
         PHPShopParser::set('user', 'demo');
         PHPShopParser::set('password', 'demouser');
         PHPShopParser::set('readonly', 'readonly');
@@ -300,18 +300,18 @@ function actionStart() {
         PHPShopParser::set('themeSelect', GetAdminSkinList($theme));
     } else {
         PHPShopParser::set('autofocus', 'autofocus');
-        
-        // Выбор БД
-        if (is_array($GLOBALS['SysValue']['connect_select'])) {
-            foreach ($GLOBALS['SysValue']['connect_select'] as $k => $v)
-                $connect_select[] = array($v, $k, $_SESSION['base']);
-
-            PHPShopParser::set('hide_home', 'hide');
-            PHPShopParser::set('themeSelect', $PHPShopGUI->setSelect('base', $connect_select, 120));
-        }
     }
 
-    
+    // Выбор БД
+    if (is_array($GLOBALS['SysValue']['connect_select'])) {
+        foreach ($GLOBALS['SysValue']['connect_select'] as $k => $v)
+            $connect_select[] = array($v, $k, $_SESSION['base']);
+
+        PHPShopParser::set('hide_home', 'hide');
+        PHPShopParser::set('themeSelect', $PHPShopGUI->setSelect('base', $connect_select, 120));
+    }
+
+
     PHPShopParser::set('title', 'PHPShop - ' . __('Авторизация'));
     PHPShopParser::set('version', $PHPShopBase->getParam('upload.version'));
     PHPShopParser::set('theme', $theme);

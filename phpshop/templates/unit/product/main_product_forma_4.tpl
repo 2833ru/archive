@@ -29,7 +29,7 @@
 
                 <div class="product-price d-flex flex-column align-items-start justify-content-end">
                     <div class=" price-old @php __hide('productPriceOld'); php@"  >@productPriceOld@</div>
-                    <div class="price-new">@productPrice@<span class="rubznak">@productValutaName@</span></div>
+                    <div class="price-new">@parentLangFrom@ @productPrice@<span class="rubznak">@productValutaName@</span></div>
 
                 </div>
                 <div class="d-flex flex-column align-items-end justify-content-end"> <span class="">

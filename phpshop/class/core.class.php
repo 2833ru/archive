@@ -198,7 +198,7 @@ class PHPShopCore {
             $arrayPath = array_reverse($this->navigation_array);
 
         $currentIndex = 2;
-        $i=0;
+        $i = 0;
         if (!empty($arrayPath) and is_array($arrayPath)) {
             foreach ($arrayPath as $v) {
                 // назначаем thisCat, чтобы в метках сохранить ИД дерева октрытых категорий в разделе shop.
@@ -226,11 +226,11 @@ class PHPShopCore {
 
             $home .= ParseTemplateReturn($elementTemplate, true, $this->template_debug);
         }
-        
+
         $this->set('breadcrumbElemTitle', $name);
-        
-        if(empty($name))
-            $lastElemTemplate=null;
+
+        if (empty($name))
+            $lastElemTemplate = null;
 
         $dis = $home . $dis . ParseTemplateReturn($lastElemTemplate, true, $this->template_debug);
 
@@ -262,7 +262,7 @@ class PHPShopCore {
         }
 
         // HSTS
-        if(empty($this->PHPShopSystem) or !$this->PHPShopSystem instanceof PHPShopSystem) {
+        if (empty($this->PHPShopSystem) or ! $this->PHPShopSystem instanceof PHPShopSystem) {
             $this->PHPShopSystem = new PHPShopSystem();
         }
         if ($this->PHPShopSystem->ifSerilizeParam('admoption.hsts', 1))
@@ -629,7 +629,7 @@ class PHPShopCore {
 
         foreach ($name_array as $name) {
 
-            if ($flag and !empty($this->SysValue['other'][$name]))
+            if ($flag and ! empty($this->SysValue['other'][$name]))
                 $this->SysValue['other'][$name] .= $value;
             else
                 $this->SysValue['other'][$name] = $value;
@@ -642,8 +642,8 @@ class PHPShopCore {
      * @return string
      */
     function get($name) {
-        if(isset($this->SysValue['other'][$name]))
-        return $this->SysValue['other'][$name];
+        if (isset($this->SysValue['other'][$name]))
+            return $this->SysValue['other'][$name];
     }
 
     /**
@@ -805,7 +805,7 @@ class PHPShopCore {
             return true;
 
         // Титл
-        $this->title = __("Ошибка")." 404  - " . $this->PHPShopSystem->getValue("name");
+        $this->title = __("Ошибка") . " 404  - " . $this->PHPShopSystem->getValue("name");
 
         // Заголовок ошибки
         @header("HTTP/1.0 404 Not Found");

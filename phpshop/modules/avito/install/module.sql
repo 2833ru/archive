@@ -7,12 +7,12 @@ CREATE TABLE `phpshop_modules_avito_system` (
   `phone` varchar(64),
   `preview_description_template` text default '',
   `image_url` varchar(255) default '',
-  `version` varchar(64) default '1.6',
+  `version` varchar(64) default '1.0',
 
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
 
-INSERT INTO `phpshop_modules_avito_system` VALUES (1, '', '', '', '', '@Description@','', '1.7');
+INSERT INTO `phpshop_modules_avito_system` VALUES (1, '', '', '', '', '@Description@','', '1.9');
 
 DROP TABLE IF EXISTS `phpshop_modules_avito_category_types`;
 CREATE TABLE `phpshop_modules_avito_xml_prices` (

@@ -349,9 +349,15 @@ function template_image_gallery($obj, $array) {
         ksort($sort_data);
 
         foreach ($sort_data as $k => $row) {
+
             $name = $row['name'];
             $name_s = str_replace(".", "s.", $name);
             $name_bigstr = str_replace(".", "_big.", $name);
+
+            // Поддержка Webp
+            $name = $obj->setImage($name);
+            $name_s = $obj->setImage($name_s);
+            $name_bigstr = $obj->setImage($name_bigstr);
 
             // Подбор исходного изображения
             if (!$obj->PHPShopSystem->ifSerilizeParam('admoption.image_save_source') or ! file_exists($_SERVER['DOCUMENT_ROOT'] . $name_bigstr))
@@ -365,10 +371,8 @@ function template_image_gallery($obj, $array) {
             $i++;
         }
 
-
         if ($i < 2)
             $bxpager = null;
-        $pic_big = $name_s;
 
         $obj->set('productFotoList', '<img class="bxslider-pre" itemprop="image"  src="' . $name_s . '" title="' . $array['name'] . '" alt="' . $array['name'] . '" /><div class="bxslider hide">' . $bxslider . '</div><div class="bx-pager">' . $bxpager . '</div>');
         $obj->set('productFotoListBig', '<ul class="bxsliderbig" data-content="' . $bxsliderbig . '" data-page="' . $bxpager . '"></ul><div class="bx-pager-big">' . $bxpager . '</div>');

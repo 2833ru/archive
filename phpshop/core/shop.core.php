@@ -1131,7 +1131,7 @@ function CID_Category($mode = false) {
             foreach ($dataArray as $row) {
                 if (empty($row['icon']))
                     $row['icon'] = $this->no_photo;
-                $this->set('podcatalogIcon', $row['icon']);
+                $this->set('podcatalogIcon', $this->setImage($row['icon']));
                 $this->set('podcatalogId', $row['id']);
                 $this->set('podcatalogName', $row['name']);
                 $this->set('podcatalogDesc', $row['content']);

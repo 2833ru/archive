@@ -20,7 +20,7 @@
                         <a class="text-inherit" title="@productName@" href="/shop/UID_@productUid@.html">@productName@</a>
 
                         <div class="d-block pt-2">
-                            <span class="h5">@productPrice@<span class="rubznak">@productValutaName@</span></span>
+                            <span class="h5">@parentLangFrom@ @productPrice@<span class="rubznak">@productValutaName@</span></span>
                             <span class="text-body ml-1 @php __hide('productPriceOld'); php@" ><del>@productPriceOld@</del></span>
 
                         </div>

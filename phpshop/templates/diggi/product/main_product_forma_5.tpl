@@ -1,4 +1,4 @@
-<div class="col-md-3 col-sm-3 product-block-wrapper-fix">
+<div class="col-auto col-sm-3 col-xs-6 product-block-wrapper-fix">
     <span class="sale-icon-content">
         @specIcon@
         @newtipIcon@
@@ -40,7 +40,6 @@
                     <i class="fa fa-shopping-cart"></i>                     
                 </button>
                 <button class="btn btn-wishlist addToWishList" data-uid="@productUid@" data-title="{Отложить}" data-placement="top" data-toggle="tooltip"><i class="fa fa-heart"></i></button>
-                <button class="btn btn-wishlist addToCompareList" data-uid="@productUid@" data-title="{Сравнить}" data-placement="top" data-toggle="tooltip"><i class="fa fa-bar-chart-o"></i></button>
 
                 <a class="btn btn-cart @elementNoticeHide@" href="/users/notice.html?productId=@productUid@" title="@productNotice@"  data-title="@productNotice@" data-placement="top" data-toggle="tooltip">
                     <i class="fa fa-envelope-o" aria-hidden="true"></i>                            

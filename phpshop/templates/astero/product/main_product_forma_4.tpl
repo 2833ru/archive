@@ -1,4 +1,4 @@
-<div class="col-md-3 col-sm-6 product-block-wrapper">
+<div class="col-md-3 col-sm-3 col-xs-6 product-block-wrapper">
 	<span class="sale-icon-content">
                 @specIcon@
 			@newtipIcon@

@@ -57,6 +57,8 @@ function actionStart() {
             $PHPShopGUI->setField('Исходное название', $PHPShopGUI->setCheckbox('option[image_save_name]', 1, 'Сохранять исходное название изображения', $option['image_save_name'])) .
             $PHPShopGUI->setField('Исходный путь', $PHPShopGUI->setCheckbox('option[image_save_path]', 1, 'Сохранять исходный путь изображения на сервере', $option['image_save_path'])) .
             $PHPShopGUI->setField('SEO название', $PHPShopGUI->setCheckbox('option[image_save_seo]', 1, 'Сохранять изображения по именам товара', $option['image_save_seo'])) .
+            $PHPShopGUI->setField('Вывод в webp ', $PHPShopGUI->setCheckbox('option[image_webp]', 1, 'Конвертация изображений в формат webp для оптимизации в реальном времени', $option['image_webp']),1,'Сокращение в несколько раз веса картинок. Может приводить к замедлению сайта, требователен к ресурсам.') .
+            $PHPShopGUI->setField('Сохранение в webp', $PHPShopGUI->setCheckbox('option[image_webp_save]', 1, 'Конвертация изображений в формат webp для оптимизации при загрузке изображений на сервер', $option['image_webp_save']),1,'Сокращение в несколько раз веса картинок.') .
             $PHPShopGUI->setField('Добавить путь каталога', $PHPShopGUI->setCheckbox('option[image_save_catalog]', 1, 'Сохранять изображения в папках по именам каталогов', $option['image_save_catalog']), 1, 'При выключенной опции, все изображения товаров сохраняются в одну папку на сервере. Если файлов становится много, это может вызывать торможение в работе файлового менеджера и влиять на загрузку сайта, на дешевых тарифах хостинга. Активируйте опцию, чтобы фото сохранялись на сервере в автоматически созданную папку для каждого созданного каталога.') .
             $PHPShopGUI->setField('Отключить фотогалерею', $PHPShopGUI->setCheckbox('option[image_off]', 1, 'Отключить возможность добавлять изображения в фотогалерею', $option['image_off']), 1, 'Режим для товара с одной подготовленной картинкой, размещенной на сервере.') .
             $PHPShopGUI->setField("Размещение", $PHPShopGUI->setInputText($GLOBALS['SysValue']['dir']['dir'] . '/UserFiles/Image/', "option[image_result_path]", $option['image_result_path'], 400), 1, 'Путь сохранения загружаемых изображений') .
@@ -150,28 +152,6 @@ function actionUpdate() {
     $data = $PHPShopOrm->select();
     $option = unserialize($data['admoption']);
 
-    // Очистка старых данных предыдущих версий PHPSgop
-    unset($option['prevpanel_enabled']);
-    unset($option['helper_enabled']);
-    unset($option['message_enabled']);
-    unset($option['message_time']);
-    unset($option['desktop_enabled']);
-    unset($option['desktop_time']);
-    unset($option['oplata_1']);
-    unset($option['oplata_2']);
-    unset($option['oplata_3']);
-    unset($option['oplata_4']);
-    unset($option['oplata_5']);
-    unset($option['oplata_6']);
-    unset($option['oplata_7']);
-    unset($option['oplata_8']);
-    unset($option['seller_enabled']);
-    unset($option['update_enabled']);
-    unset($option['lang']);
-    unset($option['calibrated']);
-    unset($option['editor_enabled']);
-    unset($option['xmlencode']);
-
     // Счетчик сообщений о поддержке
     unset($option['support_notice']);
 
@@ -179,7 +159,7 @@ function actionUpdate() {
     $_POST['option']['watermark_image'] = $_POST['watermark_image'];
 
     // Корректировка пустых значений
-    $PHPShopOrm->updateZeroVars('option.image_save_source', 'option.image_adaptive_resize', 'option.image_save_name', 'option.watermark_big_enabled', 'option.watermark_source_enabled', 'option.watermark_center_enabled', 'option.image_save_path', 'option.image_save_catalog', 'option.watermark_small_enabled', 'option.image_off', 'option.image_cat', 'option.image_slider','option.image_slider_adaptive','option.image_cat_adaptive', 'option.image_save_seo');
+    $PHPShopOrm->updateZeroVars('option.image_save_source', 'option.image_adaptive_resize', 'option.image_save_name', 'option.watermark_big_enabled', 'option.watermark_source_enabled', 'option.watermark_center_enabled', 'option.image_save_path', 'option.image_save_catalog', 'option.watermark_small_enabled', 'option.image_off', 'option.image_cat', 'option.image_slider','option.image_slider_adaptive','option.image_cat_adaptive', 'option.image_save_seo','option.image_webp','option.image_webp_save');
 
     if (is_array($_POST['option']))
         foreach ($_POST['option'] as $key => $val)

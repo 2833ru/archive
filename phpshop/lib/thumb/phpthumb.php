@@ -235,6 +235,9 @@ class PHPThumb extends PHPThumbLibrary {
             case 'STRING':
                 $this->oldImage = imagecreatefromstring($this->fileName);
                 break;
+            case 'WEBP':
+                $this->oldImage = imagecreatefromwebp($this->fileName);
+                break;
         }
 
         $this->currentDimensions = array(
@@ -882,7 +885,7 @@ class PHPThumb extends PHPThumbLibrary {
      * @param  bool         $rawData Whether or not the raw image stream should be output
      * @return \PHPThumb\GD
      */
-    public function show($rawData = false) {
+    public function show($rawData = false,$ext=false) {
         //Execute any plugins
         if ($this->plugins) {
             foreach ($this->plugins as $plugin) {
@@ -910,17 +913,28 @@ class PHPThumb extends PHPThumbLibrary {
                 imagegif($this->oldImage);
                 break;
             case 'JPG':
+            case 'STRING':
                 if ($rawData === false) {
                     header('Content-type: image/jpeg');
                 }
                 imagejpeg($this->oldImage, null, $this->options['jpegQuality']);
                 break;
             case 'PNG':
-            case 'STRING':
                 if ($rawData === false) {
                     header('Content-type: image/png');
                 }
                 imagepng($this->oldImage);
+                break;
+            case 'WEBP':
+                if ($rawData === false) {
+                    header('Content-type: image/webp');
+                }  
+                
+                if($ext == 'png')
+                    imagepalettetotruecolor($this->oldImage);
+                
+                imagewebp($this->oldImage);
+                //imagedestroy($this->oldImage); 
                 break;
         }
 
@@ -935,10 +949,10 @@ class PHPThumb extends PHPThumbLibrary {
      *
      * @return string
      */
-    public function getImageAsString() {
+    public function getImageAsString($ext) {
         $data = null;
         ob_start();
-        $this->show(true);
+        $this->show(true,$ext);
         $data = ob_get_contents();
         ob_end_clean();
 
@@ -959,7 +973,7 @@ class PHPThumb extends PHPThumbLibrary {
      * @return \PHPThumb\GD
      */
     public function save($fileName, $format = null) {
-        $validFormats = array('GIF', 'JPG', 'PNG');
+        $validFormats = array('GIF', 'JPG', 'PNG','WEBP','STRING');
         $format = ($format !== null) ? strtoupper($format) : $this->format;
 
         if (!in_array($format, $validFormats)) {
@@ -998,6 +1012,9 @@ class PHPThumb extends PHPThumbLibrary {
             case 'PNG':
                 imagepng($this->oldImage, $fileName);
                 break;
+            case 'WEBP':
+                imagewebp($this->oldImage, $fileName);
+                break;
         }
 
         return $this;
@@ -1014,7 +1031,7 @@ class PHPThumb extends PHPThumbLibrary {
      */
     public function setOptions(array $options = array()) {
         // we've yet to init the default options, so create them here
-        if (sizeof($this->options) == 0) {
+        if (!is_array($this->options) or count($this->options) == 0) {
             $defaultOptions = array(
                 'resizeUp' => false,
                 'jpegQuality' => 100,
@@ -1332,13 +1349,14 @@ class PHPThumb extends PHPThumbLibrary {
         $formatInfo = getimagesize($this->fileName);
 
         // non-image files will return false
+        /*
         if ($formatInfo === false) {
             if ($this->remoteImage) {
                 throw new Exception("Could not determine format of remote image: {$this->fileName}");
             } else {
                 throw new Exception("File is not a valid image: {$this->fileName}");
             }
-        }
+        }*/
 
         $mimeType = isset($formatInfo['mime']) ? $formatInfo['mime'] : null;
 
@@ -1352,8 +1370,11 @@ class PHPThumb extends PHPThumbLibrary {
             case 'image/png':
                 $this->format = 'PNG';
                 break;
+            case 'image/webp':
+                $this->format = 'WEBP';
+                break;
             default:
-                throw new Exception("Image format not supported: {$mimeType}");
+                //throw new Exception("Image format not supported: {$mimeType}");
         }
     }
 
@@ -1375,6 +1396,10 @@ class PHPThumb extends PHPThumbLibrary {
             case 'PNG':
                 $isCompatible = $gdInfo[$this->format . ' Support'];
                 break;
+            case 'WEBP':
+                $isCompatible = $gdInfo['WebP Support'];
+                break;
+            
             default:
                 $isCompatible = false;
         }

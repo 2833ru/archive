@@ -1,10 +1,11 @@
-<div class="col-6 col-lg-2 px-2 px-sm-3 mb-3 mb-sm-5">
+<div class="col-6 col-lg-3 px-2 px-sm-3 mb-3 mb-sm-5">
     <!-- Product -->
     <div class="card card-bordered shadow-none text-center h-100">
         <div class="position-relative">
             <img class="card-img-top" src="@productImg@" alt="@productName@" loading="lazy">
 
-            <div class="position-absolute top-0 left-0 pt-3 pl-3">
+            <div class="position-absolute top-0 left-0 pt-1 pl-1">
+	            @wholesaleIcon@
                 @hitIcon@
                 @specIcon@
                 @newtipIcon@
@@ -21,7 +22,8 @@
                     <a class="text-inherit" title="@productName@" href="/shop/UID_@productUid@.html">@productName@ </a>
                 </span>
                 <div class="d-block">
-                    <span class="text-dark font-weight-bold">@productPrice@<span class="rubznak">@productValutaName@</span></span>
+                    <span class="text-dark font-weight-bold">@parentLangFrom@ @productPrice@<span class="rubznak">@productValutaName@</span></span>
+                    <span class="text-body small ml-1 @php __hide('productPriceOld'); php@" ><del>@productPriceOld@</del></span>
                 </div>
             </div>
         </div>

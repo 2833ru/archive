@@ -2,7 +2,7 @@
 <h1 class="page-title hide">@catalogName@</h1>
 <div class="hidden-xs catalog-description-fix">@catalogContent@</div>
 
-<div class="row">@catalogList@</div>
+<div class="catalog-block">@catalogList@</div>
 
 <nav class="hide">
   <ul class="pager">

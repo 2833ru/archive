@@ -186,8 +186,8 @@ function sort_encode($sort, $category) {
                     $sort_list_array = explode($sortsdelim, $sort_list, 2);
                     $sort_name = PHPShopSecurity::TotalClean($sort_list_array[0]);
                     $sort_value = PHPShopSecurity::TotalClean($sort_list_array[1]);
-                    
-                    $return += (new sortCheck($sort_name,$sort_value,$category,$debug))->result();
+
+                    $return += (new sortCheck($sort_name, $sort_value, $category, $debug))->result();
                 }
             }
     }
@@ -222,10 +222,10 @@ function csv_update($data) {
             if (is_array($_POST['select_action'])) {
 
                 foreach ($_POST['select_action'] as $k => $name) {
-                    
+
                     // Автоматизация
-                    if(!empty($_POST['bot'])){
-                        $_POST['select_action'][$k]= PHPShopString::utf8_win1251($name,true);
+                    if (!empty($_POST['bot'])) {
+                        $_POST['select_action'][$k] = PHPShopString::utf8_win1251($name, true);
                     }
 
                     if (!empty($name))
@@ -408,7 +408,21 @@ function csv_update($data) {
 
                             // Новое имя
                             $img = $GLOBALS['dir']['dir'] . '/UserFiles/Image/' . $path . $path_parts['basename'];
+
+                            // Сохранение в webp
+                            if ($PHPShopSystem->ifSerilizeParam('admoption.image_webp_save') and $path_parts['extension'] != 'webp') {
+                                
+                                $thumb = new PHPThumb($_SERVER['DOCUMENT_ROOT'].$img);
+                                $thumb->setFormat('WEBP');
+                                $name_webp = str_replace([".png", ".jpg", ".jpeg", ".gif", ".PNG", ".JPG", ".JPEG", ".GIF", ".WEBP"], '.webp', $img);
+            
+                                $thumb->save($_SERVER['DOCUMENT_ROOT'].$name_webp);
+                                //@unlink($_SERVER['DOCUMENT_ROOT'].$img);
+                                $img = $name_webp;
+                            }
                         }
+
+
 
                         // Проверка существования изображения
                         $PHPShopOrmImg = new PHPShopOrm($GLOBALS['SysValue']['base']['foto']);
@@ -422,7 +436,7 @@ function csv_update($data) {
                             $PHPShopOrmImg->insert(array('parent_new' => intval($row['id']), 'name_new' => $img, 'num_new' => $k));
 
                             $file = $_SERVER['DOCUMENT_ROOT'] . $img;
-                            $name = str_replace(array(".png", ".jpg", ".jpeg", ".gif", ".PNG", ".JPG", ".JPEG", ".GIF"), array("s.png", "s.jpg", "s.jpeg", "s.gif", "s.png", "s.jpg", "s.jpeg", "s.gif"), $file);
+                            $name = str_replace(array(".png", ".jpg", ".jpeg", ".gif", ".PNG", ".JPG", ".JPEG", ".GIF", ".webp", ".WEBP"), array("s.png", "s.jpg", "s.jpeg", "s.gif", "s.png", "s.jpg", "s.jpeg", "s.gif", "s.webp", "s.webp"), $file);
 
                             if (!file_exists($name) and file_exists($file)) {
 
@@ -442,8 +456,9 @@ function csv_update($data) {
                                 $row['pic_big'] = $img;
 
                                 // Главное превью
-                                if (empty($row['pic_small']) or isset($_POST['export_imgload']) or isset($_POST['export_imgproc']))
-                                    $row['pic_small'] = str_replace(array(".png", ".jpg", ".jpeg", ".gif", ".PNG", ".JPG", ".JPEG", ".GIF"), array("s.png", "s.jpg", "s.jpeg", "s.gif", "s.png", "s.jpg", "s.jpeg", "s.gif"), $img);
+                                if (empty($row['pic_small']) or isset($_POST['export_imgload']) or isset($_POST['export_imgproc'])) {
+                                    $row['pic_small'] = str_replace(array(".png", ".jpg", ".jpeg", ".gif", ".PNG", ".JPG", ".JPEG", ".GIF", ".webp", ".WEBP"), array("s.png", "s.jpg", "s.jpeg", "s.gif", "s.png", "s.jpg", "s.jpeg", "s.gif", "s.webp", "s.webp"), $img);
+                                }
                             }
                         }
                     }
@@ -492,19 +507,18 @@ function csv_update($data) {
                     $uniq = $PHPShopBase->getNumRows('products', "where uid = '" . $row['uid'] . "'");
                 } else
                     $uniq = 0;
-                
+
                 // Проверка SEO имени каталога
-                if($subpath[2] == 'catalog' and !empty($row['name'])){
-                    $uniq_cat_data = (new PHPShopOrm($GLOBALS['SysValue']['base']['categories']))->getOne(['*'],['name'=>'="'.$row['name'].'"']);
-                    
+                if ($subpath[2] == 'catalog' and ! empty($row['name'])) {
+                    $uniq_cat_data = (new PHPShopOrm($GLOBALS['SysValue']['base']['categories']))->getOne(['*'], ['name' => '="' . $row['name'] . '"']);
+
                     // Есть одноименный каталог
-                    if(!empty($uniq_cat_data['name'])){
-                        $parent_cat_data = (new PHPShopOrm($GLOBALS['SysValue']['base']['categories']))->getOne(['*'],['id'=>'="'.$uniq_cat_data['parent_to'].'"']);
+                    if (!empty($uniq_cat_data['name'])) {
+                        $parent_cat_data = (new PHPShopOrm($GLOBALS['SysValue']['base']['categories']))->getOne(['*'], ['id' => '="' . $uniq_cat_data['parent_to'] . '"']);
                         $row['cat_seo_name'] = PHPShopString::toLatin($row['name']);
-                        $row['cat_seo_name'] = PHPShopString::toLatin($parent_cat_data['name']).'-'.PHPShopString::toLatin($row['name']);
-                    }
-                    else $row['cat_seo_name'] = PHPShopString::toLatin($row['name']);
-                    
+                        $row['cat_seo_name'] = PHPShopString::toLatin($parent_cat_data['name']) . '-' . PHPShopString::toLatin($row['name']);
+                    } else
+                        $row['cat_seo_name'] = PHPShopString::toLatin($row['name']);
                 }
 
                 // Проверки пустого имени
@@ -710,8 +724,8 @@ function actionSave() {
     if (!empty($_FILES['file']['name'])) {
         $_FILES['file']['ext'] = PHPShopSecurity::getExt($_FILES['file']['name']);
         if ($_FILES['file']['ext'] == "csv") {
-            if (@move_uploaded_file($_FILES['file']['tmp_name'], "csv/" . PHPShopString::toLatin($_FILES['file']['name']).'.'.$_FILES['file']['ext'])) {
-                $csv_file_name = PHPShopString::toLatin($_FILES['file']['name']).'.'.$_FILES['file']['ext'];
+            if (@move_uploaded_file($_FILES['file']['tmp_name'], "csv/" . PHPShopString::toLatin($_FILES['file']['name']) . '.' . $_FILES['file']['ext'])) {
+                $csv_file_name = PHPShopString::toLatin($_FILES['file']['name']) . '.' . $_FILES['file']['ext'];
                 $csv_file = "csv/" . $csv_file_name;
                 $_POST['lfile'] = $GLOBALS['dir']['dir'] . "/phpshop/admpanel/csv/" . $csv_file_name;
             } else
@@ -808,9 +822,9 @@ function actionSave() {
 <div class="progress bot-progress">
   <div class="progress-bar progress-bar-striped  progress-bar-success ' . $bar_class . '" role="progressbar" aria-valuenow="" aria-valuemin="0" aria-valuemax="100" style="width: ' . $bar . '%"> ' . $bar . '% 
   </div>
-</div>','success load-result',true,false,false);
+</div>', 'success load-result', true, false, false);
                 $result_message .= $PHPShopGUI->setAlert('<b>Пожалуйста, не закрывайте окно до полной загрузки товаров</b><br>
-Вы можете продолжить работу с другими разделами сайта, открывая меню в новой вкладке (нажмите <kbd>CTRL</kbd> и кликните на раздел).', 'info load-info',true,false,false);
+Вы можете продолжить работу с другими разделами сайта, открывая меню в новой вкладке (нажмите <kbd>CTRL</kbd> и кликните на раздел).', 'info load-info', true, false, false);
                 $result_message .= $PHPShopGUI->setInput("hidden", "csv_file", $csv_file);
                 $result_message .= $PHPShopGUI->setInput("hidden", "total", $total);
                 $result_message .= $PHPShopGUI->setInput("hidden", "stop", 0);
@@ -893,7 +907,7 @@ function actionSave() {
         $PHPShopOrm->insert(array('name_new' => $_POST['exchanges_new'], 'option_new' => serialize($_POST), 'type_new' => 'import'));
     }
 
-    if (!empty($_POST['bot']) and (empty($_POST['total']) or $_POST['line_limit'] < 10))
+    if (!empty($_POST['bot']) and ( empty($_POST['total']) or $_POST['line_limit'] < 10))
         $log_off = true;
 
     // Журнал загрузок
@@ -909,9 +923,9 @@ function actionSave() {
 
             $bar = round($_POST['end'] * 100 / $total);
 
-            return array("success" => $action, "bar" => $bar, "count" => $csv_load_count, "result" => PHPShopString::win_utf8($json_message), 'limit' => $limit,'action'=>PHPShopString::win_utf8(mb_strtolower($lang_do,$GLOBALS['PHPShopBase']->codBase)));
+            return array("success" => $action, "bar" => $bar, "count" => $csv_load_count, "result" => PHPShopString::win_utf8($json_message), 'limit' => $limit, 'action' => PHPShopString::win_utf8(mb_strtolower($lang_do, $GLOBALS['PHPShopBase']->codBase)));
         } else
-            return array("success" => 'done', "count" => $csv_load_count, "result" => PHPShopString::win_utf8($json_message), 'limit' => $limit,'action'=>PHPShopString::win_utf8(mb_strtolower($lang_do,$GLOBALS['PHPShopBase']->codBase)));
+            return array("success" => 'done', "count" => $csv_load_count, "result" => PHPShopString::win_utf8($json_message), 'limit' => $limit, 'action' => PHPShopString::win_utf8(mb_strtolower($lang_do, $GLOBALS['PHPShopBase']->codBase)));
     }
 }
 
@@ -958,9 +972,9 @@ function actionStart() {
 
         if ($_GET['path'] == 'exchange.import')
             $_POST['bot'] = 1;
-        
-        if($subpath[2] == 'catalog')
-            $memory[$_GET['path']]['export_action']='insert';
+
+        if ($subpath[2] == 'catalog')
+            $memory[$_GET['path']]['export_action'] = 'insert';
     }
 
 
@@ -983,9 +997,9 @@ function actionStart() {
         $PHPShopOrm->clean();
         $data = $PHPShopOrm->select(array('*'), false, false, array('limit' => 1));
         $PHPShopOrm->delete(array('name' => '="Тестовый товар"'));
-        
-       if(empty($subpath[2]))
-         $memory[$_GET['path']]['export_action']='insert';
+
+        if (empty($subpath[2]))
+            $memory[$_GET['path']]['export_action'] = 'insert';
     }
 
     if (is_array($data)) {
@@ -1213,8 +1227,8 @@ class sortCheck {
 
     var $debug = false;
 
-    function __construct($name, $value, $category,$debug=false) {
-        
+    function __construct($name, $value, $category, $debug = false) {
+
         $this->debug = $debug;
 
         $this->debug('Дано характеристика "' . $name . '" = "' . $value . '" в каталоге с ID=' . $category);
@@ -1252,7 +1266,7 @@ class sortCheck {
                 $this->debug('Нет значения характеристики "' . $name . '" = "' . $value . '"');
 
                 // Создание нового значения характеристики
-                $new_value_id = (new PHPShopOrm($GLOBALS['SysValue']['base']['sort']))->insert(['name_new' => $value, 'category_new' => $check_name['id'],'sort_seo_name_new'=>str_replace("_", "-",PHPShopString::toLatin($value))]);
+                $new_value_id = (new PHPShopOrm($GLOBALS['SysValue']['base']['sort']))->insert(['name_new' => $value, 'category_new' => $check_name['id'], 'sort_seo_name_new' => str_replace("_", "-", PHPShopString::toLatin($value))]);
 
                 $this->debug('Создание нового значения характеристики "' . $name . '" = "' . $value . '" c ID=' . $new_value_id);
                 $result[$check_name['id']][] = $new_value_id;
@@ -1294,7 +1308,7 @@ class sortCheck {
             $this->debug('Создание новой характеристики "' . $name . '" c ID=' . $new_name_id . ' в группе характеристик ID=' . $sort_categories);
 
             // Создание нового значения характеристики
-            $new_value_id = (new PHPShopOrm($GLOBALS['SysValue']['base']['sort']))->insert(['name_new' => $value, 'category_new' => $new_name_id,'sort_seo_name_new'=>str_replace("_", "-",PHPShopString::toLatin($value))]);
+            $new_value_id = (new PHPShopOrm($GLOBALS['SysValue']['base']['sort']))->insert(['name_new' => $value, 'category_new' => $new_name_id, 'sort_seo_name_new' => str_replace("_", "-", PHPShopString::toLatin($value))]);
             $this->debug('Создание нового значения характеристики "' . $name . '" = "' . $value . '" c ID=' . $new_value_id);
 
             // Добавление в категорию характеристики
@@ -1313,11 +1327,12 @@ class sortCheck {
         if ($this->debug)
             echo $str . PHP_EOL . '<br>';
     }
-    
+
     // Результат
-    function result(){
+    function result() {
         return $this->result;
     }
+
 }
 
 // Обработка событий

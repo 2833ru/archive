@@ -101,6 +101,7 @@ class PHPShopShopCore extends PHPShopCore {
         $this->sklad_status = $this->PHPShopSystem->getSerilizeParam('admoption.sklad_status');
         $this->format = intval($this->PHPShopSystem->getSerilizeParam("admoption.price_znak"));
         $this->warehouse_sum = $this->PHPShopSystem->getSerilizeParam('admoption.sklad_sum_enabled');
+        $this->webp = $this->PHPShopSystem->getSerilizeParam('admoption.image_webp');
 
         // HTML опции верстки
         $this->setHtmlOption(__CLASS__);
@@ -1020,6 +1021,7 @@ class PHPShopShopCore extends PHPShopCore {
  * @return string
  */
 function product_grid($dataArray, $cell = 2, $template = false) {
+    global $_classPath;
 
     if (empty($cell))
         $cell = 2;
@@ -1071,6 +1073,9 @@ function product_grid($dataArray, $cell = 2, $template = false) {
             // Максимальная дата изменения
             if ($row['datas'] > $lastmodified)
                 $lastmodified = $row['datas'];
+
+            // Поддержка webp в iOS
+            $row['pic_small'] = $this->setImage($row['pic_small']);
 
             // Маленькая картинка
             $this->set('productImg', $row['pic_small']);
@@ -1124,6 +1129,47 @@ function product_grid($dataArray, $cell = 2, $template = false) {
 
     $this->lastmodified = $lastmodified;
     return $table;
+}
+
+/**
+ * Поддержка webp
+ * @param string $image имя файла
+ * @return string
+ */
+function setImage($image) {
+    global $_classPath;
+
+    if (!empty($image)) {
+
+        // Преобразование webp -> jpg для iOS < 14
+        if (PHPShopSecurity::getExt($image) == 'webp') {
+            if (defined('isMobil') and defined('isIOS') and isIOS < 14) {
+
+                if (!class_exists('PHPThumb'))
+                    include_once($_classPath . 'lib/thumb/phpthumb.php');
+
+                if (file_exists($_SERVER['DOCUMENT_ROOT'] . $image)) {
+                    $thumb = new PHPThumb($_SERVER['DOCUMENT_ROOT'] . $image);
+                    $thumb->setFormat('STRING');
+                    $image = 'data:image/jpg;base64, ' . base64_encode($thumb->getImageAsString('webp'));
+                }
+            }
+        }
+        // Преобразование в webp
+        elseif ($this->webp) {
+
+            if (!class_exists('PHPThumb'))
+                include_once($_classPath . 'lib/thumb/phpthumb.php');
+
+            if (file_exists($_SERVER['DOCUMENT_ROOT'] . $image)) {
+                $thumb = new PHPThumb($_SERVER['DOCUMENT_ROOT'] . $image);
+                $thumb->setFormat('WEBP');
+                $image = 'data:image/webp;base64, ' . base64_encode($thumb->getImageAsString(PHPShopSecurity::getExt($image)));
+            }
+        }
+    }
+
+    return $image;
 }
 
 public function getPreviewSorts($products, $currentProduct) {

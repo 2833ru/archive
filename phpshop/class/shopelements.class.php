@@ -566,6 +566,7 @@ class PHPShopProductElements extends PHPShopElements {
  * @return string
  */
 function product_grid($dataArray, $cell, $template = false, $line = true, $mod = false) {
+    global $_classPath;
 
     if (!empty($line))
         $this->grid = true;
@@ -600,6 +601,9 @@ function product_grid($dataArray, $cell, $template = false, $line = true, $mod =
             $this->set('productArt', $row['uid']);
             $this->set('productDes', $row['description']);
             $this->set('productPageThis', $this->PHPShopNav->getPage());
+
+            // Поддержка webp в iOS
+            $row['pic_small'] = $this->setImage($row['pic_small']);
 
             // Пустая картинка
             if (empty($row['pic_small']))

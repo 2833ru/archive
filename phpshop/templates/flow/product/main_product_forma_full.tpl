@@ -9,7 +9,7 @@
         <h1 itemprop="name" class="h2 page-title d-none">@productName@</h1>                          
     </div>
     <div class="row">
-        <div class="col-lg-7 mb-7 mb-lg-0">
+        <div class="col-lg-7 col-md-7 mb-7 mb-lg-0">
             <div class="pr-lg-4">
                 <div class="position-relative">
 
@@ -49,12 +49,16 @@
                     </div>
                     <!-- End Slider Nav -->
                 </div><div class="m-3 p-3 mb-2">@promotionInfo@</div>
-
             </div>
         </div>
 
         <!-- Product Description -->
-        <div class="col-lg-5">
+        <div class="col-lg-5 col-md-5">
+	        <div class="mb-5 mb-0">
+	        	                        @productArt@
+
+	    </div>
+
             <!-- Rating -->
             <div class="d-flex align-items-center small mb-5">
                 <div class="rating mr-2">
@@ -85,9 +89,9 @@
                 <div class="media-body text-body small">
                     <a class="text-primary addToCompareList" data-uid="@productUid@" href="#">{В сравнение}</a>
                 </div>
-                @productArt@
             </div>
             <!-- Конец блока Сравнить -->
+ @wholesaleInfo@
 
             <!-- Цена -->
             <div class="d-flex align-items-center mb-2" itemprop="offers" itemscope itemtype="http://schema.org/Offer">
@@ -178,7 +182,7 @@
 <div class="container">
 
     <div class="row">
-        <div class="col-md-7 mb-6 mb-md-0">
+        <div class="col-md-7 mb-6 ">
             <div class="@php __hide('productDes'); php@">
                 <h4>{Описание}</h4>
                 <div class="pr-lg-4">
@@ -202,7 +206,7 @@
             </div>
         </div>
 
-        <div class="col-md-5 mb-4 mb-md-0">
+        <div class="col-md-5 mb-4">
             <div class="@php __hide('vendorDisp'); php@">
                 <h4>{Характеристики}</h4>
 
@@ -222,7 +226,49 @@
             @productFilesEnd@
 
         </div>
+        
+    		</div>
+
         <!-- End Product Description Section -->
+		<div class="w-lg-100 border-top space-2 mx-lg-auto @php __hide('productlist_list'); php@">
+			<div class="mb-3 mb-sm-5">
+				<h4>{Похожие товары}</h4> 
+			</div>
+		<!-- Slick Carousel -->
+        <div class="js-slick-carousel slick slick-gutters-3 slick-equal-height z-index-2 mx-md-auto mb-5 mb-md-9" data-hs-slick-carousel-options='{
+               "slidesToShow": 5,
+				"slidesToScroll": 3,
+	           "dots": true,
+               "dotsClass": "slick-pagination",
+               "responsive": [{
+                 "breakpoint": 1200,
+                   "settings": {
+                     "slidesToShow": 5
+                   }
+                 }, {
+                 "breakpoint": 992,
+                 "settings": {
+                   "slidesToShow": 4
+                   }
+                 }, {
+                 "breakpoint": 768,
+                 "settings": {
+                   "slidesToShow": 3
+                   }
+                 }, {
+                 "breakpoint": 554,
+                 "settings": {
+                   "slidesToShow": 2,
+	               "slidesToScroll": 2
+
+                 }
+               }]
+             }'>
+
+		@productlist_list@
+        </div>
+        <!-- End Slick Carousel -->
+        
 
         <!-- Модальное окно отзыва-->
         <div class="modal fade new-modal" id="reviewModal" tabindex="-1" role="dialog" aria-labelledby="{Оставить отзыв}" aria-hidden="true">

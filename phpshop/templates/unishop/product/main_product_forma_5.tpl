@@ -1,5 +1,5 @@
-            <div class="col-md-3 col-sm-3 product-block-wrapper">
-                 <div class="product-block">
+            <div class="col-auto col-md-3 col-sm-4 col-xs-6 product-block-wrapper">
+    <div class="product-block">
         <div class="product-block-top">
             <div class="product-block-image">
                 <div class="sale-icon-content">
@@ -20,17 +20,17 @@
             @previewSorts@
             <h4 class="product-block-price">
                 <span class="price-old">@productPriceOld@</span>
-                <span class="price-new">@productPrice@ <span class="rubznak">@productValutaName@</span></span>
+                <span class="price-new">@parentLangFrom@ @productPrice@ <span class="rubznak">@productValutaName@</span></span>
             </h4>
 
             <span class="product-sklad-list-block">@productSklad@
 			            @ComStartNotice@
-<div —Ålass="outStock">@productOutStock@</div>
+<div Òlass="outStock">@productOutStock@</div>
 @ComEndNotice@
 			</span>
             <div class="product-block-button">
-                <button class="btn btn-wishlist addToCompareList hidden-md" data-uid="@productUid@" data-title="{‚Äî—Ä–∞–≤–Ω–∏—Ç—å}" data-placement="top" data-toggle="tooltip"><i class="fa fa-bar-chart-o"></i></button>
-                <button class="btn btn-wishlist addToWishList" data-uid="@productUid@" data-title="{—ú—Ç–ª–æ–∂–∏—Ç—å}" data-placement="top" data-toggle="tooltip"><i class="feather iconz-heart"></i></button>
+                <button class="btn btn-wishlist addToCompareList" data-uid="@productUid@" data-title="{—‡‚ÌËÚ¸}" data-placement="top" data-toggle="tooltip"><i class="fa fa-bar-chart-o"></i></button>
+                <button class="btn btn-wishlist addToWishList" data-uid="@productUid@" data-title="{ŒÚÎÓÊËÚ¸}" data-placement="top" data-toggle="tooltip"><i class="feather iconz-heart"></i></button>
                 <a class="btn btn-cart @elementCartOptionHide@" href="/shop/UID_@productUid@.html">
                     <span>@productSale@</span>
                 </a>
@@ -38,7 +38,7 @@
                     <span>@productSale@</span>
                 </button>
                 <a class="btn btn-cart @elementNoticeHide@" href="/users/notice.html?productId=@productUid@" title="@productNotice@">
-                    {‚Äù–≤–µ–¥–æ–º–∏—Ç—å}
+                    {”‚Â‰ÓÏËÚ¸}
                 </a>
             </div>
         </div>

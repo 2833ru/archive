@@ -478,9 +478,11 @@ img.logo{
   border: none;
 }
 
+/*
 body.modal-open{
     margin-right: -17px;
 }
+*/
 
 #visualcart .avatar-img{
     max-width: 50px;
@@ -489,3 +491,32 @@ body.modal-open{
 .cookie-message{
     z-index:100000;
 }
+
+
+
+
+.card-img-bottom, .card-img-top {
+max-height: 17rem;
+max-width: -webkit-min-content;
+}
+
+.form-control {
+    margin-bottom: 10px;
+}
+
+.slick-slide .img-fluid {
+max-height: 800px;
+margin: auto;
+}
+
+.banner-image p {
+	margin: 0px;
+}
+
+.w-lg-60 img {
+    height: auto;
+    vertical-align: middle;
+    border-style: none;
+    max-width: 100%;
+}
+

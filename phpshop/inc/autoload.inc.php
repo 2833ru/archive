@@ -10,7 +10,7 @@ if (strstr($_SERVER['REQUEST_URI'], 'index.php')) {
     exit();
 }
 
-// Шаблон дизайна по умолчанмю
+// Шаблон дизайна по умолчанию
 $PHPShopCoreElement = new PHPShopCoreElement();
 $PHPShopCoreElement->init('skin', false);
 $PHPShopCoreElement->init('checkskin');
@@ -35,6 +35,13 @@ $PHPShopModules->doLoad();
 foreach ($GLOBALS['SysValue']['autoload'] as $val)
     if (is_file($val))
         include_once($val);
+    
+// Мобильные устройства
+$mobil = new Mobile_Detect();
+if ($mobil->isMobile() or $mobil->isTablet()) {
+    define("isMobil", true);
+    define("isIOS", $mobil->version('iPad', $mobil::VERSION_TYPE_FLOAT) . $mobil->version('iPhone', $mobil::VERSION_TYPE_FLOAT));
+}   
 
 // JS настройки
 $PHPShopCoreElement->init('setjs');

@@ -92,7 +92,6 @@ $().ready(function () {
                 $('.navbar-action').toggleClass('navbar-fixed-top');
                 $('.up').toggleClass('hide');
             },
-            offset: '10%'
         });
 
     // Поиск

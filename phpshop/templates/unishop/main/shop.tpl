@@ -259,7 +259,7 @@
         <!--/ toTop -->
 
         <!-- Footer Section Starts -->
-        <footer class="visible-sm visible-md visible-lg" id="footer-area">
+        <footer id="footer-area">
             <!-- Footer Links Starts -->
             <div class="footer-links">
                 <!-- Container Starts -->

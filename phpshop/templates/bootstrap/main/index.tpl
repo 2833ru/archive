@@ -234,9 +234,9 @@
                         <h2>{Спецпредложения}</h2>
                     </div>
                     <div class="visible-xs visible-sm"> </div>
-                    <div class="template-product-list ">@specMain@</div>
+                    <div class="row">@specMain@</div>
 
-                    <div class="row">@leftCatalTable@</div>
+                    <div class="catalog-block">@leftCatalTable@</div>
 
                 </div>
             </div>

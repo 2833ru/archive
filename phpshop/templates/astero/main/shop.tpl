@@ -36,7 +36,9 @@
         <link href="@pageCss@" rel="stylesheet">
         <link id="bootstrap_theme" data-name="@php echo $_SESSION['skin']; php@" href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@css/@astero_theme@.css" rel="stylesheet">
         <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,700&display=swap&subset=cyrillic" rel="stylesheet">
-            <!-- Стикер-полоска -->
+        <!-- Header Section Starts -->
+        <header id="header-area">
+	        <!-- Стикер-полоска -->
             <div class="@php __hide('sticker_top'); php@">
                 <div class="top-banner @php __hide('sticker_close','cookie'); php@">
                     <div class="sticker-text">@sticker_top@</div>
@@ -44,8 +46,6 @@
                 </div>
             </div>
             <!-- /Стикер-полоска -->
-        <!-- Header Section Starts -->
-        <header id="header-area">
             <!-- Nested Container Starts -->
             <div class="container">
                 <!-- Header Top Starts -->
@@ -141,9 +141,6 @@
             </div>
             <!-- Nested Container Ends -->
 
-            <!-- Header Area Background Block Starts -->
-            <div class="header-area-background-block"></div>
-            <!-- Header Area Background Block Ends -->
         </header>
         <!-- Header Section Ends -->
 
@@ -152,7 +149,7 @@
             <!-- Nested Container Starts -->
             <div class="container">
                 <!-- Nav Header Starts -->
-                <div class="navbar-header">
+                <div class="navbar-header" style="z-index: 999999;">
 
                     <a class="navbar-brand visible-xs pull-right" href="tel:@telNumMobile@">
                         <span class="glyphicon glyphicon-phone"></span> @telNumMobile@
@@ -243,9 +240,6 @@
 
                 <div class="sidebar-fix-block  hidden-xs hidden-sm">
 
-                    <!-- Товар дня -->
-                    @productDay@
-                    <!-- Товар дня -->
                     <div class="side-heading"><a href="/page/">{Блог}</a></div>
                     <div class="list-group sidebar-nav">
                         @pageCatal@
@@ -284,17 +278,24 @@
             <div class="col-md-9 col-xs-12">
                 @DispShop@
                 @getPhotos@
+                
+                <div class="col-xs-12 @php __hide('now_buying'); php@ nowbuy-block">
+                    <div class="row">                
 
-            </div>
+                        <h4 class="heading">@now_buying@</h4>
+                        @nowBuy@
+                    </div>
+                </div>
             <div class="col-xs-12">
                 <div class="banner-block">
                     @banersDispHorizontal@
                 </div>
             </div>
 
-
+            </div>
             <!-- Primary Content Ends -->
         </div>
+
         <!-- Nested Row Ends -->
     </div>
     <!-- Main Container Ends -->
@@ -309,7 +310,7 @@
     @editor@
 
     <!-- Footer Section Starts -->
-    <footer class="visible-sm visible-md visible-lg" id="footer-area">
+    <footer id="footer-area">
         <!-- Footer Links Starts -->
         <div class="footer-links">
             <!-- Container Starts -->
@@ -320,6 +321,7 @@
                     <ul>
                         @bottomMenu@
                     </ul>
+                    @sticker_socfooter@
                 </div>
                 <!-- Information Links Ends -->
                 <!-- My Account Links Starts -->

@@ -3,6 +3,11 @@ var TABLE_EVENT = true;
 locale.icon_load = locale.file_load;
 
 $().ready(function () {
+    
+    // Блокировка помощника для URL
+    $('body').on('click', '#promtUrl', function () {
+        $('#bot').bootstrapToggle('off').bootstrapToggle('disable');
+    });
 
     // Рассчет скорости 
     $('body').on('change', '#export_imgload', function () {

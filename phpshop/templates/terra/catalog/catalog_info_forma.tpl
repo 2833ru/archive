@@ -13,7 +13,7 @@
 </div>
 <!-- Category Intro Content Ends -->
 
-<div class="row">@catalogList@</div>
+<div class="catalog-block">@catalogList@</div>
 
 <nav class="visible-xs">
   <ul class="pager">

@@ -2,10 +2,10 @@
 <a href="/shop/UID_@productDayId@.html">
 <div class="card shadow-soft p-4 transition-3d-hover h-100" >
     <span class="d-block small text-danger font-weight-bold text-cap">Товар дня</span>
-    <h4>@productDayName@</h4>
+    <h4 style="z-index: 9999;">@productDayName@</h4>
     <h3 class="display-4 mb-1">@productDayPrice@ <span class="rubznak">@productValutaName@</span></h3>  
-    <h4 class="text-danger"><strike>@productDayPriceN@<span class="rubznak">@productDayCurrency@</span></strike></h4>
-<img class="m-4 position-absolute bottom-0 right-0 w-sm-35 max-w-27rem rounded-lg" src="@productDayPicBig@" alt="Image Description">
+    <h4 class="text-danger" style="z-index: 9999;"><strike>@productDayPriceN@<span class="rubznak">@productDayCurrency@</span></strike></h4>
+<img class="m-4 position-absolute bottom-0 right-0 w-sm-35 max-w-27rem rounded-lg" src="@productDayPicBig@" alt="Товар дня @productDayName@">
     <!-- Countdown -->
     <div class="w-sm-60">
         <div class="row mx-n2 mb-3">

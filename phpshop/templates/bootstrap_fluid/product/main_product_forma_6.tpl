@@ -12,7 +12,7 @@
             </a>
 			
             <h5><a href="/shop/UID_@productUid@.html" title="@productNameClean@">@productName@</a></h5>
-            <h4 class="product-price">@productPrice@<span class="rubznak">@productValutaName@</span><span class=" price-old">@productPriceOld@</span></h4>
+            <h4 class="product-price">@parentLangFrom@ @productPrice@<span class="rubznak">@productValutaName@</span><span class=" price-old">@productPriceOld@</span></h4>
 								<div class="stock">
 @ComStartNotice@
 <div class="outStock">@productOutStock@</div>

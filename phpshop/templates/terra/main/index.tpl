@@ -185,12 +185,12 @@
 
                     <div class="tab-content">
                         <div id="newprod" class="tab-pane fade in active">
-                            <div class="products-list newitems-list">
+                            <div class="row products-list newitems-list">
                                 @specMainIcon@
                             </div>
                         </div>
                         <div id="specprod" class="tab-pane fade">
-                            <div class="products-list spec-list">
+                            <div class="row products-list spec-list">
                                 @specMain@
                             </div>
                         </div>
@@ -199,10 +199,9 @@
 
                     <!-- Popular Products Starts -->
                     <h2 class="product-head @php __hide('nowBuy'); php@">{Популярные товары}</h2>
-                    <div class="products-list nowbuy-list">
+                    <div class="row products-list nowbuy-list">
                         @nowBuy@
                     </div>
-                    <div class="top-col-banners text-center">@banersDispHorizontal@</div>
 
                     <!-- Popular Products Ends -->
                     <div class="row">
@@ -213,13 +212,13 @@
                             <div>@mainContent@</div></div>
 
                     </div>
-                    <div>@leftCatalTable@</div>
+                    <div class="catalog-block">@leftCatalTable@</div>
 
 
                 </div>
 
             </div><!-- /row -->
-
+                    <div class="top-col-banners text-center">@banersDispHorizontal@</div>
         </div>
         <!-- Main Container Ends -->
         
@@ -244,11 +243,6 @@
                     <div class="row">
                         <div class="col-md-3 col-sm-6 col-xs-12">
                             <a id="logo-footer @php __hide('logo'); php@" href="/" title="@name@"><img src="@logo@" alt="" class="img-responsive" /></a>
-                            <div class="footer-social">
-                                <a class="social-button" href="#"><i class="fa fa-vk" aria-hidden="true"></i></a>
-                                <a class="social-button" href="#"><i class="fa fa-facebook" aria-hidden="true"></i></a>
-                                <a class="social-button" href="#"><i class="fa fa-twitter" aria-hidden="true"></i></a>
-                            </div>
                         </div>
 
 
@@ -257,6 +251,7 @@
                             <ul>
                                 @bottomMenu@
                             </ul>
+                            @sticker_socfooter@
                         </div>
 
 

@@ -49,7 +49,7 @@ function getFileInfo($file) {
         if ($GLOBALS['SysValue']['upload']['version'] > $file)
             $menu = array('restore', '|', 'log', 'id' => $file);
         else {
-            $menu = array('log', '|', 'id' => $file);
+            $menu = array('log', 'id' => $file);
             $version = '<span class="text-danger">' . $version . '</span>';
         }
 

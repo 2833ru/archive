@@ -291,7 +291,7 @@
         <!--/ toTop -->
         <!-- Top brands -->
         <!-- Footer Section Starts -->
-        <footer class="hidden-sm visible-md visible-lg" id="footer-field">
+        <footer id="footer-field">
             <!-- Footer Links Starts -->
             <div class="footer-link">
                 <!-- Container Starts -->

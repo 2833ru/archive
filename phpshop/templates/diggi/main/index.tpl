@@ -223,16 +223,6 @@
                     <!-- Featured Products Starts -->
                     <section class="products-list @php __hide('specMainIcon'); php@">
                         <div class="swiper-slider-wrapper">
-                            <!-- Heading Starts -->
-                            <h2 class="product-head page-header swiper-title">{Новинки}</h2>
-                            <!-- Heading Ends -->
-                            <!-- Products Row Starts -->
-                            <!-- Product Starts -->
-                            <div class="swiper-container spec-main-icon-slider">
-                                <div class="swiper-wrapper">
-                                    @specMainIcon@
-                                </div>
-                            </div>
                             <div class="swiper-button-prev-block">
                                 <div class="swiper-button-prev btn-prev1">
                                     <span class="glyphicon glyphicon-chevron-left"></span>
@@ -241,6 +231,16 @@
                             <div class="swiper-button-next-block">
                                 <div class="swiper-button-next btn-next1">
                                     <span class="glyphicon glyphicon-chevron-right"></span>
+                                </div>
+                            </div>
+                            <!-- Heading Starts -->
+                            <h2 class="product-head page-header swiper-title">{Новинки}</h2>
+                            <!-- Heading Ends -->
+                            <!-- Products Row Starts -->
+                            <!-- Product Starts -->
+                            <div class="swiper-container spec-main-icon-slider">
+                                <div class="swiper-wrapper">
+                                    @specMainIcon@
                                 </div>
                             </div>
                             <!-- Product Ends -->
@@ -254,15 +254,6 @@
                     <!-- Latest Products Starts -->
                     <section class="products-list @php __hide('specMain'); php@">
                         <div class="swiper-slider-wrapper">
-                            <!-- Heading Starts -->
-                            <h2 class="product-head page-header swiper-title">{Спецпредложения}</h2>
-                            <!-- Heading Ends -->
-                            <!-- Products Row Starts -->
-                            <div class="swiper-container spec-main-slider">
-                                <div class="swiper-wrapper">
-                                    @specMain@
-                                </div>
-                            </div>
                             <div class="swiper-button-prev-block">
                                 <div class="swiper-button-prev btn-prev2">
                                     <span class="glyphicon glyphicon-chevron-left"></span>
@@ -273,23 +264,24 @@
                                     <span class="glyphicon glyphicon-chevron-right"></span>
                                 </div>
                             </div>
+                            <!-- Heading Starts -->
+                            <h2 class="product-head page-header swiper-title">{Спецпредложения}</h2>
+                            <!-- Heading Ends -->
+                            <!-- Products Row Starts -->
+                            <div class="swiper-container spec-main-slider">
+                                <div class="swiper-wrapper">
+                                    @specMain@
+                                </div>
+                            </div>
                             <!-- Products Row Ends -->
                         </div>     
                     </section>
-                    <div class="row">@leftCatalTable@</div>
+                    <div class="catalog-block" style="margin-bottom: 10px;">@leftCatalTable@</div>
 
 
                     <section class="products-list @php __hide('now_buying'); php@">
                         <div class="swiper-slider-wrapper">
                             <!-- Heading Starts -->
-                            <h2 class="product-head page-header swiper-title">@now_buying@</h2>
-                            <!-- Heading Ends -->
-                            <!-- Products Row Starts -->
-                            <div class="swiper-container nowBuy">
-                                <div class="swiper-wrapper">
-                                    @nowBuy@
-                                </div>
-                            </div>
                             <div class="swiper-button-prev-block">
                                 <div class="swiper-button-prev btn-prev3">
                                     <span class="glyphicon glyphicon-chevron-left"></span>
@@ -298,6 +290,14 @@
                             <div class="swiper-button-next-block">
                                 <div class="swiper-button-next btn-next3">
                                     <span class="glyphicon glyphicon-chevron-right"></span>
+                                </div>
+                            </div>
+                            <h2 class="product-head page-header swiper-title">@now_buying@</h2>
+                            <!-- Heading Ends -->
+                            <!-- Products Row Starts -->
+                            <div class="swiper-container nowBuy">
+                                <div class="swiper-wrapper">
+                                    @nowBuy@
                                 </div>
                             </div>
                             <!-- Products Row Ends -->
@@ -323,7 +323,7 @@
         <!--/ toTop -->
 
         <!-- Footer Section Starts -->
-        <footer class="visible-sm visible-md visible-lg" id="footer-area">
+        <footer id="footer-area">
             <!-- Footer Links Starts -->
             <div class="footer-links">
                 <!-- Container Starts -->

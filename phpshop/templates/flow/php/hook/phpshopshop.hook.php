@@ -380,17 +380,16 @@ function template_image_gallery($obj, $array) {
             
             $name = $row['name'];
             $name_s = str_replace(".", "s.", $name);
-            $name_bigstr = str_replace(".", "_big.", $name);
-
-            // Подбор исходного изображения
-            if (!$obj->PHPShopSystem->ifSerilizeParam('admoption.image_save_source') or ! file_exists($_SERVER['DOCUMENT_ROOT'] . $name_bigstr))
-                $name_bigstr = $name;
 
             if (!file_exists($_SERVER['DOCUMENT_ROOT'] . $name_s)) {
                 $name_s = $name;
             }
+            
+            // Поддержка Webp
+            $name = $obj->setImage($name);
+            $name_s = $obj->setImage($name_s);
 
-            $heroSlider .= '<div class="js-slide"><img class="img-fluid w-100 rounded-lg" src="' . $name . '" alt="' . $productTitle . '"></div>';
+            $heroSlider .= '<div class="js-slide"><img class="img-fluid rounded-lg" src="' . $name . '" alt="' . $productTitle . '"></div>';
             $heroSliderNav .= '<div class="js-slide p-1" data-big-image="' . $name . '"><a class="js-slick-thumb-progress d-block avatar avatar-circle border p-1" href="javascript:;"><img class="avatar-img" src="' . $name_s . '" alt="' . $productTitle . '"></a></div>';
 
             $i++;

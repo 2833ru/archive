@@ -1,4 +1,4 @@
-<div class="grid-item" itemscope itemtype="https://schema.org/Article">
+<div class="grid-item col-md-4 col-lg-4 col-sm-4 col-xs-6" itemscope itemtype="https://schema.org/Article">
     <meta itemprop="author" content="@company@">
     <meta itemprop="image" content="@pageIcon@">
     <div itemprop="publisher" itemscope itemtype="https://schema.org/Organization">

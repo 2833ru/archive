@@ -458,7 +458,7 @@ $(document).ready(function () {
 
     $(".main-navbar-top > li").removeClass('active');
 
-    mainNavMenuFix()
+    // mainNavMenuFix()
     setTimeout(function () {
         $('.swiper-wrapper').css("opacity", "1");
         setEqualHeight('.product-img-centr');

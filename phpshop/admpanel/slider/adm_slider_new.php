@@ -117,6 +117,12 @@ function iconAdd() {
         else
             $thumb->resize($img_tw, $img_th);
 
+        // Сохранение в webp
+        if ($PHPShopSystem->ifSerilizeParam('admoption.image_webp_save')) {
+            $thumb->setFormat('WEBP');
+            $file = str_replace(['.jpg', '.JPG', '.png', '.PNG', '.gif', '.GIF'], '.webp', $file);
+        }
+
         $thumb->save($_SERVER['DOCUMENT_ROOT'] . $file);
     }
 

@@ -110,8 +110,7 @@ function actionSave() {
                 $error_line .= '[Line ' . $k . '] ';
                 $result_error_tracert .= 'Запрос: ' . $v . '
 Ошибка: ' . mysqli_error($link_db);
-            } else
-                @mysqli_free_result($result);
+            } 
         }
 
         // Удаление файла после выполнения

@@ -387,10 +387,14 @@ function template_image_gallery($obj, $array) {
             $small = $big;
         }
 
+        // Поддержка Webp
+        $small = $obj->setImage($small);
+        $big = $obj->setImage($big);
+
         $slides .= sprintf('<div class="%s" data-elem="slide" data-options="thumb:%s">
                          <img src="%s" data-elem="bg" alt="%s" title="%s" class="slider-img hide">
                      </div>', $index === 0 ? 'heroSlide' : '', $small, $big, $productTitle, $productTitle);
-        $thumbs .= sprintf('<div class="bigThumb" style="background-image:url(%s)" data-elem="thumb" data-big-image="%s" 
+        $thumbs .= sprintf('<div class="bigThumb" style="background-image:url(\'%s\')" data-elem="thumb" data-big-image="%s" 
                   data-options="sliderId:productSlider; index:%s; offCss:{className:bigThumb off}; onCss:{className:bigThumb on}"> </div>', $small, $big, $index);
 
         $controls .= sprintf('<div class="buttonThumb" data-elem="thumb" data-options="sliderId:productSlider; index:%s;"> </div>', $index);

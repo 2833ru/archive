@@ -112,10 +112,10 @@ function query_filter($obj) {
 
                 $obj->set('productSortB', 'sortActiv');
                 break;
-            case(3): $order = array('order' => 'num' . $order_direction . ", items desc");
+            case(3): $order = array('order' => 'num' . $order_direction . ", items ".$order_direction);
                 $obj->set('productSortC', 'sortActiv');
                 break;
-            default: $order = array('order' => 'num' . $order_direction . ", items desc");
+            default: $order = array('order' => 'num' . $order_direction . ", items ".$order_direction);
                 $obj->set('productSortC', 'sortActiv');
                 break;
         }

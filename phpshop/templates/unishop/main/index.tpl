@@ -190,12 +190,11 @@
                     <div class="shop-description">
                         <h2 class="main-page-title">@mainContentTitle@</h2>
                         <div class="description-text">@mainContent@</div>
-                        <i class="feather iconz-chevron-down show-shop-description"></i>
                     </div>
                 </div>
                 <div class="col-xs-12 @php __hide('specMainIcon'); php@">
                     <h2 class="main-page-title"><a href="/newtip/" title="{Все новинки}">{Новинки}</a></h2>
-                    <div class="owl-carousel spec-main-icon">
+                    <div class="owl-carousel spec-main-icon" loading="lazy">
                         @specMainIcon@
                     </div>
                 </div>
@@ -228,7 +227,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="row">@leftCatalTable@</div>
+                <div class="row catalog-block">@leftCatalTable@</div>
             </div>
         </div>
     </section>
@@ -241,7 +240,7 @@
     <!--/ toTop -->
 
     <!-- Footer Section Starts -->
-    <footer class="visible-sm visible-md visible-lg" id="footer-area">
+    <footer id="footer-area">
         <!-- Footer Links Starts -->
         <div class="footer-links">
             <!-- Container Starts -->

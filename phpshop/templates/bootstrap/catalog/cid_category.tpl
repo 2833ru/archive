@@ -1,4 +1,4 @@
-<div class="col-xs-12 col-sm-4 col-md-4">
+<div class="catalog-wrap">
     <a href="/shop/CID_@podcatalogId@.html" title="@podcatalogName@">
         <div class="catalog-table-block fix" >
             <div class="catalog-img"><img src="@podcatalogIcon@" alt=""></div>

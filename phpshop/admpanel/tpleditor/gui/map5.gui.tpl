@@ -1,3 +1,5 @@
+<script src="./tpleditor/gui/holder.min.js" data-rocketoptimized="false" data-cfasync="false"></script>
+
 <div class="template-map">
     <div class="panel panel-default">
         <div class="panel-heading">
@@ -22,7 +24,7 @@
         <div class="panel-body">
 
             <div class="row">
-                <div class="col-md-3"><img src="http://via.placeholder.com/180x35/FFFFFF/?text=Р›РѕРіРѕС‚РёРї" class="template-image" @logo@></div>
+                <div class="col-md-3"><img src="holder.js/180x35?text=Логотип" class="template-image" @logo@></div>
                 <div class="col-md-5">
                     <h4 @telNum@ class="pull-left">Тел: 8 800 105-85-89</h4><h4 @telNum2@ class="pull-left">, 495 105-85-90</h4>
                 </div>
@@ -64,7 +66,7 @@
 
             <div class="panel panel-default" @imageSlider@>
                 <div class="panel-body text-center">
-                    <img src="http://via.placeholder.com/850x175/EEEEEE/?text=РЎР»Р°Р№РґРµСЂ">
+                    <img src="holder.js/850x175/?text=Слайдер">
                 </div>
             </div>
 
@@ -94,7 +96,7 @@
 
             <div class="panel panel-default" @banersDisp@>
                 <div class="panel-body text-center">
-                    <img src="http://via.placeholder.com/550x75/EEEEEE/?text=Р‘Р°РЅРЅРµСЂ">
+                    <img src="holder.js/550x75/EEEEEE/?text=Баннер">
                 </div>
             </div>
 
@@ -163,7 +165,7 @@
             <div class="panel panel-default" @mainContent@>
                 <div class="panel-heading">Приветствие</div>
                 <div class="panel-body">
-                    Представляем PHPShop 6 - новую версию интернет-магазина, в которой мы соединили современные веб-технологии и наш 15-летний опыт создания и поддержки интернет-магазинов. Начинка PHPShop 6 - это HTML5, Bootstrap, JQuery, позволяющие создавать качественные, функциональные проекты с современным и адаптивным дизайн
+                    Представляем PHPShop 6 - новую версию интернет-магазина, в которой мы соединили современные веб-технологии и наш опыт создания и поддержки интернет-магазинов. Начинка PHPShop 6 - это HTML5, Bootstrap, JQuery, позволяющие создавать качественные, функциональные проекты с современным и адаптивным дизайн
                 </div>
             </div>
 
@@ -215,5 +217,5 @@
         </div>
     </div>
 
-    <div class="well well-lg"><span @company@>© Продавец</span>, <span @telNum@>Тел: (495)111-22-33</span>, <span @streetAddress@>Адрес: Москва, ул. Физическая, дом 1.</span><span @button@  class="pull-right template-image"><img src="http://via.placeholder.com/80x35/FFFFFF/?text=Yandex"> <img src="http://via.placeholder.com/80x35/FFFFFF/?text=Google" ></span></div>
+    <div class="well well-lg"><span @company@>© Продавец</span>, <span @telNum@>Тел: (495)111-22-33</span>, <span @streetAddress@>Адрес: Москва, ул. Физическая, дом 1.</span><span @button@  class="pull-right template-image"><img src="holder.js/80x35/FFFFFF/?text=Yandex"> <img src="holder.js/80x35/FFFFFF/?text=Google" ></span></div>
 </div>

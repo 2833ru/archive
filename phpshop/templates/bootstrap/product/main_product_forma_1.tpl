@@ -14,7 +14,7 @@
                 <h3 class="media-heading"><a href="/shop/UID_@productUid@.html" title="@productNameClean@">@productName@</a></h3>
                 <p>@productDes@</p>
                 @previewSorts@
-            <h4 class="product-price">@productPrice@<span class="rubznak">@productValutaName@</span><sup class="text-muted">@productPriceOld@</sup></h4>
+            <h4 class="product-price">@parentLangFrom@ @productPrice@<span class="rubznak">@productValutaName@</span><sup class="text-muted">@productPriceOld@</sup></h4>
 								<div class="stock">
 @ComStartNotice@
 <div class="outStock">@productOutStock@</div>

@@ -325,8 +325,6 @@ function actionStart() {
 
     // Õàğàêòåğèñòèêè
     $Tab_sorts = $PHPShopGUI->loadLib('tab_sorts', $data);
-    
-    
 
     // Çàãîëîâêè
     $Tab_header = $PHPShopGUI->loadLib('tab_headers', $data);
@@ -711,7 +709,7 @@ function fotoAdd() {
     if (!empty($_FILES['file']['name'])) {
         $_FILES['file']['ext'] = PHPShopSecurity::getExt($_FILES['file']['name']);
         $_FILES['file']['name'] = PHPShopString::toLatin(str_replace('.' . $_FILES['file']['ext'], '', PHPShopString::utf8_win1251($_FILES['file']['name']))) . '.' . $_FILES['file']['ext'];
-        if (in_array($_FILES['file']['ext'], array('gif', 'png', 'jpg', 'jpeg'))) {
+        if (in_array($_FILES['file']['ext'], array('gif', 'png', 'jpg', 'jpeg','webp'))) {
             if (move_uploaded_file($_FILES['file']['tmp_name'], $_SERVER['DOCUMENT_ROOT'] . $path . $_FILES['file']['name'])) {
                 $file = $_SERVER['DOCUMENT_ROOT'] . $path . $_FILES['file']['name'];
                 $file_name = $_FILES['file']['name'];
@@ -795,6 +793,12 @@ function fotoAdd() {
                 $thumb->createWatermarkText($watermark_text, $PHPShopSystem->getSerilizeParam('admoption.watermark_text_size'), $_SERVER['DOCUMENT_ROOT'] . $GLOBALS['SysValue']['dir']['dir'] . '/phpshop/lib/font/' . $PHPShopSystem->getSerilizeParam('admoption.watermark_text_font') . '.ttf', $PHPShopSystem->getSerilizeParam('admoption.watermark_right'), $PHPShopSystem->getSerilizeParam('admoption.watermark_bottom'), $PHPShopSystem->getSerilizeParam('admoption.watermark_text_color'), $PHPShopSystem->getSerilizeParam('admoption.watermark_text_alpha'), 0, $PHPShopSystem->getSerilizeParam('admoption.watermark_center_enabled'));
         }
 
+        // Ñîõğàíåíèå â webp
+        if ($PHPShopSystem->ifSerilizeParam('admoption.image_webp_save')) {
+            $thumb->setFormat('WEBP');
+            $name_s = str_replace([".png", ".jpg", ".jpeg", ".gif", ".PNG", ".JPG", ".JPEG", ".GIF"], '.webp', $name_s);
+        }
+
         $thumb->save($_SERVER['DOCUMENT_ROOT'] . $path . $name_s);
 
         // Áîëüøîå èçîáğàæåíèå
@@ -818,10 +822,22 @@ function fotoAdd() {
                 $thumb->createWatermarkText($watermark_text, $PHPShopSystem->getSerilizeParam('admoption.watermark_text_size'), $_SERVER['DOCUMENT_ROOT'] . $GLOBALS['SysValue']['dir']['dir'] . '/phpshop/lib/font/' . $PHPShopSystem->getSerilizeParam('admoption.watermark_text_font') . '.ttf', $PHPShopSystem->getSerilizeParam('admoption.watermark_right'), $PHPShopSystem->getSerilizeParam('admoption.watermark_bottom'), $PHPShopSystem->getSerilizeParam('admoption.watermark_text_color'), $PHPShopSystem->getSerilizeParam('admoption.watermark_text_alpha'), 0, $PHPShopSystem->getSerilizeParam('admoption.watermark_center_enabled'));
         }
 
+        // Ñîõğàíåíèå â webp
+        if ($PHPShopSystem->ifSerilizeParam('admoption.image_webp_save')) {
+            $thumb->setFormat('WEBP');
+            $name = str_replace(['.jpg', '.JPG', '.png', '.PNG', '.gif', '.GIF'], '.webp', $name);
+        }
+
         $thumb->save($_SERVER['DOCUMENT_ROOT'] . $path . $name);
 
         // Èñõîäíîå èçîáğàæåíèå
         if (!empty($image_save_source)) {
+
+            // Ñîõğàíåíèå â webp
+            if ($PHPShopSystem->ifSerilizeParam('admoption.image_webp_save')) {
+                $thumb->setFormat('WEBP');
+                $name_big = str_replace(['.jpg', '.JPG', '.png', '.PNG', '.gif', '.GIF'], '.webp', $name_big);
+            }
 
             if (!$PHPShopSystem->ifSerilizeParam('admoption.image_save_name')) {
                 $file_big = $_SERVER['DOCUMENT_ROOT'] . $path . $name_big;
@@ -854,7 +870,6 @@ function fotoAdd() {
         $insert['parent_new'] = $_POST['rowID'];
         $insert['name_new'] = $path . $name;
         $insert['pic_small_new'] = $path . $name_s;
-        //$insert['info_new'] = $_POST['info_img_new'][0];
         $PHPShopOrm->insert($insert);
         return $insert;
     }

@@ -241,6 +241,7 @@
 
                 @rightMenu@
                 @leftMenu@
+                
                 <div class="panel panel-default  hidden-xs  hidden-sm @php __hide('productlist_list'); php@">
                     <div class="panel-heading">
                         <div class="panel-title">{Похожие товары}</div>
@@ -262,7 +263,17 @@
             <div class="bar-padding-top-fix visible-xs visible-sm"></div>
             <div class="col-md-9 col-xs-12 main">
                 @DispShop@
-                @getPhotos@					
+                @getPhotos@	
+                
+        <div class="row">
+            <div class="col-xs-12 @php __hide('now_buying'); php@">
+                <h2 class="page-header">@now_buying@</h2>
+                <div class="row">@nowBuy@</div>
+            </div>
+        </div>
+
+        <div class="text-center banner">@banersDispHorizontal@</div>
+                				
             </div>
 
         </div>
@@ -273,17 +284,8 @@
             <a href="#" id="toTop"><span id="toTopHover"></span>{Наверх}</a>
         </div>
         <!--/ toTop -->
-        <div class="text-center banner">@banersDispHorizontal@</div>
 
         @editor@
-
-        <div class="row">
-            <div class="col-xs-12 @php __hide('now_buying'); php@">
-                <h2 class="page-header">@now_buying@</h2>
-                @nowBuy@
-            </div>
-        </div>
-
 
         <footer class="footer well ">
             <div class="row">

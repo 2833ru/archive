@@ -8,15 +8,15 @@ function template_CID_Product($obj, $data, $rout) {
 
         // Âèðòóàëüíûå êàòàëîãè
         $obj->cat_template = 'sortñattemplatehook';
-        
-        if(empty($_GET['gridChange']))
-            $_GET['gridChange']=null;
-        
-        if(empty($_GET['s']))
-            $_GET['s']=null;
-        
-        if(empty($_GET['f']))
-            $_GET['f']=null;
+
+        if (empty($_GET['gridChange']))
+            $_GET['gridChange'] = null;
+
+        if (empty($_GET['s']))
+            $_GET['s'] = null;
+
+        if (empty($_GET['f']))
+            $_GET['f'] = null;
 
         switch ($_GET['gridChange']) {
             case 1:
@@ -372,7 +372,12 @@ function template_image_gallery($obj, $array) {
                 $name_s = $name;
             }
 
-            $bxslider .= '<div><a class href="#"><img src="' . $name . '" title="' . $array['name'] . '" alt="' .$productTitle . '" /></a></div>';
+            // Ïîääåðæêà Webp
+            $name = $obj->setImage($name);
+            $name_s = $obj->setImage($name_s);
+            $name_bigstr = $obj->setImage($name_bigstr);
+
+            $bxslider .= '<div><a class href="#"><img src="' . $name . '" title="' . $array['name'] . '" alt="' . $productTitle . '" /></a></div>';
             $bxsliderbig .= '<li><a class href=\'#\'><img src=\'' . $name_bigstr . '\' title=\'' . $productTitle . '\' alt=\'' . $productTitle . '\'></a></li>';
             $bxpager .= '<a data-slide-index=\'' . $i . '\' href=\'\'><img class=\'img-thumbnail\'  src=\'' . $name_s . '\' data-big-image="' . $name . '"></a>';
             $i++;
@@ -381,7 +386,7 @@ function template_image_gallery($obj, $array) {
 
         if ($i < 2)
             $bxpager = null;
-        
+
         $obj->set('productFotoList', '<img itemprop="image" content="http://' . $_SERVER['SERVER_NAME'] . $array['pic_big'] . '" class="bxslider-pre" alt="' . $array['name'] . '" src="' . $array['pic_big'] . '" /><div class="bxslider hide bigslider">' . $bxslider . '</div><div class="bx-pager">' . $bxpager . '</div>');
         $obj->set('productFotoListBig', '<ul class="bxsliderbig" data-content="' . $bxsliderbig . '" data-page="' . $bxpager . '"></ul><div class="bx-pager-big">' . $bxpager . '</div>');
         $obj->set('productSliderOneImage', sprintf('<img class="one-image-slider" src="%s" alt="%s" title="%s"/>', !empty($array['pic_big']) ? $array['pic_big'] : $data[0]['name'], $productTitle, $productTitle));

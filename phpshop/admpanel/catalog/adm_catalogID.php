@@ -220,10 +220,10 @@ function actionStart() {
     $Tab_info .= $PHPShopGUI->setField('Дополнительные каталоги', $tree_select_dop, 1, 'Подкаталоги одновременно выводятся в нескольких каталогах.');
 
     $Tab1 = $PHPShopGUI->setCollapse('Информация', $Tab_info);
-    
+
     // Цвет
     $Tab_icon = $PHPShopGUI->setField("Инверсия цвета текста", $PHPShopGUI->setInputText(null, "color_new", (int) $data['color'], 100, '%'));
-    
+
     // Иконка
     $Tab_icon .= $PHPShopGUI->setField("Изображение", $PHPShopGUI->setIcon($data['icon'], "icon_new", false));
 
@@ -488,6 +488,13 @@ function iconAdd() {
             $thumb->adaptiveResize($img_tw, $img_th);
         else
             $thumb->resize($img_tw, $img_th);
+
+        // Сохранение в webp
+        if ($PHPShopSystem->ifSerilizeParam('admoption.image_webp_save')) {
+            $thumb->setFormat('WEBP');
+            $file = str_replace(['.jpg', '.JPG', '.png', '.PNG', '.gif', '.GIF'], '.webp', $file);
+        }
+
         $thumb->save($_SERVER['DOCUMENT_ROOT'] . $file);
     }
 

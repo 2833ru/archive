@@ -25,12 +25,7 @@ $PHPShopModules = new PHPShopModules($_classPath . "modules/");
 // Подключение хука
 function loadHooks() {
 
-    // ShopBuilder Lite
-    if (empty($GLOBALS['option']['shopbuilder']))
-        $path = "hook";
-    else
-        $path = "../phpshop/templates/1cManager/hook";
-
+    $path = "hook";
     if (@$dh = opendir('hook')) {
         while (($file = readdir($dh)) !== false) {
             $fstat = explode(".", $file);

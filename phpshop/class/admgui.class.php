@@ -196,8 +196,14 @@ class PHPShopGUI {
         if (!empty($option['server']))
             $add .= '<button type="button" class="btn btn-default" id="server" data-return="return=' . $id . '" data-toggle="modal" data-target="#elfinderModal" data-path="' . $option['server'] . '">' . $this->__('Сервер') . '</button>';
 
-        if (!empty($option['url']))
-            $add .= '<button type="button" class="btn btn-default" id="promtUrl" data-target="' . $id . '">URL</button><input type="hidden" name="furl" id="furl" value="0">';
+        if (!empty($option['url'])){
+            
+            if(stristr($data,'http'))
+                    $value = $data;
+            else $value="";
+                    
+            $add .= '<button type="button" class="btn btn-default" id="promtUrl" data-target="' . $id . '">URL</button><input type="hidden" name="furl" id="furl" value="'.$value.'">';
+        }
 
 
         if (empty($option['view']))
@@ -2441,7 +2447,7 @@ class PHPShopInterface extends PHPShopGUI {
             $options = json_decode($_COOKIE['check_memory'], true);
         }
 
-        if (empty($options) or ! is_array($options) or count($options['catalog.option']) < 3) {
+        if (empty($options) or !is_array($options['catalog.option']) or count($options['catalog.option']) < 3) {
             $options = [
                 'catalog.option' => [
                     'icon' => 1,

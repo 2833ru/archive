@@ -229,7 +229,6 @@ h6{
 .header-bottom #logo img {
     max-width: 165px;
     max-height: 100%;
-    min-height: 80px;
 }
 .header-menu-wrapper {
     position: relative;
@@ -461,7 +460,6 @@ max-width: 33%;
     font-size: 40px;
 }
 .product-block {
-    padding: 18px;
     border: 1px solid #e1e7ec;
     margin-top: 4px;
     margin-bottom: 4px;
@@ -486,7 +484,7 @@ max-width: 33%;
 .sale-icon-content {
     position: absolute;
     display: block;
-    top: -9px;
+    top: 2px;
     left: 0px;
     width: 100%;
 }
@@ -528,9 +526,6 @@ max-width: 33%;
 .template-product-list.products-list .row {
     margin-left: -5px;
     margin-right: -5px;
-}
-.product-block {
-    margin-bottom: 30px;
 }
 .product-block-img-link {
     height: 145px;
@@ -4194,7 +4189,14 @@ thead td#allspecwhite {
 }
  .catalog-table-block:hover{box-shadow: 0 0 4px rgba(0, 0, 0, 0.4);}
 
-.catalog-img{width:100%;text-align:right; display:flex; align-items:flex-end; justify-content:flex-end;height:130px;}
+.catalog-img {
+width: 100%;
+/* text-align: center; */
+display: flex;
+align-items: flex-end;
+justify-content: center;
+height: 130px;}
+
 .catalog-img img{max-width:100%; max-height:100%;}
 .catalog-table-block.fix {
     margin-top: 10px;
@@ -4203,7 +4205,6 @@ thead td#allspecwhite {
 .catalog-table-block img {
     max-width: 100%;
     max-height: 100%;
-    border-radius: 7px;
 }
 .catalog-table-link {
     display: block;
@@ -4212,16 +4213,10 @@ thead td#allspecwhite {
     margin-bottom: 15px;
 }
 .catalog-table-block-name {
-    width: calc(100% - 20px);
-    bottom: 30px;
-    left: 20px;
-    margin: 0;
-    padding-left: 15px;
-    position: absolute;
-    text-align: left;
-    font-size: 20px;
-    font-weight: 800px;
-    color: #000;
+padding: 15px;
+text-align: center;
+font-weight: 800px;
+color: #000;
 }
 
 .additional-nav-menu {
@@ -4832,6 +4827,8 @@ padding: 1rem 1rem;
 color: white;
 margin: 1rem 1rem;
 text-fill-color: !important;
+min-height: 250px;
+
 }
 
 .otz {
@@ -4872,6 +4869,7 @@ border-radius: 7px;
     background-color: #515151;
     border-radius: 7px;
     background-size: cover;
+    background-position: center center;
 }
 
 .block {
@@ -4883,10 +4881,7 @@ border-radius: 7px;
 
 
 .top-banner {
-    padding-right: 10px;
-    padding-left: 10px;
     width: 100%;
-    height: 40px;
     overflow: hidden;
     -webkit-align-items: center;
     align-items: center;
@@ -4896,9 +4891,12 @@ border-radius: 7px;
     justify-content: center;
     position:relative;
     background-color: #d8d8d8;
-
 }
 
+.sticker-text {
+	text-align: center;
+	margin: 10px;
+}
 .top-banner p {
     margin: 0;
     text-align: center;
@@ -4910,11 +4908,125 @@ border-radius: 7px;
 }
 
 .top-banner .close {
-    position: absolute;
-    top: 13px;
-    right: 170px;
-    font-size: 14px
+    position: relative;
+	margin-right: 10px;
+    font-size: 14px;
 }
+
 .banner-list h3{
     color:#fff;
 }
+
+/* Убирает прокрутку по горизонтали, для мобильной версии */
+@media(max-width:768px){
+    html, body {
+    overflow-x: hidden;
+    }
+}
+
+
+
+.catalog-block {
+  padding-top: 0.9375rem;
+  padding-bottom: 1.25rem;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  border-bottom: 0.0625rem solid #F1F2F3;
+  margin-bottom: 1.3125rem;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+}
+
+.catalog-wrap {
+  padding: 0 0.5rem;
+  width: calc(100%/4);
+  opacity: 1 !important;
+}
+
+.catalog-wrap a {
+  opacity: 1 !important;
+  color: #3F3E3E;
+  font-size: 1rem;
+  line-height: 1.375rem;
+}
+
+.catalog-wrap:hover .catalog-img {
+  opacity: 0.7;
+}
+
+.catalog-wrap:hover .catalog-name {
+  opacity: 1 !important;
+}
+
+@media (max-width: 1199px) {
+  .catalog-wrap {
+    width: calc(100%/3);
+  }
+}
+
+@media (max-width: 991px) {
+  .catalog-wrap {
+    width: calc(100%/3);
+  }
+}
+
+@media (max-width: 767px) {
+  .catalog-wrap {
+    width: calc(100%/2);
+  }
+  .catalog-name {
+    font-weight: 400;
+  }
+}
+
+@media (max-width: 550px) {
+  .catalog-wrap {
+    width: calc(100%/2);
+  }
+}
+
+.banner-image p {
+	margin: 0px;
+	padding-top: 10px;
+}
+
+
+.banner-align {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	text-align: left;
+}
+
+.bg-img-hero-center {
+	background-size: cover;
+	background-repeat: no-repeat;
+	background-position: center center;
+	margin-bottom: 10px;
+	border-radius: 10px;
+}
+
+@media (min-width: 1200px){
+	.col-auto {
+width: 20%;
+}
+	.col-auto6 {
+	width: 16%;
+	padding: 3px;
+}
+
+}
+
+.row .template-product-list {
+	display: flex;
+    flex-wrap: wrap;
+}
+
+
+@media (max-width: 457px){
+	.col-xs-4 {
+		width: 50%;
+	}
+	}
+

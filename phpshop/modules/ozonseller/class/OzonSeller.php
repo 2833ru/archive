@@ -83,7 +83,7 @@ class OzonSeller {
         $params['stocks'][] = [
             'offer_id' => $info['offer_id'],
             'product_id' => $info['product_id'],
-            'stock' => $product['items'],
+            'stock' => (int) $product['items'],
             'warehouse_id' => $this->warehouse_id
         ];
 

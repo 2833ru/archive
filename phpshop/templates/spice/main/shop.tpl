@@ -43,20 +43,18 @@
         <!-- Theme -->
         <link id="bootstrap_theme" data-name="@php echo $_SESSION['skin']; php@" href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@css/@spice_theme@.css" rel="stylesheet">
 
+        <!-- Header Section Starts -->
+        <header id="header-area">
+            <!-- Header Top Starts -->
+            <div class="header-top">
         <!-- Стикер-полоска -->
-        <div class="@php __hide('sticker_top'); php@ hidden-xs">
+        <div class="@php __hide('sticker_top'); php@">
             <div class="top-banner @php __hide('sticker_close','cookie'); php@">
                 <div class="sticker-text">@sticker_top@</div>
                 <span class="close sticker-close">x</span>
             </div>
         </div>
         <!-- /Стикер-полоска -->
-
-
-        <!-- Header Section Starts -->
-        <header id="header-area">
-            <!-- Header Top Starts -->
-            <div class="header-top">
                 <!-- Nested Container Starts -->
                 <div class="container">
                     <!-- Row Starts -->
@@ -258,9 +256,6 @@
                 <script src="java/jqfunc.js"></script>
 
                 <div class="sidebar-fix-block  product-day-wrap hidden-xs hidden-sm">
-                    <!-- Товар дня -->
-                    @productDay@
-                    <!-- Товар дня -->
 
 
                     <h3 class="side-heading">{Полезная информация}</h3>
@@ -304,21 +299,19 @@
                 @DispShop@
 
 
-                <div class="col-xs-12 @php __hide('now_buying'); php@ nowbuy-block">
-                    <div class="row">                
-
-                        <h4 class="heading">@now_buying@</h4>
+                <div class="col-xs-12 @php __hide('now_buying','orderContent','empty'); php@">
+             <h4 class="heading">@now_buying@</h4>
+                    <div class="row template-product-list">                
                         @nowBuy@
                     </div>
                 </div>
 
-
-
-            </div>
             <div class="col-xs-12">
                 <div class="banner-block">
                     @banersDispHorizontal@
                 </div>
+            </div>
+
             </div>
 
             <!-- Primary Content Ends -->
@@ -343,7 +336,7 @@
         @editor@
 
     <!-- Footer Section Starts -->
-    <footer class="visible-sm visible-md visible-lg" id="footer-area">
+    <footer id="footer-area">
         <!-- Footer Links Starts -->
         <div class="footer-links">
             <!-- Container Starts -->

@@ -3,7 +3,7 @@
 /**
  * Файл выгрузки для Яндекс Маркет
  * @author PHPShop Software
- * @version 3.5
+ * @version 3.7
  * @package PHPShopXML
  * @example ?retailcrm [bool] Выгрузка для RetailCRM
  * @example ?marketplace=cdek [bool] Выгрузка для СДЭК (упрощенный тип YML с использованием count)
@@ -312,16 +312,15 @@ class PHPShopYml {
                 $where = "aliexpress='1' and";
             } elseif (isset($_GET['marketplace']) && $_GET['marketplace'] === 'sbermarket' && isset($GLOBALS['SysValue']['base']['marketplaces']['marketplaces_system'])) {
                 $where = "sbermarket='1' and";
-            }
-            elseif (isset($_GET['marketplace']) && $_GET['marketplace'] === 'ozon' && isset($GLOBALS['SysValue']['base']['ozonseller']['ozonseller_system'])) {
+            } elseif (isset($_GET['marketplace']) && $_GET['marketplace'] === 'ozon' && isset($GLOBALS['SysValue']['base']['ozonseller']['ozonseller_system'])) {
                 $where = "export_ozon='1' and";
-            }else {
+            } else {
                 $where = "yml='1' and";
             }
+        }
 
-            if (isset($_GET['available'])) {
-                $where .= " p_enabled='1' and";
-            }
+        if (isset($_GET['available'])) {
+            $where .= " sklad='0' and";
         }
 
         // Мультибаза
@@ -333,7 +332,7 @@ class PHPShopYml {
         if ($_GET['search']) {
             $wherePrice = '';
         }
-
+ 
         $result = $PHPShopOrm->query("select * from " . $GLOBALS['SysValue']['base']['products'] . " where $where enabled='1' and parent_enabled='0' $wherePrice");
         while ($row = mysqli_fetch_array($result)) {
 
@@ -586,7 +585,7 @@ class PHPShopYml {
 function setHeader() {
     $this->xml .= '<?xml version="1.0" encoding="' . $this->encoding . '"?>
 <!DOCTYPE yml_catalog SYSTEM "shops.dtd">
-<yml_catalog date="' . date('Y-m-d H:i') . '">
+<yml_catalog date="' . date(DATE_RFC3339) . '">
 <shop>
 <name>' . $this->PHPShopSystem->getName() . '</name>
 <company>' . $this->PHPShopSystem->getValue('company') . '</company>
@@ -608,13 +607,13 @@ function setCurrencies() {
  * Категории
  */
 function setCategories() {
-    
-     // Перехват модуля
+
+    // Перехват модуля
     $hook = $this->setHook(__CLASS__, __FUNCTION__);
     if ($hook) {
         return $hook;
     }
-    
+
     $this->xml .= '<categories>';
     $category = $this->category();
     foreach ($category as $val) {
@@ -627,8 +626,6 @@ function setCategories() {
     }
 
     $this->xml .= '</categories>';
-    
-   
 }
 
 /**

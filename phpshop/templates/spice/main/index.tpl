@@ -42,8 +42,13 @@
         <!-- Theme -->
         <link id="bootstrap_theme" data-name="@php echo $_SESSION['skin']; php@" href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@css/@spice_theme@.css" rel="stylesheet">
         
+
+        <!-- Header Section Starts -->
+        <header id="header-area">
+            <!-- Header Top Starts -->
+            <div class="header-top">
         <!-- Стикер-полоска -->
-        <div class="@php __hide('sticker_top'); php@ hidden-xs">
+        <div class="@php __hide('sticker_top'); php@">
             <div class="top-banner @php __hide('sticker_close','cookie'); php@">
                 <div class="sticker-text">@sticker_top@</div>
                 <span class="close sticker-close">x</span>
@@ -51,12 +56,10 @@
         </div>
         <!-- /Стикер-полоска -->
 
-        <!-- Header Section Starts -->
-        <header id="header-area">
-            <!-- Header Top Starts -->
-            <div class="header-top">
+
                 <!-- Nested Container Starts -->
                 <div class="container">
+
                     <!-- Row Starts -->
                     <div class="row">
                         <!-- Header Links Starts -->
@@ -212,76 +215,37 @@
 					<div class="clearfix"></div>
 
         <!-- Slider Section Ends -->
+        <div class="container">
+            <div class="catalog-block">@leftCatalTable@</div>
+        </div>
 
 
         <!-- Main Container Starts -->
         <div class="main-container container main-page">
             <!-- Featured Products Starts -->
-            <section class="products-list">
-                <div class="page-header visible-lg visible-md product-head">
+             <div class="page-header visible-lg visible-md product-head">
                     <h2>@mainContentTitle@</h2>
                 </div>
                 <div>@mainContent@</div>
-                <div class="swiper-slider-wrapper @php __hide('specMainIcon'); php@">
-                    <!-- Heading Starts -->
-                    <h2 class="product-head page-header swiper-title"><a href="/newtip/" title="{Все новинки}">{Новинки}</a></h2>
-                    <!-- Heading Ends -->
-                    <!-- Products Row Starts -->
-                    <!-- Product Starts -->
-                    <div class="swiper-container spec-main-icon-slider">
-                        <div class="swiper-wrapper">
-                            @specMainIcon@
-                        </div>
-                    </div>
-                    <div class="swiper-button-prev-block">
-                        <div class="swiper-button-prev btn-prev1"><i class="fa fa-angle-left" aria-hidden="true"></i></div>
-                    </div>
-                    <div class="swiper-button-next-block">
-                        <div class="swiper-button-next btn-next1"><i class="fa fa-angle-right" aria-hidden="true"></i></div>
-                    </div>
-                    <!-- Product Ends -->
-                    <!-- Products Row Ends -->
-                </div>
-            </section>
-            <!-- Featured Products Ends -->
-
             <!-- Banners Starts -->
             <div class="top-col-banners">@banersDispHorizontal@</div>
 
             <!-- Banners Ends -->    
 
-            <!-- Latest Products Starts -->
-            <section class="products-list @php __hide('specMain'); php@">
-                <div class="swiper-slider-wrapper">
-                    <!-- Heading Starts -->
-                    <h2 class="product-head page-header swiper-title"><a href="/spec/" title="{Все спецпредложения}">{Спецпредложения}</a></h2>
-                    <!-- Heading Ends -->
-                    <!-- Products Row Starts -->
-                    <div class="swiper-container spec-main-slider">
-                        <div class="swiper-wrapper">
-                            @specMain@
-                        </div>
-                    </div>
-                    <div class="swiper-button-prev-block">
-                        <div class="swiper-button-prev btn-prev2"><i class="fa fa-angle-left" aria-hidden="true"></i></div>
-                    </div>
-                    <div class="swiper-button-next-block">
-                        <div class="swiper-button-next btn-next2"><i class="fa fa-angle-right" aria-hidden="true"></i></div>
-                    </div>
-                    <!-- Products Row Ends -->
-                </div>     
-            </section>
-            <!-- Latest Products Ends -->
-            <div class="row">@leftCatalTable@</div>
+        <!-- Latest Products Starts -->
+        <section class="products-list @php __hide('specMain'); php@">         
+                <!-- Heading Starts -->
+                <h2 class="product-head page-header"><a href="/spec/" title="{Все спецпредложения}">{Спецпредложения}</a></h2>
+                <!-- Heading Ends -->
+                <!-- Products Row Starts -->
+                <div class="row new-product-list">
+                    @specMain@
+                </div>
+                <!-- Products Row Ends -->
+        </section>
+        <!-- Latest Products Ends -->
 
-            <!-- News Starts -->
-            <h2 class="product-head page-header @php __hide('miniNews'); php@"><a  href="/news/" title="{Все новости}">{Новости}</a></h2>
-            <div class="news-list">
-                <div class="row">
-                    @miniNews@
-                </div>                
-            </div>
-            <!-- News Ends -->
+
         </div>
         <!-- Main Container Ends -->
 
@@ -297,7 +261,7 @@
         @editor@
 
         <!-- Footer Section Starts -->
-        <footer class="visible-sm visible-md visible-lg" id="footer-area">
+        <footer id="footer-area">
             <!-- Footer Links Starts -->
             <div class="footer-links">
                 <!-- Container Starts -->

@@ -1,8 +1,8 @@
 <div class="col-sm-6 col-lg-4 mb-2 mb-sm-8">
     <!-- Blog Card -->
     <article class="card h-100">
-        <div class="card-img-top position-relative">
-            <img class="card-img-top" src="@newsIcon@" alt="" loading="lazy">
+        <div class="position-relative">
+            <img class="img-fluid p-0 rounded-top" src="@newsIcon@" alt="@newsZag@" loading="lazy">
         </div>
 
         <div class="card-body">

@@ -15,3 +15,7 @@ Deny From All
 Order Deny,Allow
 Deny From All
 </files>
+<files *.log>
+Order Deny,Allow
+Deny From All
+</files>

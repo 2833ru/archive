@@ -18,6 +18,9 @@ function tab_info($data) {
             <li>
                 Запчасти и аксессуары: <code>http://' . $_SERVER['SERVER_NAME'] .$GLOBALS['SysValue']['dir']['dir']. '/phpshop/modules/avito/xml/spare.php</code>   
             </li> 
+            <li>
+                Остатки: <code>http://' . $_SERVER['SERVER_NAME'] .$GLOBALS['SysValue']['dir']['dir']. '/phpshop/modules/avito/xml/stock.php</code>   
+            </li>
         </ol>
         <h4>Настройка модуля</h4>
         <ol>

@@ -50,7 +50,7 @@
     </div>
 <!-- Product Filter Ends -->
 
-<div class="template-product-list products-list">@productPageDis@</div>
+<div class="row template-product-list products-list">@productPageDis@</div>
 
 <div id="ajaxInProgress"></div>
 <div class="product-scroll-init"></div>

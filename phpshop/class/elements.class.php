@@ -74,6 +74,7 @@ class PHPShopElements {
         $this->PHPShopNav = &$PHPShopNav;
         $this->LoadItems = &$GLOBALS['LoadItems'];
         $this->PHPShopModules = &$PHPShopModules;
+        $this->webp = $this->PHPShopSystem->getSerilizeParam('admoption.image_webp');
     }
 
     function __call($name, $arguments) {
@@ -87,7 +88,7 @@ class PHPShopElements {
      * @param string $template имя шаблона для паисинга
      */
     function addToTemplate($template) {
-        $this->Disp.=ParseTemplateReturn($template);
+        $this->Disp .= ParseTemplateReturn($template);
     }
 
     /**
@@ -95,7 +96,7 @@ class PHPShopElements {
      * @param sting $content контент
      */
     function add($content) {
-        $this->Disp.=$content;
+        $this->Disp .= $content;
     }
 
     /**
@@ -116,7 +117,7 @@ class PHPShopElements {
      */
     function set($name, $value, $flag = false) {
         if ($flag)
-            @$this->SysValue['other'][$name].=$value;
+            @$this->SysValue['other'][$name] .= $value;
         else
             $this->SysValue['other'][$name] = $value;
     }
@@ -127,8 +128,8 @@ class PHPShopElements {
      * @return string
      */
     function get($name) {
-        if(isset($this->SysValue['other'][$name]))
-        return $this->SysValue['other'][$name];
+        if (isset($this->SysValue['other'][$name]))
+            return $this->SysValue['other'][$name];
     }
 
     /**
@@ -246,14 +247,12 @@ class PHPShopElements {
                 if (!empty($check)) {
                     if (!empty($_SESSION['Memory'][__CLASS__][$param[0]][$param[1]]))
                         return true;
-                }
-                else
+                } else
                     return $_SESSION['Memory'][__CLASS__][$param[0]][$param[1]];
             }
             elseif (!empty($check))
                 return true;
-        }
-        else
+        } else
             return false;
     }
 
@@ -350,8 +349,7 @@ class PHPShopElements {
                         break;
                 }
             }
-        }
-        else
+        } else
             $this->setError("action", "экшены объявлена неверно");
     }
 
@@ -364,8 +362,8 @@ class PHPShopElements {
      * @return bool
      */
     function setHook($class_name, $function_name, $data = false, $rout = false) {
-        if(!empty($this->PHPShopModules))
-        return $this->PHPShopModules->setHookHandler($class_name, $function_name, array(&$this), $data, $rout);
+        if (!empty($this->PHPShopModules))
+            return $this->PHPShopModules->setHookHandler($class_name, $function_name, array(&$this), $data, $rout);
     }
 
     /**
@@ -373,9 +371,9 @@ class PHPShopElements {
      * @param string $class_name имя класса
      */
     function setHtmlOption($class_name) {
-        
+
         if (!empty($GLOBALS['SysValue']['html'][strtolower($class_name)])) {
-            
+
             $html = $GLOBALS['SysValue']['html'][strtolower($class_name)];
 
             // Назначение сетки
@@ -389,7 +387,6 @@ class PHPShopElements {
             //$this->cell=1;
             $this->product_grid = null;
         }
-        
     }
 
     /**
@@ -412,6 +409,47 @@ class PHPShopElements {
                 return call_user_func_array($function_name, array(&$this, $function_row));
             }
         }
+    }
+
+    /**
+     * Поддержка webp
+     * @param string $image имя файла
+     * @return string
+     */
+    function setImage($image) {
+        global $_classPath;
+
+        if (!empty($image)) {
+
+            // Преобразование webp -> jpg для iOS < 14
+            if (PHPShopSecurity::getExt($image) == 'webp') {
+                if (defined('isMobil') and defined('isIOS') and isIOS < 14) {
+
+                    if (!class_exists('PHPThumb'))
+                        include_once($_classPath . 'lib/thumb/phpthumb.php');
+
+                    if (file_exists($_SERVER['DOCUMENT_ROOT'] . $image)) {
+                        $thumb = new PHPThumb($_SERVER['DOCUMENT_ROOT'] . $image);
+                        $thumb->setFormat('STRING');
+                        $image = 'data:image/jpg;base64, ' . base64_encode($thumb->getImageAsString('webp'));
+                    }
+                }
+            }
+            // Преобразование в webp
+            elseif ($this->webp) {
+
+                if (!class_exists('PHPThumb'))
+                    include_once($_classPath . 'lib/thumb/phpthumb.php');
+
+                if (file_exists($_SERVER['DOCUMENT_ROOT'] . $image)) {
+                    $thumb = new PHPThumb($_SERVER['DOCUMENT_ROOT'] . $image);
+                    $thumb->setFormat('WEBP');
+                    $image = 'data:image/webp;base64, ' . base64_encode($thumb->getImageAsString(PHPShopSecurity::getExt($image)));
+                }
+            }
+        }
+
+        return $image;
     }
 
 }

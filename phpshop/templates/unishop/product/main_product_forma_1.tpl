@@ -20,7 +20,7 @@
             </h3>
             <h4 class="product-block-price">
                 <span class="price-old">@productPriceOld@</span>
-                <span class="price-new">@productPrice@ <span class="rubznak">@productValutaName@</span></span>
+                <span class="price-new">@parentLangFrom@ @productPrice@ <span class="rubznak">@productValutaName@</span></span>
             </h4>
 
             <span class="product-sklad-list-block">@productSklad@
@@ -34,7 +34,7 @@
             </div>
             @previewSorts@
             <div class="product-block-button">
-                <button class="btn btn-wishlist addToCompareList hidden-md" data-uid="@productUid@" data-title="{Сравнить}" data-placement="top" data-toggle="tooltip"><i class="fa fa-bar-chart-o"></i></button>
+                <button class="btn btn-wishlist addToCompareList" data-uid="@productUid@" data-title="{Сравнить}" data-placement="top" data-toggle="tooltip"><i class="fa fa-bar-chart-o"></i></button>
                 <button class="btn btn-wishlist addToWishList" data-uid="@productUid@" data-title="{Отложить}" data-placement="top" data-toggle="tooltip"><i class="feather iconz-heart"></i></button>
                 <a class="btn btn-cart @elementCartOptionHide@" href="/shop/UID_@productUid@.html">
                     <span>@productSale@</span>

@@ -97,7 +97,7 @@
         <header id="header" class="header left-aligned-navbar">
 
             <!-- Стикер-полоска -->
-            <div class="alert alert-soft-primary text-center alert-dismissible font-size-1 fade show @php __hide('sticker_close','cookie'); php@" role="alert">@sticker_top@<button type="button" class="close sticker-close" data-dismiss="alert" aria-label="Close"><svg aria-hidden="true" class="mb-0" width="14" height="14" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg"><path fill="currentColor" d="M11.5,9.5l5-5c0.2-0.2,0.2-0.6-0.1-0.9l-1-1c-0.3-0.3-0.7-0.3-0.9-0.1l-5,5l-5-5C4.3,2.3,3.9,2.4,3.6,2.6l-1,1 C2.4,3.9,2.3,4.3,2.5,4.5l5,5l-5,5c-0.2,0.2-0.2,0.6,0.1,0.9l1,1c0.3,0.3,0.7,0.3,0.9,0.1l5-5l5,5c0.2,0.2,0.6,0.2,0.9-0.1l1-1 c0.3-0.3,0.3-0.7,0.1-0.9L11.5,9.5z"/></svg></button>
+            <div class="alert alert-soft-primary text-center alert-dismissible font-size-1 fade show @php __hide('sticker_top');__hide('sticker_close','cookie'); php@" role="alert">@sticker_top@<button type="button" class="close sticker-close" data-dismiss="alert" aria-label="Close"><svg aria-hidden="true" class="mb-0" width="14" height="14" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg"><path fill="currentColor" d="M11.5,9.5l5-5c0.2-0.2,0.2-0.6-0.1-0.9l-1-1c-0.3-0.3-0.7-0.3-0.9-0.1l-5,5l-5-5C4.3,2.3,3.9,2.4,3.6,2.6l-1,1 C2.4,3.9,2.3,4.3,2.5,4.5l5,5l-5,5c-0.2,0.2-0.2,0.6,0.1,0.9l1,1c0.3,0.3,0.7,0.3,0.9,0.1l5-5l5,5c0.2,0.2,0.6,0.2,0.9-0.1l1-1 c0.3-0.3,0.3-0.7,0.1-0.9L11.5,9.5z"/></svg></button>
             </div>
             <!-- Конец Стикер-полоска -->
 
@@ -342,14 +342,14 @@
             $GLOBALS['SysValue']['other']['banersDisp'] = null;
             }
             else {
-            $GLOBALS['container_style'] = 'd-lg-block';
+            $GLOBALS['container_style'] = 'd-lg-block d-md-block';
             $GLOBALS['container_col'] = 9;
             }
             php@
 
             <div class="container space-top-1 space-top-md-1 space-bottom-1">
                 <div class="row">
-                    <div class="col-lg-3 mb-5 mb-lg-0 d-none @php echo $GLOBALS['container_style']; php@">
+                    <div class="col-3 d-none @php echo $GLOBALS['container_style']; php@">
 
                         <div class="mb-2">
                             @leftCatal@ 
@@ -386,9 +386,9 @@
 
                         @leftMenu@
 
-                        @banersDisp@
+                        <div class="mt-5">@banersDisp@</div>
                     </div>
-                    <div class="col-lg-@php echo $GLOBALS['container_col']; php@ mb-5 mb-lg-0">
+                    <div class="col-md-@php echo $GLOBALS['container_col']; php@ mb-5 mb-lg-0">
                         <!-- Вывод содержимого @DispShop -->
                         @DispShop@
                         <!-- Конец @DispShop -->

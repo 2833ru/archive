@@ -7,7 +7,7 @@
 
 <div class="hidden-xs">@catalogContent@</div>
 
-<div class="row">@catalogList@</div>
+<div class="catalog-block">@catalogList@</div>
 
 <nav class="visible-xs">
   <ul class="pager">

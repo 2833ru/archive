@@ -440,13 +440,13 @@ function mainPageProductSlider() {
         lazyLoad: true,
         responsive: {
             0: {
-                items: 1
-            },
-            600: {
                 items: 2
             },
-            1000: {
+            600: {
                 items: 4
+            },
+            1000: {
+                items: 5
             }
         }
     });
@@ -456,13 +456,13 @@ function mainPageProductSlider() {
         lazyLoad: true,
         responsive: {
             0: {
-                items: 1
-            },
-            600: {
                 items: 2
             },
-            1000: {
+            600: {
                 items: 4
+            },
+            1000: {
+                items: 5
             }
         }
     });
@@ -472,13 +472,13 @@ function mainPageProductSlider() {
         lazyLoad: true,
         responsive: {
             0: {
-                items: 1
-            },
-            600: {
                 items: 2
             },
-            1000: {
+            600: {
                 items: 4
+            },
+            1000: {
+                items: 5
             }
         }
     });

@@ -11,18 +11,19 @@
             </div>
             <div class="position-absolute bottom-0 left-0 pl-1 pb-1">
                 @promotionsIcon@
+                @wholesaleIcon@
             </div>
 
         </div>
 
-        <div class="card-body pt-4 px-4 pb-0 align-items-end">
+        <div class="card-body pt-4 px-3 pb-0 align-items-end">
             <div class="mb-2">
                 <span class="d-block font-size-1">
                     <a class="text-inherit" title="@productName@" href="/shop/UID_@productUid@.html">@productName@</a>
                 </span>
                 <div class="d-block">
-                    <span class="text-dark font-weight-bold">@productPrice@<span class="rubznak">@productValutaName@</span></span>
-                    <span class="text-body ml-1 @php __hide('productPriceOld'); php@" ><del>@productPriceOld@</del></span>
+                    <span class="text-dark font-weight-bold">@parentLangFrom@ @productPrice@<span class="rubznak">@productValutaName@</span></span>
+                    <span class="text-body small ml-1 @php __hide('productPriceOld'); php@" ><del>@productPriceOld@</del></span>
                 </div>
             </div>
         </div>

@@ -327,8 +327,8 @@ function actionStart() {
         <tr class="treegrid-all">
            <td><a href="?path=modules" class="treegrid-parent" data-parent="treegrid-all">' . __('Все модули') . '</a> <span class="label label-primary pull-right">105</span></td>
 	</tr>
-        <tr class="treegrid-template">
-           <td><a href="?path=modules&cat=pro" class="treegrid-parent" data-parent="treegrid-template">' . __('Pro') . '</a> <span class="label label-primary pull-right">13</span></td>
+        <tr class="treegrid-pro">
+           <td><a href="?path=modules&cat=pro" class="treegrid-parent" data-parent="treegrid-pro">' . __('Pro') . '</a> <span class="label label-primary pull-right">13</span></td>
 	</tr>
         <tr class="treegrid-template">
            <td><a href="?path=modules&cat=template" class="treegrid-parent" data-parent="treegrid-template">' . __('Дизайн') . '</a> <span class="label label-primary pull-right">8</span></td>

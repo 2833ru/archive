@@ -52,6 +52,14 @@
         </div>
         <header>
             <div class="container ">
+            <!-- Стикер-полоска -->
+            <div class="top_banner_parent @php __hide('sticker_top'); php@">
+                <div class="top-banner @php __hide('sticker_close','cookie'); php@">
+                    <div class="sticker-text">@sticker_top@</div>
+                    <span class="close sticker-close">x</span>
+                </div>
+            </div>
+            <!-- /Стикер-полоска -->
 
                 <div class="d-flex align-items-center justify-content-between">
                     <div class="logo">
@@ -183,15 +191,6 @@
         <!--/ Notification -->
 
         <div class="container d-flex catalog-list flex-wrap main-catalog ">    @leftCatalTable@
-
-            <!-- Стикер-полоска -->
-            <div class="top_banner_parent @php __hide('sticker_top'); php@">
-                <div class="top-banner @php __hide('sticker_close','cookie'); php@">
-                    <div class="sticker-text">@sticker_top@</div>
-                    <span class="close sticker-close">x</span>
-                </div>
-            </div>
-            <!-- /Стикер-полоска -->
 
         </div>
 
