@@ -129,11 +129,6 @@ $(document).ready(function() {
         setTimeout(function() {
             $('#body').fadeIn();
         }, 1000);
-
-        $.cookie(skin+'_theme', theme, {
-            path: '/'
-        });
-
     });
 
 

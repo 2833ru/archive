@@ -2,7 +2,7 @@ ALTER TABLE `phpshop_categories` ADD `cat_seo_name` VARCHAR(255) DEFAULT '';
 ALTER TABLE `phpshop_products` ADD `prod_seo_name` VARCHAR(255) DEFAULT '';
 ALTER TABLE `phpshop_sort` ADD `sort_seo_name` VARCHAR(255) DEFAULT '';
 ALTER TABLE `phpshop_news` ADD `news_seo_name` VARCHAR(255) DEFAULT '';
-ALTER TABLE `phpshop_page_categories` ADD `page_cat_seo_name` VARCHAR(255)DEFAULT '';
+ALTER TABLE `phpshop_page_categories` ADD `page_cat_seo_name` VARCHAR(255) DEFAULT '';
 ALTER TABLE `phpshop_products` ADD `prod_seo_name_old` VARCHAR(255) DEFAULT '';
 ALTER TABLE `phpshop_categories` ADD `cat_seo_name_old` VARCHAR(255) DEFAULT '';
 

@@ -5,7 +5,11 @@ $PHPShopOrm = new PHPShopOrm($PHPShopModules->getParam("base.formgenerator.formg
 
 // Функция обновления
 function actionUpdate() {
-    global $PHPShopOrm;
+    global $PHPShopOrm,$PHPShopModules;
+    
+    // Настройки витрины
+    $PHPShopModules->updateOption($_GET['id'], $_POST['servers']);
+    
     $action = $PHPShopOrm->update($_POST);
     header('Location: ?path=modules&install=check');
     return $action;
@@ -48,6 +52,9 @@ function actionStart() {
          </p>
          <p>
          Для включения защитной каптчи используйте <kbd>@formgenerator_captcha@</kbd>
+         </p>
+         <p>
+         Для передачи данных по товару в сообщение администратору (наименование, артикул, ИД, ссылка) добавьте переменную <kbd>?product_id=XXX</kbd> на страницу вызова формы, где (ХХХ - ID товара). Пример: <code>http://'.$_SERVER['SERVER_NAME'].'/formgenerator/example/?product_id=101</code>
          </p>';
 
     $Tab2 = $PHPShopGUI->setInfo($Info, 250, '97%');

@@ -5,7 +5,10 @@ PHPShopObj::loadClass('order');
 $PHPShopOrm = new PHPShopOrm("phpshop_modules_sberbankrf_system");
 // Функция обновления
 function actionUpdate() {
-    global $PHPShopOrm;
+    global $PHPShopOrm,$PHPShopModules;
+    
+    // Настройки витрины
+    $PHPShopModules->updateOption($_GET['id'], $_POST['servers']);
     $PHPShopOrm->debug = false;
 
     if (empty($_POST["dev_mode_new"]))

@@ -630,12 +630,6 @@ $(document).ready(function() {
     });
 
 
-    // Validator Fix brands url
-    $('#brand-menu .mega-menu a').on('click', function(event) {
-        event.preventDefault();
-        window.location.replace($(this).attr('data-url'));
-    });
-
     // убираем пустые закладки подробного описания
     if ($('#files').html() != 'Нет файлов')
         $('#filesTab').addClass('show');

@@ -5,7 +5,11 @@ $PHPShopOrm = new PHPShopOrm($PHPShopModules->getParam("base.button.button_syste
 
 // Функция обновления
 function actionUpdate() {
-    global $PHPShopOrm;
+    global $PHPShopOrm,$PHPShopModules;
+    
+     // Настройки витрины
+    $PHPShopModules->updateOption($_GET['id'], $_POST['servers']);
+    
     if (empty($_POST['enabled_new']))
         $_POST['enabled_new'] = 0;
     $action = $PHPShopOrm->update($_POST);

@@ -76,13 +76,25 @@ function promotion_check_userstatus($active, $statuses) {
  * $with_desc - возвращать описание (для страницы товара) 
  */
 function promotion_get_discount($row, $with_desc = false) {
-    global $promotionslist;
+    global $promotionslist, $promotionslistCode;
     
     //двумерный массив если запись одна
     if (!isset($promotionslist[0]['code'])) {
         $data[0] = $promotionslist;
     } else {
         $data = $promotionslist;    
+    }
+    
+    //выведем информацию по скидкам по промокодам на странице товара
+    if ($with_desc) {
+        if (!empty($promotionslistCode)) {
+            if (!isset($promotionslistCode[0]['code'])) {
+                $data[] = $promotionslistCode;
+            } else {
+                foreach ($promotionslistCode as $pro)
+                    $data[] = $pro;
+            }
+        }
     }
     
     $promo_discount = $promo_discountsum = 0; 
@@ -108,7 +120,6 @@ function promotion_get_discount($row, $with_desc = false) {
                 endif;
 
                 $sumche = $sumchep = 0;
-
                 // Не нулевая цена или выключен режим проверки нулевой цены
                 if (empty($row['price_n']) or empty($pro['block_old_price'])) {
                     
@@ -140,7 +151,7 @@ function promotion_get_discount($row, $with_desc = false) {
                 //обнуляем категории и товары
                 unset($category_ar);
                 unset($products_ar);
-
+                
                 if ($sumche == 1 || $sumchep == 1) {
                     //если процент
                     if ($pro['discount_tip'] == 1) {

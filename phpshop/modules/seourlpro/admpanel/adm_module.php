@@ -17,7 +17,10 @@ function actionBaseUpdate() {
 
 // Функция обновления
 function actionUpdate() {
-    global $PHPShopOrm;
+    global $PHPShopOrm,$PHPShopModules;
+    
+    // Настройки витрины
+    $PHPShopModules->updateOption($_GET['id'], $_POST['servers']);
 
     $action = $PHPShopOrm->update($_POST);
     header('Location: ?path=modules&id='.$_GET['id']);

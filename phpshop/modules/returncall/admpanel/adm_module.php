@@ -10,18 +10,22 @@ function actionBaseUpdate() {
     $option = $PHPShopOrm->select();
     $new_version = $PHPShopModules->getUpdate($option['version']);
     $PHPShopOrm->clean();
-    $action = $PHPShopOrm->update(array('version_new' => $new_version));
+    $PHPShopOrm->update(array('version_new' => $new_version));
 }
 
 // Функция обновления
 function actionUpdate() {
-    global $PHPShopOrm;
+    global $PHPShopOrm,$PHPShopModules;
 
+    // Настройки витрины
+    $PHPShopModules->updateOption($_GET['id'],$_POST['servers']);
+    
     $PHPShopOrm->debug = false;
     $action = $PHPShopOrm->update($_POST);
     header('Location: ?path=modules&id=' . $_GET['id']);
     return $action;
 }
+
 
 function actionStart() {
     global $PHPShopGUI, $PHPShopOrm;

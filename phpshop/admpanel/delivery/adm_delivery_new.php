@@ -59,6 +59,7 @@ function actionStart() {
     }
     else
         $catalog = false;
+    $data['is_mod']=1;
 
     // Начальные данные
     if ($catalog)
@@ -69,14 +70,10 @@ function actionStart() {
     $data['enabled'] = 1;
     $data['PID'] = $_GET['cat'];
 
-
-
-
-    $PHPShopGUI->setActionPanel(__("Доставка") . ' / ' . $data['city'], false, array('Создать и редактировать', 'Сохранить и закрыть'));
+    $PHPShopGUI->setActionPanel(__("Доставка") . ' &rarr; ' . $data['city'], false, array('Создать и редактировать', 'Сохранить и закрыть'));
 
     // Наименование
     $Tab_info = $PHPShopGUI->setField("Название", $PHPShopGUI->setInputText(false, 'city_new', $data['city'], '100%') . $PHPShopGUI->setInput('hidden', 'is_folder_new', $data['is_folder']));
-
 
     $PHPShopCategoryArray = new PHPShopDeliveryArray(array('is_folder' => "='1'"));
     $CategoryArray = $PHPShopCategoryArray->getArray();
@@ -93,8 +90,6 @@ function actionStart() {
         if ($k == $data['PID'])
             $tree_array[$k]['selected'] = true;
     }
-
-
 
     $GLOBALS['tree_array'] = &$tree_array;
     $_GET['parent_to'] = $data['PID'];
@@ -124,7 +119,6 @@ function actionStart() {
     $tree_select.='</select>';
     $tree.='</table>';
 
-
     // Выбор каталога
     $Tab_info.= $PHPShopGUI->setField("Размещение", $tree_select);
 
@@ -143,7 +137,6 @@ function actionStart() {
         $data['ofd_nds'] = $PHPShopSystem->getParam('nds');
 
     $Tab_price.= $PHPShopGUI->setField("Значение НДС", $PHPShopGUI->setInputText(null, 'ofd_nds_new', $data['ofd_nds'], 100, '%'));
-
 
     // Тип сортировки
     $Tab_info.=$PHPShopGUI->setField("Приоритет", $PHPShopGUI->setInputText('№', "num_new", $data['num'], 150));
@@ -179,8 +172,13 @@ function actionStart() {
         }
 
     // Оплаты
-    if ($_GET['target'] != 'cat')
+    if ($_GET['target'] != 'cat'){
         $Tab1.=$PHPShopGUI->setField("Блокировка оплат", $PHPShopGUI->setSelect('payment_new[]', $payment_value, false, null, false, $search = false, false, $size = 1, $multiple = true));
+    
+        // Для модулей
+    if(isset($data['is_mod']))
+     $Tab1.=$PHPShopGUI->setField(__('Не изменять стоимость'), $PHPShopGUI->setRadio('is_mod_new', 1, __('Выключить'), $data['is_mod'], false, 'text-warning') .$PHPShopGUI->setRadio('is_mod_new', 2, __('Включить'), $data['is_mod']));
+    }
 
     // Сумма заказа
     if($_GET['target'] != 'cat')
@@ -194,7 +192,6 @@ function actionStart() {
     if (!$catalog)
         $Tab2 = $PHPShopGUI->loadLib('tab_option', $data);
 
-
     // Запрос модуля на закладку
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $data);
 
@@ -204,14 +201,12 @@ function actionStart() {
     else
         $PHPShopGUI->setTab(array("Основное", $Tab1));
 
-
     // Левый сайдбар
     $sidebarleft[] = array('title' => 'Категории', 'content' => $tree, 'title-icon' => '<span class="glyphicon glyphicon-plus newcat" data-toggle="tooltip" data-placement="top" title="Добавить каталог"></span>&nbsp;<span class="glyphicon glyphicon-chevron-down" data-toggle="tooltip" data-placement="top" title="Развернуть"></span>&nbsp;<span class="glyphicon glyphicon-chevron-up" data-toggle="tooltip" data-placement="top" title="Свернуть"></span>');
 
     $help = '<p class="text-muted">'.__('У каждого типа доставки можно настроить обязательные и дополнительные поля для заполнения заказа в закладке управления доставкой <kbd>Адреса пользователя</kbd>').'</p>';
 
     $sidebarleft[] = array('title' => 'Подсказка', 'content' => $help);
-
     $PHPShopGUI->setSidebarLeft($sidebarleft, 3);
     $PHPShopGUI->sidebarLeftCell = 3;
 
@@ -252,7 +247,6 @@ function actionInsert() {
 
 // Добавление изображения 
 function iconAdd($name = 'icon_new') {
-
 
     // Папка сохранения
     $path = '/UserFiles/Image/';

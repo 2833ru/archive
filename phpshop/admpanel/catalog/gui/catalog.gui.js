@@ -19,10 +19,10 @@ $().ready(function() {
                     data: json,
                     enableLinks: false,
                     showIcon: true,
-                    color: $('#temp').css('color'),
+                    color: $('#temp-color').css('color'),
                     showBorder: false,
-                    selectedBackColor: $('#temp').css('color'),
-                    onhoverColor: "#fff",
+                    selectedBackColor: $('#temp-color-selected').css('color'),
+                    onhoverColor: $('.navbar-action').css('background-color'),
                     backColor: "transparent",
                     expandIcon: 'glyphicon glyphicon-triangle-right',
                     collapseIcon: 'glyphicon glyphicon-triangle-bottom'

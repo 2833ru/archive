@@ -14,7 +14,7 @@ function actionStart() {
     $CategoryArray = $PHPShopCategoryArray->getArray();
 
     if (!empty($CategoryArray[$_GET['cat']]['name']))
-        $catname = " / " . $CategoryArray[$_GET['cat']]['name'];
+        $catname = " &rarr; " . $CategoryArray[$_GET['cat']]['name'];
 
 
     $PHPShopInterface->action_select['Редактировать каталог'] = array(

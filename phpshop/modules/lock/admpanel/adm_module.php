@@ -5,7 +5,10 @@ $PHPShopOrm = new PHPShopOrm($PHPShopModules->getParam("base.lock.lock_system"))
 
 // Функция обновления
 function actionUpdate() {
-    global $PHPShopOrm;
+    global $PHPShopOrm,$PHPShopModules;
+    
+    // Настройки витрины
+    $PHPShopModules->updateOption($_GET['id'], $_POST['servers']);
 
     $PHPShopOrm->debug = false;
     $action = $PHPShopOrm->update($_POST);

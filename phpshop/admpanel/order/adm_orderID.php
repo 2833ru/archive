@@ -217,7 +217,6 @@ function actionStart() {
         'target' => '_blank'
     );
 
-
     // Библиотека заказа
     $PHPShopOrder = new PHPShopOrderFunction($data['id'], $data);
 
@@ -230,7 +229,6 @@ function actionStart() {
         $currency = ' <span class=rubznak>p</span>';
     else
         $currency = $PHPShopOrder->default_valuta_iso;
-
 
     $PHPShopGUI->setActionPanel(__("Заказ") . ' № ' . $data['uid'] . ' <span class="hidden-xs hidden-md">/ ' . PHPShopDate::dataV($data['datas']) . $update_date . ' / ' . __("Итого") . ': ' . $PHPShopOrder->getTotal(false, ' ') . $currency . '</span>', array('Сделать копию', 'Все заказы пользователя', 'Отчет по заказам', '|', 'csv', 'xml', '|', 'Удалить'), array('Сохранить', 'Сохранить и закрыть'), false);
 
@@ -251,6 +249,9 @@ function actionStart() {
 
     if (!empty($data['flat']))
         $flat = ', кв. ' . $data['flat'];
+    
+    if (empty($data['fio']) and !empty($order['Person']['name_person']))
+        $data['fio'] = $order['Person']['name_person'];
 
     // Информация о покупателе
     $sidebarleft[] = array('id' => 'user-data-1', 'title' => 'Информация о покупателе', 'name' => array('caption' => $data['fio'], 'link' => '?path=shopusers&return=order.' . $data['id'] . '&id=' . $data['user']), 'content' => array(array('caption' => $order['Person']['mail'], 'link' => 'mailto:' . $order['Person']['mail']), $data['tel']));

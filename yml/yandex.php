@@ -3,7 +3,7 @@
 /**
  * Файл выгрузки для Яндекс Маркет
  * @author PHPShop Software
- * @version 2.2
+ * @version 2.3
  * @package PHPShopXML
  * @example ?ssl [bool] SSL
  * @example ?getall [bool] Выгрузка всех товаров без учета флага YML
@@ -21,80 +21,22 @@ PHPShopObj::loadClass("valuta");
 PHPShopObj::loadClass("string");
 PHPShopObj::loadClass("security");
 PHPShopObj::loadClass("modules");
+PHPShopObj::loadClass("file");
+
+// Настроки
+$PHPShopSystem = new PHPShopSystem();
+
+// Мульибаза
+$PHPShopBase->checkMultibase();
 
 // Модули
 $PHPShopModules = new PHPShopModules($_classPath . "modules/");
 
-/**
- *  Вывод характеристик по имени
- *  @example $search=PHPShopSortSearch('Бренд','vendor'); $search->search($vendor_aray);
- */
-class PHPShopSortSearch {
-
-    /**
-     * Выборка характеритик по имени
-     * @param string $name имя характеристики
-     * @param string $tag тэг обрамления
-     */
-    function __contsruct($name, $tag) {
-
-        if (!empty($name)) {
-            $this->tag = $tag;
-            $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['sort_categories']);
-            $PHPShopOrm->debug = false;
-            $data = $PHPShopOrm->select(array('id'), array('name' => '="' . $name . '"', 'category' => "!=0"), false, array('limit' => 1));
-            if (is_array($data)) {
-
-                $sort_category = $data['id'];
-                $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['sort']);
-                $PHPShopOrm->debug = false;
-                $data = $PHPShopOrm->select(array('id,name'), array('category' => '=' . $sort_category), false, array('limit' => 100));
-                if (is_array($data)) {
-                    foreach ($data as $val)
-                        $this->sort_array[$val['id']] = $val['name'];
-                }
-            }
-        }
-    }
-
-    /**
-     * Поиск в массиве характеристик товара нужной характеристики
-     * @param array $row массив характеристик товара
-     * @return string имя характеристики в тэге
-     */
-    function search($row) {
-
-        // Проверка на сложный параметр
-        if (strstr($this->tag, ' ')) {
-            $tag_array = explode(" ", $this->tag);
-            $tag_start = $this->tag;
-            $tag_end = $tag_array[0];
-        } else {
-            $tag_start = $tag_end = $this->tag;
-        }
-
-        if (is_array($row))
-            foreach ($row as $val) {
-                if (!empty($this->sort_array[$val[0]])) {
-
-
-
-                    return '
-                        <' . $tag_start . '>' . $this->sort_array[$val[0]] . '</' . $tag_end . '>';
-                }
-            }
-
-        /*
-          return '
-          <' . $tag_start . '></' . $tag_end . '>'; */
-    }
-
-}
 
 /**
  * Создание YML для Яндекс Маркета
  * @author PHPShop Software
- * @version 1.2
+ * @version 1.3
  * @package PHPShopClass
  */
 class PHPShopYml {
@@ -144,9 +86,9 @@ class PHPShopYml {
      * Конструктор
      */
     function __construct() {
-        global $PHPShopModules;
+        global $PHPShopModules,$PHPShopSystem;
 
-        $this->PHPShopSystem = new PHPShopSystem();
+        $this->PHPShopSystem = $PHPShopSystem;
         $PHPShopValuta = new PHPShopValutaArray();
         $this->PHPShopValuta = $PHPShopValuta->getArray();
 
@@ -228,14 +170,58 @@ class PHPShopYml {
     }
 
     /**
+     * Проверка прав каталога режима Multibase
+     * @return string 
+     */
+    function queryMultibase() {
+
+        // Мультибаза
+        if (defined("HostID") or defined("HostMain")) {
+
+
+            $multi_cat = array();
+
+            // Не выводить скрытые каталоги
+            $where['skin_enabled '] = "!='1'";
+
+            if (defined("HostID"))
+                $where['servers'] = " REGEXP 'i" . HostID . "i'";
+            elseif (defined("HostMain"))
+                $where['skin_enabled'] .= ' and (servers ="" or servers REGEXP "i1000i")';
+
+            $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['categories']);
+            $PHPShopOrm->debug = $this->debug;
+            $data = $PHPShopOrm->select(array('id'), $where, false, array('limit' => 1000), __CLASS__, __FUNCTION__);
+            if (is_array($data)) {
+                foreach ($data as $row) {
+                    $multi_cat[] = $row['id'];
+                }
+            }
+
+            $multi_select = ' category IN (' . @implode(',', $multi_cat) . ') and ';
+
+            return $multi_select;
+        }
+    }
+
+    /**
      * Данные по каталогам
      * @return array массив каталогов
      */
     function category() {
         $Catalog = array();
         $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['categories']);
-        $data = $PHPShopOrm->select(array('id,name,parent_to'), false, false, array('limit' => 1000));
 
+        // Не выводить скрытые каталоги
+        $where['skin_enabled'] = "!='1'";
+
+        // Мультибаза
+        if (defined("HostID"))
+            $where['servers'] = " REGEXP 'i" . HostID . "i'";
+        elseif (defined("HostMain"))
+            $where['skin_enabled'] .= ' and (servers ="" or servers REGEXP "i1000i")';
+
+        $data = $PHPShopOrm->select(array('id,name,parent_to'), $where, false, array('limit' => 1000));
         if (is_array($data))
             foreach ($data as $row) {
                 if ($row['id'] != $row['parent_to']) {
@@ -261,6 +247,13 @@ class PHPShopYml {
             $where = null;
         else
             $where = "yml='1' and";
+
+
+        // Мультибаза
+        $queryMultibase = $this->queryMultibase();
+        if (!empty($queryMultibase))
+            $where.= ' ' . $queryMultibase;
+
 
         $result = $PHPShopOrm->query("select * from " . $GLOBALS['SysValue']['base']['products'] . " where $where enabled='1' and parent_enabled='0' and price>0");
         while ($row = mysqli_fetch_array($result)) {

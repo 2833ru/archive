@@ -74,6 +74,7 @@ class PHPShopProductElements extends PHPShopElements {
         // Настройки
         $this->user_price_activate = $this->PHPShopSystem->getSerilizeParam('admoption.user_price_activate');
         $this->format = intval($this->PHPShopSystem->getSerilizeParam("admoption.price_znak"));
+        $this->sklad_enabled = $this->PHPShopSystem->getSerilizeParam('admoption.sklad_enabled');
 
         // HTML опции верстки
         $this->setHtmlOption(__CLASS__);
@@ -124,7 +125,7 @@ class PHPShopProductElements extends PHPShopElements {
         $this->compile();
     }
 
-     /**
+    /**
      * Проверка прав каталога режима Multibase
      * @return string 
      */
@@ -132,16 +133,23 @@ class PHPShopProductElements extends PHPShopElements {
         global $queryMultibase;
 
         // Мультибаза
-        if (defined("HostID")) {
-            
+        if (defined("HostID") or defined("HostMain")) {
+
             // Память
-            if(!empty($queryMultibase))
+            if (!empty($queryMultibase))
                 return $queryMultibase;
-            
+
             $multi_cat = array();
             $multi_dop_cat = null;
 
-            $where['servers'] = " REGEXP 'i" . HostID . "i'";
+            // Не выводить скрытые каталоги
+            $where['skin_enabled '] = "!='1'";
+
+            if (defined("HostID"))
+                $where['servers'] = " REGEXP 'i" . HostID . "i'";
+            elseif (defined("HostMain"))
+                $where['skin_enabled'] .= ' and (servers ="" or servers REGEXP "i1000i")';
+
             $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['categories']);
             $PHPShopOrm->debug = $this->debug;
             $data = $PHPShopOrm->select(array('id'), $where, false, array('limit' => 100), __CLASS__, __FUNCTION__);
@@ -151,9 +159,9 @@ class PHPShopProductElements extends PHPShopElements {
                     $multi_dop_cat.=" or dop_cat REGEXP '#" . $row['id'] . "#'";
                 }
             }
-            
-            if(count($multi_cat)>0)
-            $queryMultibase = $multi_select = ' and ( category IN (' . @implode(',', $multi_cat) . ') '.$multi_dop_cat.')';
+
+            if (count($multi_cat) > 0)
+                $queryMultibase = $multi_select = ' and ( category IN (' . @implode(',', $multi_cat) . ') ' . $multi_dop_cat . ')';
 
             return $multi_select;
         }
@@ -184,7 +192,7 @@ class PHPShopProductElements extends PHPShopElements {
         }
         else
             $this->max_item = $_SESSION['max_item'];
-  
+
 
         $limit_start = rand(1, $this->max_item / rand(1, 7));
         return ' BETWEEN ' . $limit_start . ' and ' . round($limit_start + $limit + $this->max_item / 3);
@@ -342,7 +350,7 @@ class PHPShopProductElements extends PHPShopElements {
         }
         else
             $this->set('elementCartOptionHide', 'hide hidden');
-        
+
         // Если цены показывать только после авторизации
         if ($this->user_price_activate == 1 and empty($_SESSION['UsersId'])) {
             $this->set('ComStartCart', PHPShopText::comment('<'));

@@ -34,6 +34,10 @@
                 border-right: 1px solid #000000;
                 text-align: right;
             }
+            .hidden{
+                display: none;
+            }
+            
         </style>
         <style media="print" type="text/css">
             <!--
@@ -48,8 +52,8 @@
     </head>
     <body>
         <div align="right" class="nonprint">
-            <button id="saveCsv">{Сохранить} CSV</button>
-            <button id="savePdf">{Сохранить} PDF</button>
+            <button id="saveCsv" class="@hidden@">{Сохранить} CSV</button>
+            <button id="savePdf" class="@hidden@">{Сохранить} PDF</button>
             <button onclick="window.print();">{Распечатать}</button>
             <hr>
         </div>

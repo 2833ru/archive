@@ -9,8 +9,7 @@ function actionUpdate() {
     if (empty($_POST['enabled_new']))
         $_POST['enabled_new'] = 0;
     $action = $PHPShopOrm->update($_POST);
-    header('Location: ?path=modules&install=check');
-    return $action;
+    header('Location: ?path=modules&id='.$_GET['id']);
 }
 
 
@@ -21,13 +20,13 @@ function actionStart() {
     // Выборка
     $data = $PHPShopOrm->select();
 
-    $Tab1=$PHPShopGUI->setCollapse(__('Статус'),$PHPShopGUI->setField("Откат изменений", $PHPShopGUI->setRadio("enabled_new", 1, "Вкл.", $data['enabled']) . $PHPShopGUI->setRadio("enabled_new", 0, "Выкл.", $data['enabled'])));
+    $Tab1=$PHPShopGUI->setField("Откат изменений", $PHPShopGUI->setRadio("enabled_new", 1, "Вкл.", $data['enabled']) . $PHPShopGUI->setRadio("enabled_new", 0, "Выкл.", $data['enabled']));
 
     // Содержание закладки 2
     $Tab2 = $PHPShopGUI->setPay();
 
     // Вывод формы закладки
-    $PHPShopGUI->setTab(array("Основное", $Tab1), array("О Модуле", $Tab2));
+    $PHPShopGUI->setTab(array("Основное", $Tab1,true), array("О Модуле", $Tab2),array("Журнал событий", 0,'?path=modules.dir.admlog'));
 
     // Вывод кнопок сохранить и выход в футер
     $ContentFooter =

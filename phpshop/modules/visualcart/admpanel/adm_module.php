@@ -5,13 +5,17 @@ $PHPShopOrm = new PHPShopOrm($PHPShopModules->getParam("base.visualcart.visualca
 
 // Функция обновления
 function actionUpdate() {
-    global $PHPShopOrm;
+    global $PHPShopOrm, $PHPShopModules;
 
     if (empty($_POST['memory_new']))
         $_POST['memory_new'] = 0;
+
+    // Настройки витрины
+    $PHPShopModules->updateOption($_GET['id'], $_POST['servers']);
+
     $PHPShopOrm->debug = false;
     $action = $PHPShopOrm->update($_POST);
-     header('Location: ?path=modules&id=' . $_GET['id']);
+    header('Location: ?path=modules&id=' . $_GET['id']);
     return $action;
 }
 
@@ -43,7 +47,7 @@ function actionStart() {
     $Tab3 = $PHPShopGUI->setPay();
 
     // Вывод формы закладки
-    $PHPShopGUI->setTab(array("Основное", $Tab1,true), array("Инструкция", $Tab2), array("О Модуле", $Tab3),array("Незавершенные заказы", null,'?path=modules.dir.visualcart'));
+    $PHPShopGUI->setTab(array("Основное", $Tab1, true), array("Инструкция", $Tab2), array("О Модуле", $Tab3), array("Незавершенные заказы", null, '?path=modules.dir.visualcart'));
 
     // Вывод кнопок сохранить и выход в футер
     $ContentFooter =

@@ -7,103 +7,86 @@ $PHPShopOrm = new PHPShopOrm($PHPShopModules->getParam("base.admlog.admlog_log")
 
 // Функция обновления
 function actionUpdate() {
-
-    $pathinfo = pathinfo($_POST['file_new']);
-    $file = $pathinfo['dirname'];
+    global $PHPShopModules;
 
     // Карта таблиц БД
     $baseMap = array(
-        'page' => 'page',
-        'system' => 'table_name3',
-        'gbook' => 'gbook',
-        'news' => 'news',
-        'menu' => 'table_name14',
-        'news_writer' => 'table_name9',
-        'banner' => 'table_name15',
-        'links' => 'table_name17',
-        'users' => 'users',
-        'opros' => 'table_name20',
+        'banner' => 'baners',
         'product' => 'products',
         'catalog' => 'categories'
     );
 
-    // Карта папок
-    $dirSearch = array_keys($baseMap);
+    // Выборка
+    $PHPShopOrm = new PHPShopOrm($PHPShopModules->getParam("base.admlog.admlog_log"));
+    $data = $PHPShopOrm->select(array('*'), array('id' => '=' . intval($_POST['rowID'])));
 
+    if (is_array($data)) {
 
-    foreach ($dirSearch as $val)
-        if (strpos($file, $val)) {
-            $baseName = $baseMap[$val];
-        }
-
-    $contentCode = unserialize(base64_decode($_POST['contentCode']));
-
-
-    $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base'][$baseName]);
-    $PHPShopOrm->debug = true;
-    //$PHPShopOrm->trace($contentCode);
-
-    if (!empty($contentCode['delID'])) {
-        $action = $PHPShopOrm->insert($contentCode);
-        $nameHandler = 'Откат удаления';
-    } else {
-
-        if (!empty($contentCode['newsID']))
-            $itemID = $contentCode['newsID'];
-        elseif (!empty($contentCode['pageID']))
-            $itemID = $contentCode['pageID'];
-        elseif (!empty($contentCode['productID']))
-            $itemID = $contentCode['productID'];
-        elseif (!empty($contentCode['catalogID']))
-            $itemID = $contentCode['catalogID'];
-        elseif (!empty($contentCode['rowID']))
-            $itemID = $contentCode['rowID'];
+        if (!empty($baseMap[$data['file']]))
+            $baseName = $baseMap[$data['file']];
         else
-            $itemID = $contentCode['itemID'];
+            $baseName = $data['file'];
 
-        $action = $PHPShopOrm->update($contentCode, array('id' => '=' . intval($itemID)));
-        $nameHandler = 'Откат изменения';
+        $contentCode = unserialize($data['content']);
+
+        if (is_array($contentCode)) {
+
+            $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base'][$baseName]);
+            $PHPShopOrm->debug = false;
+            //$PHPShopOrm->trace($contentCode);
+
+            if (!empty($contentCode['delID'])) {
+                $action = $PHPShopOrm->insert($contentCode);
+                $nameHandler = 'Откат удаления';
+            } else {
+
+                $action = $PHPShopOrm->update($contentCode, array('id' => '=' . intval($_POST['rowID'])));
+                $nameHandler = 'Откат изменения от '.PHPShopDate::dataV($data['date'], true);
+            }
+
+            // Пишем лог
+            include_once('writelog.php');
+            setLog(false, $nameHandler);
+        }
     }
-
-    // Пишем лог
-    include_once('writelog.php');
-    setLog(false, $nameHandler);
-
-    return $action;
+    
+    header('Location: ?path='.$_GET['path']);
 }
 
 // Начальная функция загрузки
 function actionStart() {
-    global $PHPShopGUI, $PHPShopOrm, $TitlePage;
+    global $PHPShopGUI, $PHPShopOrm, $TitlePage, $PHPShopSystem;
 
 
     $PHPShopGUI->action_button['Восстановить данные'] = array(
         'name' => 'Восстановить данные',
-        'action' => 'report.searchreplace',
-        'class' => 'btn btn-default btn-sm navbar-btn btn-action-panel',
-        'type' => 'button',
+        'action' => 'saveID',
+        'class' => 'btn btn-default btn-sm navbar-btn',
+        'type' => 'submit',
         'icon' => 'glyphicon glyphicon-refresh'
     );
-
-    $PHPShopGUI->setActionPanel($TitlePage, false, array('Восстановить данные'));
 
 
     // Выборка
     $data = $PHPShopOrm->select(array('*'), array('id' => '=' . intval($_GET['id'])));
     $contentTemp = unserialize($data['content']);
-
+    
+    if($data['file'] != 'modules')
+        $button=array('Восстановить данные');
+    else $button=null;
+    
+    $PHPShopGUI->setActionPanel('Запись журнала изменений от '.PHPShopDate::dataV($data['date'], true), false, $button);
 
     // Содержание закладки 1
-    $Tab1 = $PHPShopGUI->setField("Дата:", $PHPShopGUI->setInput("text", "name_new", PHPShopDate::dataV($data['date'], true), "left", 150));
+    //$Tab1 = $PHPShopGUI->setField("Дата:", $PHPShopGUI->setInput("text", "name_new", PHPShopDate::dataV($data['date'], true), "left", 150));
     $Tab1.=$PHPShopGUI->setField("Пользователь:", $PHPShopGUI->setInput("text", "name_new", $data['user']));
     $Tab1.=$PHPShopGUI->setField("Действие:", $PHPShopGUI->setInput("text", "name_new", $data['title']));
-
 
     // Основное содержание
     $titleSearch = array('content_new', 'description_new');
     if (is_array($contentTemp))
         foreach ($contentTemp as $key => $val) {
-            if (in_array($key, $titleSearch)) {
+            if (in_array($key, $titleSearch) and !empty($contentTemp[$key])) {
                 $contentMain = $contentTemp[$key];
                 break;
             }
@@ -111,26 +94,18 @@ function actionStart() {
 
 
     // Редактор 1
-    $PHPShopGUI->setEditor('none');
+    $PHPShopGUI->setEditor($PHPShopSystem->getSerilizeParam("admoption.editor"));
     $oFCKeditor = new Editor('content_temp');
     $oFCKeditor->Height = '280';
     $oFCKeditor->Value = $contentMain;
 
     $Tab2 = $oFCKeditor->AddGUI();
 
-    // Данные отката
-    $Tab1.=$PHPShopGUI->setInput("hidden", "contentCode", base64_encode($data['content']), "left", 1);
-
-
     // Вывод формы закладки
-    $PHPShopGUI->setTab(array("Основное", $Tab1), array("Содержание", $Tab2));
+    $PHPShopGUI->setTab(array("Основное", $Tab1, true), array("Содержание", $Tab2));
 
-
-    $pathinfo = pathinfo($data['file']);
-    $ContentFooter = $PHPShopGUI->setInput("button", "", "Отмена", "right", 70, "return onCancel();", "but");
-
-    if ($pathinfo['basename'] != "adm_admlog_back.php")
-        $ContentFooter.=$PHPShopGUI->setInput("submit", "editID", "Откатить", "right", 70, "", "but", "actionUpdate");
+    $ContentFooter.=$PHPShopGUI->setInput("hidden", "rowID", $data['id'], "right", 70, "", "but") .
+            $PHPShopGUI->setInput("submit", "saveID", "Откатить", "right", 70, "", "but", "actionUpdate.modules.edit");
 
     $PHPShopGUI->setFooter($ContentFooter);
     return true;

@@ -20,6 +20,9 @@ function actionBaseUpdate() {
 function actionUpdate() {
     global $PHPShopModules;
 
+    // Настройки витрины
+    $PHPShopModules->updateOption($_GET['id'], $_POST['servers']);
+
 
     // Доставки
     if (isset($_POST['delivery_id_new'])) {
@@ -40,6 +43,10 @@ function actionUpdate() {
             $_POST['express_delivery_id_new'] = @implode(',', $_POST['express_delivery_id_new']);
         }
     }
+    if (empty($_POST['express_delivery_id_new']))
+        $_POST['express_delivery_id_new'] = '';
+    if (empty($_POST['delivery_id_new']))
+        $_POST['delivery_id_new'] = '';
 
     $PHPShopOrm = new PHPShopOrm($PHPShopModules->getParam("base.boxberrywidget.boxberrywidget_system"));
     $PHPShopOrm->debug = false;
@@ -51,16 +58,21 @@ function actionUpdate() {
 }
 
 function actionStart() {
-    global $PHPShopGUI, $PHPShopOrm;
+    global $PHPShopGUI, $PHPShopOrm, $PHPShopBase;
 
     // Выборка
     $data = $PHPShopOrm->select();
+
+    // Демо-режим
+    if ($PHPShopBase->getParam('template_theme.demo') == 'true') {
+        $data['api_key'] = $data['token'] = '';
+    }
 
     // Выбор ПВЗ отправки
     $PHPShopGUI->addJSFiles('//points.boxberry.ru/js/boxberry.js');
     $PHPShopGUI->addJSFiles('../modules/boxberrywidget/admpanel/gui/boxberrywidget.gui.js');
 
-    if(empty($data['pvz_id']))
+    if (empty($data['pvz_id']))
         $buttonText = 'Выбрать ПВЗ';
     else
         $buttonText = 'Изменить ПВЗ';
@@ -106,7 +118,7 @@ function actionStart() {
             else
                 $express_delivery_id = null;
 
-            $express_delivery_value[] = array($delivery['city'], $delivery['id'],  $express_delivery_id);
+            $express_delivery_value[] = array($delivery['city'], $delivery['id'], $express_delivery_id);
         }
     }
 
@@ -115,20 +127,19 @@ function actionStart() {
     $Tab1.= $PHPShopGUI->setField('ID пункта поступления ЗП', $PHPShopGUI->setInputText(false, 'pvz_id_new', $data['pvz_id'], 300, '<a id="link-activate-ddelivery" onclick="getPVZ()" href="#">' . $buttonText . '</a>'));
     $Tab1.= $PHPShopGUI->setField('Статус для отправки', $PHPShopGUI->setSelect('status_new', $status, 300));
     $Tab1.= $PHPShopGUI->setField('Доставка самовывоз из ПВЗ', $PHPShopGUI->setSelect('delivery_id_new[]', $delivery_value, 300, null, false, $search = false, false, $size = 1, $multiple = true));
-    $Tab1.= $PHPShopGUI->setField('Курьерская доставка', $PHPShopGUI->setSelect('express_delivery_id_new[]',$express_delivery_value, 300, null, false, $search = false, false, $size = 1, $multiple = true));
+    $Tab1.= $PHPShopGUI->setField('Курьерская доставка', $PHPShopGUI->setSelect('express_delivery_id_new[]', $express_delivery_value, 300, null, false, $search = false, false, $size = 1, $multiple = true));
     $Tab1.= $PHPShopGUI->setField('Город на карте по умолчанию', $PHPShopGUI->setInputText(false, 'city_new', $data['city'], 300));
-    $Tab1.= $PHPShopGUI->setCollapse('Вес и габариты по умолчанию',
-        $PHPShopGUI->setField('Вес, гр.', $PHPShopGUI->setInputText('', 'weight_new', $data['weight'],300)) .
-        $PHPShopGUI->setField('Ширина, см.', $PHPShopGUI->setInputText('', 'width_new', $data['width'],300)) .
-        $PHPShopGUI->setField('Высота, см.', $PHPShopGUI->setInputText('', 'height_new', $data['height'],300)) .
-        $PHPShopGUI->setField('Длина, см.', $PHPShopGUI->setInputText('', 'depth_new', $data['depth'],300))
+    $Tab1.= $PHPShopGUI->setCollapse('Вес и габариты по умолчанию', $PHPShopGUI->setField('Вес, гр.', $PHPShopGUI->setInputText('', 'weight_new', $data['weight'], 300)) .
+            $PHPShopGUI->setField('Ширина, см.', $PHPShopGUI->setInputText('', 'width_new', $data['width'], 300)) .
+            $PHPShopGUI->setField('Высота, см.', $PHPShopGUI->setInputText('', 'height_new', $data['height'], 300)) .
+            $PHPShopGUI->setField('Длина, см.', $PHPShopGUI->setInputText('', 'depth_new', $data['depth'], 300))
     );
 
     $info = '<h4>Получение Ключа интеграции и API token</h4>
        <ol>
         <li>Зарегистрироваться в <a href="http://api.boxberry.de" target="_blank">http://api.boxberry.de</a>.</li>
-        <li>Ключ интеграции доступен по ссылке <a target="_blank" href="http://api.boxberry.de/?act=info&sub=api_info_lk">Справка API ЛК</a>.</li>
-        <li>API token доступен по ссылке <a target="_blank" href="http://api.boxberry.de/?act=settings&sub=view">Настройка средств интеграции</a>.</li>
+        <li>Ключ интеграции доступен по ссылке <a target="_blank" href="http://api.boxberry.de/?act=settings&sub=view">Настройка средств интеграции</a>.</li>
+        <li>API token доступен по ссылке <a target="_blank" href="http://api.boxberry.de/?act=info&sub=api_info_lk">Справка API ЛК</a>.</li>
         </ol>
         
        <h4>Настройка модуля</h4>
@@ -144,6 +155,8 @@ function actionStart() {
        <h4>Настройка доставки</h4>
         <ol>
         <li>В карточке редактирования доставки в закладке <kbd>Изменение стоимости доставки</kbd> настроить дополнительный параметр сохранения стоимости доставки для модуля. Опция "Не изменять стоимость" должна быть активна.</li>
+         <li>В карточке редактирования доставки для курьерской доставки в закладке <kbd>Адреса пользователя</kbd> отметить <kbd>Индекс</kbd> "Вкл." и "Обязательное"</li>
+         <li>В карточке редактирования доставки для курьерской доставки в закладке <kbd>Адреса пользователя</kbd> отметить <kbd>ФИО</kbd> "Вкл." и "Обязательное"</li>
         </ol>
 
 ';
@@ -151,7 +164,7 @@ function actionStart() {
     $Tab2 = $PHPShopGUI->setInfo($info);
 
     // Форма регистрации
-    $Tab4 = $PHPShopGUI->setPay($serial = false, false, $data['version'], true);
+    $Tab4 = $PHPShopGUI->setPay($serial = false, false, $data['version'], false);
 
     // Вывод формы закладки
     $PHPShopGUI->setTab(array("Основное", $Tab1, true), array("Инструкция", $Tab2), array("О Модуле", $Tab4));

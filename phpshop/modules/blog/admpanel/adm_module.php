@@ -5,7 +5,10 @@ $PHPShopOrm = new PHPShopOrm($PHPShopModules->getParam("base.blog.blog_system"))
 
 // Функция обновления
 function actionUpdate() {
-    global $PHPShopOrm;
+    global $PHPShopOrm,$PHPShopModules;
+    
+    // Настройки витрины
+    $PHPShopModules->updateOption($_GET['id'], $_POST['servers']);
 
     if (empty($_POST['enabled_new']))
         $_POST['enabled_new'] = 0;

@@ -130,4 +130,15 @@ class PHPShopFile {
 
 }
 
+/**
+ * Поиск лицензии
+ * @param string $file имя файла
+ * @return string
+ */
+function getLicense($file) {
+    $fstat = explode(".", $file);
+    if ($fstat[1] == "lic")
+        return $file;
+}
+
 ?>

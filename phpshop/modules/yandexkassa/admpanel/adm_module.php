@@ -18,7 +18,10 @@ function actionBaseUpdate() {
 
 // Функция обновления
 function actionUpdate() {
-    global $PHPShopOrm;
+    global $PHPShopOrm,$PHPShopModules;
+    
+    // Настройки витрины
+    $PHPShopModules->updateOption($_GET['id'], $_POST['servers']);
 
     if (is_array($_POST['pay_variants_new']))
         $_POST['pay_variants_new'] = serialize($_POST['pay_variants_new']);

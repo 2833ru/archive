@@ -23,7 +23,6 @@ $PHPShopSkinElement->init('skinSelect');
 // Стили шаблона дизайна
 $PHPShopCoreElement->init('pageCss', false, false);
 
-
 // Загрузка модулей
 PHPShopObj::loadClass('modules');
 $PHPShopModules = new PHPShopModules();
@@ -47,16 +46,13 @@ $PHPShopUserElement->init('wishlist');
 $PHPShopProductIndexElements = new PHPShopProductIndexElements();
 $PHPShopProductIndexElements->init('specMain');
 
-
 // Последние покупки
 $PHPShopProductIndexElements->init('nowBuy');
 
 // Меню каталогов
-
 $PHPShopShopCatalogElement = new PHPShopShopCatalogElement();
 $PHPShopShopCatalogElement->init('leftCatal');
 $PHPShopShopCatalogElement->init('leftCatalTable');
-
 
 // Новинки в колонку
 $PHPShopProductIconElements = new PHPShopProductIconElements();
@@ -82,15 +78,19 @@ $PHPShopSliderElement->init('imageSlider');
 $PHPShopBannerElement = new PHPShopBannerElement();
 $PHPShopBannerElement->init('banersDisp');
 
+// Аналитика
+$PHPShopAnalitica = new PHPShopAnalitica();
+
 // Облако тегов
 $PHPShopCloudElement = new PHPShopCloudElement();
 $PHPShopCloudElement->init('cloud');
 
 // Текстовый блок
 $PHPShopTextElement = new PHPShopTextElement();
-$PHPShopTextElement->init('leftMenu', true); // Вывод левого блока
-$PHPShopTextElement->init('rightMenu', true); // Вывод правого блока
-$PHPShopTextElement->init('topMenu', true); // Вывод главного меню
+$PHPShopTextElement->init('leftMenu', true);
+$PHPShopTextElement->init('rightMenu', true);
+$PHPShopTextElement->init('topMenu', true);
+
 // Корзина
 $PHPShopCartElement = new PHPShopCartElement();
 $PHPShopCartElement->init('miniCart');

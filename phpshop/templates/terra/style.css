@@ -2376,6 +2376,7 @@ img.template:hover{
 .user-dropdown > .dropdown-menu {
 	background: #3bc6e4;
 	border: none;
+        width: 180px;
 	padding: 0;
 	-webkit-border-radius: 0px !important;
 	-moz-border-radius: 0px !important;

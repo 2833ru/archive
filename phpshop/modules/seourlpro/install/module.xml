@@ -5,6 +5,7 @@
     <faqlink>http://faq.phpshop.ru/page/seo-url.html</faqlink>
     <description>Модуль расширенных SEO ссылок и редиректов</description>
     <category>seo</category>
+    <status>update</status>
     <adminmenu>
         <title>SeoUrl Pro</title>
         <capability>true</capability>

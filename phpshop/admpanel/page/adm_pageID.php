@@ -125,8 +125,7 @@ function actionStart() {
     $SelectValue[] = array('Вывод в каталоге', 1, $data['enabled']);
     $SelectValue[] = array('Заблокировать', 0, $data['enabled']);
 
-    if ($data['category'] != 2000)
-        $Tab1.= $PHPShopGUI->setField("Опции вывода:", $PHPShopGUI->setSelect("enabled_new", $SelectValue, 300, true));
+    $Tab1.= $PHPShopGUI->setField("Опции вывода:", $PHPShopGUI->setSelect("enabled_new", $SelectValue, 300, true));
 
     // Рекомендуемые товары
     if ($data['category'] != 2000)
@@ -142,9 +141,12 @@ function actionStart() {
         // Безопасность
         $SecurityValue[] = array('Всем пользователям', 0, $data['secure']);
         $SecurityValue[] = array('Только зарегистрированным пользователям', 1, $data['secure']);
-        $Tab1.=$PHPShopGUI->setCollapse('Доступность', $PHPShopGUI->setField("Показывать", $PHPShopGUI->setSelect("secure_new", $SecurityValue, 300, true)) .
-                $PHPShopGUI->setField("Витрины", $PHPShopGUI->loadLib('tab_multibase', $data, 'catalog/')));
+        $TabSec = $PHPShopGUI->setField("Показывать", $PHPShopGUI->setSelect("secure_new", $SecurityValue, 300, true));
     }
+    else
+        $TabSec = null;
+
+    $Tab1.=$PHPShopGUI->setCollapse('Доступность', $TabSec . $PHPShopGUI->setField("Витрины", $PHPShopGUI->loadLib('tab_multibase', $data, 'catalog/')));
 
     // Запрос модуля на закладку
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $data);

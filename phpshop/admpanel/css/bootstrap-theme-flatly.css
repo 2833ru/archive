@@ -6738,3 +6738,8 @@ label {
   text-decoration: none;
   color: #ffffff;
 }
+
+#body,#form-signin{
+    background: #F0F0F0 url(images/brick.png) top center repeat !important;
+    background-attachment: fixed !important;
+}

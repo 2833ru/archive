@@ -1678,18 +1678,18 @@ class PHPShopGUI {
     /**
      * Прорисовка формы о модуле
      * @param bool $serial сериный ключ [false]
-     * @param bool $pay форма оплаты [false]
+     * @param bool $pay настройки оплаты [false]
      * @param string $version номер версии модуля
      * @param bool $update проверка обновлений
      * @return string
      */
-    function setPay($serial = false, $pay = false, $version = false, $update = false) {
+    function setPay($serial = false, $server_block = false, $version = false, $update = false) {
         global $PHPShopModules;
 
         $mes = null;
         $path = $PHPShopModules->path;
         PHPShopObj::loadClass("date");
-
+        
         /*
           if (!empty($path)) {
           $data = $PHPShopModules->checkKeyBase();
@@ -1707,6 +1707,7 @@ class PHPShopGUI {
                   <th>Название</th>
                   <th>Версия</th>
                   <th>Описание</th>
+                  <th>Доступность</th>
                </tr>';
 
 
@@ -1718,17 +1719,23 @@ class PHPShopGUI {
             $version_info.=$this->setInput("submit", "modupdate", "Обновить модуль", "center", null, "", "btn-sm pull-right", "actionBaseUpdate");
         }
         else
-            $version_info = $db['version'] . $status;
+            $version_info = $db['version'];
 
         if (!empty($db['status']))
             $status = ' <span class="label label-default">' . $db['status'] . '</span>';
         else
             $status = null;
-
+        
+        if(!$server_block)
+            $tab_multibase = $this->loadLib('tab_multibase', array('servers'=>$PHPShopModules->showcase[$path]), 'catalog/');
+        else $tab_multibase = $this->__('Общая');
+        
+        
         $CODE.='<tr>
                   <td>' . $db['name'] . '</td>
                   <td>' . $version_info . '</td>
                   <td>' . $db['description'] . $mes . '</td>
+                  <td>' . $tab_multibase . '</td>
                </tr>
                </table>';
 

@@ -3,7 +3,7 @@
 /**
  * Библиотека чтения CSV файлов на основе fgetcsv()
  * @author PHPShop Software
- * @version 1.7
+ * @version 1.8
  * @package PHPShopClass
  */
 class PHPShopReadCsvNative {
@@ -15,9 +15,7 @@ class PHPShopReadCsvNative {
     
 
     function __construct($file) {
-        global $link_db;
         $this->read($file);
-        $this->link_db = $link_db;
     }
 
     function read($file) {
@@ -40,14 +38,16 @@ class PHPShopReadCsvNative {
     }
 
     function CheckUid($uid) {
+        global $link_db;
         $sql = "select id from " . $this->TableName . " where uid='$uid'";
-        $result = mysqli_query($this->link_db, $sql);
+        $result = mysqli_query($link_db, $sql);
         return intval(mysqli_num_rows($result));
     }
 
     function CheckId($id) {
+        global $link_db;
         $sql = "select id from " . $this->TableName . " where id=".intval($id);
-        $result = mysqli_query($this->link_db, $sql);
+        $result = mysqli_query($link_db, $sql);
         return intval(mysqli_num_rows($result));
     }
 

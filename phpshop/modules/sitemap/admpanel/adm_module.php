@@ -243,7 +243,7 @@ function actionStart() {
         </ol>";
     $Tab1 = $PHPShopGUI->setInfo($Info);
 
-    $Tab2 = $PHPShopGUI->setPay();
+    $Tab2 = $PHPShopGUI->setPay(false,true);
 
 // Вывод формы закладки
     $PHPShopGUI->setTab(array("Основное", $Tab1), array("О Модуле", $Tab2));

@@ -2,6 +2,8 @@ ALTER TABLE `phpshop_modules_promotions_forms` ADD `label` text;
 ALTER TABLE `phpshop_modules_promotions_forms` ADD `header_mail` varchar(255);
 ALTER TABLE `phpshop_modules_promotions_forms` ADD `content_mail` text;
 ALTER TABLE `phpshop_modules_promotions_forms` ADD `block_old_price` enum('0','1') DEFAULT '0';
+ALTER TABLE `phpshop_modules_promotions_forms` ADD `statuses` text NOT NULL DEFAULT '';
+ALTER TABLE `phpshop_modules_promotions_forms` ADD `status_check` enum('0','1') NOT NULL DEFAULT '0';
 
 DROP TABLE IF EXISTS `phpshop_modules_promotions_codes`;
 CREATE TABLE IF NOT EXISTS `phpshop_modules_promotions_codes` (
@@ -18,4 +20,4 @@ CREATE TABLE IF NOT EXISTS `phpshop_modules_promotions_system` (
   `version` varchar(64) DEFAULT '1.0',
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
-INSERT INTO `phpshop_modules_promotions_system` VALUES (1,'2.4');
+INSERT INTO `phpshop_modules_promotions_system` VALUES (1,'2.5');

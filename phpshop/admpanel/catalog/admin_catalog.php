@@ -26,11 +26,11 @@ function actionStart() {
     $GLOBALS['count'] = count($CategoryArray);
 
     if (!empty($CategoryArray[$_GET['cat']]['name']))
-        $catname = " / " . $CategoryArray[$_GET['cat']]['name'];
+        $catname = "  &rarr;  " . $CategoryArray[$_GET['cat']]['name'];
     elseif (!empty($CategoryArray[$_GET['sub']]['name']))
-        $catname = " / " . $CategoryArray[$_GET['sub']]['name'];
+        $catname = "  &rarr;  " . $CategoryArray[$_GET['sub']]['name'];
     else
-        $catname = " / " . __('Новые товары');
+        $catname = "  &rarr;  " . __('Новые товары');
 
     // Права менеджеров
     if ($secure_groups and isset($_GET['cat']) and empty($CategoryArray[$_GET['cat']]['name'])) {

@@ -13,12 +13,13 @@ function send_to_order_boxberrywidget_hook($obj, $row, $rout)
 
     if(in_array($_POST['d'], @explode(",", $BoxberryWidget->option['delivery_id'])) or in_array($_POST['d'], @explode(",", $BoxberryWidget->option['express_delivery_id'])))
     {
-        if(!empty($_POST['boxberrySum']))
+        if(!empty($_POST['DeliverySum']))
         {
             if ($rout == 'START') {
-                $obj->delivery_mod = number_format($_POST['boxberrySum'], 0, '.', '');
+                $obj->delivery_mod = number_format($_POST['DeliverySum'], 0, '.', '');
                 $obj->manager_comment = $_POST['boxberryInfo'];
                 $obj->set('deliveryInfo', $_POST['boxberryInfo']);
+                $_POST['boxberry_pvz_id_new'] = $_POST['boxberry_pvz_id'];
             }
 
             if ($rout == 'MIDDLE' and $BoxberryWidget->option['status'] == 0) {

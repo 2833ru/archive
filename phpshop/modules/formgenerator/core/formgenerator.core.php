@@ -78,6 +78,23 @@ class PHPShopFormgenerator extends PHPShopCore {
                 }
 
 
+            // Данные по товару
+            $product_id = intval($_POST['product_id']);
+            if (!empty($product_id)) {
+
+                $PHPShopProduct = new PHPShopProduct($product_id);
+                $product_name = $PHPShopProduct->getName();
+                if (!empty($product_name)) {
+                    $content.= '
+Товар: ' . $product_name . '
+ID: ' . $product_id . '
+Артикул: ' . $PHPShopProduct->getParam('uid') . '
+Ссылка: http://' . $_SERVER['SERVER_NAME'] . '/shop/UID_' . $product_id . '.html
+                    ';
+                }
+            }
+
+
             // Если все поля заполнены
             if (empty($error)) {
 
@@ -90,8 +107,6 @@ class PHPShopFormgenerator extends PHPShopCore {
 E-mail: ' . $mail . '
 ' . $content . '
 Источник: ' . $_SERVER['HTTP_REFERER'] . '
-
----
 ';
 
                 // Сообщение пользователю
@@ -173,6 +188,20 @@ E-mail: ' . $mail . '
 
             if (!empty($_GET['error']))
                 $error = $data['error_message'];
+            
+            // Защитная каптча
+        $GLOBALS['SysValue']['other']['formgenerator_captcha']='
+        <p id="formgenerator_captcha">
+        <table>
+          <tr>
+            <td><img src="phpshop/modules/formgenerator/inc/captcha.php" alt="" border="0"></td>
+            <td>&nbsp;&nbsp;</td>
+            <td>Введите код, указанный на картинке<br>
+              <input type="text" name="key" style="width:220px;">
+            </td>
+          </tr>
+        </table>
+        </p>';
 
             $forma_content = '
                 <p><b>' . $error . '</b></p>
@@ -180,6 +209,7 @@ E-mail: ' . $mail . '
             ' . Parser($this->fixtags($data['content'])) . '
                 <p id="formgenerator_buttons">
             <input type="hidden" name="forma_id" value="' . $data['id'] . '">
+            <input type="hidden" name="product_id" value="' . $_REQUEST['product_id'] . '">
             <input class="btn btn-default" type="reset" value="Очистить">
             <input class="btn btn-primary" type="submit" name="forma_send" value="Отправить">
              </p>

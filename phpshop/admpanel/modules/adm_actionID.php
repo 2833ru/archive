@@ -68,11 +68,11 @@ if (!empty($PHPShopBase) and $PHPShopBase->Rule->CheckedRules('modules', 'edit')
                 else
                     $key = $Info['key'];
 
-                $sql = "INSERT INTO " . $GLOBALS['SysValue']['base']['modules'] . "  VALUES ('" . $_POST['moduleId'] . "','" . $Info ['name'] . "'," . time() . ")";
+                $sql = "INSERT INTO " . $GLOBALS['SysValue']['base']['modules'] . " (`path`, `name`, `date`) VALUES ('" . $_POST['moduleId'] . "','" . $Info ['name'] . "'," . time() . ")";
                 $result = mysqli_query($PHPShopBase->link_db, $sql);
 
                 if (!empty($date_end))
-                    $sql = "INSERT INTO " . $GLOBALS['SysValue']['base']['modules_key'] . "  VALUES ('" . $_POST['moduleId'] . "'," . $date_end . ",'" . $key . "','" . md5($_POST['moduleId'] . $date_end . $_SERVER['SERVER_NAME'] . $key) . "')";
+                    $sql = "INSERT INTO " . $GLOBALS['SysValue']['base']['modules_key'] . " (`path`, `name`, `date`) VALUES ('" . $_POST['moduleId'] . "'," . $date_end . ",'" . $key . "','" . md5($_POST['moduleId'] . $date_end . $_SERVER['SERVER_NAME'] . $key) . "')";
                 mysqli_query($PHPShopBase->link_db, $sql);
 
                 // Устанавливаем БД модуля

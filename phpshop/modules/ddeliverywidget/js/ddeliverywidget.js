@@ -1,4 +1,5 @@
 function ddeliverywidgetStart() {
+    $('input[name="ddeliveryReq"]').remove();
 
     var products = $.parseJSON($("input:hidden.cartListJson").val());
     if(!$('input').is('[name="ddeliverySum"]')) { $('<input type="hidden" name="ddeliverySum" id="ddeliverySum">').insertAfter('#d'); }
@@ -67,11 +68,6 @@ function ddeliverywidgetStart() {
     });      
 
     $("#ddeliverywidgetModal").modal("toggle");
-}
-
-
-function ddeliverywidgetReset() {
-    $('input[name="ddeliveryReq"]').remove();
 }
 
 /*

@@ -204,9 +204,10 @@ function actionStart() {
             // Библиотека заказа
             $PHPShopOrder = new PHPShopOrderFunction($row['id'], $row);
 
-            if (empty($row['fio'])) {
+            if (empty($row['fio']) and !empty($row['name'])) 
+                $row['fio'] = $row['name'];
+            elseif(empty($row['fio']) and empty($row['name']))
                 $row['fio'] = $row['mail'];
-            }
 
             $datas = PHPShopDate::get($row['datas']);
 

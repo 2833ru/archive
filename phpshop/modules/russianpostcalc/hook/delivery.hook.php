@@ -33,22 +33,28 @@ function russianpostcalc_delivery_hook($obj, $data) {
             $hook['success'] = 'index';
             $hook['message'] = PHPShopString::win_utf8('Стоимость доставки в город ' . PHPShopString::utf8_win1251($ret['info']['to_city']) . ' составит ' . $hook['delivery'] . ' руб.');
             $hook['city'] = $ret['info']['to_city'];
+
+            return $hook;
         } else {
             $hook['message'] = $ret['msg']['text'];
             $hook['success'] = 'indexError';
+
+            return $hook;
         }
     } elseif ($xid == $option['delivery_id'] and strlen($_POST['index']) > 6) {
         $hook['success'] = 'indexError';
         $hook['message'] = PHPShopString::win_utf8('Неверно введен индекс получателя!');
+
+        return $hook;
     } elseif ($xid == $option['delivery_id'] and empty($_POST['index'])) {
         $hook['hook'] = '';
         $hook['adresList'] = $_RESULT['adresList'];
         $hook['dellist'] = $_RESULT['dellist'];
         $hook['total'] = $_RESULT['total'];
         $hook['success'] = '1';
-    }
 
-    return $hook;
+        return $hook;
+    }
 }
 
 $addHandler = array

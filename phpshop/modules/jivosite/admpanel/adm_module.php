@@ -5,7 +5,10 @@ $PHPShopOrm = new PHPShopOrm($PHPShopModules->getParam("base.jivosite.jivosite_s
 
 // Функция обновления
 function actionUpdate() {
-    global $PHPShopOrm;
+    global $PHPShopOrm,$PHPShopModules;
+    
+    // Настройки витрины
+    $PHPShopModules->updateOption($_GET['id'], $_POST['servers']);
 
     $PHPShopOrm->debug = false;
 
@@ -14,6 +17,7 @@ function actionUpdate() {
         $path = 'https://admin.jivosite.com/integration/install';
 
         $query['email'] = $_POST['email_new'];
+        $query['userDisplayName'] = $_POST['display_name_new'];
         $query['userPassword'] = $_POST['userPassword_new'];
         $query['siteUrl'] = 'http://' . $_SERVER['SERVER_NAME'];
         $query['partnerId'] = "17863";
@@ -53,10 +57,9 @@ function actionStart() {
     // Выборка
     $data = $PHPShopOrm->select();
 
-    //$Tab1 = $PHPShopGUI->setField('Widget id',$PHPShopGUI->setInputText(false, 'widget_id_new', $data['widget_id'], '300'));
-
     $Tab1 = $PHPShopGUI->setField('Логин', $PHPShopGUI->setInputText(false, 'email_new', $data['email'], 300));
     $Tab1 .= $PHPShopGUI->setField('Пароль', $PHPShopGUI->setInput("password", 'userPassword_new', $data['userPassword'], false, 300));
+    $Tab1 .= $PHPShopGUI->setField('Имя отображаемое в чате', $PHPShopGUI->setInputText(false, 'display_name_new', $data['display_name'], 300));
 
     $Info = '<h4>Для вставки данного модуля следуйте инструкции:</h4>
         <ol>

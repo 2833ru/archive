@@ -27,6 +27,7 @@ class PHPShopFormgeneratorElement {
         <table>
           <tr>
             <td><img src="phpshop/modules/formgenerator/inc/captcha.php" alt="" border="0"></td>
+            <td>&nbsp;&nbsp;</td>
             <td>¬ведите код, указанный на картинке<br>
               <input type="text" name="key" style="width:220px;">
             </td>

@@ -185,7 +185,7 @@ function actionStart() {
                         } else {
                             foreach ($template['var'] as $var) {
 
-                                // Поиск перемнной в файле
+                                // Поиск переменной в файле
                                 if (preg_match("/@" . $var['name'] . "@/", $content)) {
                                     $class_btn = 'btn-default';
                                     $class_icon = 'glyphicon-tag';
@@ -204,16 +204,16 @@ function actionStart() {
 
         if (!empty($var_list)) {
             $PHPShopGUI->_CODE = '<div class="panel panel-default" id="varlist">
-            <div class="panel-body">' . $var_list . '<div class="text-right data-row"><a href="#" id="vartable" data-toggle="modal" data-target="#selectModal" data-title="' . $_GET['file'] . '"><span class="glyphicon glyphicon-question-sign"></span>'.__('Описание переменных').'</a></div></div></div>';
+            <div class="panel-body">' . $var_list . '<div class="text-right data-row"><a href="#" id="vartable" data-toggle="modal" data-target="#selectModal" data-title="' . $_GET['file'] . '"><span class="glyphicon glyphicon-question-sign"></span>' . __('Описание переменных') . '</a></div></div></div>';
 
             // Модальное окно таблицы описаний переменных
-            $selectModalBody = '<table class="table table-striped"><tr><th>'.__('Переменная').'</th><th>'.__('Описание').'</th></tr>' . $selectModal . '</table>';
+            $selectModalBody = '<table class="table table-striped"><tr><th>' . __('Переменная') . '</th><th>' . __('Описание') . '</th></tr>' . $selectModal . '</table>';
         }
 
-        $PHPShopGUI->_CODE.= '<textarea class="hide hidden-edit" id="editor_src" name="editor_src" data-mod="' . $mod . '" data-theme="' . $theme . '">' . $content . '</textarea><pre id="editor">'.__('Загрузка...').'</pre>';
+        $PHPShopGUI->_CODE.= '<textarea class="hide hidden-edit" id="editor_src" name="editor_src" data-mod="' . $mod . '" data-theme="' . $theme . '">' . $content . '</textarea><pre id="editor">' . __('Загрузка...') . '</pre>';
     } else {
-        $PHPShopGUI->_CODE = '<p class="text-muted hidden-xs data-row">'.__('Выберите установленный шаблон и файл для редактирования в левом меню.  
-            Установка шаблона для отображения на сайте производится в основных системных настройках, закладка').' <a href="?path=system#1"><span class="glyphicon glyphicon-share-alt"></span>'.__('Настройка дизайна').'</a>. '.__('Цветовая тема подсветки синтаксиса меняется в основных системных настройках, закладка').' <a href="?path=system#4"><span class="glyphicon glyphicon-share-alt"></span>'.__('Настройка управления').'</a>.</p>';
+        $PHPShopGUI->_CODE = '<p class="text-muted hidden-xs data-row">' . __('Выберите установленный шаблон и файл для редактирования в левом меню.  
+            Установка шаблона для отображения на сайте производится в основных системных настройках, закладка') . ' <a href="?path=system#1"><span class="glyphicon glyphicon-share-alt"></span>' . __('Настройка дизайна') . '</a>. ' . __('Цветовая тема подсветки синтаксиса меняется в основных системных настройках, закладка') . ' <a href="?path=system#4"><span class="glyphicon glyphicon-share-alt"></span>' . __('Настройка управления') . '</a>.</p>';
 
         // Карта шаблона
         if (!empty($_GET['name']))
@@ -236,7 +236,7 @@ function actionStart() {
     if (empty($_GET['name'])) {
 
         // Левый сайдбар дерева шаблонов
-        $tree = '<table class="table table-hover">';
+        $tree = '<table class="table table-hover" id="template-tree">';
 
         $root = glob("../templates/*", GLOB_ONLYDIR);
         if (is_array($root)) {
@@ -252,11 +252,11 @@ function actionStart() {
     } else {
 
         // Левый сайдбар дерева шаблонов
-        $tree = '<table class="tree table table-hover">';
+        $tree = '<table class="table table-hover" id="template-tree">';
 
         // Левый сайдбар дерева шаблонов
         $tree.= '<tr class="treegrid-all">
-           <td><a href="?path=' . $_GET['path'] . $option_str . '" class="btn btn-default btn-sm">'.__('Все шаблоны').'</a> <span class="glyphicon glyphicon-triangle-right"></span> <span class="btn btn-info btn-sm" id="templatename">' . @ucfirst(PHPShopSecurity::TotalClean($_GET['name'], 4)) . '</span></td>
+           <td><a href="?path=' . $_GET['path'] . $option_str . '" class="btn btn-default btn-sm">' . __('Все шаблоны') . '</a> <span class="glyphicon glyphicon-triangle-right"></span> <span class="btn btn-info btn-sm" id="templatename">' . @ucfirst(PHPShopSecurity::TotalClean($_GET['name'], 4)) . '</span></td>
 	</tr>';
 
         $dir = '../templates/' . $_GET['name'];
@@ -302,7 +302,7 @@ function actionStart() {
             $tree.='<tr class="treegrid-parent-' . $parent1 . ' data-row"><td><span class="glyphicon glyphicon-text-width"></span> <a href="?path=' . $_GET['path'] . '&name=' . $_GET['name'] . '&file=' . $dir2 . '&mod=css' . $option_str . '" title="style.css">' . _tpl('style.css') . '</a></td></tr>';
         }
 
-        $title_icon = '<span class="glyphicon glyphicon-chevron-down" data-toggle="tooltip" data-placement="top" title="'.__('Развернуть все').'"></span>&nbsp;<span class="glyphicon glyphicon-chevron-up" data-toggle="tooltip" data-placement="top" title="'.__('Свернуть').'"></span>';
+        $title_icon = '<span class="glyphicon glyphicon-chevron-down" data-toggle="tooltip" data-placement="top" title="' . __('Развернуть все') . '"></span>&nbsp;<span class="glyphicon glyphicon-chevron-up" data-toggle="tooltip" data-placement="top" title="' . __('Свернуть') . '"></span>';
     }
 
     $tree.='</table>';
@@ -328,17 +328,16 @@ function actionSerial() {
         if ($PHPShopTemplates->checkKey($_POST['path'], $_POST['key_new'])) {
 
             $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['templates_key']);
-            if($PHPShopOrm->update($_POST, array('path' => '="' . $_POST['path'] . '"'))){
-                $result=__('Ключ принят для шаблона').' <b>'.$_POST['path'].'</b>';
-                $success=true;
-            }
-            else {
-                $result=__('Ключ шаблона не принят');
-                $success=false;
+            if ($PHPShopOrm->update($_POST, array('path' => '="' . $_POST['path'] . '"'))) {
+                $result = __('Ключ принят для шаблона') . ' <b>' . $_POST['path'] . '</b>';
+                $success = true;
+            } else {
+                $result = __('Ключ шаблона не принят');
+                $success = false;
             }
         }
-        
-        return array("success" =>$success, "result"=> PHPShopSTring::win_utf8($result));
+
+        return array("success" => $success, "result" => PHPShopSTring::win_utf8($result));
     }
 }
 
@@ -371,8 +370,9 @@ function actionLoad() {
             if ($_POST['template_type'] == 'commerce') {
                 $is_commerce = true;
                 $load = $skin_base_path . '/commerce/' . $_POST['template_load'] . '/' . $_POST['template_load'] . '.zip';
-            }
-            else
+            } elseif ($_POST['template_type'] == 'archive')
+                $load = $skin_base_path . '/templates-archive/' . $_POST['template_load'] . '/' . $_POST['template_load'] . '.zip';
+            elseif ($_POST['template_type'] == "default")
                 $load = $skin_base_path . '/templates5/' . $_POST['template_load'] . '/' . $_POST['template_load'] . '.zip';
         }
         else
@@ -417,13 +417,13 @@ function actionLoad() {
                     }
                 }
                 else
-                    $result = __('Ошибка распаковки файла').' ' . $_POST['template_load'] . '.zip, '.__('нет прав записи в папку').' phpshop/templates/';
+                    $result = __('Ошибка распаковки файла') . ' ' . $_POST['template_load'] . '.zip, ' . __('нет прав записи в папку') . ' phpshop/templates/';
             }
             else
-                $result = __('Ошибка записи файла').' ' . $_POST['template_load'] . '.zip, '.__('нет прав записи в папку').' /UserFiles/Files/';
+                $result = __('Ошибка записи файла') . ' ' . $_POST['template_load'] . '.zip, ' . __('нет прав записи в папку') . ' /UserFiles/Files/';
         }
         else {
-            $result = __('Ошибка чтения файла').' ' . $_POST['template_load'] . '.zip';
+            $result = __('Ошибка чтения файла') . ' ' . $_POST['template_load'] . '.zip';
         }
     }
 

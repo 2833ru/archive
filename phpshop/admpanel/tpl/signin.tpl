@@ -12,7 +12,7 @@
 
         <!-- Bootstrap -->
         <link id="bootstrap_theme" href="./css/bootstrap-theme-@theme@.css" rel="stylesheet">
-        
+        <link href="./css/bootstrap-select.min.css" rel="stylesheet">
         <link  href="./css/signin.css" rel="stylesheet">
         <link  href="./css/bar.css" rel="stylesheet">
 
@@ -34,10 +34,12 @@
 
         <!-- container -->
         <div class="container">
+            
+            <div class="row">
 
-            <form class="form-signin"  method="post" action="./">
+            <form class="form-signin "  method="post" action="./">
 
-                <h3 class="form-signin-heading hidden-xs">{Авторизация}<a class="pull-right hidden-xs" href="../../" title="{Вернуться в магазин}"><span class="glyphicon glyphicon-home"></span></a></h3>
+                <h3 class="form-signin-heading hidden-xs">{Авторизация}<a class="pull-right hidden-xs @hide@" href="../../" title="{Вернуться в магазин}"><span class="glyphicon glyphicon-home"></span></a> <div class="pull-right">@themeSelect@</div></h3>
 
                 <div class="input-group @error@">
                     <span class="input-group-addon" id="input-group-addon1"><span class="glyphicon glyphicon-user"></span></span>
@@ -48,18 +50,20 @@
                     <input type="password" name="pas" class="form-control" value="@password@" placeholder="{Пароль}"  required @readonly@>
                 </div>
 
-                <div class="checkbox ">
-                    <label  class="hidden-xs">
+                <div class="checkbox">
+                    <label  class="hidden-xs @hide@">
                         <input type="checkbox" name="actionHash" value="true" id="remember-me" @disabled@> {Восстановить пароль}
                         
                     </label>
-                    <small class="pull-right text-muted text-uppercase"><img src="../locale/@lang@/icon.png" /> @code@</small>
+                    <small class="pull-right text-muted text-uppercase @hide@"><img src="../locale/@lang@/icon.png" /> @code@</small>
+                    
                 </div>
                 <button class="btn btn-lg btn-primary btn-block" type="submit">{Вход}</button>
                 <input type="hidden" name="actionID" value="true">
                 <input type="hidden" name="actionList[actionHash]" value="actionHash">
                 <input type="hidden" name="actionList[actionID]" value="actionEnter">
             </form>
+                </div>
         </div> <!-- /container -->
         <!-- Fixed mobile bar -->
         <div class="bar-padding-fix visible-xs"> </div>
@@ -93,7 +97,7 @@
         <!--/ Notification -->
 
         <script src="./js/bootstrap.min.js"></script>
+        <script src="./js/bootstrap-select.min.js" data-rocketoptimized="false" data-cfasync="false"></script>
         <script src="./js/signin.js"></script>
-
     </body>
 </html>

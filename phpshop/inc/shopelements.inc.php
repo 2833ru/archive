@@ -32,7 +32,8 @@ class PHPShopBrandsElement extends PHPShopElements {
 
         // Учет модуля SEOURLPRO
         if (!empty($GLOBALS['SysValue']['base']['seourlpro']['seourlpro_system'])) {
-            $seourlpro_enabled = true;
+            $PHPShopOrmSeo = new PHPShopOrm($GLOBALS['SysValue']['base']['seourlpro']['seourlpro_system']);
+            $seourlpro = $PHPShopOrmSeo->select();
         }
 
         // Массив имен характеристик
@@ -83,9 +84,9 @@ class PHPShopBrandsElement extends PHPShopElements {
                         $this->set('brandName', $v[0]['name']);
 
 
-                        if ($seourlpro_enabled) {
-                            if (empty($row['sort_seo_name']))
-                                $this->set('brandPageLink', '/brand/' . PHPShopString::toLatin($v[0]['name']) . '.html');
+                        if ($seourlpro['seo_brands_enabled'] == 2) {
+                            if (empty($v[0]['sort_seo_name']))
+                                $this->set('brandPageLink', $GLOBALS['SysValue']['dir']['dir'] . '/selection/?' . substr($link, 0, strlen($link) - 1));
                             else
                                 $this->set('brandPageLink', '/brand/' . $v[0]['sort_seo_name'] . '.html');
                         }
@@ -98,9 +99,9 @@ class PHPShopBrandsElement extends PHPShopElements {
                         $this->set('brandIcon', $v[0]['icon']);
                         $this->set('brandName', $v[0]['name']);
 
-                        if ($seourlpro_enabled) {
-                            if (empty($row['sort_seo_name']))
-                                $this->set('brandPageLink', '/brand/' . PHPShopString::toLatin($v[0]['name']) . '.html');
+                        if ($seourlpro['seo_brands_enabled'] == 2) {
+                            if (empty($v[0]['sort_seo_name']))
+                                $this->set('brandPageLink', $GLOBALS['SysValue']['dir']['dir'] . '/selection/?v[' . $v[0]['category'] . ']=' . $v[0]['id']);
                             else
                                 $this->set('brandPageLink', '/brand/' . $v[0]['sort_seo_name'] . '.html');
                         }
@@ -798,7 +799,7 @@ class PHPShopShopCatalogElement extends PHPShopProductElements {
                 $this->memory_set(__CLASS__ . '.' . __FUNCTION__, 0);
         }
 
-        return parent::setCell($d1, $d2, $d3, $d4, $d5, $d5);
+        return parent::setCell($d1, $d2, $d3, $d4, $d5, $d6, $d7);
     }
 
     /**
@@ -855,19 +856,19 @@ class PHPShopShopCatalogElement extends PHPShopProductElements {
                     // Подключаем шаблон
                     $dis.= ParseTemplateReturn("catalog/catalog_table_forma.tpl");
 
-                    // Ячейки с каталогами (1-5)
+                    // Ячейки с каталогами (1-7)
                     if ($j < $this->cell) {
                         $cell_name = 'd' . $j;
                         $$cell_name = $dis;
                         $j++;
                         if ($item == count($this->data)) {
-                            $table.=$this->setCell($d1, @$d2, @$d3, @$d4, @$d5);
+                            $table.=$this->setCell($d1, @$d2, @$d3, @$d4, @$d5, @$d6, @$d7);
                         }
                     } else {
                         $cell_name = 'd' . $j;
                         $$cell_name = $dis;
-                        $table.=$this->setCell($d1, @$d2, @$d3, @$d4, @$d5);
-                        $d1 = $d2 = $d3 = $d4 = $d5 = null;
+                        $table.=$this->setCell($d1, @$d2, @$d3, @$d4, @$d5, @$d6, @$d7);
+                        $d1 = $d2 = $d3 = $d4 = $d5 = $d6 = $d7 = null;
                         $j = 1;
                     }
                     $item++;
@@ -988,15 +989,16 @@ class PHPShopShopCatalogElement extends PHPShopProductElements {
         $PHPShopOrm->cache_format = $this->cache_format;
         $PHPShopOrm->cache = $this->cache;
         $PHPShopOrm->debug = $this->debug;
-
         $where['parent_to'] = '=' . $n;
 
         // Не выводить скрытые каталоги и дополнительные каталоги
-        $where['skin_enabled'] = "!='1' or dop_cat LIKE '%#$n#%'";
+        $where['parent_to'] .= " and (skin_enabled !='1' or dop_cat LIKE '%#$n#%')";
 
         // Мультибаза
         if (defined("HostID"))
             $where['servers'] = " REGEXP 'i" . HostID . "i'";
+        elseif (defined("HostMain"))
+            $where['parent_to'] .= ' and (servers ="" or servers REGEXP "i1000i")';
 
         // Сортировка каталога
         switch ($parent_data['order_to']) {

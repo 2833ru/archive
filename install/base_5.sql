@@ -616,6 +616,7 @@ CREATE TABLE `phpshop_modules` (
   `path` varchar(255) NOT NULL DEFAULT '',
   `name` varchar(255) DEFAULT '',
   `date` int(11) DEFAULT '0',
+  `servers` varchar(64) default '',
   PRIMARY KEY (`path`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
 
@@ -624,57 +625,14 @@ CREATE TABLE `phpshop_modules` (
 --
 
 INSERT INTO `phpshop_modules` (`path`, `name`, `date`) VALUES
-('button', 'Button', 1512653689),
 ('returncall', 'Return Call', 1512653689),
 ('visualcart', 'Visual Cart', 1512653689),
 ('oneclick', 'One Click', 1512653689),
 ('promotions', 'Promotions', 1512653689),
 ('seourlpro', 'SeoUrlPro', 1512653689),
-('tinkoff', 'Tinkoff', 1512653689),
 ('sticker', 'Sticker', 1521908948),
 ('productlastview', 'Product Last View', 1521908948);
 
--- --------------------------------------------------------
-
---
--- Структура таблицы `phpshop_modules_button_forms`
---
-
-CREATE TABLE `phpshop_modules_button_forms` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(64) DEFAULT '',
-  `content` text,
-  `enabled` enum('0','1') DEFAULT '1',
-  `num` tinyint(11) DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
-
---
--- Дамп данных таблицы `phpshop_modules_button_forms`
---
-
-INSERT INTO `phpshop_modules_button_forms` (`id`, `name`, `content`, `enabled`, `num`) VALUES
-(1, 'Счетчик Яндекса', '<!-- Вставьте код счетчика сюда -->\r\n<img src="/UserFiles/Image/Trial/metrika.png">\r\n', '1', 1);
-
--- --------------------------------------------------------
-
---
--- Структура таблицы `phpshop_modules_button_system`
---
-
-CREATE TABLE `phpshop_modules_button_system` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `enabled` enum('0','1','2','3') DEFAULT '1',
-  `serial` varchar(64) DEFAULT '',
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
-
---
--- Дамп данных таблицы `phpshop_modules_button_system`
---
-
-INSERT INTO `phpshop_modules_button_system` (`id`, `enabled`, `serial`) VALUES
-(1, '0', '');
 
 -- --------------------------------------------------------
 
@@ -689,26 +647,6 @@ CREATE TABLE `phpshop_modules_key` (
   `verification` varchar(32) DEFAULT '',
   PRIMARY KEY (`path`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
-
--- --------------------------------------------------------
-
-
-CREATE TABLE IF NOT EXISTS `phpshop_modules_tinkoff_system` (
-  `id` int(11) NOT NULL auto_increment,
-  `status` int(11),
-  `title` text,
-  `title_end` text,
-  `terminal` varchar(64) default '',
-  `secret_key` varchar(64) default '',
-  `gateway` varchar(64) default '',
-  `version` varchar(64) DEFAULT '1.0',
-  `enabled_taxation` int DEFAULT 0,
-  `taxation` varchar(64),
-  PRIMARY KEY  (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
-
-INSERT INTO `phpshop_modules_tinkoff_system` VALUES (1, 0, 'Платежная система Тинькофф Банка', 'Оплатите пожалуйста свой заказ','TinkoffBankTest', 'TinkoffBankTest
-', 'https://securepay.tinkoff.ru/v2', '1.1', '0', 'osn');
 
 -- --------------------------------------------------------
 
@@ -762,7 +700,7 @@ CREATE TABLE IF NOT EXISTS `phpshop_modules_promotions_system` (
 -- Дамп данных таблицы `phpshop_modules_oneclick_system`
 --
 
-INSERT INTO `phpshop_modules_promotions_system` VALUES (1,'2.5');
+INSERT INTO `phpshop_modules_promotions_system` VALUES (1,'2.6');
 
 -- --------------------------------------------------------
 
@@ -785,6 +723,8 @@ CREATE TABLE IF NOT EXISTS `phpshop_modules_promotions_forms` (
   `free_delivery` enum('0','1') NOT NULL,
   `categories_check` enum('0','1') NOT NULL,
   `categories` text NOT NULL,
+  `status_check` enum('0','1') NOT NULL DEFAULT '0',
+  `statuses` text NOT NULL DEFAULT '',
   `products_check` enum('0','1') NOT NULL,
   `products` text NOT NULL,
   `sum_order_check` enum('0','1') NOT NULL,
@@ -1294,8 +1234,7 @@ CREATE TABLE `phpshop_payment_systems` (
 
 INSERT INTO `phpshop_payment_systems` (`id`, `name`, `path`, `enabled`, `num`, `message`, `message_header`, `yur_data_flag`, `icon`) VALUES
 (1, 'Банковский перевод', 'bank', '1', 4, '<img src="/UserFiles/Image/Trial/rabbit.png" alt="" align="" border="0"><h3>Благодарим Вас за заказ!</h3><p>Счет уже доступен в Вашем&nbsp;<a href="/users/order.html">личном кабинете</a>.&nbsp;</p><p>Пароли доступа от личного кабинета находятся в Вашей почте.</p>', '', '1', '/UserFiles/Image/Payments/beznal.png'),
-(3, 'Наличная оплата', 'message', '1', 0, '<img src="/UserFiles/Image/Trial/rabbit.png" alt="" align="" border="0"><h3>Благодарим Вас за заказ!</h3>В ближайшее время с Вами свяжется наш менеджер для уточнения деталей.', '', '', '/UserFiles/Image/Payments/nal.png'),
-(10032, 'Visa, Mastercard (Tinkoff)', 'modules', '0', 0, '', '', '', '/UserFiles/Image/Payments/tinkoff.png');
+(3, 'Наличная оплата', 'message', '1', 0, '<img src="/UserFiles/Image/Trial/rabbit.png" alt="" align="" border="0"><h3>Благодарим Вас за заказ!</h3>В ближайшее время с Вами свяжется наш менеджер для уточнения деталей.', '', '', '/UserFiles/Image/Payments/nal.png');
 
 -- --------------------------------------------------------
 

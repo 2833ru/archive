@@ -77,7 +77,7 @@ class PHPShopPricePrint {
 
     function category_array() {
 
-        $PHPShopCategoryArray = new PHPShopCategoryArray();
+        $PHPShopCategoryArray = new PHPShopCategoryArray(array('skin_enabled'=>"='0'"));
         $Catalog = $PHPShopCategoryArray->getArray();
         $CatalogKeys = $PHPShopCategoryArray->getKey('id.parent_to');
 
@@ -103,6 +103,9 @@ class PHPShopPricePrint {
 
         // Безопасность
         if (!is_numeric($this->category)) {
+            
+            // Скрытие формы CSV/PDF
+            PHPShopParser::set('hidden', 'hidden');
 
             foreach ($this->category_array as $key => $val) {
                 $this->product($key);
@@ -114,7 +117,6 @@ class PHPShopPricePrint {
 
     // Вывод результата
     function compile() {
-        global $PHPShopSystem;
 
         if (!empty($this->print)) {
 

@@ -6,8 +6,7 @@ $PHPShopOrm = new PHPShopOrm($PHPShopModules->getParam("base.tinkoff.tinkoff_sys
  * Обновление версии модуля
  * @return mixed
  */
-function actionBaseUpdate()
-{
+function actionBaseUpdate(){
     global $PHPShopModules, $PHPShopOrm;
 
     $PHPShopOrm->clean();
@@ -21,9 +20,11 @@ function actionBaseUpdate()
  * Обновление настроек
  * @return mixed
  */
-function actionUpdate()
-{
-    global $PHPShopOrm;
+function actionUpdate(){
+    global $PHPShopOrm,$PHPShopModules;
+    
+    // Настройки витрины
+    $PHPShopModules->updateOption($_GET['id'], $_POST['servers']);
 
     $PHPShopOrm->debug = false;
     $action = $PHPShopOrm->update($_POST);

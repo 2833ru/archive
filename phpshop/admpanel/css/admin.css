@@ -534,7 +534,10 @@ form.navbar-right{
 
 }
 
-
 .navbar-btn{
    overflow: hidden !important;
+}
+
+#presentation-content .panel{
+    margin: 7px !important;
 }

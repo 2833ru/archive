@@ -43,6 +43,56 @@ function generatePassword($length = 8) {
     return $string;
 }
 
+// Выбор шаблона панели управления
+function GetAdminSkinList($skin) {
+    global $PHPShopGUI;
+    $dir = "./css/";
+    $id = 0;
+
+    $color = array(
+        'default' => '#178ACC',
+        'cyborg' => '#000',
+        'flatly' => '#D9230F',
+        'spacelab' => '#46709D',
+        'slate' => '#4E5D6C',
+        'yeti' => '#008CBA',
+        'simplex' => '#DF691A',
+        'sardbirds' => '#45B3AF',
+        'wordless' => '#468966',
+        'wildspot' => '#564267',
+        'loving' => '#FFCAEA',
+        'retro' => '#BBBBBB',
+        'cake' => '#E3D2BA',
+        'dark' => '#3E444C'
+    );
+    
+    if (is_dir($dir)) {
+        if (@$dh = opendir($dir)) {
+            while (($file = readdir($dh)) !== false) {
+
+                if (preg_match("/^bootstrap-theme-([a-zA-Z0-9_]{1,30}).css$/", $file, $match)) {
+                    $icon = $color[$match[1]];
+
+                    $file = str_replace(array('.css', 'bootstrap-theme-'), '', $file);
+
+                    if ($skin == $file)
+                        $sel = "selected";
+                    else
+                        $sel = "";
+
+                    if ($file != "." and $file != ".." and !strpos($file, '.')) {
+                        $value[] = array($file, $file, $sel, 'data-content="<span class=\'glyphicon glyphicon-picture\' style=\'color:' . $icon . '\'></span> ' . $file . '"');
+                        $id++;
+                    }
+                }
+            }
+            closedir($dh);
+        }
+    }
+
+    return $PHPShopGUI->setSelect('theme', $value, 100, null, false, false, false, 1, false, 'theme');
+}
+
 // Экшен выхода
 function actionLogout() {
     global $notification;
@@ -133,6 +183,13 @@ function actionEnter() {
                 $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['jurnal']);
                 $PHPShopOrm->insert(array('user' => $_POST['log'], 'datas' => time(), 'flag' => 0, 'ip' => PHPShopSecurity::TotalClean($_SERVER['REMOTE_ADDR'])), '');
 
+                // Смена цветовой темы
+                $theme = PHPShopSecurity::TotalClean($_POST['theme']);
+                if (!file_exists('./css/bootstrap-theme-' . $theme . '.css'))
+                    $theme = 'default';
+                else
+                    $_SESSION['admin_theme'] = $theme;
+
                 header('Location: ./admin.php' . $return);
                 return true;
             }
@@ -143,13 +200,6 @@ function actionEnter() {
     $PHPShopOrm->insert(array('user' => PHPShopSecurity::TotalClean($_POST['log']), 'datas' => time(), 'flag' => 1, 'ip' => PHPShopSecurity::TotalClean($_SERVER['REMOTE_ADDR'])), '');
 
     PHPShopParser::set('error', 'has-error');
-}
-
-// Поиск лицензии
-function getLicense($file) {
-    $fstat = explode(".", $file);
-    if ($fstat[1] == "lic")
-        return $file;
 }
 
 function actionStart() {
@@ -176,22 +226,28 @@ function actionStart() {
         header('Location: ./admin.php');
     }
 
+    // Тема офомления
+    if (empty($_SESSION['admin_theme']))
+        $theme = PHPShopSecurity::TotalClean($PHPShopSystem->getSerilizeParam('admoption.theme'));
+    elseif(!file_exists('./css/bootstrap-theme-' . $theme . '.css'))
+        $theme = $_SESSION['admin_theme'];
+    else 
+        $theme = 'default';
+
     // Демо-режим
     if ($PHPShopBase->getParam('template_theme.demo') == 'true') {
         PHPShopParser::set('user', 'demo');
         PHPShopParser::set('password', 'demouser');
         PHPShopParser::set('readonly', 'readonly');
         PHPShopParser::set('disabled', 'disabled');
-    }
-    else {
-        PHPShopParser::set('autofocus','autofocus');
+        PHPShopParser::set('hide', 'hide');
+        PHPShopParser::set('themeSelect', GetAdminSkinList($theme));
+    } else {
+        PHPShopParser::set('autofocus', 'autofocus');
     }
 
     PHPShopParser::set('title', 'PHPShop - ' . __('Авторизация'));
     PHPShopParser::set('version', $PHPShopBase->getParam('upload.version'));
-    $theme = PHPShopSecurity::TotalClean($PHPShopSystem->getSerilizeParam('admoption.theme'));
-    if (!file_exists('./css/bootstrap-theme-' . $theme . '.css'))
-        $theme = 'default';
     PHPShopParser::set('theme', $theme);
     PHPShopParser::set('notification', $notification);
     PHPShopParser::set('code', $GLOBALS['PHPShopLang']->code);

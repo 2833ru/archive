@@ -16,11 +16,7 @@ CREATE TABLE IF NOT EXISTS `phpshop_modules_boxberrywidget_system` (
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
 
-
 INSERT INTO `phpshop_modules_boxberrywidget_system` VALUES (1, '', '', '0', '', '', '', '500', '50', '50', '50', 'Москва', '1.0');
-
-ALTER TABLE `phpshop_delivery` ADD `is_mod` enum('1','2') DEFAULT '1';
-ALTER TABLE `phpshop_orders` ADD `boxberry_pvz_id` varchar(64) default '';
 
 CREATE TABLE IF NOT EXISTS `phpshop_modules_boxberrywidget_log` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -31,3 +27,6 @@ CREATE TABLE IF NOT EXISTS `phpshop_modules_boxberrywidget_log` (
   `type` varchar(64) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
+
+ALTER TABLE `phpshop_orders` ADD `boxberry_pvz_id` varchar(64) default '';
+ALTER TABLE `phpshop_delivery` ADD `is_mod` enum('1','2') DEFAULT '1';

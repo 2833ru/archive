@@ -5,12 +5,13 @@ PHPShopObj::loadClass('order');
 $PHPShopOrm = new PHPShopOrm("phpshop_modules_alfabank_system");
 // Функция обновления
 function actionUpdate() {
-    global $PHPShopOrm;
+    global $PHPShopOrm,$PHPShopModules;
+    
+    // Настройки витрины
+    $PHPShopModules->updateOption($_GET['id'], $_POST['servers']);
+    
+    
     $PHPShopOrm->debug = false;
-/*
-    if (empty($_POST["dev_mode_new"]))
-        $_POST["dev_mode_new"] = 0;*/
-
     $action = $PHPShopOrm->update($_POST);
     header('Location: ?path=modules&id=' . $_GET['id']);
     return $action;

@@ -545,7 +545,7 @@ class PHPShopShopCore extends PHPShopCore {
 
             $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['categories']);
             $PHPShopOrm->debug = $this->debug;
-            $data = $PHPShopOrm->select(array('id'), $where, false, array('limit' => 100), __CLASS__, __FUNCTION__);
+            $data = $PHPShopOrm->select(array('id'), $where, false, array('limit' => 1000), __CLASS__, __FUNCTION__);
             if (is_array($data)) {
                 foreach ($data as $row) {
                     $multi_cat[] = $row['id'];
@@ -566,8 +566,8 @@ class PHPShopShopCore extends PHPShopCore {
      * @return boolean 
      */
     function errorMultibase($category, $dop_cat = null) {
-
-        if (defined("HostID")) {
+       
+        if (defined("HostID") or defined("HostMain")) {
 
             if (empty($this->multi_cat)) {
 
@@ -585,7 +585,13 @@ class PHPShopShopCore extends PHPShopCore {
                     $where['id'] = ' IN ("' . @implode('","', $dop_cat_array_true) . '")';
                 }
 
-                $where['servers'] = " REGEXP 'i" . HostID . "i'";
+                // Ќе выводить скрытые каталоги
+                $where['skin_enabled'] = "!='1'";
+
+                if (defined("HostID"))
+                    $where['servers'] = " REGEXP 'i" . HostID . "i'";
+                elseif (defined("HostMain"))
+                    $where['skin_enabled'] .= ' and (servers ="" or servers REGEXP "i1000i")';
 
                 $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['categories']);
                 $PHPShopOrm->debug = $this->debug;
@@ -714,9 +720,9 @@ class PHPShopShopCore extends PHPShopCore {
         }
         else
             $this->set('elementCartOptionHide', 'hide hidden');
-        
-        
-         // ≈сли цены показывать только после авторизации
+
+
+        // ≈сли цены показывать только после авторизации
         if ($this->user_price_activate == 1 and empty($_SESSION['UsersId'])) {
             $this->set('ComStartCart', PHPShopText::comment('<'));
             $this->set('ComEndCart', PHPShopText::comment('>'));
@@ -726,7 +732,7 @@ class PHPShopShopCore extends PHPShopCore {
             $this->set('elementCartOptionHide', 'hide hidden');
             $this->set('elementCartHide', 'hide hidden');
         }
-        
+
 
         // ѕерехват модул€, занесение в пам€ть наличи€ модул€ дл€ оптимизации
         if ($this->memory_get(__CLASS__ . '.' . __FUNCTION__, true)) {

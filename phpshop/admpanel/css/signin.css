@@ -1,6 +1,14 @@
-body#form-signin {
-    padding-top: 40px;
-    padding-bottom: 40px;
+html, body {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+
+body#form-signin{
+    -padding-top: 40px;
+    -padding-bottom: 40px;
     background: #F0F0F0 url(images/default.png) top center repeat;
 }
 
@@ -80,7 +88,7 @@ body#form-signin {
 } 
 
 @media (max-width:767px){
-    
+
     body#form-signin {
         padding-top: 40px;
         padding-bottom: 40px;
@@ -96,3 +104,29 @@ body#form-signin {
         box-shadow: none;
     }
 }
+
+.container {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    overflow: auto;
+}
+
+.row {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    margin: auto; 
+}
+
+form {
+        max-width: 100%;
+        height: auto;
+        display: block;
+        margin: 0 auto;
+        border: none;
+    }

@@ -81,7 +81,6 @@ function option_select_add($vendor_array, $n, $title, $numel, $xid, $optionname,
     $PHPShopOrm->debug = $debug;
     $PHPShopOrm->comment = 'phpshopshop.' . __FUNCTION__;
     $data = $PHPShopOrm->select(array('*'), array('category' => '=' . intval($n)), array('order' => 'num,name'), array('limit' => 100));
-
     if (is_array($data))
         foreach ($data as $row)
             if (option_check($vendor_array, $n, $row['id'])) {
@@ -99,7 +98,7 @@ function option_select_add($vendor_array, $n, $title, $numel, $xid, $optionname,
                         if ($id == $v)
                             $sel = "selected";
                     }
-                $dis.='<option value="[' . $ct . $name . ']" >' . $name . '</option>' . "\n";
+                $dis.='<option value="[' . $ct . $name . ']" data-icon="'.$row['icon'].'">' . $name . '</option>' . "\n";
             }
 
     if (!empty($dis)) {

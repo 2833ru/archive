@@ -1,14 +1,14 @@
 <?php
+
 /**
  * Автономная синхронизация номенклатуры из 1С
  * @package PHPShopExchange
  * @author PHPShop Software
- * @version 2.3
+ * @version 2.4
  */
-
 // Авторизация
 include_once("login.php");
-PHPShopObj::loadClass(array("readcsv","product","orm"));
+PHPShopObj::loadClass(array("readcsv", "product", "orm"));
 
 $F_done = null;
 $GetItemCreate = 0;
@@ -29,7 +29,7 @@ function charsGenerator($category, $CsvToArray) {
     global $PHPShopBase;
 
     $return = null;
-    
+
     // Отладка
     $debug = $_GET['debug'];
 
@@ -60,6 +60,9 @@ function charsGenerator($category, $CsvToArray) {
 
         $sort_name = trim($CsvToArray[$i]);
         $sort_value = trim($CsvToArray[$i + 1]);
+        
+        if(empty($sort_name) or empty($sort_value)) 
+            continue;
 
         // Получить ИД набора характеристик в каталоге
         $PHPShopOrm = new PHPShopOrm();
@@ -119,20 +122,20 @@ function charsGenerator($category, $CsvToArray) {
 
                 $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['sort_categories']);
                 $PHPShopOrm->debug = $debug;
-                if ($parent = $PHPShopOrm->insert(array('name_new' => $sort_name, 'category_new' => $cat_set), '_new', __FUNCTION__, __LINE__)) {
+                if ($parent = $PHPShopOrm->insert(array('name_new' => $sort_name, 'category_new' => intval($cat_set)), '_new', __FUNCTION__, __LINE__)) {
 
                     // Создаем новое значение характеристики
                     $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['sort']);
                     $PHPShopOrm->debug = $debug;
                     $slave = $PHPShopOrm->insert(array('name_new' => $sort_value, 'category_new' => $parent), '_new', __FUNCTION__, __LINE__);
 
-                    $return[$parent][] = $slave;
+                    $return[$parent][] = intval($slave);
                     $cat_sort[] = $parent;
 
                     // Обновляем набор каталога товаров
                     $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['categories']);
                     $PHPShopOrm->debug = $debug;
-                    $PHPShopOrm->update(array('sort_new' => serialize($cat_sort)), array('id' => '=' . $category), '_new', __FUNCTION__, __LINE__);
+                    $PHPShopOrm->update(array('sort_new' => serialize($cat_sort)), array('id' => '=' . intval($category)), '_new', __FUNCTION__, __LINE__);
                 }
             }
             // Дописываем значение 
@@ -148,7 +151,7 @@ function charsGenerator($category, $CsvToArray) {
                     $PHPShopOrm->debug = $debug;
                     $slave = $PHPShopOrm->insert(array('name_new' => $sort_value, 'category_new' => $parent), '_new', __FUNCTION__, __LINE__);
 
-                    $return[$parent][] = $slave;
+                    $return[$parent][] = intval($slave);
                 }
             }
         }
@@ -354,9 +357,7 @@ class ReadCsv1C extends PHPShopReadCsvNative {
                 $sql.="price='" . @$CsvToArray[7] . "', "; // цена 1
 
 
-
-                
-// Склад
+            // Склад
             if ($this->ObjSystem->getSerilizeParam("1c_option.update_item") == 1) {
                 switch ($this->Sklad_status) {
 
@@ -484,7 +485,14 @@ class ReadCsv1C extends PHPShopReadCsvNative {
                     $sql.="vendor='" . $vendor . "', ";
                     $sql.="vendor_array='" . $resSerialized . "' ";
                     $sql.=" where uid='" . $CsvToArray[0] . "'";
-                    $result = mysqli_query($link_db, $sql);
+
+                    // Отладка
+                    if (isset($_GET['debug'])) {
+                        echo $sql . PHP_EOL;
+                        $result = mysqli_query($link_db, $sql) or die(mysqli_error($link_db)) . PHP_EOL;
+                    }
+                    else
+                        $result = mysqli_query($link_db, $sql);
                 }
             }
         }
@@ -700,11 +708,11 @@ if (is_array($list_file))
             // Читаем файл
             $ReadCsv = new ReadCsv1C($fp, $ReadCsvCatalog, $PS);
             $F_done.=$val . ";";
-            
+
             $GetCatalogCreate+=$ReadCsv->GetCatalogCreate();
             $GetItemCreate+=$ReadCsv->GetItemCreate();
             $GetItemUpdate+=$ReadCsv->GetItemUpdate();
-            
+
             // Персонализация
             if (function_exists('mod_end_load')) {
                 call_user_func_array('mod_end_load', array($ReadCsv, __CLASS__, __FUNCTION__));
@@ -722,7 +730,7 @@ if (is_array($list_file))
 
             // Журнал
             $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['table_name12']);
-            $PHPShopOrm->insert(array('datas_new'=>time(),'p_name_new'=>$date,'f_name_new'=>$val,'time_new'=>$seconds));
+            $PHPShopOrm->insert(array('datas_new' => time(), 'p_name_new' => $date, 'f_name_new' => $val, 'time_new' => $seconds));
         }
     }
 else

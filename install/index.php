@@ -307,7 +307,7 @@ else
                 Ниже приведена инструкция для ручной установки PHPShop на виртуальный хостинг. Перед установкой рекомендуем ознакомиться со
                 списком <a class="btn btn-info btn-xs" href="http://phpshop.ru/page/hosting-list.html" target="_blank" title="Хостинги"><span class="glyphicon glyphicon-share-alt"></span> рекомендуемых хостингов</a> на соответствие с системными требованиями PHPShop.</p>
 
-            <p class="<?php echo $system; ?>">Если вы не хотите или по каким-то причинам не можете воспользоваться <strong>готовыми программами для установки</strong> <a href="http://wiki.phpshop.ru/index.php/PHPShop_EasyControl#PHPShop_Installer" class="btn btn-default btn-xs" target="_blank"><span class="glyphicon glyphicon-share-alt"></span> Windows Installer</a> и <a href="http://install.phpshop.ru" target="_blank" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-share-alt"></span> Web Installer</a>, то приведенная ниже информация, поможет вам выполнить установку в ручном режиме.</p>
+            <p class="<?php echo $system; ?>">Если вы не хотите или по каким-то причинам не можете воспользоваться автоматическим установщиком <a href="http://install.phpshop.ru" target="_blank" class="btn btn-info btn-xs"><span class="glyphicon glyphicon-share-alt"></span> Web Installer</a>, то приведенная ниже информация, поможет вам выполнить установку в ручном режиме.</p>
 
 
             <div class="panel panel-info <?php echo $system; ?>" id="sys">

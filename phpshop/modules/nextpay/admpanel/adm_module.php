@@ -18,9 +18,11 @@ function actionBaseUpdate()
 }
 
 // Функция обновления
-function actionUpdate()
-{
-    global $PHPShopOrm;
+function actionUpdate(){
+    global $PHPShopOrm,$PHPShopModules;
+    
+    // Настройки витрины
+    $PHPShopModules->updateOption($_GET['id'], $_POST['servers']);
 
     $PHPShopOrm->debug = false;
     $action = $PHPShopOrm->update($_POST);
@@ -29,8 +31,7 @@ function actionUpdate()
     return $action;
 }
 
-function actionStart()
-{
+function actionStart(){
     global $PHPShopGUI, $PHPShopOrm;
 
     $PHPShopGUI->addJSFiles("../../phpshop/modules/nextpay/admpanel/ajax/ajax.js");

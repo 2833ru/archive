@@ -79,6 +79,7 @@ function actionInsert() {
     global $PHPShopOrm, $PHPShopModules,$PHPShopSystem;
 
     $_POST['password_new'] = base64_encode($_POST['password_new']);
+    $_POST['mail_new']=$_POST['login_new'];
 
     // Оповещение пользователя
     if (!empty($_POST['enabled_new']) and !empty($_POST['sendActivationEmail'])) {

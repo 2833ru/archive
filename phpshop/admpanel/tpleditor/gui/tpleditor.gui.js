@@ -1,5 +1,10 @@
 
 $().ready(function() {
+    
+    $('[data-toggle="popover-icon"]').popover({
+        "trigger": "hover",
+        "html": true
+    });
 
     $("body").on('click', ".template-map .nav a", function(event) {
         event.preventDefault();
@@ -81,7 +86,7 @@ $().ready(function() {
         var parent = $(this).closest('.panel');
         id.tooltip('toggle');
         parent.find('.panel-heading').append(' - Загружается...');
-        id.addClass('glyphicon glyphicon-save');
+        //id.addClass('glyphicon glyphicon-save');
         data.push({name: 'template_load', value: path});
         data.push({name: 'template_type', value: $(this).attr('data-type')});
         data.push({name: 'editID', value: 1});
@@ -100,7 +105,9 @@ $().ready(function() {
                     parent.addClass('panel-success');
                     id.remove();
                     parent.find('.panel-heading').html(path);
-                    $('.tree').append('<tr class="treegrid-all"><td><span class="treegrid-expander"></span><a href="?path=tpleditor&name=' + path + '">' + path + '</a></td></tr>');
+                    $('#template-tree').append('<tr class="treegrid-all"><td><a href="?path=tpleditor&name=' + path + '">' + path + '</a></td></tr>');
+                    parent.find('.panel-footer').find('.btn').removeClass('hide');
+                    
                 } else {
                     showAlertMessage(json['result'], true);
                     parent.addClass('panel-warning');

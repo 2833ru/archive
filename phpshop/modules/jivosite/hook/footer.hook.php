@@ -16,7 +16,6 @@ function jivosite_footer_hook() {
 
     $jivosite = new jivosite();
     $options = $jivosite->option();
-
     $dis = "<script type='text/javascript'>
                 (function(){ var widget_id = '" . $options[widget_id] . "';
                     var s = document.createElement('script');

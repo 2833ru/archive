@@ -13,6 +13,8 @@ function actionUpdate() {
         $_POST['user_mail_copy_new'] = 0;
     if (empty($_POST['enabled_new']))
         $_POST['enabled_new'] = 0;
+    if (empty($_POST['user_mail_copy_new']))
+        $_POST['user_mail_copy_new'] = 0;
 
     $action = $PHPShopOrm->update($_POST, array('id' => '=' . $_POST['rowID']));
     return array('success' => $action);
@@ -24,7 +26,6 @@ function actionUpdate() {
 function actionSave() {
     global $PHPShopGUI;
 
-
     // Сохранение данных
     actionUpdate();
 
@@ -33,7 +34,7 @@ function actionSave() {
 
 // Начальная функция загрузки
 function actionStart() {
-    global $PHPShopGUI, $PHPShopOrm, $PHPShopSystem;
+    global $PHPShopGUI, $PHPShopOrm;
 
     // Выборка
     $data = $PHPShopOrm->select(array('*'), array('id' => '=' . intval($_GET['id'])));
@@ -42,7 +43,7 @@ function actionStart() {
     $Tab1.=$PHPShopGUI->setField('Ссылка:', $PHPShopGUI->setInputText('http://' . $_SERVER['SERVER_NAME'] . '/formgenerator/', 'path_new', $data['path'],false,'/'));
     $Tab1.=$PHPShopGUI->setField('E-mail:', $PHPShopGUI->setInputText(false, 'mail_new', $data['mail']));
     $Tab1.=$PHPShopGUI->setline() . $PHPShopGUI->setField('Статус:', $PHPShopGUI->setCheckbox('enabled_new', '1', 'Вывод на сайте', $data['enabled']) .
-                    $PHPShopGUI->setCheckbox('user_mail_copy_new', '1', 'Выслать копию пользователю на e-mail', 1));
+                    $PHPShopGUI->setCheckbox('user_mail_copy_new', '1', 'Выслать копию пользователю на E-mail', $data['user_mail_copy']));
     $Tab1.=$PHPShopGUI->setField('Сообщение после отправки:', $PHPShopGUI->setTextarea('success_message_new', $data['success_message'], false, false, 200));
     $Tab1.=$PHPShopGUI->setField('Сообщение о заполнении обязательных полей:', $PHPShopGUI->setTextarea('error_message_new', $data['error_message']));
     $Tab1.= $PHPShopGUI->setField('Привязка к страницам:', $PHPShopGUI->setInputText(false, 'dir_new', $data['dir']) . $PHPShopGUI->setHelp('Пример: /page/about.html,/page/company.html'));

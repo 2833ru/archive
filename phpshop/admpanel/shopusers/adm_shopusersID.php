@@ -134,6 +134,8 @@ function actionUpdate() {
                 unset($mass_decode[$k]);
         }
 
+        
+    $_POST['mail_new']=$_POST['login_new'];
 
     // Оповещение пользователя
     if (!empty($_POST['enabled_new']) and !empty($_POST['sendActivationEmail'])) {

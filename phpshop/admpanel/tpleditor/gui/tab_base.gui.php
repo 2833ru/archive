@@ -108,12 +108,12 @@ function tab_base($data) {
         $img_list.='</div>';
 
 
-    // Бесплатные шаблоны
+    // Архивные шаблоны
     $i = 1;
     $count = 0;
-    $data_pic = xml2array($skin_base_path . '/template5.php', "template", true);
+    $data_pic = xml2array($skin_base_path . '/template-archive.php', "template", true);
     arsort($data_pic);
-
+    
     $title_free = '<p class="text-muted hidden-xs data-row">' . __('Ниже представлены классические бесплатные шаблоны от предыдущих версий PHPShop. Функциональность классических шаблонов может отличаться от современных шаблонов. Для 100% работоспособности продукта рекомендуется использовать предустановленные шаблоны').'.</p>';
     $img_list_free = null;
     if (is_array($data_pic))
@@ -134,7 +134,7 @@ function tab_base($data) {
             
 
  
-            $img_list_free.='<div class="col-md-4"><div class="panel ' . $panel . '"><div class="panel-heading">' . $row['name'] . $mes . ' <span class="glyphicon glyphicon-plus pull-right btn ' . $main . ' btn-xs skin-load" data-path="' . $row['name'] . '" data-toggle="tooltip" data-placement="top" title="' . __('Загрузить') . '"></span></div><div class="panel-body text-center"><img class="image-shadow image-skin"  src="' . $skin_base_path . $row['icon'] . '"></div></div></div>';
+            $img_list_free.='<div class="col-md-4"><div class="panel ' . $panel . '"><div class="panel-heading">' . $row['name'] . $mes . ' <span class="glyphicon glyphicon-plus pull-right btn ' . $main . ' btn-xs skin-load" data-path="' . $row['name'] . '" data-toggle="tooltip" data-type="archive" data-placement="top" title="' . __('Загрузить') . '"></span></div><div class="panel-body text-center"><img class="image-shadow image-skin"  src="' . $skin_base_path . $row['icon'] . '"></div></div></div>';
 
             if ($i == 3) {
                 $img_list_free.='</div>';
@@ -149,6 +149,68 @@ function tab_base($data) {
 
     if (count($data_pic) % 3 != 0)
         $img_list_free.='</div>';
+    
+    
+    // Дефолтные шаблоны 
+    $i = 1;
+    $count = 0;
+    $data_pic = xml2array($skin_base_path . '/template5.php', "template", true);
+    arsort($data_pic);
+
+    $title_default = '<p class="text-muted hidden-xs data-row">' . __('Ниже представлены штатные бесплатные шаблоны, адаптированные для мобильных устройств. Для редактирования шаблона, кликните на кнопку "Настроить". Выбранный новый шаблон нужно сохранить в <a href="?path=system#1"><span class="glyphicon glyphicon-share-alt"></span>Основых настройках</a> для отображения посетителям магазина').'.</p>';
+    $img_list_default = null;
+    if (is_array($data_pic))
+        foreach ($data_pic as $row) {
+
+            if ($i == 1)
+                $img_list_default.='<div class="row">';
+
+            if (@in_array($row['name'], $ready_theme)) {
+                $main = "hide";
+                $panel = 'panel-default';
+                $mes = '  <span class="pull-right text-muted">' . __('загружен').'</span>';
+                $demo=null;
+            } else {
+                $main = "btn-default";
+                $panel = 'panel-default';
+                $mes = null;
+                $demo="hide";
+            }
+            
+            if($row['type'] == 'new')
+                $new = ' <span class="label label-primary">new</span>';
+            else $new=null;
+            
+
+            $img_list_default.='<div class="col-md-4"><div class="panel ' . $panel . '"><div class="panel-heading">' . $row['name'] . $new. $mes . '</div><div class="panel-body text-center"><img class="image-shadow image-skin"  src="' . $skin_base_path . $row['icon'] . '"></div>
+                
+           <div class="text-center panel-footer">
+                    
+                        <div class="btn-group" role="group" aria-label="...">
+                        <a class="btn btn-sm btn-primary ' . $demo.'" data-toggle="tooltip" data-placement="top" title="' . __('Настроить') . '" href="?path=' . $_GET['path'] . '&name=' . $path_parts['basename'] .'"><span class="glyphicon glyphicon-cog"></span> ' . __('Настроить').' ' . $row['price'] . ' </a>
+                              
+                        <a class="btn btn-sm btn-default ' . $demo.'" data-toggle="tooltip" data-placement="top" title="' . __('Посмотреть демо') . '" href="../../?skin=' . $row['name'] . '" target="_blank"><span class="glyphicon glyphicon-eye-open"></span> ' . __('Демо').'</a>
+                            
+                        <a class="btn btn-sm btn-default ' . $main.' skin-load" data-path="' . $row['name'] . '" data-type="default" data-toggle="tooltip" data-placement="top" title="' . __('Загрузить') . '"><span class="glyphicon glyphicon-plus"></span> ' . __('Загрузить').'</a>
+
+                        </div>
+                     </div>
+
+</div></div>';
+
+            if ($i == 3) {
+                $img_list_default.='</div>';
+                $i = 1;
+            }
+            else
+                $i++;
+
+            $count++;
+        }
+
+
+    if (count($data_pic) % 3 != 0)
+        $img_list_default.='</div>';
 
     // Персональный дизайн
     $promo = 'Дизайн-бюро <a href="http://www.phpshop.ru/page/portfolio.html" target="_blank">PHPShop.Design</a> делает дизайны только для  PHPShop, а значит, неожиданностей при создании дизайна не произойдет, и  вы получите уникальный профессиональный дизайн в срок, отвечающий всем  требованиям сегодняшнего дня. 
@@ -167,7 +229,7 @@ function tab_base($data) {
 
     if (!empty($img_list)) {
         //$disp= $PHPShopGUI->setCollapse(__('Дополнительные шаблоны'), $title.$img_list);
-        $PHPShopGUI->setTab(array(__('Бесплатные шаблоны'), $title_free . $img_list_free, true),array(__('Платные шаблоны'), $title . $img_list, true),  array(__('Персональный дизайн'), $promo, true));
+        $PHPShopGUI->setTab(array(__('Бесплатные шаблоны'), $title_default . $img_list_default, true),array(__('Платные шаблоны'), $title . $img_list, true),  array(__('Персональный дизайн'), $promo, true),array(__('Архивные шаблоны'), $title_free . $img_list_free, true));
     }
     else
         $disp = $PHPShopGUI->setAlert('Ошибка связи с сервером ' . $skin_base_path, $type = 'warning');

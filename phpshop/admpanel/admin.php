@@ -24,7 +24,7 @@ $PHPShopBase->chekAdmin();
 // Системные настройки
 $PHPShopSystem = new PHPShopSystem();
 $_SESSION['lang'] = $PHPShopSystem->getSerilizeParam("admoption.lang");
-$PHPShopLang = new PHPShopLang(array('locale'=>$_SESSION['lang'],'path'=>'admin'));
+$PHPShopLang = new PHPShopLang(array('locale' => $_SESSION['lang'], 'path' => 'admin'));
 
 $_SESSION['imageResultPath'] = $PHPShopSystem->getSerilizeParam('admoption.image_result_path');
 $_SESSION['imageResultDir'] = $PHPShopBase->getParam('dir.dir');
@@ -95,13 +95,6 @@ if (file_exists($loader_file)) {
     }
 }
 
-// Поиск лицензии
-function getLicense($file) {
-    $fstat = explode(".", $file);
-    if ($fstat[1] == "lic")
-        return $file;
-}
-
 // Подключение меню модулей
 function modulesMenu() {
     global $notificationList;
@@ -130,7 +123,12 @@ function modulesMenu() {
             // Redirect module.xml redirect.from -> redirect.to
             if (is_array($db['redirect'])) {
                 if ($_GET['path'] == $db['redirect']['from'] and empty($_GET['id'])) {
-                    return header('Location: ?path=modules.' . $db['redirect']['to']);
+
+                    // Сохранение GET параметров
+                    parse_str($_SERVER['QUERY_STRING'], $source_query);
+                    $source_query['path'] = 'modules.' . $db['redirect']['to'];
+
+                    return header('Location: ?' . http_build_query($source_query));
                 }
             }
         }
@@ -145,7 +143,9 @@ else
     $presentation_checked = null;
 
 // Тема оформления
+if(empty($_SESSION['admin_theme']))
 $theme = PHPShopSecurity::TotalClean($PHPShopSystem->getSerilizeParam('admoption.theme'));
+else $theme = $_SESSION['admin_theme'];
 if (!file_exists('./css/bootstrap-theme-' . $theme . '.css'))
     $theme = 'default';
 
@@ -160,9 +160,9 @@ if (empty($adm_title)) {
 }
 ?>
 <!DOCTYPE html>
-<html lang="<?php echo $GLOBALS['PHPShopLang']->code;?>">
+<html lang="<?php echo $GLOBALS['PHPShopLang']->code; ?>">
     <head>
-        <meta charset="<?php echo $GLOBALS['PHPShopLang']->charset;?>">
+        <meta charset="<?php echo $GLOBALS['PHPShopLang']->charset; ?>">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title><?php echo $adm_title . ' - ' . PHPShopSecurity::TotalClean($TitlePage); ?></title>
@@ -196,7 +196,7 @@ if (empty($adm_title)) {
         <script src="js/jquery-1.11.0.min.js" data-rocketoptimized="false" data-cfasync="false"></script>
 
         <!-- Localization -->
-        <script src="../locale/<?php echo $_SESSION['lang'];?>/gui.js" data-rocketoptimized="false" data-cfasync="false"></script>
+        <script src="../locale/<?php echo $_SESSION['lang']; ?>/gui.js" data-rocketoptimized="false" data-cfasync="false"></script>
 
         <div class="container" style="<?php echo $frameWidth; ?>">
 
@@ -220,14 +220,14 @@ if (empty($adm_title)) {
                             <li class="dropdown <?php echo $menu_active_modules; ?>">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><?php _e('Модули'); ?> <span class="caret"></span></a>
                                 <ul class="dropdown-menu" role="menu" id="modules-menu">
-                                    <li><a href="?path=modules"><?php _e('Управление модулями'); ?></a></li>
-                                    <li class="divider"></li>
                                     <li class="dropdown-header"><?php _e('Установленные модули'); ?></li>
                                     <?php echo $modulesMenu; ?>
+                                    <li class="divider"></li>
+                                    <li><a href="?path=modules"><span class="glyphicon glyphicon-tasks"></span> <?php _e('Управление модулями'); ?></a></li>
 
                                 </ul>
                             </li>
-                            <li class="dropdown <?php echo $menu_active_system . $menu_active_system_company . $menu_active_system_seo . $menu_active_system_sync . $menu_active_tpleditor . $menu_active_system_image . $menu_active_system_servers.$menu_active_system_integration; ?>">
+                            <li class="dropdown <?php echo $menu_active_system . $menu_active_system_company . $menu_active_system_seo . $menu_active_system_sync . $menu_active_tpleditor . $menu_active_system_image . $menu_active_system_servers . $menu_active_system_integration; ?>">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><?php _e('Настройки'); ?> <span class="caret"></span></a>
                                 <ul class="dropdown-menu" role="menu">
                                     <li><a href="?path=system"><?php _e('Основные'); ?></a></li>
@@ -276,7 +276,9 @@ if (empty($adm_title)) {
                             <li class="dropdown <?php echo $menu_active_users . $menu_active_users_jurnal . $menu_active_users_stoplist; ?>">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><span class="glyphicon glyphicon-user hidden-xs"></span> <span class="visible-xs"><?php _e('Администратор'); ?> <span class="caret"></span></span><span class="caret  hidden-xs"></span></a>
                                 <ul class="dropdown-menu" role="menu">
-                                    <li class="dropdown-header"><?php _e('Вошел как'); echo ' '.$_SESSION['logPHPSHOP']; ?></li>
+                                    <li class="dropdown-header"><?php _e('Вошел как');
+                                    echo ' ' . $_SESSION['logPHPSHOP'];
+                                    ?></li>
                                     <li class="divider"></li>
                                     <li><a href="?path=users&id=<?php echo $_SESSION['idPHPSHOP']; ?>"><?php _e('Профиль'); ?></a></li>
                                     <li><a href="?path=users"><?php _e('Все администраторы'); ?></a></li>
@@ -307,7 +309,7 @@ if (empty($adm_title)) {
 
                         <ul class="nav navbar-nav">
                             <li><a href="../../" title="Магазин" target="_blank" class="visible-xs"><?php _e('Магазин'); ?></a></li>
-                            <li><a href="./admin.php" title="Стартовая панель" class="home"><span class="glyphicon glyphicon-home hidden-xs"></span><span class="visible-xs"><?php _e('Домой'); ?></span></a></li>
+                            <li class="<?php echo $menu_active_intro; ?>"><a href="./admin.php" title="Стартовая панель" class="home"><span class="glyphicon glyphicon-home hidden-xs"></span><span class="visible-xs"><?php _e('Домой'); ?></span></a></li>
                             <li class="dropdown <?php echo $menu_active_order . $menu_active_payment . $menu_active_order_paymentlog . $menu_active_order_status . $menu_active_report_statorder . $menu_active_report_statuser . $menu_active_report_statpayment . $menu_active_report_statproduct; ?>">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><?php _e('Заказы'); ?> <span class="caret"></span></a>
                                 <ul class="dropdown-menu" role="menu">
@@ -356,15 +358,15 @@ if (empty($adm_title)) {
                                 </ul>
                             </li>
 
-                            <li class="dropdown <?php echo $menu_active_slider . $menu_active_links . $menu_active_banner . $menu_active_opros.$menu_active_metrica_traffic.$menu_active_metrica_sources_summary.$menu_active_metrica_sources_social.$menu_active_metrica_sources_sites .$menu_active_metrica_search_phrases.$menu_active_metrica_search_engines.$menu_active_metrica; ?>" >
+                            <li class="dropdown <?php echo $menu_active_slider . $menu_active_links . $menu_active_banner . $menu_active_opros . $menu_active_metrica_traffic . $menu_active_metrica_sources_summary . $menu_active_metrica_sources_social . $menu_active_metrica_sources_sites . $menu_active_metrica_search_phrases . $menu_active_metrica_search_engines . $menu_active_metrica; ?>" >
                                 <a href="#" class="dropdown-toggle " data-toggle="dropdown" role="button" aria-expanded="false"><?php _e('Маркетинг'); ?> <span class="caret"></span></a>
                                 <ul class="dropdown-menu" role="menu">
                                     <li><a href="?path=slider"><span><?php _e('Слайдер'); ?></span><span class="dropdown-header"><?php _e('Рекламный слайдер на главной странице'); ?></span></a></li>
                                     <li><a href="?path=news.sendmail"><?php _e('Рассылки'); ?><span class="dropdown-header"><?php _e('Создание email рассылок пользователям'); ?></span></a></li>
 
-                                    <li><a href="?path=links"><span><?php _e('Ссылки');?></span><span class="dropdown-header"><?php _e('Обмен ссылками с сайтами');?></span></a></li>
-                                    <li><a href="?path=banner"><?php _e('Баннеры');?><span class="dropdown-header"><?php _e('Вывод графических изображений');?></span></a></li>
-                                    <li><a href="?path=opros"><?php _e('Опросы');?><span class="dropdown-header"><?php _e('Опросы для пользователей на сайте');?></span></a></li>                                    <li class="divider"></li>
+                                    <li><a href="?path=links"><span><?php _e('Ссылки'); ?></span><span class="dropdown-header"><?php _e('Обмен ссылками с сайтами'); ?></span></a></li>
+                                    <li><a href="?path=banner"><?php _e('Баннеры'); ?><span class="dropdown-header"><?php _e('Вывод графических изображений'); ?></span></a></li>
+                                    <li><a href="?path=opros"><?php _e('Опросы'); ?><span class="dropdown-header"><?php _e('Опросы для пользователей на сайте'); ?></span></a></li>                                    <li class="divider"></li>
                                     <li><a href="?path=metrica"><span class="glyphicon glyphicon-equalizer"></span> <?php _e('Статистика посещений'); ?></a></li>
                                 </ul>
                             </li>
@@ -422,18 +424,17 @@ if (empty($adm_title)) {
 
 
                         if (!empty($_SESSION['update_check']))
-                            echo '<a class="navbar-btn btn btn-sm btn-info navbar-right hidden-xs" href="?path=update" data-toggle="tooltip" data-placement="bottom" title="'.__('Доступно обновление').'">Update <span class="badge">' . intval($_SESSION['update_check']) . '</span></a>';
+                            echo '<a class="navbar-btn btn btn-sm btn-info navbar-right hidden-xs" href="?path=update" data-toggle="tooltip" data-placement="bottom" title="' . __('Доступно обновление') . '">Update <span class="badge">' . intval($_SESSION['update_check']) . '</span></a>';
                         ?>
 
-                        <a class="navbar-btn btn btn-sm btn-warning navbar-right hidden-xs hidden-sm hide" href="?path=order&where[statusi]=0"><?php _e('Заказы');?> <span class="badge" id="orders-check"><?php echo $PHPShopBase->getNumRows('orders', "where statusi='0'"); ?></span>
+                        <a class="navbar-btn btn btn-sm btn-warning navbar-right hidden-xs hidden-sm hide" href="?path=order&where[statusi]=0"><?php _e('Заказы'); ?> <span class="badge" id="orders-check"><?php echo $PHPShopBase->getNumRows('orders', "where statusi='0'"); ?></span>
                         </a>
 
                     </div><!-- /.navbar-collapse -->
                 </div>
             </nav>
             <div class="clearfix"></div>
-            <a id="temp" class="hide"></a>
-
+            <a id="temp-color" class="hide"></a><a id="temp-color-selected" class="hide"></a>
 
             <?php
             if (file_exists($loader_file)) {
@@ -468,31 +469,40 @@ if (empty($adm_title)) {
 
         <!-- Presentation -->
         <div id="presentation" class="hide">
-            <div class="panel panel-default">
-                <div class="panel-heading "><span class="glyphicon glyphicon-film text-primary"></span> <b class="text-primary"><?php _e('Урок 1: Создание товара');?></b>
-                    <a class="btn btn-primary btn-xs pull-right" href="?path=product&return=catalog&action=new&video"><span class="glyphicon glyphicon-play"></span> <?php _e('Старт');?></a></div>
-                <div class="panel-body ">
-                    <?php _e('Обучающий урок по созданию нового товара, заполнения полей и сохранения результата');?>.
+            <div id="presentation-content">
+                <div class="panel panel-default">
+                    <div class="panel-heading "><span class="glyphicon glyphicon-film text-primary"></span> <b class="text-primary"><?php _e('Урок 1: Создание товара'); ?></b>
+                        <a class="btn btn-primary btn-xs pull-right" href="?path=product&return=catalog&action=new&video"><span class="glyphicon glyphicon-play"></span> <?php _e('Старт'); ?></a></div>
+                    <div class="panel-body ">
+<?php _e('Обучающий урок по созданию нового товара, заполнения полей и сохранения результата'); ?>.
+                    </div>
                 </div>
-            </div>
-            <div class="panel panel-default">
-                <div class="panel-heading"><span class="glyphicon glyphicon-film text-primary"></span> <b class="text-primary"><?php _e('Урок 2: Создание каталога');?></b>
-                    <a class="btn btn-primary btn-xs pull-right" href="?path=catalog&action=new&video"><span class="glyphicon glyphicon-play"></span> <?php _e('Старт');?></a></div>
-                <div class="panel-body ">
-                    <?php _e('Обучающий урок по созданию нового каталога товара, заполнения полей и сохранения результата');?>.
+                <div class="panel panel-default">
+                    <div class="panel-heading"><span class="glyphicon glyphicon-film text-primary"></span> <b class="text-primary"><?php _e('Урок 2: Создание каталога'); ?></b>
+                        <a class="btn btn-primary btn-xs pull-right" href="?path=catalog&action=new&video"><span class="glyphicon glyphicon-play"></span> <?php _e('Старт'); ?></a></div>
+                    <div class="panel-body ">
+<?php _e('Обучающий урок по созданию нового каталога товара, заполнения полей и сохранения результата'); ?>.
+                    </div>
                 </div>
-            </div>
-            <div class="panel panel-default">
-                <div class="panel-heading"><span class="glyphicon glyphicon-film text-primary"></span> <b class="text-primary"><?php _e('Урок 3: Редактор шаблонов');?></b>
-                    <a class="btn btn-primary btn-xs pull-right" href="?path=tpleditor&name=bootstrap&file=/main/index.tpl&mod=html&video"><span class="glyphicon glyphicon-play"></span> <?php _e('Старт');?></a></div>
-                <div class="panel-body">
-                     <?php _e('Обучающий урок по редактированию шаблона дизайна, описание переменных шаблонизатора, управление редактором кода');?>.
+                <div class="panel panel-default">
+                    <div class="panel-heading"><span class="glyphicon glyphicon-film text-primary"></span> <b class="text-primary"><?php _e('Урок 3: Редактор шаблонов'); ?></b>
+                        <a class="btn btn-primary btn-xs pull-right" href="?path=tpleditor&name=bootstrap&file=/main/index.tpl&mod=html&video"><span class="glyphicon glyphicon-play"></span> <?php _e('Старт'); ?></a></div>
+                    <div class="panel-body">
+<?php _e('Обучающий урок по редактированию шаблона дизайна, описание переменных шаблонизатора, управление редактором кода'); ?>.
+                    </div>
                 </div>
-            </div>
-            <div class="checkbox text-muted">
-                <label>
-                    <input type="checkbox" <?php echo $presentation_checked; ?> id="presentation-check">  <?php _e('Показывать при входе в панель управления');?>
-                </label>
+                <div class="panel panel-default">
+                    <div class="panel-heading"><span class="glyphicon glyphicon-film text-primary"></span> <b class="text-primary"><?php _e('Урок 4: Настройки'); ?></b><a class="btn btn-primary btn-xs pull-right" href="?path=system#1"><span class="glyphicon glyphicon-play"></span> <?php _e('Старт'); ?></a>
+                    </div>
+                    <div class="panel-body">
+<?php _e('Выбрать общий шаблон дизайна магазина можно в <a href="?path=system#1">Настройках дизайна</a>. Изменить цветовую тему оформления панели управления можно в  <a href="?path=system#4">Настройках управления</a>'); ?>.
+                    </div>
+                </div>
+                <div class="checkbox text-muted">
+                    <label>
+                        <input type="checkbox" <?php echo $presentation_checked; ?> id="presentation-check">  <?php _e('Показывать при входе в панель управления'); ?>
+                    </label>
+                </div>
             </div>
         </div>
         <?php
@@ -518,7 +528,7 @@ if (empty($adm_title)) {
                         </div>
                         <div class="modal-body">
 
-                            <?php if (!empty($selectModalBody)) echo $selectModalBody; ?>
+<?php if (!empty($selectModalBody)) echo $selectModalBody; ?>
 
                         </div>
                         <div class="modal-footer">
@@ -531,9 +541,9 @@ if (empty($adm_title)) {
                             </div>   
                             <!--/ Progress -->
 
-                            <button type="button" class="btn btn-default btn-sm pull-left hidden btn-delete"><span class="glyphicon glyphicon-trash"></span> <?php _e('Удалить');?></button>
-                            <button type="button" class="btn btn-default btn-sm" data-dismiss="modal"><?php _e('Отменить');?></button>
-                            <button type="submit" class="btn btn-primary btn-sm"><?php _e('Применить');?></button>
+                            <button type="button" class="btn btn-default btn-sm pull-left hidden btn-delete"><span class="glyphicon glyphicon-trash"></span> <?php _e('Удалить'); ?></button>
+                            <button type="button" class="btn btn-default btn-sm" data-dismiss="modal"><?php _e('Отменить'); ?></button>
+                            <button type="submit" class="btn btn-primary btn-sm"><?php _e('Применить'); ?></button>
                         </div>
                     </form>
                 </div>
@@ -550,7 +560,7 @@ if (empty($adm_title)) {
 
                         <span class="btn btn-default btn-sm pull-left glyphicon glyphicon-fullscreen" id="filemanagerwindow" data-toggle="tooltip" data-placement="bottom" title="Увеличить размер"></span>
 
-                        <h4 class="modal-title"><?php _e('Найти файл');?></h4>
+                        <h4 class="modal-title"><?php _e('Найти файл'); ?></h4>
                     </div>
                     <div class="modal-body">
                         <iframe class="elfinder-modal-content" frameborder="0" marginheight="0" marginwidth="0" scrolling="no" data-path="image" data-option="return=icon_new"></iframe>
@@ -566,23 +576,23 @@ if (empty($adm_title)) {
         <nav class="navbar navbar-statick navbar-fixed-bottom bar bar-tab visible-xs visible-sm <?php echo $isFrame; ?>" role="navigation">
             <a class="tab-item <?php echo $menu_active_intro; ?>" href="./admin.php">
                 <span class="icon icon-home"></span>
-                <span class="tab-label"><?php _e('Домой');?></span>
+                <span class="tab-label"><?php _e('Домой'); ?></span>
             </a>
             <a class="tab-item <?php echo $menu_active_order; ?>" href="?path=order" id="bar-cart">
                 <span class="icon icon-download"></span> <span class="badge badge-positive hide" id="orders-mobile-check"><?php echo $PHPShopBase->getNumRows('orders', "where statusi='0'"); ?></span>
-                <span class="tab-label"><?php _e('Заказы');?></span>
+                <span class="tab-label"><?php _e('Заказы'); ?></span>
             </a>
             <a class="tab-item <?php echo $menu_active_catalog; ?>" href="?path=catalog">
                 <span class="icon icon-compose"></span>
-                <span class="tab-label"><?php _e('Цены');?></span>
+                <span class="tab-label"><?php _e('Цены'); ?></span>
             </a>
             <a class="tab-item <?php echo $menu_active_shopusers; ?>"  href="?path=shopusers">
                 <span class="icon icon-person"></span>
-                <span class="tab-label"><?php _e('Покупатели');?></span>
+                <span class="tab-label"><?php _e('Покупатели'); ?></span>
             </a>
             <a class="tab-item" href="./?logout">
                 <span class="icon icon-share"></span>
-                <span class="tab-label"><?php _e('Выход');?></span>
+                <span class="tab-label"><?php _e('Выход'); ?></span>
             </a>
         </nav>
         <!--/ Fixed mobile bar -->
@@ -595,15 +605,16 @@ if (empty($adm_title)) {
         <script src="./js/jquery.cookie.js" data-rocketoptimized="false" data-cfasync="false"></script>
         <script src="./js/jquery.form.js" data-rocketoptimized="false" data-cfasync="false"></script>
         <script src="./js/bootstrap-select.min.js" data-rocketoptimized="false" data-cfasync="false"></script>
-         <!--/ jQuery plugins -->
+        <!--/ jQuery plugins -->
 
-        <?php if(isset($_SESSION['chat']) and !$PHPShopSystem->ifSerilizeParam("admoption.chat_enabled")) echo ' <!-- Chat --> <link rel="stylesheet" href="https://cdn.envybox.io/widget/cbk.css">
+        <?php
+        if (isset($_SESSION['chat']) and !$PHPShopSystem->ifSerilizeParam("admoption.chat_enabled"))
+            echo ' <!-- Chat --> <link rel="stylesheet" href="https://cdn.envybox.io/widget/cbk.css">
 <script type="text/javascript" src="https://cdn.envybox.io/widget/cbk.js?wcb_code=679f0a2e11f4ab299aa741fb8d211539" charset="UTF-8" async></script><!--/ Chat -->';
         ?>
     </body>
 </html>
 <?php
-
 // Запись файла локализации
 //writeLangFile();
 ?>

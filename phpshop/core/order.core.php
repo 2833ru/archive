@@ -16,7 +16,7 @@ class PHPShopOrder extends PHPShopCore {
      * Конструктор
      */
     function __construct() {
-       
+
         // Отладка
         $this->debug = false;
 
@@ -84,10 +84,14 @@ class PHPShopOrder extends PHPShopCore {
      * Экшен удаление товара в заказе
      */
     function id_delete() {
+        global $PHPShopAnalitica;
 
         // Перехват модуля
         if ($this->setHook(__CLASS__, __FUNCTION__, $_POST))
             return true;
+
+        // Аналитика
+        $PHPShopAnalitica->init(__FUNCTION__, $_POST);
 
         $this->PHPShopCart->del($_POST['id_delete']);
         $this->index();
@@ -132,7 +136,6 @@ class PHPShopOrder extends PHPShopCore {
         $this->set('delivery_price', PHPShopDelivery::getPriceDefault());
         // при загрузке сначала доставка 0
         //$this->set('delivery_price', 0);
-
         // Итоговая стоимость
         $this->set('total', $PHPShopOrder->returnSumma($this->PHPShopCart->getSum(false), $this->get('discount')) + $this->get('delivery_price'));
 
@@ -372,7 +375,6 @@ function ordercartforma($val, $option) {
         // Артикул
         if (!empty($val['parent_uid']))
             $val['uid'] = $val['parent_uid'];
-        
     } else {
         PHPShopParser::set('cart_id', $val['parent']);
     }

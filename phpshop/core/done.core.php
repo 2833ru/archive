@@ -105,8 +105,7 @@ class PHPShopDone extends PHPShopCore {
      * İêøåí çàïèñè çàêàçà
      */
     function send_to_order() {
-        global $SysValue, $link_db;
-
+        global $SysValue, $link_db, $PHPShopAnalitica;
 
         // Ïåğåõâàò ìîäóëÿ
         if ($this->setHook(__CLASS__, __FUNCTION__, $_POST, 'START'))
@@ -166,6 +165,9 @@ class PHPShopDone extends PHPShopCore {
 
                 // Ïåğåõàò ìîäóëÿ â ñåğåäèíå ôóíêöèè
                 $this->setHook(__CLASS__, __FUNCTION__, $_POST, 'MIDDLE');
+
+                // Àíàëèòèêà
+                $PHPShopAnalitica->init(__FUNCTION__, $this);
 
                 // Ïîäêëş÷åíèå ëîãèêè îïëàòû èç ôàéëîâ
                 if (file_exists("./payment/$path/order.php"))
@@ -280,7 +282,7 @@ class PHPShopDone extends PHPShopCore {
         // Ïåğåõâàò ìîäóëÿ â êîíöå ôóíêöèè
         if ($this->setHook(__CLASS__, __FUNCTION__, $content_adm, 'END'))
             return true;
-        
+
 
         // Îòñûëàåì ïèñüìî àäìèíèñòğàòîğó
         $PHPShopMail->sendMailNow($content_adm);
@@ -351,10 +353,10 @@ class PHPShopDone extends PHPShopCore {
             "sum" => $this->sum,
             "weight" => $this->weight,
             "dostavka" => $this->delivery);
-        
+
         // Áåñïëàòíàÿ äîñòàâêà
-        if($this->delivery_free)
-            $cart['delivery_free']=true;
+        if ($this->delivery_free)
+            $cart['delivery_free'] = true;
 
         // Ñòàòóñ çàêàçà
         $this->status = array(

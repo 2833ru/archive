@@ -66,7 +66,7 @@ function actionStart() {
     else
         $catalog = false;
 
-    $PHPShopGUI->setActionPanel(__("Доставка") . ' / ' . $data['city'], array('Создать', '|', 'Удалить',), array('Сохранить', 'Сохранить и закрыть'));
+    $PHPShopGUI->setActionPanel(__("Доставка") . ' &rarr; ' . $data['city'], array('Создать', '|', 'Удалить',), array('Сохранить', 'Сохранить и закрыть'));
 
     // Наименование
     $Tab_info = $PHPShopGUI->setField("Название", $PHPShopGUI->setInputText(false, 'city_new', $data['city'], '100%'));
@@ -174,6 +174,10 @@ function actionStart() {
     // Оплаты
     if(empty($data['is_folder']))
     $Tab1.=$PHPShopGUI->setField("Блокировка оплат", $PHPShopGUI->setSelect('payment_new[]', $payment_value, false, true, false, $search = false, false, $size = 1, $multiple = true));
+    
+    // Для модулей
+    if(isset($data['is_mod']))
+     $Tab1.=$PHPShopGUI->setField(__('Не изменять стоимость'), $PHPShopGUI->setRadio('is_mod_new', 1, __('Выключить'), $data['is_mod'], false, 'text-warning') .$PHPShopGUI->setRadio('is_mod_new', 2, __('Включить'), $data['is_mod']));
     
     // Сумма заказа
     if(empty($data['is_folder']))

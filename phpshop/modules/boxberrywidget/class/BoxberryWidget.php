@@ -50,6 +50,19 @@ class BoxberryWidget {
         }
     }
 
+    public function requestGet($method, $data) {
+
+        $data['token'] = $this->option['token'];
+        $data['method'] = $method;
+
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, 'http://api.boxberry.de/json.php?' . http_build_query($data));
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        $data = json_decode(curl_exec($ch),1);
+
+        return $data;
+    }
+
     public function setDataFromDoneHook($obj, $data, $postData) {
 
         if($obj->PHPShopCart->getWeight() < 5)
@@ -61,9 +74,9 @@ class BoxberryWidget {
             'order_id'     => $data['ouid'],
             'price'        => $obj->get('total'),
             'payment_sum'  => $obj->get('total'),
-            'delivery_sum' => $postData['boxberrySum'],
+            'delivery_sum' => $postData['DeliverySum'],
             'shop'         => array(
-                'name'         => $postData['boxberry_pvz_id_new'],
+                'name'         => $postData['boxberry_pvz_id'],
                 'name1'        => $this->option['pvz_id']
             ),
             'customer'     => array(
@@ -163,13 +176,57 @@ class BoxberryWidget {
     }
 
     /**
+     * ѕолучение стоимости курьерской доставки
+     * @param string $zip индекс
+     * @param string $weight вес
+     * @param string $depth длина
+     * @param string $height высота
+     * @param string $width ширина
+     * @return mixed результат
+     */
+    public function getCourierPrice($zip, $weight, $depth, $height, $width)
+    {
+        $result = array();
+
+        $checkZip = $this->checkZip($zip);
+
+        if(empty($weight))
+            $weight = $this->option['weight'];
+
+        if($checkZip == false) {
+            $result['error'] = 'ƒоставка по данному индексу не возможна';
+            return $result;
+        } else {
+            $request = $this->requestGet('DeliveryCosts', array('weight' => $weight, 'depth' => $depth, 'height' => $height, 'width' => $width, 'targetstart' => $this->option['pvz_id']));
+            return $request['price'];
+        }
+    }
+
+    /**
+     * ѕроверка возможности доставки по заданному индексу
+     * @param string $zip индекс
+     * @return boolean результат
+     */
+    public function checkZip($zip)
+    {
+        $data['Zip'] = $zip;
+        $request = $this->requestGet('ZipCheck', $data);
+
+        if($request[0]['ExpressDelivery'] == 1)
+            return true;
+        else
+            return false;
+    }
+
+    /**
      * «апись лога
      * @param array $message содержание запроса в ту или иную сторону
      * @param string $order_id номер заказа
      * @param string $status статус отправки
      * @param string $type request
      */
-    public function log($message, $order_id, $status, $type) {
+    public function log($message, $order_id, $status, $type)
+    {
 
         $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['boxberrywidget']['boxberrywidget_log']);
         $id = explode("-", $order_id);

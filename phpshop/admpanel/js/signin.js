@@ -23,8 +23,14 @@ $().ready(function() {
         $('input[name=pas]').removeAttr('required');
         $('input[name=actionID]').detach();
     });
-    
-    
-    $('[data-toggle="tooltip"]').tooltip();
 
+    // Смена цветовой темы
+    $('#theme').on('changed.bs.select', function(e) {
+        var theme = $(this).val();
+        $('#form-signin').fadeOut('slow', function() {
+            $('#bootstrap_theme').attr('href', './css/bootstrap-theme-' + theme + '.css');
+            $('#form-signin').fadeIn('slow');
+        });
+
+    });
 });

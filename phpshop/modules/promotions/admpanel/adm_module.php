@@ -15,7 +15,10 @@ function actionBaseUpdate() {
 
 // Функция обновления
 function actionUpdate() {
-    global $PHPShopOrm;
+    global $PHPShopOrm,$PHPShopModules;
+    
+    // Настройки витрины
+    $PHPShopModules->updateOption($_GET['id'], $_POST['servers']);
 
     $action = $PHPShopOrm->update($_POST);
     header('Location: ?path=modules&id=' . $_GET['id']);
@@ -29,7 +32,7 @@ function actionStart() {
 
     $data = $PHPShopOrm->select();
 
-    $PHPShopGUI->setActionPanel(__("Настройка модуля") . ' <span id="module-name">' . ucfirst($_GET['id']) . '</span>', $select_name, null);
+    $PHPShopGUI->setActionPanel(__("Настройка модуля") . ' <span id="module-name">' . ucfirst($_GET['id']) . '</span>', $select_name, array('Сохранить и закрыть'));
 
     $Info = '
         <h4>Дополнительные переменные в товарах</h4>

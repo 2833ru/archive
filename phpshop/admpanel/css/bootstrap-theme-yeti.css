@@ -74,3 +74,8 @@
 .btn-xs {
   padding: 0px 5px 3px 5px;
 }
+
+#body,#form-signin{
+    background: #F0F0F0 url(images/bg5.jpg) top center repeat !important;
+    background-attachment: fixed !important;
+}

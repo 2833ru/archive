@@ -92,45 +92,50 @@ $().ready(function() {
         });
     });
 
-    if($('#odnotip_new').length)
-    $('#odnotip_new').tagsInput({
-        'height': '100px',
-        'width': '100%',
-        'interactive': true,
-        'defaultText': locale.enter,
-        'removeWithBackspace': true,
-        'minChars': 0,
-        'maxChars': 0, // if not provided there is no limit
-        'placeholderColor': '#666666'
-    });
+    if ($('#odnotip_new').length)
+        $('#odnotip_new').tagsInput({
+            'height': '100px',
+            'width': '100%',
+            'interactive': true,
+            'defaultText': locale.enter,
+            'removeWithBackspace': true,
+            'minChars': 0,
+            'maxChars': 0, // if not provided there is no limit
+            'placeholderColor': '#666666'
+        });
 
     // Управление деревом категорий
     if (typeof(TREEGRID_LOAD) != 'undefined')
-    $('.title-icon .glyphicon-chevron-down').on('click', function() {
-        $('.tree').treegrid('expandAll');
-    });
+        $('.title-icon .glyphicon-chevron-down').on('click', function() {
+            $('.tree').treegrid('expandAll');
+        });
 
     if (typeof(TREEGRID_LOAD) != 'undefined')
-    $('.title-icon .glyphicon-chevron-up').on('click', function() {
-        $('.tree').treegrid('collapseAll');
-    });
+        $('.title-icon .glyphicon-chevron-up').on('click', function() {
+            $('.tree').treegrid('collapseAll');
+        });
 
     // Дерево категорий
     if (typeof(TREEGRID_LOAD) != 'undefined')
-    $('.tree').treegrid({
-        saveState: true,
-        expanderExpandedClass: 'glyphicon glyphicon-triangle-bottom',
-        expanderCollapsedClass: 'glyphicon glyphicon-triangle-right'
-    });
+        $('.tree').treegrid({
+            saveState: true,
+            color: $('#temp-color').css('color'),
+            showBorder: false,
+            selectedBackColor: $('#temp-color-selected').css('color'),
+            onhoverColor: $('.navbar-action').css('background-color'),
+            backColor: "transparent",
+            expanderExpandedClass: 'glyphicon glyphicon-triangle-bottom',
+            expanderCollapsedClass: 'glyphicon glyphicon-triangle-right'
+        });
 
     $('.data-tree .dropdown-toggle').addClass('btn-xs');
 
     // Раскрытие категорий
     if (typeof(TREEGRID_LOAD) != 'undefined')
-    $(".treegrid-parent").on('click', function(event) {
-        event.preventDefault();
-        $('.' + $(this).attr('data-parent')).treegrid('toggle');
-    });
+        $(".treegrid-parent").on('click', function(event) {
+            event.preventDefault();
+            $('.' + $(this).attr('data-parent')).treegrid('toggle');
+        });
 
     // Редактировать категорию в дереве
     $(".tree .edit").on('click', function(event) {

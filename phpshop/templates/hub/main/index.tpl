@@ -128,19 +128,7 @@
                                         <li class="visible-xs"><a href="/price/">{Прайс-лист}</a></li>
                                         <li class="visible-xs"><a href="/map/">{Карта сайта}</a></li>
                                     </ul>
-                                    <ul class="nav navbar-nav navbar-right visible-lg visible-md">
-                                        <li>
-                                            <a id="cartlink" data-trigger="click" data-container="body" data-toggle="popover" data-placement="bottom" data-html="true" data-url="/order/" data-content='@visualcart@'>
-                                                <span class="glyphicon glyphicon-shopping-cart"></span> 
-                                                <span class="visible-lg-inline">
-                                                    товаров 
-                                                    <span id="num" class="label label-info">@num@</span> на 
-                                                </span>
-                                                <span id="sum" class="label label-info">@sum@</span> 
-                                                <span class="rubznak">@productValutaName@</span>
-                                            </a>
-                                        </li>
-                                    </ul>
+                                   
                                 </div><!--/.nav-collapse -->
                             </div>
                         </nav>
@@ -164,7 +152,7 @@
                                 <button id="cartlink" type="button" data-toggle="dropdown" class="btn-cartlink dropdown-toggle" data-trigger="click" data-container="body"  data-placement="bottom" data-html="true" data-url="/order/" data-content='@visualcart@'>
                                     <i class="iconz-cart"></i>
                                 </button>
-                                <div class="cart-number" id="cartlink" type="button" data-toggle="dropdown" class="btn-cartlink dropdown-toggle" data-trigger="click" data-container="body"  data-placement="bottom" data-html="true" data-url="/order/" data-content='@visualcart@'>
+                                <div class="cart-number"  type="button" data-toggle="dropdown" class="btn-cartlink dropdown-toggle" data-trigger="click" data-container="body"  data-placement="bottom" data-html="true" data-url="/order/" data-content='@visualcart@'>
                                     <span id="num1">
                                         @num@
                                     </span>

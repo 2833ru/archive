@@ -1,3 +1,3 @@
 <div class="brand">
-	<a href="#" data-url="@brandPageLink@"><img src="@brandIcon@" title="@brandName@" alt="@brandName@"></a>
+	<a href="@brandPageLink@" title="@brandName@"><img src="@brandIcon@" title="@brandName@" alt="@brandName@"></a>
 </div>

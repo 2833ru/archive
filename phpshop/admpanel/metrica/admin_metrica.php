@@ -242,7 +242,7 @@ function actionStart() {
 
         $PHPShopGUI->_CODE.='<div class="col-md-6 col-xs-12">
      <div class="panel panel-default">
-             <div class="panel-heading"><span class="glyphicon glyphicon-thumbs-up"></span> ' . __('Популярные страницы') . ' <a class="pull-right" href="?path=metrica.sources_summary">' . __('Показать больше') . '</a></div>
+             <div class="panel-heading"><span class="glyphicon glyphicon-thumbs-up"></span> ' . __('Популярные страницы') . ' <a class="pull-right" href="?path=metrica.popular">' . __('Показать больше') . '</a></div>
                    <table class="table table-hover intro-list">' . $PHPShopInterface->getContent() . '</table>
           </div>
     </div>

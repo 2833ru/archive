@@ -33,7 +33,7 @@ function promotions_mail($obj, $data, $rout) {
     if ($rout == 'START') {
 
         // Бесплатная доставка
-        if ($_SESSION['freedelivery'] == 0) {
+        if ($_SESSION['freedelivery'] === 0) {
             $obj->delivery = 0;
         }
 

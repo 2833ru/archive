@@ -3,7 +3,7 @@
 /**
  * Подключение модулей и дизайн хуков
  * @author PHPShop Software
- * @version 1.14
+ * @version 1.15
  * @package PHPShopClass
  * @tutorial http://doc.phpshop.ru/PHPShopClass/PHPShopModules.html
  */
@@ -45,12 +45,21 @@ class PHPShopModules {
 
         $this->checkKeyBase();
 
-        $data = $this->PHPShopOrm->select(array('*'), false, false, array('limit' => 100));
+        // Мультибаза
+        $where = array('date' => '>0');
+        if (defined("HostID"))
+            $where['servers'] = " REGEXP 'i" . HostID . "i'";
+        elseif (defined("HostMain"))
+            $where['date'].= ' and (servers ="" or servers REGEXP "i1000i")';
+
+        $data = $this->PHPShopOrm->select(array('*'), $where, false, array('limit' => 100));
         if (is_array($data))
             foreach ($data as $row) {
                 $path = $row['path'];
-                if (empty($_SESSION[$this->getKeyName()][crc32($path)]) or $this->path)
+                if (empty($_SESSION[$this->getKeyName()][crc32($path)]) or $this->path){
                     $this->getIni($path);
+                    $this->showcase[$path]=$row['servers'];
+                }
             }
 
         // Добавляем хуки шаблона
@@ -560,6 +569,25 @@ class PHPShopModules {
             exit('PHPShop Report: Модуль "' . ucfirst($path) . '" выключен.');
     }
 
+    /**
+     * Обновление настроек модулей для витрин
+     * @param string $path размещение модуля
+     * @param array $servers массив витрин вывода
+     * @return bool
+     */
+    function updateOption($path, $servers) {
+
+        $servers_new = "";
+        if (is_array($servers)){
+            foreach ($servers as $v)
+                if ($v != 'null' and !strstr($v, ','))
+                    $servers_new.="i" . $v . "i";
+        }
+
+        $action = $this->PHPShopOrm->update(array('servers_new' => $servers_new), array('path' => '="' . $path.'"'));
+        return $action;
+    }
+
 }
 
 class PHPShopTemplates {
@@ -629,7 +657,6 @@ class PHPShopTemplates {
   <span class="glyphicon glyphicon-exclamation-sign"></span> <strong>Внимание!</strong> Для использования этого шаблона требуется купить <a href="/phpshop/admpanel/admin.php?path=tpleditor" target="_blank" class="alert-link">лицензию</a>.</div>');
         }
     }
-
 
 }
 
