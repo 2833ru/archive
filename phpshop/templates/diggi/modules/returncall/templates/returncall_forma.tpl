@@ -15,7 +15,7 @@
         <label>Сообщение</label>
         <textarea class="form-control" name="returncall_mod_message" placeholder="Сообщение..."></textarea>
     </div>
-    @returncall_captcha@
+   <p>@returncall_captcha@</p>
     <div class="pull-right">
         <input type="hidden" name="returncall_mod_send" value="1">
         <button type="submit" class="btn btn-primary">Заказать звонок</button>

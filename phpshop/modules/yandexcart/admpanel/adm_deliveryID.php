@@ -30,6 +30,7 @@ function addYandexcartDelivery($data) {
     // Точки
     $Tab3.=$PHPShopGUI->setField(__('Точки продаж и пункты выдачи'), $PHPShopGUI->setTextarea('yandex_outlet_new', $data['yandex_outlet'], "none", false, false, __('ID точек продаж через запятую')));
 
+    if(empty($data['is_folder']))
     $PHPShopGUI->addTab(array("Яндекс.Заказ", $Tab3, true));
 }
 

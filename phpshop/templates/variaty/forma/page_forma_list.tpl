@@ -33,16 +33,17 @@
        <p class="small"><label><input name="rule" value="1" required="" checked="" type="checkbox"> @rule@</label></p>
       </td>
     </tr>
-  </table>
-   
-  <table>
     <tr>
-      <td align="center"><img src="phpshop/captcha.php" id="captcha" alt="captcha" ><br>
-        <a class=b  title="Обновить картинку" href="javascript:CapReload();">Обновить картинку</a></td>
-      <td>Введите код, указанный на картинке<br>
-        <input type="text" name="key" style="width:220px;">
-        <img src="images/shop/flag_green.gif" alt="" width="16" height="16"  hspace="5" align="absmiddle"></td>
+      <td align="center"></td>
+      <td>
+           @captcha@
+          
+      </td>
     </tr>
+  </table>
+ 
+  <table>
+    
     <tr>
       <td colspan="2"><br>
         <div id=allspec><img src="images/shop/comment.gif" alt="" width="16" height="16"  hspace="5" align="absmiddle">Данные, отмеченные <b>флажками</b> обязательны для заполнения.<br>

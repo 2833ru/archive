@@ -55,7 +55,7 @@
             <input type="hidden" name="send_price_link" value="ok">
             <button type="submit" class="btn btn-primary">Пожаловаться на цену</button>
         </span>
-        <img src="phpshop/captcha3.php" alt="" border="0" align="left" style="margin-right:10px"> <input type="text" name="key"  class="form-control" placeholder="Код с картинки..." style="width:150px" required="">
+        @captcha@
 
     </div>
 

@@ -157,6 +157,7 @@ switch ($_SERVER["PATH_INFO"]) {
 
 
                     // Точки
+                    
                     if (!empty($delivery['yandex_outlet'])) {
                         if (strstr($delivery['yandex_outlet'], ',')) {
                             $outlet = explode(",", $delivery['yandex_outlet']);
@@ -188,6 +189,7 @@ switch ($_SERVER["PATH_INFO"]) {
                     $result["cart"]["deliveryOptions"][$i]["paymentMethods"] = $paymentMethods[intval($delivery['yandex_payment'])];
 
                     $i++;
+                    //unset($outlets);
                 }
             }
 

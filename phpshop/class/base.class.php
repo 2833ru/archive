@@ -50,7 +50,7 @@ class PHPShopBase {
     /**
      * Подключения к БД
      * @param string $iniPath путь до конфигурационного файла config.ini
-     * @param bool $connectdb подюченеи к БД
+     * @param bool $connectdb подючение к БД
      * @param bool $error блокировка ошибок PHP
      */
     function __construct($iniPath, $connectdb = true, $error = true) {

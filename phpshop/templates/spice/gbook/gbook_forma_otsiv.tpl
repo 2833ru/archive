@@ -34,7 +34,7 @@
             <input type="hidden" name="send_gb" value="1">
             <button type="submit" class="btn btn-primary">Отправить отзыв</button>
         </span>
-        <img src="phpshop/captcha3.php" alt="" border="0" align="left" style="margin-right:10px"> <input type="text" name="key"   class="form-control" id="exampleInputEmail1" placeholder="Код с картинки..." style="width:100px" required="">
+       @captcha@
 
     </div>
 </form>

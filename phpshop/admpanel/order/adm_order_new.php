@@ -120,6 +120,8 @@ function actionStart() {
     $data['statusi'] = 0;
     $data['seller']=0;
     $data['sum_new'] = $order['Cart']['sum'];
+    $data['ofd']='';
+    $data['ofd_status']=0;
 
     // Запись пустого заказа для получения идентификатора заказа
     $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['orders']);

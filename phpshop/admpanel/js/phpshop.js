@@ -278,6 +278,7 @@ $().ready(function() {
 
             // Выделение выбранного элемента
             $(this).closest('ul').find('li').removeClass('disabled');
+            $(this).closest('.dropdown').find('a.dropdown-toggle').toggleClass('text-muted');
             $(this).parent('li').addClass('disabled');
 
             // Возможные варианты переключателей

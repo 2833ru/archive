@@ -61,6 +61,22 @@ $(document).ready(function() {
 
     });
 
+
+    // Template Debug
+    $('.setDebug').on('click', function() {
+
+        if ($.cookie('debug_template') != 1)
+            $.cookie('debug_template', 1, {
+                path: '/'
+            });
+        else $.removeCookie('debug_template', {
+            path: '/'
+        });
+        
+        window.location.reload();
+
+    });
+
     // Editor в отдельное окно
     $('#editorwindow').on('click', function() {
         var url = $('.admin-modal-content').attr('src');
@@ -131,7 +147,7 @@ $(document).ready(function() {
 
         $('.color').colorpicker('update');
         $('.color').colorpicker('reposition');
-        
+
         window.location.replace($(this).attr('data-random'));
     });
 

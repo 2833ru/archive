@@ -350,7 +350,14 @@ class ReadCsv1C extends PHPShopReadCsvNative {
 
             $sql.=" where uid='" . $CsvToArray[0] . "'";
 
-            $result = mysqli_query($link_db, $sql);
+            // Отладка
+            if (isset($_GET['debug'])) {
+                echo $sql.PHP_EOL;
+                $result = mysqli_query($link_db, $sql) or die(mysqli_error($link_db)).PHP_EOL;
+            }
+            else
+                $result = mysqli_query($link_db, $sql);
+
             $this->ItemUpdate++;
 
             // Добавляем картинки в галерею
@@ -490,7 +497,15 @@ class ReadCsv1C extends PHPShopReadCsvNative {
             price5='" . $CsvToArray[11] . "',
             baseinputvaluta='" . $this->GetIdValuta[$CsvToArray[14]] . "',
             ed_izm='" . $CsvToArray[13] . "'";
-            $result = mysqli_query($link_db, $sql);
+
+            // Отладка
+            if (isset($_GET['debug'])) {
+                echo $sql.PHP_EOL;
+                $result = mysqli_query($link_db, $sql) or die(mysqli_error($link_db)).PHP_EOL;
+            }
+            else
+                $result = mysqli_query($link_db, $sql);
+
             $this->ItemCreate++;
 
             // Добавляем картинки в галерею

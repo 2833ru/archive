@@ -73,12 +73,7 @@
                 <input type="text"  name="name_new" value="@php echo $_POST['name_new']; php@">
                 <br>
                 <br>
-                <label><input type="checkbox"  name="subscribe_new"> <b>Подписка</b></label>
-                <br>
-                <br>
-                <img src="phpshop/captcha3.php" id="captcha" alt="" border="0"><br>
-                <b>Проверочный код:</b><br>
-                <input type="text"  name="key" value="@php echo $_POST['key']; php@">
+                @captcha@
                 <br>
                 <br>
                 <input type="submit" value="Регистрация" id="button-login" class="button"><br>

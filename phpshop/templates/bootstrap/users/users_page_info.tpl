@@ -21,7 +21,7 @@
     <div class="form-group">
         <label class="col-sm-2 control-label">Email</label>
         <div class="col-xs-4">
-            <input type="email" class="form-control" name="login_new" value="@user_login@" required="">
+            <input type="email" class="form-control" value="@user_login@" required="" disabled>
         </div>
     </div>
 

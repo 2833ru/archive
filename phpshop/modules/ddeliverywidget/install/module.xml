@@ -4,8 +4,7 @@
     <name>DDelivery Widget</name>
     <faqlink>http://faq.phpshop.ru/page/ddelivery-widget.html</faqlink>
     <description>Виджет расчета доставки DDelivery.ru</description>
-    <category>sale</category>
-    <status>update</status>
+    <category>sale,delivery</category>
     <adminmenu>
         <title>DDelivery Widget</title>
         <capability>true</capability>

@@ -137,8 +137,22 @@ function actionStart() {
     $Tab_info.=$PHPShopGUI->setField('Артикул:', $PHPShopGUI->setInputText(null, 'uid_new', $data['uid'], 250));
 
     // Иконка
-    $Tab_info.=$PHPShopGUI->setField(__("Изображение"), $PHPShopGUI->setIcon($data['pic_big'], "pic_big_new", true, array('load' => false, 'server' => true, 'url' => false)), 1, 'Главное изображение товара создается автоматически при загрузке через закладку Изображение. Но вы можете загрузить главное фото отдельно здесь.');
-    $Tab_info.=$PHPShopGUI->setField(__("Превью"), $PHPShopGUI->setFile($data['pic_small'], "pic_small_new", array('load' => false, 'server' => 'image', 'url' => false)), 1, 'Превью изображения товара создается автоматически при загрузке через закладку Изображение. Но вы можете загрузить превью отдельно здесь.');
+    $PHPShopOrmImg = new PHPShopOrm($GLOBALS['SysValue']['base']['foto']);
+    $data_pic = $PHPShopOrmImg->select(array('*'), array('parent' => '=' . intval($data['id'])), array('order' => 'num,id'), array('limit' => 1));
+    if (is_array($data_pic)){
+        $icon_server = true;
+         $icon_title = false;
+    }
+    else{
+        $icon_server = false;
+        $icon_title='Главное изображение товара создается автоматически при загрузке через закладку Изображение. Но вы можете загрузить главное фото отдельно здесь.';
+    }
+
+    $Tab_info.=$PHPShopGUI->setField(__("Изображение"), $PHPShopGUI->setIcon($data['pic_big'], "pic_big_new", true, array('load' => false, 'server' => true, 'url' => false, 'view' => $icon_server)), 1, $icon_title);
+    
+    if(empty($icon_server))
+    $Tab_info.=$PHPShopGUI->setField(__("Превью"), $PHPShopGUI->setFile($data['pic_small'], "pic_small_new", array('load' => false, 'server' => 'image', 'url' => false,'view' => $icon_server)), 1, 'Превью изображения товара создается автоматически при загрузке через закладку Изображение. Но вы можете загрузить превью отдельно здесь.');
+    else $Tab_info.=$PHPShopGUI->setFile($data['pic_small'], "pic_small_new", array('load' => false, 'server' => 'image', 'url' => false,'view' => $icon_server));
 
     // Склад
     if (empty($data['ed_izm']))
@@ -448,7 +462,7 @@ function actionUpdate() {
     $action = $PHPShopOrm->update($_POST, array('id' => '=' . $_POST['rowID']));
     $PHPShopOrm->clean();
 
-    return array('success' => $action,'enabled'=>$_POST['enabled_new'],'sklad'=>$_POST['sklad_new'],'id'=>$_POST['rowID']);
+    return array('success' => $action, 'enabled' => $_POST['enabled_new'], 'sklad' => $_POST['sklad_new'], 'id' => $_POST['rowID']);
 }
 
 // Добавление изображения в фотогалерею
@@ -678,6 +692,9 @@ function actionOptionEdit() {
     // Вес
     $Tab_info.=$PHPShopGUI->setField('Вес:', $PHPShopGUI->setInputText(false, 'weight_new', $data['weight'], 100, 'гр.'));
 
+    // Опции вывода
+    $Tab_info.=$PHPShopGUI->setField('Вывод:', $PHPShopGUI->setCheckbox('enabled_new', 1, 'Вывод в товаре', $data['enabled']));
+
     $PHPShopGUI->_CODE.=$Tab_info;
 
     // Валюты
@@ -698,7 +715,7 @@ function actionOptionEdit() {
     // Цены
     $Tab_price.=$PHPShopGUI->setField('Цена 1:', $PHPShopGUI->setInputText(null, 'price_new', $data['price'], 150, $valuta_def_name));
     $Tab_price.=$PHPShopGUI->setField('Цена 2:', $PHPShopGUI->setInputText(null, 'price2_new', $data['price2'], 150, $valuta_def_name));
-    $Tab_price.=$PHPShopGUI->setField('Цена 3:', $PHPShopGUI->setInputText(null, 'price3_new', $data['price3'], 150, $valuta_def_name));
+    //$Tab_price.=$PHPShopGUI->setField('Цена 3:', $PHPShopGUI->setInputText(null, 'price3_new', $data['price3'], 150, $valuta_def_name));
     //$Tab_price.=$PHPShopGUI->setField('Цена 4:', $PHPShopGUI->setInputText(null, 'price4_new', $data['price4'], 150, $valuta_def_name));
     //$Tab_price.=$PHPShopGUI->setField('Цена 5:', $PHPShopGUI->setInputText(null, 'price5_new', $data['price5'], 150, $valuta_def_name));
     // Валюта

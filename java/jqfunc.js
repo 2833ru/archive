@@ -107,6 +107,8 @@ function UpdateDeliveryJq(xid, param, stop_hook) {
                 $("#userAdresData").html(json['adresList']);
                 $("#userAdresData").fadeIn("slow");
 
+                $('#deliveryInfo').html(null);
+
                 // блокировка способов оплат
                 var paymentStop = $("input#dostavka_metod:checked").attr('data-option');
                 if (paymentStop !== undefined)
@@ -122,13 +124,13 @@ function UpdateDeliveryJq(xid, param, stop_hook) {
                         $('input[data-option="payment' + value + '"]').attr('checked', false);
                     });
                 }
-                
-                if ($("input#order_metod:checked").length == 0) {             
+
+                if ($("input#order_metod:checked").length == 0) {
                     $('input#order_metod').each(function() {
-                        if (!this.disabled){
+                        if (!this.disabled) {
                             this.checked = true;
                             return false;
-                        }                 
+                        }
                     });
                 }
 
@@ -176,8 +178,8 @@ function OrderChekJq()
             if ($(this).val().length < 3)
                 badReqName = 1;
 
-        if ($(this).val() == "" || (badReqEmail && $(this).attr('name') == 'mail') || (badReqName && $(this).attr('name') == 'name_new')) {
-            // переходим по €корю на саомое верхнее незаполненое поле
+        if ($(this).val() == "" || ($(this).attr('name') == 'rule' && $(this).prop('checked') == false) || (badReqEmail && $(this).attr('name') == 'mail') || (badReqName && $(this).attr('name') == 'name_new')) {
+            // переходим по €корю на самое верхнее незаполненое поле
             if (badReq == 0) {
                 var destination = $(this).parent().offset().top;
                 var par = $(this);

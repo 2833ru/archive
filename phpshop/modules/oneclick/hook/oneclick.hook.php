@@ -28,6 +28,10 @@ class AddToTemplateOneclickElement extends PHPShopElements {
      * Вывод формы
      */
     function display() {
+
+        $PHPShopRecaptchaElement = new PHPShopRecaptchaElement();
+        $this->set('oneclick_captcha', $PHPShopRecaptchaElement->captcha('oneclick'));
+
         $forma = PHPShopParser::file($GLOBALS['SysValue']['templates']['oneclick']['oneclick_forma'], true, false, true);
         $this->set('leftMenuContent', $forma);
         $this->set('leftMenuName', 'Быстрый заказ');
@@ -43,8 +47,6 @@ class AddToTemplateOneclickElement extends PHPShopElements {
                 $dis = $this->parseTemplate($this->getValue('templates.left_menu'));
             }
         }
-
-
 
 
         // Назначаем переменную шаблона

@@ -17,9 +17,10 @@
         <label>Повторите пароль</label>
         <input type="password" name="password_new2"  class="form-control" required="">
         <span class="glyphicon glyphicon-remove form-control-feedback hide" aria-hidden="true"></span>
+        <p class="small"><label><input name="rule" value="1" required="" checked="" type="checkbox"> @rule@</label></p>
     </div>
     <div>
-        <img src="phpshop/captcha3.php" alt="" border="0" align="left" style="margin-right:10px"> <input type="text" name="key"   class="form-control" id="exampleInputEmail1" placeholder="Код с картинки..." style="width:150px" required="">
+        @captcha@
     </div>
     <p><br></p>
     <p>

@@ -12,16 +12,18 @@ class PHPShopYandexkassaArray extends PHPShopArray {
     }
 
     function get_pay_variants_array($arr = null, $forDoneCore = null) {
-        $pay_variants_array['PC'] = array('Оплата из кошелька в Яндекс.Деньгах.', 'PC', '');
-        $pay_variants_array['AC'] = array('Оплата с произвольной банковской карты.', 'AC', '');
-        $pay_variants_array['MC'] = array('Платеж со счета мобильного телефона.', 'MC', '');
-        $pay_variants_array['GP'] = array('Оплата наличными через кассы и терминалы.', 'GP', '');
-        $pay_variants_array['WM'] = array('Оплата из кошелька в системе WebMoney.', 'WM', '');
-        $pay_variants_array['SB'] = array('Оплата через Сбербанк: оплата по SMS или Сбербанк Онлайн.', 'SB', '');
+        $pay_variants_array['PC'] = array('Оплата из кошелька в Яндекс.Деньгах', 'PC', '');
+        $pay_variants_array['AC'] = array('Оплата с произвольной банковской карты', 'AC', '');
+        $pay_variants_array['MC'] = array('Платеж со счета мобильного телефона', 'MC', '');
+        $pay_variants_array['GP'] = array('Оплата наличными через кассы и терминалы', 'GP', '');
+        $pay_variants_array['WM'] = array('Оплата из кошелька в системе WebMoney', 'WM', '');
+        $pay_variants_array['SB'] = array('Оплата через Сбербанк: оплата по SMS или Сбербанк Онлайн', 'SB', '');
 //        $pay_variants_array['MP'] = array('Оплата через мобильный терминал (mPOS).', 'MP', '');
-        $pay_variants_array['AB'] = array('Оплата через Альфа-Клик.', 'AB', '');
-        $pay_variants_array['МА'] = array('Оплата через MasterPass.', 'МА', '');
-        $pay_variants_array['PB'] = array('Оплата через Промсвязьбанк.', 'PB', '');
+        $pay_variants_array['AB'] = array('Оплата через Альфа-Клик', 'AB', '');
+        $pay_variants_array['МА'] = array('Оплата через MasterPass', 'МА', '');
+        $pay_variants_array['PB'] = array('Оплата через Промсвязьбанк', 'PB', '');
+        $pay_variants_array['QW'] = array('QIWI Wallet', 'QW', '');
+        $pay_variants_array['KV'] = array('КупиВкредит', 'KV', '');
 
         if (is_array($arr))
             foreach ($arr as $key => $value) {

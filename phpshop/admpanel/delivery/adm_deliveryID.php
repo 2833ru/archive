@@ -132,7 +132,11 @@ function actionStart() {
 
     // Такса
     $Tab_price.=$PHPShopGUI->setField(__("Такса за каждые 0.5 кг веса"), $PHPShopGUI->setInputText(false, 'taxa_new', $data['taxa'], '150', $PHPShopSystem->getDefaultValutaCode()) . $PHPShopGUI->setHelp('Используется для задания дополнительной тарификации (например, для "Почта России").<br>Каждые дополнительные 0.5 кг свыше базовых 0.5 кг будут стоить указанную сумму.'));
-
+    
+    if ($data['ofd_nds'] == '')
+        $data['ofd_nds'] = $PHPShopSystem->getParam('nds');
+    
+    $Tab_price.= $PHPShopGUI->setField("Значение НДС:", $PHPShopGUI->setInputText(null, 'ofd_nds_new', $data['ofd_nds'], 100, '%'));
 
     // Тип сортировки
     $Tab_info.=$PHPShopGUI->setField(__("Приоритет:"), $PHPShopGUI->setInputText('№', "num_new", $data['num'], 150));

@@ -20,7 +20,7 @@ function send_to_order_mod_nextpay_hook($obj, $value, $rout) {
             $amount= number_format($obj->get('total'), 2, '.', '');
             $nextpay_product_id = $option['merchant_key'];
 
-            $link=PHPShopText::a("https://www.nextpay.ru/bankpay/?product_id=".$nextpay_product_id."&ext_order_cost=".$amount."&seller_ext_order_id=".$order_id."&command=show_product_form_ext&np_email=".$_POST['mail']."&np_payer=".$obj->get('user_name'), "Оплатить заказ № $order_id через платежную систему NextPay", "Оплатить заказ № ".$order_id, false, false, false, 'btn btn-success');
+            $link=PHPShopText::a("https://www.nextpay.ru/bankpay/?product_id=".$nextpay_product_id."&ext_order_cost=".$amount."&seller_ext_order_id=".$order_id."&command=show_product_form_ext&np_email=".$_POST['mail']."&np_payer=".$_POST['fio_new'], "Оплатить заказ № $order_id через платежную систему NextPay", "Оплатить заказ № ".$order_id, false, false, false, 'btn btn-success');
 
             $obj->set('payment_forma', $link);
             $obj->set('payment_info', $option['title']);

@@ -9,7 +9,8 @@ function userorderpaymentlink_mod_nextpay_hook($obj, $PHPShopOrderFunction) {
 
 
     // Контроль оплаты от статуса заказа
-    if ($PHPShopOrderFunction->getParam('statusi') == $option['status']) {
+    if ($PHPShopOrderFunction->order_metod_id == 10016)
+    if ($PHPShopOrderFunction->getParam('statusi') == $option['status'] or empty($option['status'])) {
         // Номер счета
         $mrh_ouid = explode("-", $PHPShopOrderFunction->objRow['uid']);
         $order_id = $mrh_ouid[0] . "" . $mrh_ouid[1];
@@ -22,7 +23,7 @@ function userorderpaymentlink_mod_nextpay_hook($obj, $PHPShopOrderFunction) {
        
 
 
-        $return = PHPShopText::a("https://www.nextpay.ru/bankpay/?product_id=".$nextpay_product_id."&ext_order_cost=".$amount."&seller_ext_order_id=".$order_id."&command=show_product_form_ext&np_email=".$PHPShopOrderFunction->getMail()."&np_payer=".$_SESSION['UsersName'], 'Оплатить сейчас', 'Оплатить сейчас', false, false, '_blank', 'btn btn-success pull-right');
+        $return = PHPShopText::a("https://www.nextpay.ru/bankpay/?product_id=".$nextpay_product_id."&ext_order_cost=".$amount."&seller_ext_order_id=".$order_id."&command=show_product_form_ext&np_email=".$PHPShopOrderFunction->getMail()."&np_payer=", 'Оплатить сейчас', 'Оплатить сейчас', false, false, '_blank', 'btn btn-success pull-right');
     } elseif ($PHPShopOrderFunction->getSerilizeParam('orders.Person.order_metod') == 10016)
         $return = ', Заказ обрабатывается менеджером';
 

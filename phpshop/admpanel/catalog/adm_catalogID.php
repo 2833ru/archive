@@ -184,8 +184,9 @@ function actionStart() {
     else
         $Tab8 = $PHPShopGUI->setHelp('Характеристики доступны только в подкаталогах с товарами.');
 
-    //Мультибаза
-    //$Tab8.=$PHPShopGUI->setCollapse(__('Мультибаза'), $PHPShopGUI->loadLib('tab_multibase', $data));
+    // Мультибаза
+    $Tab9.=$PHPShopGUI->setCollapse(__('Показывать на витринах'), $PHPShopGUI->loadLib('tab_multibase', $data));
+    
     // Запрос модуля на закладку
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $data);
 
@@ -274,12 +275,12 @@ function actionUpdate() {
         $_POST['secure_groups_new'] = $secure;
     }
 
-    /* // Мультибаза
+    // Мультибаза
       $_POST['servers_new'] = null;
       if (is_array($_POST['servers']))
       foreach ($_POST['servers'] as $v)
       $_POST['servers_new'].="i" . $v . "i";
-     */
+    
 
     // Доп каталоги
     if (!empty($_POST['dop_cat_new']) and substr($_POST['dop_cat_new'], 1) != '#') {

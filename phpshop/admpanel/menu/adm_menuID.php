@@ -43,6 +43,8 @@ function actionStart() {
             $PHPShopGUI->setLine() .
             $PHPShopGUI->setField("Таргетинг:", $PHPShopGUI->setInput("text", "dir_new", $data['dir']) .
                     $PHPShopGUI->setHelp(__('* Пример: /page/,/news/. Можно указать несколько адресов через запятую.')));
+    
+    $Tab1.=$PHPShopGUI->setField("Витрины", $PHPShopGUI->loadLib('tab_multibase', $data, 'catalog/'));
 
     $Tab1.= $PHPShopGUI->setField("Содержание",$oFCKeditor->AddGUI());
     
@@ -50,8 +52,7 @@ function actionStart() {
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $data);
 
     // Вывод формы закладки
-    $PHPShopGUI->setTab(array("Основное", $Tab1));
-
+    $PHPShopGUI->setTab(array("Основное", $Tab1,true));
 
 
     // Вывод кнопок сохранить и выход в футер
@@ -80,6 +81,12 @@ function actionSave() {
 // Функция обновления
 function actionUpdate() {
     global $PHPShopOrm, $PHPShopModules;
+    
+        // Мультибаза
+    $_POST['servers_new'] = null;
+    if (is_array($_POST['servers']))
+        foreach ($_POST['servers'] as $v)
+            $_POST['servers_new'].="i" . $v . "i";
 
     // Перехват модуля
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $_POST);

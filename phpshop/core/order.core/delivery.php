@@ -12,9 +12,13 @@ function delivery($obj, $deliveryID) {
     $pred = $br = $my = $alldone = $waytodo =  $disp = null;
 
 
-    $engineinc = 0;
-    $pathTemplate = $GLOBALS['SysValue']['dir']['dir'] . chr(47) . $GLOBALS['SysValue']['dir']['templates'] . chr(47) . $_SESSION['skin'] . chr(47); // путь до шаблона
-
+    if (empty($SysValue['nav'])) {
+        $engineinc = 0;
+        $pathTemplate = $GLOBALS['SysValue']['dir']['dir']. chr(47) . $GLOBALS['SysValue']['dir']['templates'] . chr(47) . $_SESSION['skin'] ; 
+    } else {
+        $engineinc = 1;
+        $pathTemplate = $GLOBALS['SysValue']['dir']['dir'].  $GLOBALS['SysValue']['dir']['templates'] . chr(47) . $_SESSION['skin'] ; 
+    }
 
     $table = $SysValue['base']['delivery'];
 
@@ -82,7 +86,7 @@ function delivery($obj, $deliveryID) {
             //Если ((есть соседи, т.е. на верхнем уровне можно выбрать что-то другое)
             // И (уровень доставки больше первого)), то показываем приглашение перейти на уровень выше
             if (($ii > 1) && ($num > 0)) { //Показывать кнопку "снять" если больше 1 вариант выбора у верхнего И (либо есть потомки либо уровень доставки больше первого)
-                $pred = 'Выбрано: ' . $city . ' <A href="javascript:UpdateDeliveryJq(' . $PIDpr . ',this)" title="Выбрать другой способ доставки"><img src="' . $pathTemplate . '/images/shop/icon-activate.gif" alt=""  border="0" align="absmiddle">Выбрать другой способ доставки</A> <BR> ' . $pred;
+                $pred = 'Выбрано: ' . $city . ' <A href="javascript:UpdateDeliveryJq(\'' . $PIDpr . '\',this)" title="Выбрать другой способ доставки"><img src="' . $pathTemplate . '/images/shop/icon-activate.gif" alt=""  border="0" align="absmiddle">Выбрать другой способ доставки</A> <BR> ' . $pred;
             }
         }
         if (strlen($pred)) {
@@ -217,7 +221,7 @@ function getAdresFields($mass, $city_select = null) {
                 $req = "";
                 $star = "";
             }
-            $disp .= "$star " . $enabled['country']['name'] . "<br> <select name='country_new' class='citylist $req'><option value='' for='0'>-----------</option>$disOpt</select><br><br>";
+            $disp .= "$star " . $enabled['country']['name'] . "<p> <select name='country_new' class='citylist $req'><option value='' for='0'>-----------</option>$disOpt</select></p>";
         }
 
         // регион
@@ -235,10 +239,10 @@ function getAdresFields($mass, $city_select = null) {
             $req = "";
             $star = "";
         }
-        $disp .= "$star " . $enabled['state']['name'] . "<br> <select name='state_new' class='citylist $req' $disabled><option value='' for='0'>-----------</option>$disOpt</select><br><br>";
+        $disp .= "$star " . $enabled['state']['name'] . "<p><select name='state_new' class='citylist $req' $disabled><option value='' for='0'>-----------</option>$disOpt</select></p>";
 
         //Город
-        $disp .= "$star " . $enabled['city']['name'] . "<br> <select name='city_new' class='citylist $req' $disabled><option value='' for='0'>-----------</option></select><br><br></div>";
+        $disp .= "$star " . $enabled['city']['name'] . "<p> <select name='city_new' class='citylist $req' $disabled><option value='' for='0'>-----------</option></select></p></div>";
     }
 
     foreach ($num as $key => $value) {
@@ -254,7 +258,7 @@ function getAdresFields($mass, $city_select = null) {
                 $star = "";
                 $required = null;
             }
-            $disp .= $star . " " . $enabled[$key][name] . "<br><input type='text' $req value='' name='" . $key . "_new' $required><br><br>";
+            $disp .= $star . " " . $enabled[$key][name] . "<p><input type='text' $req value='' name='" . $key . "_new' $required></p>";
         }
     }
     return $disp;

@@ -58,7 +58,7 @@ function actionValueEdit() {
 
 
     // Перехват модуля
-    $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $_POST);
+    $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $data);
 
     exit($PHPShopGUI->_CODE . '<p class="clearfix"> </p>');
 }

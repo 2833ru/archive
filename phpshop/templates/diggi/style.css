@@ -2361,6 +2361,10 @@ img.template:hover{
     cursor: pointer;
 }
 
+.paymOneEl label {
+   cursor: pointer;
+}
+
 .product-col .panel.panel-default {
         border: none;
         box-shadow: none;

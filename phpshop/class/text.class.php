@@ -237,6 +237,8 @@ class PHPShopText {
      * @param string $onchange имя javascript функции по экшену onchange
      * @param int $height высота
      * @param int $size размер
+     * @param string $id CSS ID
+     * @param string $class CSS class
      * @return string
      */
     static function select($name, $value, $width, $float = "none", $caption = false, $onchange = "return true", $height = false, $size = 1, $id = false, $class = "form-control selectpicker show-menu-arrow") {
@@ -323,7 +325,7 @@ class PHPShopText {
         // Знак рубля
         if (strstr($string, " ")) {
             $string_array = explode(" ", $string);
-            return '<span style="text-decoration: line-through">' . $string_array[0] . '</span><span class="rubznak">' . $string_array[1] . '</span>';
+            return '<span style="text-decoration: line-through">' . $string_array[0] . '</span> <span class="rubznak">' . $string_array[1] . '</span>';
         }
         else
             return '<span style="text-decoration: line-through">' . $string . '</span>';

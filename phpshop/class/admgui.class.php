@@ -62,7 +62,7 @@ class PHPShopGUI {
      * @param bool $drag_off загрузка перетаскиванием
      * @param array $option настройки
      */
-    function setIcon($data, $id = "icon_new", $drag_off = false, $option = array('load' => true, 'server' => true, 'url' => true, 'multi' => false), $width = false) {
+    function setIcon($data, $id = "icon_new", $drag_off = false, $option = array('load' => true, 'server' => true, 'url' => true, 'multi' => false, 'view'=>false), $width = false) {
 
         if (!empty($data)) {
             $name = '<span data-icon="' . $id . '">' . $data . '</span>';
@@ -97,17 +97,19 @@ class PHPShopGUI {
 
         $dis = '
         <div class="row">
-           <div class="col-md-2 btn-file"><a href="#" class="link-thumbnail">' . $icon . '</a>' . $drag;
+           <div class="col-md-2 btn-file"><a href="#" class="link-thumbnail">' . $icon . '</a>' . $drag.'</div>';
 
+        if(empty($option['view']))
         $dis.='
-           </div>
            <div class="col-md-10">
              <p><span class="remove glyphicon glyphicon-remove-sign ' . $icon_hide . '" data-return="' . $id . '" data-toggle="tooltip" data-placement="top" title="Удалить эту запись"></span> ' . $name . '</p><input type="hidden" name="' . $id . '" value="' . $data . '">
                <div class="btn-group btn-group-sm" role="group" aria-label="...">
                  ' . $add . '
               </div>
-          </div>
-        </div>';
+          </div>';
+        else $dis.='<input type="hidden" name="' . $id . '" value="' . $data . '">';
+          
+        $dis.='</div>';
 
         return $dis;
     }
@@ -117,7 +119,7 @@ class PHPShopGUI {
      * @param string $data путь
      * @param string $id имя поля
      */
-    function setFile($data = null, $id = "lfile", $option = array('load' => true, 'server' => 'file', 'url' => true)) {
+    function setFile($data = null, $id = "lfile", $option = array('load' => true, 'server' => 'file', 'url' => true,'view'=>false)) {
 
         if (!empty($data)) {
             $name = '<span data-icon="' . $id . '">' . $data . '</span>';
@@ -137,12 +139,14 @@ class PHPShopGUI {
             $add.='<button type="button" class="btn btn-default" id="promtUrl" data-target="' . $id . '">URL</button><input type="hidden" name="furl" id="furl" value="0">';
 
 
+        if(empty($option['view']))
         $dis.='
              <p><span class="remove glyphicon glyphicon-remove-sign ' . $icon_hide . '" data-return="' . $id . '" data-toggle="tooltip" data-placement="top" title="Удалить эту запись"></span> ' . $name . '</p><input type="hidden" name="' . $id . '" id="' . $id . '" value="' . $data . '" >
                <div class="btn-group btn-group-sm" role="group" aria-label="...">
                  ' . $add . '
               </div>
         ';
+        else $dis.='<input type="hidden" name="' . $id . '" id="' . $id . '" value="' . $data . '" >';
 
         return $dis;
     }
@@ -426,9 +430,9 @@ class PHPShopGUI {
         else
             $back['class'] = null;
 
-
-        if (strlen($title) > 73)
-            $title = substr($title, 0, 73) . '...';
+        /*
+          if (strlen($title) > 73)
+          $title = substr($title, 0, 73) . '...'; */
 
         $CODE = '
             <!-- Action panell -->
@@ -925,13 +929,26 @@ class PHPShopGUI {
     function addTab() {
 
         $Arg = func_get_args();
-        foreach ($Arg as $val) {
+        foreach ($Arg as $key=>$val) {
 
             if (!empty($val[2]))
                 $val[1] = '<hr>' . $val[1];
 
-            $this->addTabName.='<li role="presentation"><a href="#tabs-' . $this->tab_key . '" aria-controls="tabs-' . $this->tab_key . '" role="tab" data-toggle="tab" data-id="' . $val[0] . '">' . $val[0] . '</a></li>';
-            $this->addTabContent.='<div role="tabpanel" class="tab-pane fade" id="tabs-' . $this->tab_key . '">' . $val[1] . '</div>';
+            
+            if (!empty($val[3]))
+                $this->tab_key_uid = $val[3];
+            else
+                $this->tab_key_uid = $this->tab_key;
+
+            // Номер закладки в ссылке tab
+            if ($this->tab_key_uid === $_GET['tab'])
+                $active = 'active in';
+            else
+                $active = null;
+
+
+            $this->addTabName.='<li role="presentation" class="' . $active . '"><a href="#tabs-' . $this->tab_key_uid . '" aria-controls="tabs-' . $this->tab_key_uid . '" role="tab" data-toggle="tab" data-id="' . $val[0] . '">' . $val[0] . '</a></li>';
+            $this->addTabContent.='<div role="tabpanel" class="tab-pane ' . $active . ' fade" id="tabs-' . $this->tab_key_uid . '">' . $val[1] . '</div>';
 
             $this->tab_key++;
         }
@@ -950,11 +967,13 @@ class PHPShopGUI {
 
 
         $name = $content = null;
+        
+        
         foreach ($Arg as $key => $val) {
 
-            // Номер закладки в ссылке tab
-            if ($key == intval($_GET['tab']))
+            if($key == $_GET['tab']){
                 $active = 'active in';
+            }
             else
                 $active = null;
 
@@ -1537,6 +1556,10 @@ class PHPShopGUI {
 
     /**
      * Прорисовка формы о модуле
+     * @param bool $serial сериный ключ [false]
+     * @param bool $pay форма оплаты [false]
+     * @param string $version номер версии модуля
+     * @param bool $update проверка обновлений
      * @return string
      */
     function setPay($serial = false, $pay = false, $version = false, $update = false) {

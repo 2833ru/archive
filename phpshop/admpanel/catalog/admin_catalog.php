@@ -238,11 +238,16 @@ function actionStart() {
     // Быстрый поиск
     if ($_GET['from'] == 'header') {
         $PHPShopOrm->Option['where'] = " or ";
-        $where['uid'] = $where['id'] = $where['name'];
+        $where['uid'] =  $where['name'];
+        
+        // Убираем подтипы
+        $where['id']= $where['name']." and parent_enabled='0'";
     }
-
+    else {
+        
     // Убираем подтипы
     $where['parent_enabled'] = "='0'";
+    }
 
     $PHPShopOrm->mysql_error = false;
     $data = $PHPShopOrm->select(array('*'), $where, $order, $limit);

@@ -11,8 +11,8 @@ function delivery_promotions_hook($obj, $data) {
         $hook['adresList'] = $_RESULT['adresList'];
         $hook['success'] = 1;
 
-        // Совместимость с модулем ddelivery
-        if (empty($GLOBALS['SysValue']['base']['ddelivery']['ddelivery_system'])) {
+        // Совместимость с модулем ddeliverywidget
+        if (empty($GLOBALS['SysValue']['base']['ddeliverywidget']['ddeliverywidget_system'])) {
             return $hook;
         }
     }

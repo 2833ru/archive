@@ -373,7 +373,7 @@ function setEqualHeight(columns) {
         });
 
         if (tallestcolumn > 0) {
-            $(this).find(columns).height(tallestcolumn);
+            $(this).find(columns).css('min-height', tallestcolumn);
         }
     });
 
@@ -876,9 +876,27 @@ $(document).ready(function() {
         if ($(this).find('a').html() === undefined && $(this).find('.vendorenabled').html() === undefined) {
             $(this).fadeOut('slow');
         }
-        else if ($(this).find('.vendorenabled').html() == '') {
-            $(this).fadeOut('slow');
-        }
     });
-
 });
+
+// reCAPTCHA
+if ($("#recaptcha_default").length || $("#recaptcha_returncall").length || $("#recaptcha_oneclick").length) {
+    var ga = document.createElement('script');
+    ga.type = 'text/javascript';
+    ga.async = true;
+    ga.defer = true;
+    ga.src = '//www.google.com/recaptcha/api.js?onload=recaptchaCreate&render=explicit';
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(ga, s);
+}
+recaptchaCreate = function() {
+
+    if ($("#recaptcha_default").length)
+        grecaptcha.render("recaptcha_default", {"sitekey": $("#recaptcha_default").attr('data-key'), "size": $("#recaptcha_default").attr('data-size')});
+
+    if ($("#recaptcha_returncall").length)
+        grecaptcha.render("recaptcha_returncall", {"sitekey": $("#recaptcha_returncall").attr('data-key'), "size": $("#recaptcha_returncall").attr('data-size')});
+
+    if ($("#recaptcha_oneclick").length)
+        grecaptcha.render("recaptcha_oneclick", {"sitekey": $("#recaptcha_oneclick").attr('data-key'), "size": $("#recaptcha_oneclick").attr('data-size')});
+};

@@ -255,9 +255,9 @@ class PHPShopShopCore extends PHPShopCore {
             $currency = $this->dengi;
 
         $row = $this->select(array('*'), array('id' => '=' . intval($currency)), false, array('limit' => 1), __FUNCTION__, array('base' => $this->getValue('base.currency'), 'cache' => 'true'));
-        
-        if($name == 'code' and ($row['iso'] == 'RUR' or $row['iso']=="RUB"))
-        return 'p';
+
+        if ($name == 'code' and ($row['iso'] == 'RUR' or $row['iso'] == "RUB"))
+            return 'p';
 
         return $row[$name];
     }
@@ -270,9 +270,10 @@ class PHPShopShopCore extends PHPShopCore {
      * @param array $option массив условий выборки
      * @param string $function_name имя функции для отладки
      * @param array $from массив опций
+     * @param array $mysql_error блокировка ошибок
      * @return array
      */
-    function select($select, $where, $order = false, $option = array('limit' => 1), $function_name = false, $from = false) {
+    function select($select, $where, $order = false, $option = array('limit' => 1), $function_name = false, $from = false, $mysql_error = true) {
 
         if (is_array($from)) {
             $base = @$from['base'];
@@ -289,6 +290,7 @@ class PHPShopShopCore extends PHPShopCore {
         $PHPShopOrm->objBase = $base;
         $PHPShopOrm->debug = $this->debug;
         $PHPShopOrm->cache = $cache;
+        $PHPShopOrm->mysql_error = $mysql_error;
         $PHPShopOrm->cache_format = $cache_format;
         $result = $PHPShopOrm->select($select, $where, $order, $option, __CLASS__, $function_name);
 
@@ -523,28 +525,24 @@ class PHPShopShopCore extends PHPShopCore {
      */
     function errorMultibase($category) {
 
-        // Мультибаза
-        /*
-          if ($this->PHPShopSystem->ifSerilizeParam('admoption.base_enabled')) {
+        if (defined("HostID")) {
 
-          if (empty($this->multi_cat)) {
-          $where['servers'] = " REGEXP 'i" . $this->PHPShopSystem->getSerilizeParam('admoption.base_id') . "i'";
-          $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['categories']);
-          $PHPShopOrm->debug = $this->debug;
-          $PHPShopOrm->cache = true;
-          $data = $PHPShopOrm->select(array('id'), $where, false, array('limit' => 100));
-          if (is_array($data)) {
-          foreach ($data as $row) {
-          $this->multi_cat[] = $row['id'];
-          }
-          }
-          }
+            if (empty($this->multi_cat)) {
+                $where['servers'] = " REGEXP 'i" . HostID . "i'";
+                $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['categories']);
+                $PHPShopOrm->debug = $this->debug;
+                $PHPShopOrm->cache = false;
+                $data = $PHPShopOrm->select(array('id'), $where, false, array('limit' => 1000));
+                if (is_array($data)) {
+                    foreach ($data as $row) {
+                        $this->multi_cat[] = $row['id'];
+                    }
+                }
+            }
 
-          if (!in_array($category, $this->multi_cat))
-          return true;
-          }
-         * 
-         */
+            if (!in_array($category, $this->multi_cat))
+                return true;
+        }
     }
 
     /**
@@ -580,7 +578,7 @@ class PHPShopShopCore extends PHPShopCore {
 
         if ($price < $this->price_min)
             $this->price_min = $price;
-        
+
         // Форматирование
         $price = number_format($price, $this->format, '.', ' ');
 
@@ -766,7 +764,7 @@ class PHPShopShopCore extends PHPShopCore {
      * @param Int $num_row  кол-во колонок в категории по умолчанию
      */
     function calculateCell($category, $num_row) {
-        
+
         if (!empty($_REQUEST['gridChange'])) {
             if ($_REQUEST['gridChange'] == 2 AND $num_row > 1) {
                 $_SESSION['gridChange'][$category] = $num_row;

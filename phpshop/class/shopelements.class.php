@@ -121,6 +121,35 @@ class PHPShopProductElements extends PHPShopElements {
         // Собираем и возвращаем таблицу с товарами
         $this->compile();
     }
+    
+        /**
+     * Проверка прав каталога режима Multibase
+     * @param int $category
+     * @return boolean 
+     */
+    function randMultibase() {
+
+        $multi_cat = null;
+
+        // Мультибаза
+        if (defined("HostID")) {
+
+            $where['servers'] = " REGEXP 'i" . HostID . "i'";
+            $where['parent_to'] = " > 0";
+            $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['categories']);
+            $PHPShopOrm->debug = $this->debug;
+            $PHPShopOrm->cache = true;
+            $data = $PHPShopOrm->select(array('id'), $where, false, array('limit' => 100), __CLASS__, __FUNCTION__);
+            $multi_cat=null;
+            if (is_array($data)) {
+                foreach ($data as $row) {
+                    $multi_cat.=$row['id'] . ',';
+                }
+            }
+
+            return $multi_cat;
+        }
+    }
 
     /**
      * Расчет случайного вывода товаров
@@ -201,10 +230,11 @@ class PHPShopProductElements extends PHPShopElements {
      * Проверка режима Multibase
      */
     function checkMultibase($pic_small) {
-
+/*
         $base_host = $this->PHPShopSystem->getSerilizeParam('admoption.base_host');
         if ($this->PHPShopSystem->getSerilizeParam('admoption.base_enabled') == 1 and !empty($base_host))
             $this->set('productImg', str_replace("/UserFiles/", "http://" . $base_host . "/UserFiles/", $pic_small));
+ */
     }
 
     /**

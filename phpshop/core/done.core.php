@@ -120,9 +120,9 @@ class PHPShopDone extends PHPShopCore {
             // ñîçäà¸ì íîâîãî ïîëüçîâàòåëÿ, èëè àâòîğèçóåì ñòàğîãî
             if (!class_exists('PHPShopUsers'))
                 PHPShopObj::importCore('users');
+            
             $PHPShopUsers = new PHPShopUsers();
             $this->userId = $PHPShopUsers->add_user_from_order($_POST['mail']);
-
 
             if (PHPShopSecurity::true_email($_POST['mail']) AND $this->userId) {
                 $this->ouid = $_POST['ouid'];
@@ -303,6 +303,24 @@ class PHPShopDone extends PHPShopCore {
     }
 
     /**
+     * Îòïğàâêà äàííûõ â ÎÔÄ [âûêëş÷åíî/òåñò]
+     * @param array $data äàííûå ïî çàêàçó
+     */
+    function ofd($order_id) {
+        global $_classPath;
+
+        $ofd = 'atol';
+        include_once($_classPath . 'modules/' . substr($ofd, 0, 15) . '/api.php');
+
+        if (function_exists('OFDStart')) {
+            $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['orders']);
+            $PHPShopOrm->debug = false;
+            $data = $PHPShopOrm->select(array('*'), array('id' => '=' . intval($order_id)), false, array('limit' => '1'));
+            OFDStart($data);
+        }
+    }
+
+    /**
      * Çàïèñü çàêàçà â ÁÄ
      */
     function write() {
@@ -317,18 +335,10 @@ class PHPShopDone extends PHPShopCore {
             "data" => date("U"),
             "time" => date("H:s a"),
             "mail" => PHPShopSecurity::TotalClean($_POST['mail'], 3),
-            "name_person" => PHPShopSecurity::TotalClean($_POST['name_person']),
-            "org_name" => PHPShopSecurity::TotalClean($_POST['org_name']),
-            "org_inn" => PHPShopSecurity::TotalClean($_POST['org_inn']),
-            "org_kpp" => PHPShopSecurity::TotalClean($_POST['org_kpp']),
-            "tel_code" => PHPShopSecurity::TotalClean($_POST['tel_code']),
-            "tel_name" => PHPShopSecurity::TotalClean($_POST['tel_name']),
-            "adr_name" => PHPShopSecurity::TotalClean($_POST['adr_name']),
+            "name_person" => PHPShopSecurity::TotalClean($this->get('user_name')),
             "dostavka_metod" => intval($_POST['dostavka_metod']),
             "discount" => $this->discount,
             "user_id" => $this->userId,
-            "dos_ot" => PHPShopSecurity::TotalClean($_POST['dos_ot']),
-            "dos_do" => PHPShopSecurity::TotalClean($_POST['dos_do']),
             "order_metod" => intval($_POST['order_metod']));
 
         // Äàííûå ïî êîğçèíå
@@ -380,6 +390,8 @@ class PHPShopDone extends PHPShopCore {
         // Çàïèñü çàêàçà â ÁÄ
         $result = $this->PHPShopOrm->insert($insert);
 
+        // ÎÔÄ Òåñò
+        //$this->ofd($result);
         // Ïğîâåğêà îøèáîê ïğè çàïèñè çàêàçà
         $this->error_report($result, array("Cart" => $cart, "Person" => $person, 'insert' => $insert));
 

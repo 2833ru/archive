@@ -4,7 +4,7 @@
     <name>Яндекс Быстрый Заказ</name>
     <faqlink>http://faq.phpshop.ru/page/yandex-order.html</faqlink>
     <description>Модуль быстрой вставки информации о клиенте из Яндекса. Учет рефералов.</description>
-    <category>form,sale</category>
+    <category>form,sale,yandex</category>
     <adminmenu>
         <title>Яндекс.Быстрый Заказ</title>
         <capability>true</capability>

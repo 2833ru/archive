@@ -24,7 +24,7 @@ class PHPShopSuccess extends PHPShopCore {
         $this->objBase = $GLOBALS['SysValue']['base']['orders'];
 
         parent::__construct();
-        
+
         // Мета
         $this->title = "Оплата - " . $this->PHPShopSystem->getValue("name");
     }
@@ -48,7 +48,8 @@ class PHPShopSuccess extends PHPShopCore {
      */
     function true_num($uid) {
         $order_prefix_format = $this->getValue('my.order_prefix_format');
-        if(empty($order_prefix_format)) $order_prefix_format = 2;
+        if (empty($order_prefix_format))
+            $order_prefix_format = 2;
         $last_num = substr($uid, -$order_prefix_format);
         $total = strlen($uid);
         $ferst_num = substr($uid, 0, ($total - $order_prefix_format));
@@ -84,7 +85,7 @@ class PHPShopSuccess extends PHPShopCore {
         if (is_array($data)) {
 
             // Сообщение пользователю об успешном платеже
-            $text = PHPShopText::h3($data['message_header'],'text-success') . $data['message'];
+            $text = PHPShopText::h3($data['message_header'], 'text-success') . $data['message'];
             $this->set('mesageText', $text);
             $this->set('orderMesage', ParseTemplateReturn($this->getValue('templates.order_forma_mesage')));
 
@@ -96,6 +97,25 @@ class PHPShopSuccess extends PHPShopCore {
         }
         else
             $this->error();
+    }
+
+    /**
+     * Отправка данных в ОФД
+     */
+    function ofd() {
+        global $_classPath;
+
+        $ofd = 'atol';
+        include_once($_classPath . 'modules/' . substr($ofd, 0, 15) . '/api.php');
+
+        if (function_exists('OFDStart')) {
+
+            $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['orders']);
+            $PHPShopOrm->debug = $this->debug;
+            $data = $PHPShopOrm->select(array('*'), array('uid' => '="' . $this->true_num($this->inv_id) . '"'), false, array('limit' => 1));
+            if (is_array($data))
+                OFDStart($data);
+        }
     }
 
     /**
@@ -181,7 +201,7 @@ class PHPShopSuccess extends PHPShopCore {
         $hook = $this->setHook(__CLASS__, __FUNCTION__, $_REQUEST);
         if (is_array($hook)) {
             extract($hook);
-        }else if ($hook)
+        } else if ($hook)
             return $hook;
 
         if (!empty($inv_id)) {
@@ -195,11 +215,11 @@ class PHPShopSuccess extends PHPShopCore {
             } else {
 
                 $this->order_metod = $order_metod;
-                
+
                 // Имя платежной системы для модулей
                 if (!empty($order_metod_name))
                     $this->order_metod_name = $order_metod_name;
-                
+
                 $this->out_summ = $out_summ;
                 $orderId = $inv_id;
 
@@ -218,6 +238,9 @@ class PHPShopSuccess extends PHPShopCore {
 
                         // Обновление статуса заказа на 101
                         $this->update_order_status();
+
+                        // ОФД
+                        $this->ofd();
                     }
 
                     // Очищаем корзину

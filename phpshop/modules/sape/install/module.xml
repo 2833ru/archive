@@ -4,7 +4,7 @@
     <name>Sape</name>
     <faqlink>http://faq.phpshop.ru/page/sape.html</faqlink>
     <description>Модуль вывода платных ссылок Sape.</description>
-    <category>sale,develop</category>
+    <category>seo,develop</category>
     <adminmenu>
         <title>Sape</title>
         <capability>true</capability>

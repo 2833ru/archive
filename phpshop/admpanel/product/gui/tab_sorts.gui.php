@@ -32,7 +32,7 @@ function sorttemplate($value, $n, $title, $vendor) {
 
     $value = $PHPShopGUI->setSelect('vendor_array_new[' . $n . '][]', $value_new, 500, null, false, $search = true, false, $size = 1, $multiple = true);
 
-    $disp = $PHPShopGUI->setField($title, $value) .
+    $disp = $PHPShopGUI->setField('<a href="?path=sort&id='.$n.'">'.$title.'</a>', $value) .
             $PHPShopGUI->setField(null, $PHPShopGUI->setInputArg(array('type' => 'text', 'placeholder' => __('¬вести другое через разделитель #'), 'size' => '500', 'name' => 'vendor_array_add[' . $n . ']', 'class' => 'vendor_add')));
 
     return $disp;

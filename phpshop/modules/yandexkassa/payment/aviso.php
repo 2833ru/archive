@@ -49,7 +49,7 @@ class Payment extends PHPShopPaymentResult {
      * @return boolean 
      */
     function check() {
-//        print_r($this->option);
+
         $this->my_crc = strtoupper(md5($_REQUEST['action'] . ';' . $_REQUEST['orderSumAmount'] . ';' . $_REQUEST['orderSumCurrencyPaycash'] . ';' . $_REQUEST['orderSumBankPaycash'] . ';' . $_REQUEST['shopId'] . ';' . $_REQUEST['invoiceId'] . ';' . $_REQUEST['customerNumber'] . ';' . $this->option['merchant_sig']));
 
         $this->inv_id = $_REQUEST['orderNumber'];

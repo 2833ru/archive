@@ -131,7 +131,7 @@ $().ready(function() {
     });
 
     // Восстановить бекап из списка
-    $(".data-row .restore").on('click', function(event) {
+    $("body").on('click',".data-row .restore", function(event) {
         event.preventDefault();
         var file = $(this).closest('.data-row').find('td:nth-child(2)>a').html();
         if (confirm(locale.confirm_restore + ': ' + file + '?')) {
@@ -158,7 +158,7 @@ $().ready(function() {
     });
 
     // Удаление из списка
-    $(".data-row .delete").on('click', function(event) {
+    $("body").on('click',".data-row .delete", function(event) {
         event.preventDefault();
         $('.list_edit_' + $(this).attr('data-id')).append('<input type="hidden" name="file" value="' + $(this).closest('.data-row').find('td:nth-child(2)>a').html() + '">');
     });

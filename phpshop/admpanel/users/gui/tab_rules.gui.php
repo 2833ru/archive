@@ -165,7 +165,7 @@ function tab_rules($row, $autofill = false) {
                             </tr>
                             <tr>
                             <td>Валюты</td>
-                                <td>-</td>
+                                <td>' . $PHPShopGUI->setCheckbox('currency_rul_1', 1, false, rules_checked($status[currency], 0)) . '</td>
                                 <td>' . $PHPShopGUI->setCheckbox('currency_rul_2', 1, false, rules_checked($status[currency], 1)) . '</td>
                                 <td>' . $PHPShopGUI->setCheckbox('currency_rul_3', 1, false, rules_checked($status[currency], 2)) . '</td>
                                 <td>-</td>
@@ -179,7 +179,7 @@ function tab_rules($row, $autofill = false) {
                                 <td>-</td>
                                 <td>-</td>
                             </tr> 
-                            <tr class="hide">
+                            <tr>
                             <td>Мультибаза</td>
                                 <td>' . $PHPShopGUI->setCheckbox('servers_rul_1', 1, false, rules_checked($status[servers], 0)) . '</td>
                                 <td>' . $PHPShopGUI->setCheckbox('servers_rul_2', 1, false, rules_checked($status[servers], 1)) . '</td>

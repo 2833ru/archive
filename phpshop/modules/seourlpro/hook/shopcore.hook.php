@@ -232,7 +232,7 @@ function UID_seourlpro_hook($obj, $row, $rout) {
             $obj->set('odnotipDisp', null);
             $obj->setError404();
         } elseif ($url == $url_pack or $url == $url_old_seo) {
-            header('Location: ' . $url_true . '.html', true, 301);
+            header('Location: ' . $obj->getValue('dir.dir').$url_true . '.html', true, 301);
             return true;
         }
 

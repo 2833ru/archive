@@ -22,7 +22,7 @@
                     <input type="text" name="oneclick_mod_tel" class="form-control" placeholder="Телефон..." required="">
                 </div>
             </div>
-
+            @oneclick_captcha@
 
         </div>
         <div class="modal-footer">

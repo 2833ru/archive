@@ -4,7 +4,7 @@
     <name>Liqpay</name>
     <faqlink>http://faq.phpshop.ru/page/liqpay.html</faqlink>
     <description>Прием оплат через Liqpay.</description>
-    <category>sale</category>
+    <category>payment</category>
     <adminmenu>
         <title>Прием оплат через Liqpay</title>
         <capability>true</capability>

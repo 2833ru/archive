@@ -1,12 +1,10 @@
-<?
-if (!defined("OBJENABLED"))
-    exit(header('Location: /?error=OBJENABLED'));
+<?php
 
 class PHPShopExampleElement extends PHPShopElements {
 
     // Конструктор
-    function PHPShopExampleElement() {
-        parent::PHPShopElements();
+    function __construct() {
+        parent::__construct();
     }
 
     // Прорисовка ссылки Example
@@ -24,13 +22,13 @@ class PHPShopExampleElement extends PHPShopElements {
     }
 
     // Прорисовка текстового блока Example
-    function addToRightMenu() {
+    function addToTextMenu() {
 
         // Название меню
         $this->set('leftMenuName','Example');
 
         // Ссылка
-        $this->set('leftMenuContent','<p>Текстовый блок Example сгенерирован модулем Example в файле example.inc.php</p>');
+        $this->set('leftMenuContent','<p>Текстовый блок Example сгенерирован модулем Example в файле <mark>example.inc.php</mark></p>');
 
         // Парсируем шаблон
         $dis=$this->parseTemplate($this->getValue('templates.right_menu'));
@@ -40,17 +38,10 @@ class PHPShopExampleElement extends PHPShopElements {
 
 
 
-
-// Вызываем генерацию главного горизонтального меню
-$PHPShopTextElement = new PHPShopTextElement();
-$PHPShopTextElement->init('topMenu'); // Вывод главного меню
-$PHPShopTextElement->init('rightMenu'); // Вывод главного меню
-//
-// Добавляем ссылку Example в главного горизонтальное меню
+// Добавляем ссылку Example в горизонтальное меню
 $PHPShopExampleElement = new PHPShopExampleElement();
 $GLOBALS['SysValue']['other']['topMenu'].=$PHPShopExampleElement->addToTopMenu();
 
-// Добавляем ссылку Example в левый текстовый блок
-$PHPShopExampleElement = new PHPShopExampleElement();
-$GLOBALS['SysValue']['other']['rightMenu'].=$PHPShopExampleElement->addToRightMenu();
+// Добавляем ссылку Example в текстовый блок
+$GLOBALS['SysValue']['other']['rightMenu'].=$PHPShopExampleElement->addToTextMenu();
 ?>

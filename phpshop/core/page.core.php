@@ -143,6 +143,11 @@ class PHPShopPage extends PHPShopCore {
         } else {
             $sort = " and (secure !='1') ";
         }
+        
+          // Мультибаза
+        if (defined("HostID")) {
+            $sort.= " and servers REGEXP 'i" . HostID . "i'";
+        }
 
         $PHPShopOrm = new PHPShopOrm();
         $PHPShopOrm->debug = $this->debug;

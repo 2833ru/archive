@@ -83,6 +83,9 @@ $version = null;
 foreach (str_split($GLOBALS['SysValue']['upload']['version']) as $w)
     $version.=$w . '.';
 
+if(empty($License['License']['DomenLocked']))
+    $License['License']['DomenLocked']='-';
+
 $Info = "Информация о программе
 ---------------------------------------------
 
@@ -92,6 +95,7 @@ $Info = "Информация о программе
 Установлено: " . $FileDate . "
 Окончание лицензии: " . $LicenseUntil . "
 Окончание поддержки: " . $TechPodUntil . "
+Ограничение на домен: ".$License['License']['DomenLocked']."
 
 ---------------------------------------------
 

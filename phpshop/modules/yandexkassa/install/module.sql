@@ -1,3 +1,4 @@
+
 DROP TABLE IF EXISTS `phpshop_modules_yandexkassa_system`;
 CREATE TABLE IF NOT EXISTS `phpshop_modules_yandexkassa_system` (
   `id` int(11) NOT NULL auto_increment,
@@ -9,13 +10,13 @@ CREATE TABLE IF NOT EXISTS `phpshop_modules_yandexkassa_system` (
   `merchant_sig` varchar(64) NOT NULL default '',
   `pay_variants` blob NOT NULL,
   `serial` varchar(64) NOT NULL default '',
-  `version` FLOAT(2) DEFAULT '1.0' NOT NULL,
+  `version` varchar(64) DEFAULT '1.0' NOT NULL,
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
 
 
 INSERT INTO `phpshop_modules_yandexkassa_system` (`id`, `status`, `title`, `title_end`, `merchant_id`, `merchant_scid`, `merchant_sig`, `pay_variants`, `serial`, `version`) VALUES
-(1, 0, 'Платежная система Яндекс.Касса', 'Оплатите пожалуйста свой заказ', '', '', '', 0x613a333a7b693a303b733a323a225043223b693a313b733a323a224143223b693a323b733a323a224750223b7d, '', 1.1);
+(1, 0, 'Оплатить сейчас', 'Оплатите пожалуйста свой заказ', '', '', '', 0x613a333a7b693a303b733a323a225043223b693a313b733a323a224143223b693a323b733a323a224750223b7d, '', 1.2);
 
 ALTER TABLE  `phpshop_modules_yandexkassa_system` ADD  `test` ENUM(  '0',  '1' ) NOT NULL DEFAULT  '0' AFTER  `pay_variants` ;
 
@@ -30,4 +31,4 @@ CREATE TABLE IF NOT EXISTS `phpshop_modules_yandexkassa_log` (
   `status` varchar(255) NOT NULL,
   `type` varchar(64) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=cp1251;
+) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;

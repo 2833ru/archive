@@ -168,7 +168,8 @@ $(document).ready(function() {
             });
 
 
-    //Активация слайдеров на главной странице
+        //Активация слайдеров на главной странице
+		if(document.designMode == 'off'){
         $('.spec-main-icon-slider > .swiper-wrapper .col-md-3.col-sm-6').unwrap();
         $('.spec-main-icon-slider > .swiper-wrapper > div').addClass('swiper-slide');
             var swiper = new Swiper('.spec-main-icon-slider', {
@@ -216,4 +217,5 @@ $(document).ready(function() {
                         }
                 }
             });
+		}
 });

@@ -139,14 +139,13 @@ function actionStart() {
     $Tab3 = $PHPShopGUI->setField("Title: ", $PHPShopGUI->setTextarea("title_new", $data['title']));
     $Tab3.=$PHPShopGUI->setField("Description: ", $PHPShopGUI->setTextarea("description_new", $data['description']));
     $Tab3.=$PHPShopGUI->setField("Keywords: ", $PHPShopGUI->setTextarea("keywords_new", $data['keywords']));
-
-
     $Tab1.=$PHPShopGUI->setCollapse(__('SEO / Мета-данные'), $Tab3);
 
     // Безопасность
     $SecurityValue[] = array('Всем пользователям', 0, $data['secure']);
     $SecurityValue[] = array('Только зарегистрированным пользователям', 1, $data['secure']);
-    $Tab1.=$PHPShopGUI->setCollapse(__('Доступность'), $PHPShopGUI->setField("Показывать", $PHPShopGUI->setSelect("secure_new", $SecurityValue, 300)));
+    $Tab1.=$PHPShopGUI->setCollapse(__('Доступность'), $PHPShopGUI->setField("Показывать", $PHPShopGUI->setSelect("secure_new", $SecurityValue, 300)) .
+            $PHPShopGUI->setField("Витрины", $PHPShopGUI->loadLib('tab_multibase', $data, 'catalog/')));
 
     // Запрос модуля на закладку
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $data);
@@ -177,6 +176,12 @@ function actionUpdate() {
 
     // Корректировка пустых значений
     $PHPShopOrm->updateZeroVars('enabled_new', 'secure_new');
+
+    // Мультибаза
+    $_POST['servers_new'] = null;
+    if (is_array($_POST['servers']))
+        foreach ($_POST['servers'] as $v)
+            $_POST['servers_new'].="i" . $v . "i";
 
     // Перехват модуля
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $_POST);

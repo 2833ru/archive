@@ -115,7 +115,7 @@ class PHPShopPrice extends PHPShopShopCore {
         if ($_SESSION['max_item'] < 1000)
             $this->value[] = array($this->lang('search_all_cat'), 'ALL', false);
 
-        $this->PHPShopCategoryArray = new PHPShopCategoryArray();
+        $this->PHPShopCategoryArray = new PHPShopCategoryArray(array('skin_enabled'=>"!='1'"));
         $this->ParentArray = $this->PHPShopCategoryArray->getKey('parent_to.id', true);
         if (is_array($this->ParentArray[0])) {
             foreach ($this->ParentArray[0] as $val) {

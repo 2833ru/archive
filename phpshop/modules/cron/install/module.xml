@@ -5,7 +5,6 @@
     <faqlink>http://faq.phpshop.ru/page/cron.html</faqlink>
     <description>Модуль запуска задач по времени.</description>
     <category>develop</category>
-    <status>update</status>
     <adminmenu>
         <title>Задачи</title>
         <capability>true</capability>

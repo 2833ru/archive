@@ -3,12 +3,17 @@
 function tab_userdata($data, $order) {
     global $PHPShopGUI;
     
+    
     $PHPShopGUI->field_col=3;
     
-    $help='<p class="text-muted hidden-xs data-row">Дополнительные поля в заказе и требование к их обязательному заполнению можно настроить в разделе  <a href="?path=delivery"><span class="glyphicon glyphicon-share-alt"></span>Управление доставкой</a></p><hr>';
+    $help='<p class="text-muted hidden-xs data-row">Дополнительные поля в заказе и требование к их обязательному заполнению можно настроить в разделе  <a href="?path=delivery&id='.$order['Person']['dostavka_metod'].'&tab=1"><span class="glyphicon glyphicon-share-alt"></span>Управление доставкой</a></p><hr>';
+    
+    if(empty($data['fio'])){
+        $data['fio']=$order['Person']['name_person'];
+    }
 
     // Данные покупателя
-    $disp1 = $PHPShopGUI->setField(__("ФИО"), $PHPShopGUI->setInputText('', 'fio_new', $data['fio'] . $order['Person']['name_person'])) .
+    $disp1 = $PHPShopGUI->setField(__("ФИО"), $PHPShopGUI->setInputText('', 'fio_new', $data['fio'] )) .
             $PHPShopGUI->setField(__("Телефон"), $PHPShopGUI->setInputText('', 'tel_new', $data['tel'])) .
             $PHPShopGUI->setField(__("Страна"), $PHPShopGUI->setInputText('', 'country_new', $data['country'])) .
             $PHPShopGUI->setField(__("Регион/штат"), $PHPShopGUI->setInputText('', 'state_new', $data['state'])) .

@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="windows-1251"?>
 <module>
     <version>1.2</version>
-    <name>Yandex Money</name>
+    <name>Яндекс.Деньги</name>
     <faqlink>http://faq.phpshop.ru/page/yandex-money.html</faqlink>
     <description>Прием оплат через Яндекс.Деньги для физических лиц.</description>
-    <category>yandex,sale</category>
+    <category>yandex,payment</category>
     <adminmenu>
         <title>Яндекс.Деньги</title>
         <capability>true</capability>

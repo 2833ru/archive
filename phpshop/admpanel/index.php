@@ -166,12 +166,17 @@ function actionStart() {
     $License = parse_ini_file_true("../../license/" . PHPShopFile::searchFile('../../license/', 'getLicense', true), 1);
 
     // Ознакомительный режим
-    if (is_array($License) and $License['License']['Expires'] != 'Never' and $License['License']['Expires'] < time()) {
-        PHPShopParser::set('title', 'Окончание работы PHPShop');
-        PHPShopParser::set('server', getenv('SERVER_NAME'));
-        PHPShopParser::set('serverLocked', getenv('SERVER_NAME'));
-        exit(PHPShopParser::file($_SERVER['DOCUMENT_ROOT'] . '/phpshop/lib/templates/error/license.tpl'));
-        exit("Ошибка проверки лицензии для SERVER_NAME=" . $_SERVER["SERVER_NAME"] . ", HardwareLocked=" . getenv('SERVER_NAME'));
+    if (is_array($License)) {
+        if ($License['License']['Expires'] != 'Never' and $License['License']['Expires'] < time()) {
+            PHPShopParser::set('title', 'Окончание работы PHPShop');
+            PHPShopParser::set('server', getenv('SERVER_NAME'));
+            PHPShopParser::set('serverLocked', getenv('SERVER_NAME'));
+            exit(PHPShopParser::file($_SERVER['DOCUMENT_ROOT'] . '/phpshop/lib/templates/error/license.tpl'));
+            exit("Ошибка проверки лицензии для SERVER_NAME=" . $_SERVER["SERVER_NAME"] . ", HardwareLocked=" . getenv('SERVER_NAME'));
+        }
+        elseif(strstr($License['License']['HardwareLocked'],'-') and getenv('SERVER_NAME') != $License['License']['DomenLocked']){
+            header('Location: //'.$License['License']['DomenLocked'].'/phpshop/admpanel/admin.php');
+        }
     }
 
     if (!empty($_SESSION['logPHPSHOP']) and empty($_SESSION['return']))

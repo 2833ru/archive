@@ -151,7 +151,7 @@ function actionStart() {
     $order_to_value[] = array('убыванию', 2, $data['order_to']);
     $Tab_info.=$PHPShopGUI->setField(__("Сортировка:"), $PHPShopGUI->setInputText(null, "num_new", $data['num'], 100, false, 'left') . '&nbsp' .
             $PHPShopGUI->setSelect('order_by_new', $order_by_value, 120) . $PHPShopGUI->setSelect('order_to_new', $order_to_value, 120), 'left');
-    
+
     // Дополнительные каталоги
     $Tab_info.=$PHPShopGUI->setField('Дополнительные каталоги:', $PHPShopGUI->setTextarea('dop_cat_new', $data['dop_cat'], false, false, false, __('Введите ID каталога')), 1, 'Подкаталоги одновременно выводятся в нескольких каталогах.');
 
@@ -172,14 +172,15 @@ function actionStart() {
     $editor->Value = $data['content'];
     $Tab2 = $editor->AddGUI();
 
-
     // Заголовки
     $Tab7 = $PHPShopGUI->loadLib('tab_headers', $data);
 
     // Безопасноть
-    //$Tab8 = $PHPShopGUI->setCollapse(__('Редактирование'), $PHPShopGUI->loadLib('tab_secure', $data));
+    $Tab8 = $PHPShopGUI->setCollapse(__('Редактирование'), $PHPShopGUI->loadLib('tab_secure', $data));
+
     //Мультибаза
-    //$Tab8.=$PHPShopGUI->setCollapse(__('Мультибаза'), $PHPShopGUI->loadLib('tab_multibase', $data));
+    $Tab8.=$PHPShopGUI->setCollapse(__('Мультибаза'), $PHPShopGUI->loadLib('tab_multibase', $data));
+
     // Добавление закладки характеристики если нет подкаталогов
     $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['categories']);
     $subcategory_data = $PHPShopOrm->select(array('id'), array('parent_to' => '=' . intval($data['id'])), false, array('limit' => 2));
@@ -190,7 +191,7 @@ function actionStart() {
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $data);
 
     // Вывод формы закладки
-    $PHPShopGUI->setTab(array(__("Основное"), $Tab1), array(__("Описание"), $Tab2), array(__("Заголовки"), $Tab7), array(__("Характеристики"), $Tab9));
+    $PHPShopGUI->setTab(array(__("Основное"), $Tab1), array(__("Описание"), $Tab2), array(__("Заголовки"), $Tab7), array(__("Характеристики"), $Tab9), array(__("Права"), $Tab8));
 
     // Прогрессбар
     if ($GLOBALS['count'] > 500)
@@ -229,7 +230,7 @@ function actionStart() {
  * @return bool 
  */
 function actionInsert() {
-    global $PHPShopModules, $PHPShopOrm;
+    global $PHPShopModules, $PHPShopOrm, $PHPShopBase;
 
     if (empty($_POST['vid_new']))
         $_POST['vid_new'] = 0;
@@ -240,14 +241,29 @@ function actionInsert() {
     // Характеристики
     $_POST['sort_new'] = serialize($_POST['sort_new']);
 
-    /* // Мультибаза
-      $_POST['servers_new'] = null;
-      if (is_array($_POST['servers']))
-      foreach ($_POST['servers'] as $v)
-      $_POST['servers_new'].="i" . $v . "i";
-     */
+    // Мультибаза
+    $_POST['servers_new'] = null;
+    if (is_array($_POST['servers']))
+        foreach ($_POST['servers'] as $v)
+            $_POST['servers_new'].="i" . $v . "i";
 
-    $_POST['iocn_new'] = iconAdd();
+    // Проверка прав редактирования
+    if ($PHPShopBase->Rule->CheckedRules('catalog', 'rule')) {
+
+        $secure = null;
+        if (is_array($_POST['secure_groups_new']))
+            foreach ($_POST['secure_groups_new'] as $crid => $value) {
+                $secure.='i' . $crid . 'i';
+                if (!empty($_POST['secure_groups_new']['all'])) {
+                    $secure = '';
+                    break;
+                }
+            }
+
+        $_POST['secure_groups_new'] = $secure;
+    }
+
+    $_POST['icon_new'] = iconAdd();
 
     // Доп каталоги
     if (!empty($_POST['dop_cat_new']) and substr($_POST['dop_cat_new'], 1) != '#') {

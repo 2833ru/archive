@@ -15,6 +15,7 @@
 </div>
 <div class="col-sm-12 no-p">
     <div class="alert alert-warning">
-        <span class="glyphicon glyphicon-info-sign"></span> Если Вы - новый пользователь, то личный кабинет мы создадим за Вас и пришлём пароли на почту. Если Вы не авторизованы, мы узнаем Вас по емейлу и привяжем этот заказ к Вашему аккаунту.
+        <span class="glyphicon glyphicon-info-sign"></span> Если Вы - новый пользователь, то личный кабинет мы создадим за Вас и пришлём пароли на почту. Если Вы не авторизованы, мы узнаем Вас по емейлу и привяжем этот заказ к Вашему аккаунту.<br>
+         <label><input type="checkbox" value="on" name="rule" class="req" checked="checked"> @rule@</label>
     </div>
 </div>

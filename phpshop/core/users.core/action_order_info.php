@@ -72,7 +72,7 @@ function action_order_info($obj, $tip) {
             $total = PHPShopText::tr(PHPShopText::b(__('Итого с учетом скидки ') . $PHPShopOrderFunction->getDiscount() . '%'), PHPShopText::b($PHPShopOrderFunction->getNum() + 1) . ' ' . __('шт.'), PHPShopText::b($PHPShopOrderFunction->getTotal()) . ' ' . $currency);
 
             // Комментарии по заказу
-            if ($PHPShopOrderFunction->getSerilizeParam('status.maneger') != '')
+            if ($PHPShopOrderFunction->getSerilizeParam('status.maneger') != '' and $PHPShopOrderFunction->getParam('ddelivery_token') != '')
                 $comment = PHPShopText::p(PHPShopText::message($PHPShopOrderFunction->getSerilizeParam('status.maneger')));
             else
                 $comment = null;

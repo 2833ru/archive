@@ -27,12 +27,12 @@ class PHPShopExample extends PHPShopCore {
         $this->set('pageTitle','Example');
 
         // Добавляем справочную информацию
-        $info='<p>Информация сгенерирована файлом phpshop/modules/example/core/example.core.php<br>
-            Для получения информации по серверу PhpInfo() нажмите на <a href="?info=true">ссылку</a>.
+        $info='<p>Информация сгенерирована файлом <mark>phpshop/modules/example/core/example.core.php</mark><br>
+            Для получения информации по серверу <kbd>phpinfo</kbd> нажмите на <a href="?info=true">ссылку</a>.
             <p>
             <h4>Описание API PHPShopCore</h4>
-            <iframe src="http://doc.phpshop.ru/PHPShopClass/PHPShopCore.html" width="100%" height="500" frameborder="0"></iframe>
-            <p><a href="http://doc.phpshop.ru/PHPShopClass/PHPShopCore.html" target="_blank">Открыть в отдельном окне</a>';
+            <iframe src="http://doc.phpshop.ru/package-PHPShopCore.html" width="100%" height="500" frameborder="0"></iframe>
+            <p><a href="http://doc.phpshop.ru/package-PHPShopCore.html" target="_blank">Открыть в отдельном окне</a>';
         $this->set('pageContent',$info,true);
 
         // Мета

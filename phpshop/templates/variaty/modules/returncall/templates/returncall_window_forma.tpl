@@ -22,7 +22,7 @@
             </div>
             <div class="form-group">
                 <label>Сообщение</label>
-                <textarea class="form-control input-xlarge" name="returncall_mod_message"></textarea>
+                <textarea class="form-control input-xlarge" name="returncall_mod_message" style="height:30px"></textarea>
             </div>
             @returncall_captcha@
         

@@ -13,7 +13,7 @@ function ddeliverywidget_delivery_hook($obj, $data) {
     $ddeliverywidget = new ddeliverywidget();
     $option = $ddeliverywidget->option();
 
-    if (in_array($xid,@explode(",",$option['delivery_id']))) {
+    if (in_array($xid, @explode(",", $option['delivery_id']))) {
 
         $hook['dellist'] = $_RESULT['dellist'];
         $hook['hook'] = 'ddeliverywidgetStart();';
@@ -21,9 +21,17 @@ function ddeliverywidget_delivery_hook($obj, $data) {
         $hook['total'] = $_RESULT['total'];
         $hook['adresList'] = $_RESULT['adresList'];
         $hook['success'] = 1;
-
-        return $hook;
+    
+    } else {
+        $hook['dellist'] = $_RESULT['dellist'];
+        $hook['hook'] = 'ddeliverywidgetReset();';
+        $hook['delivery'] = $_RESULT['delivery'];
+        $hook['total'] = $_RESULT['total'];
+        $hook['adresList'] = $_RESULT['adresList'];
+        $hook['success'] = 1;
     }
+    return $hook;
+    
 }
 
 $addHandler = array

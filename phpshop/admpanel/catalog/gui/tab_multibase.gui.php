@@ -8,8 +8,8 @@ function tab_multibase($option) {
     global $PHPShopGUI;
 
     $value=array();
-    $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['table_name31']);
-    $data = $PHPShopOrm->select(array('*'), false, array('order' => 'name'), array('limit' => 100));
+    $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['servers']);
+    $data = $PHPShopOrm->select(array('*'), array('enabled'=>"='1'"), array('order' => 'id'), array('limit' => 1000));
     if (is_array($data)) {
         foreach ($data as $row) {
             $server = preg_split('/i/', $option['servers'], -1, PREG_SPLIT_NO_EMPTY);
@@ -19,11 +19,12 @@ function tab_multibase($option) {
                     if ($row['id'] == $v)
                         $sel = "selected";
                 }
-            $value[] = array($row['data'].' >> '.$row['host'], $row['id'], $sel);
+            $value[] = array($row['host'], $row['id'], $sel);
         }
+        return  $PHPShopGUI->setSelect('servers[]', $value, '300', false, false, false, '300', false,true);
     }
+    else return $PHPShopGUI->setHelp('Нет дополнительных витрин. <a href="?path=system.servers&action=new">Создать витрину</a>.');
     
-    return  $PHPShopGUI->setSelect('servers[]', $value, '300', false, false, false, '300', false,true);
 }
 
 ?>

@@ -10,7 +10,8 @@ function userorderpaymentlink_mod_netpay_hook($obj, $PHPShopOrderFunction) {
 
 
     // Контроль оплаты от статуса заказа
-    if ($PHPShopOrderFunction->getParam('statusi') == $option['status']) {
+    if ($PHPShopOrderFunction->order_metod_id == 10017)
+    if ($PHPShopOrderFunction->getParam('statusi') == $option['status'] or empty($option['status'])) {
         // Номер счета
         $mrh_ouid = explode("-", $PHPShopOrderFunction->objRow['uid']);
         $inv_id = $mrh_ouid[0] . "" . $mrh_ouid[1];

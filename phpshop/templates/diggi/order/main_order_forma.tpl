@@ -19,7 +19,8 @@
                     <div class="panel-body">
                         <input type="hidden" name="ouid" value="@orderNum@" readonly="1">
                         <input type="hidden" value="@orderDate@"  readonly="1">
-                        @authData@ @noAuth@
+                        @authData@ 
+                        @noAuth@
                     </div>
                 </div>
                 <!-- Taxes Block Starts -->
@@ -102,6 +103,7 @@
                         <dd id="SkiSummaAll"><span id="SkiSumma">@discount@</span></dd>
                         <dt>Доставка :</dt>
                         <dd><span id="DosSumma">@delivery_price@</span> <span class="rubznak">@currency@</span> <span id="deliveryInfo"></span></dd>
+                        
                     </dl>
                     <hr>
                     <dl class="dl-horizontal total">

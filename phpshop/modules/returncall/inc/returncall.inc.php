@@ -31,30 +31,30 @@ class AddToTemplateReturnCallElement extends PHPShopElements {
      * Вывод формы
      */
     function display() {
-
-        // Защитная каптча
-        if ($this->option['captcha_enabled'] == 1) {
-            $captcha = PHPShopParser::file($GLOBALS['SysValue']['templates']['returncall']['returncall_captcha_forma'], true, false, true);
-            $this->set('returncall_captcha', $captcha);
-        }
+        
+        $PHPShopRecaptchaElement = new PHPShopRecaptchaElement();
+        $this->set('returncall_captcha', $PHPShopRecaptchaElement->captcha('returncall','compact'));
 
         $forma = PHPShopParser::file($GLOBALS['SysValue']['templates']['returncall']['returncall_forma'], true, false, true);
         $this->set('leftMenuContent', $forma);
         $this->set('leftMenuName', $this->option['title']);
 
+
         // Подключаем шаблон
         if (empty($this->option['windows']))
+            
             $dis = $this->parseTemplate($this->getValue('templates.left_menu'));
         else {
+            
+            $this->set('returncall_captcha', $PHPShopRecaptchaElement->captcha('returncall'));
+            
             if (empty($this->option['enabled']))
                 $dis = PHPShopParser::file($GLOBALS['SysValue']['templates']['returncall']['returncall_window_forma'], true, false, true);
             else {
-                 $this->set('leftMenuContent', PHPShopParser::file($GLOBALS['SysValue']['templates']['returncall']['returncall_window_forma'], true, false, true));
+                $this->set('leftMenuContent', PHPShopParser::file($GLOBALS['SysValue']['templates']['returncall']['returncall_window_forma'], true, false, true));
                 $dis = $this->parseTemplate($this->getValue('templates.left_menu'));
             }
         }
-
-
 
 
         // Назначаем переменную шаблона

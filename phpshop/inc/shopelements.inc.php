@@ -271,6 +271,11 @@ class PHPShopProductIconElements extends PHPShopProductElements {
         // Память режима выборки новинок из каталогов
         $memory_spec = $this->memory_get('product_spec.' . $category);
 
+        // Мультибаза
+        $randMultibase = $this->randMultibase();
+        if (!empty($randMultibase))
+            $where['category'] = ' IN (' . $randMultibase . '0)';
+        
         // Выборка новинок
         if ($memory_spec != 2 and $memory_spec != 3)
             $this->dataArray = $this->select(array('*'), $where, array('order' => 'RAND()'), array('limit' => $this->limitspec), __FUNCTION__);
@@ -548,34 +553,6 @@ class PHPShopProductIndexElements extends PHPShopProductElements {
     }
 
     /**
-     * Проверка прав каталога режима Multibase
-     * @param int $category
-     * @return boolean 
-     */
-    function randMultibase() {
-
-        $multi_cat = null;
-
-        // Мультибаза
-        if ($this->PHPShopSystem->ifSerilizeParam('admoption.base_enabled')) {
-
-            $where['servers'] = " REGEXP 'i" . $this->PHPShopSystem->getSerilizeParam('admoption.base_id') . "i'";
-            $where['parent_to'] = " > 0";
-            $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['categories']);
-            $PHPShopOrm->debug = $this->debug;
-            $PHPShopOrm->cache = true;
-            $data = $PHPShopOrm->select(array('id'), $where, false, array('limit' => 1), __CLASS__, __FUNCTION__);
-            if (is_array($data)) {
-                foreach ($data as $row) {
-                    $multi_cat = '=' . $row['id'];
-                }
-            }
-
-            return $multi_cat;
-        }
-    }
-
-    /**
      * Элемент "Спецпредложения" на главную страницу
      * @return string
      */
@@ -614,12 +591,10 @@ class PHPShopProductIndexElements extends PHPShopProductElements {
             $where['enabled'] = "='1'";
             $where['parent_enabled'] = "='0'";
 
-            /*
-              $randMultibase = $this->randMultibase();
-              if (!empty($randMultibase))
-              $where['category'] = $randMultibase;
-             */
-
+            // Мультибаза
+            $randMultibase = $this->randMultibase();
+            if (!empty($randMultibase))
+                $where['category'] = ' IN (' . $randMultibase . '0)';
 
             // Выборка
             if ($this->limit > 1)
@@ -812,11 +787,7 @@ class PHPShopShopCatalogElement extends PHPShopProductElements {
                         $row['icon'] = $this->no_photo;
                     $this->set('catalogIcon', $row['icon']);
 
-                    // Проверка на наличие иконки в описании категории
-                    if (stristr($row['content'], 'img') and strlen($row['content']) < $this->cat_description_limit)
-                        $this->set('catalogContent', $row['content']);
-                    else
-                        $this->set('catalogContent', null);
+                    $this->set('catalogContent', null);
 
                     // Обход массива категорий из кэша, список подкаталогов
                     if (is_array($GLOBALS['Cache'][$this->objBase]))
@@ -882,11 +853,8 @@ class PHPShopShopCatalogElement extends PHPShopProductElements {
         $where['skin_enabled '] = "!='1'";
 
         // Мультибаза
-        /*
-        if ($this->PHPShopSystem->ifSerilizeParam('admoption.base_enabled')) {
-            $where['servers'] = " REGEXP 'i" . $this->PHPShopSystem->getSerilizeParam('admoption.base_id') . "i'";
-        }
-         */
+        if (defined("HostID"))
+            $where['servers'] = " REGEXP 'i" . HostID . "i'";
 
         $PHPShopOrm = new PHPShopOrm($this->objBase);
         $PHPShopOrm->cache_format = $this->cache_format;
@@ -965,10 +933,8 @@ class PHPShopShopCatalogElement extends PHPShopProductElements {
         $where['skin_enabled'] = "!='1' or dop_cat LIKE '%#$n#%'";
 
         // Мультибаза
-        /*
-        if ($this->PHPShopSystem->ifSerilizeParam('admoption.base_enabled')) {
-            $where['servers'] = " REGEXP 'i" . $this->PHPShopSystem->getSerilizeParam('admoption.base_id') . "i'";
-        }*/
+        if (defined("HostID"))
+            $where['servers'] = " REGEXP 'i" . HostID . "i'";
 
         // Сортировка каталога
         switch ($parent_data['order_to']) {
@@ -1043,8 +1009,8 @@ class PHPShopShopCatalogElement extends PHPShopProductElements {
             $where['parent_to'] = '=' . $n;
 
             // Мультибаза
-            if ($this->PHPShopSystem->ifSerilizeParam('admoption.base_enabled')) {
-                $where['servers'] = " REGEXP 'i" . $this->PHPShopSystem->getSerilizeParam('admoption.base_id') . "i'";
+            if (defined("HostID")) {
+                $where['servers'] = " REGEXP 'i" . HostID . "i'";
             }
 
             $num = $PHPShopOrm->select(array('*'), $where, false, array('limit' => 1), __CLASS__, __FUNCTION__);

@@ -1,6 +1,5 @@
 function ddeliverywidgetStart() {
 
-
     var products = $.parseJSON($("input:hidden.cartListJson").val());
     $('<input type="hidden" name="ddeliverySum">').insertAfter('#d');
     $('<input type="hidden" name="ddeliveryReq" class="req form-control">').insertAfter('#dop_info');
@@ -11,8 +10,6 @@ function ddeliverywidgetStart() {
         height: 550,
         env: DDeliveryWidget.ENV_PROD
     }, {
-        price: function(data) {
-        },
         change: function(data) {
 
             $('<input type="hidden" name="ddeliveryToken" value="' + data['client_token'] + '">').insertAfter('#d');
@@ -27,6 +24,7 @@ function ddeliverywidgetStart() {
             $('input[name="street_new"]').val(data['to_street']).attr('disabled', 'true');
             $('input[name="ddeliveryReq"]').val(data['info']);
             $('#deliveryInfo').html(data['info']);
+            $('#ddelivery-close').text('Продолжить').addClass('btn-success');
 
             // Hook
             if ($.isFunction(window.ddeliverywidgetHook))
@@ -39,6 +37,11 @@ function ddeliverywidgetStart() {
     });
 
     $("#ddeliverywidgetModal").modal("toggle");
+}
+
+
+function ddeliverywidgetReset() {
+    $('input[name="ddeliveryReq"]').remove();
 }
 
 /*

@@ -5,7 +5,7 @@
     }
 </script>
 <div style="position:relative">
-    <div id="mod_oneclick_forma" style="display: none;width:215px;position:absolute;z-index:100">
+    <div id="mod_oneclick_forma" style="display: none;width:350px;position:absolute;z-index:100">
         <div>
             <div style="position:relative; border:1px solid #ccc; background:#ebf1f6 ;border-radius:5px;">
                 <form action="@ShopDir@/oneclick/" method="post" onsubmit="return checkModOneClickForma();" >
@@ -22,6 +22,7 @@
                                 <td><b>Телефон</b>:</td>
                                 <td><input type="text" name="oneclick_mod_tel" id="oneclick_mod_tel" size="15"> </td>
                             </tr>
+                            <tr><td colspan="2"><p>@captcha@</p></td></tr>
                             <tr>
                                 <td></td>
                                 <td>

@@ -315,8 +315,10 @@ $().ready(function() {
     // —сылка на модуль или инструкцию
     $(".modules-list > a").on('click', function(event) {
         event.preventDefault();
-        if ($(this).closest('.data-row').find('.install-date').html() == '')
-            window.open($(this).attr('data-wiki'));
+        if ($(this).closest('.data-row').find('.install-date').html() == ''){
+            if($(this).attr('data-wiki') != "")
+             window.open($(this).attr('data-wiki'));
+        }
         else
             window.location.href = $(this).attr('href');
     });

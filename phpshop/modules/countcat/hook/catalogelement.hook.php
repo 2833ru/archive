@@ -59,8 +59,8 @@ function countcat_hook_getSubcatalogIds($n, $obj) {
     $where['skin_enabled'] = "!='1'";
 
     // Мультибаза
-    if ($obj->PHPShopSystem->ifSerilizeParam('admoption.base_enabled')) {
-        $where['servers'] = " REGEXP 'i" . $obj->PHPShopSystem->getSerilizeParam('admoption.base_id') . "i'";
+    if (defined("HostID")){
+        $where['servers'] = " REGEXP 'i" . HostID . "i'";
     }
 
     $data = $PHPShopOrm->select(array('*'), $where, false, array('limit' => 100), __CLASS__, __FUNCTION__);

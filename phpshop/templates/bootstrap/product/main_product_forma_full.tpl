@@ -15,7 +15,7 @@
                 <h1 itemprop="name">@productName@</h1>
 
                 <div itemprop="offers" itemscope itemtype="http://schema.org/Offer">
-                    <h2 class="text-primary"><span itemprop="price">@productPrice@</span> <span itemprop="priceCurrency" class="rubznak">@productValutaName@</span>
+                    <h2 class="text-primary"><span itemprop="price">@productPrice@</span> <span itemprop="priceCurrency" class="rubznak" content="RUB">@productValutaName@</span>
                     </h2> @productPriceRub@</div> 
 
 

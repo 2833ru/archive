@@ -12,6 +12,7 @@ function actionBaseUpdate() {
     $new_version = $PHPShopModules->getUpdate($option['version']);
     $PHPShopOrm->clean();
     $action = $PHPShopOrm->update(array('version_new' => $new_version));
+    header('Location: ?path=modules&id='.$_GET['id']);
     return $action;
 }
 
@@ -26,7 +27,7 @@ function actionUpdate() {
 
     $PHPShopOrm->debug = false;
     $action = $PHPShopOrm->update($_POST);
-    header('Location: ?path=modules&install=check');
+    header('Location: ?path=modules&id='.$_GET['id']);
     return $action;
 }
 
@@ -39,8 +40,8 @@ function actionStart() {
     $data = $PHPShopOrm->select();
 
 
-    $Tab1 = $PHPShopGUI->setField('Наименование типа оплаты', $PHPShopGUI->setInputText(false, 'title_new', $data['title']));
-    $Tab1 .= $PHPShopGUI->setField('Тестовый режим', $PHPShopGUI->setCheckbox('test_new', 1, 'Включить/выключить тестовый режим', $data['test']));
+    $Tab1 = $PHPShopGUI->setField('Ссылка на оплату', $PHPShopGUI->setInputText(false, 'title_new', $data['title']));
+    $Tab1 .= $PHPShopGUI->setField('Тестовый режим', $PHPShopGUI->setCheckbox('test_new', 1, 'Включить тестовый режим', $data['test']));
     $Tab1.=$PHPShopGUI->setField('ShopID', $PHPShopGUI->setInputText(false, 'merchant_id_new', $data['merchant_id'], 300));
     $Tab1.=$PHPShopGUI->setField('Scid', $PHPShopGUI->setInputText(false, 'merchant_scid_new', $data['merchant_scid'], 300));
     $Tab1.=$PHPShopGUI->setField('Секретное слово', $PHPShopGUI->setInputText(false, 'merchant_sig_new', $data['merchant_sig'], 300));
@@ -67,7 +68,7 @@ function actionStart() {
 
 
     // Форма регистрации
-    $Tab3 = $PHPShopGUI->setPay($data['serial'], false, $data['version'], true);
+    $Tab3 = $PHPShopGUI->setPay(false, false, $data['version'], false);
 
     $info = '
         <h4>Как подключиться к Яндекс.Кассе?</h4>
@@ -79,13 +80,19 @@ function actionStart() {
 </ol>
 
 <h4>Технические данные необходимые для регистрации и подключения к Яндекс.Касса</h4>
-            <p>CheckOrder URL: <ins>https://' . $_SERVER['SERVER_NAME'] . '/phpshop/modules/yandexkassa/payment/check.php</ins>. <br>
-            PaymentAviso URL: <ins>https://' . $_SERVER['SERVER_NAME'] . '/phpshop/modules/yandexkassa/payment/aviso</ins>.php. <br>
-            SuccessURL: <ins>http://' . $_SERVER['SERVER_NAME'] . '/yandexkassa/?act=success</ins>. <br>
-            FailURL URL: <ins>http://' . $_SERVER['SERVER_NAME'] . '/yandexkassa/?act=fail</ins>. </p>
-                <p>Используйте тестовый режим во вкладке "основное" для проведения тестовых платежей. Поле "Секретное слово" заполняется занными указанными в поле "shopPassword" при регистрации в системе. Поля "ShopID" и "Scid" вам пришлет сотрудник Яндекс.Кассы после регистрации.</p>
+            <p>CheckOrder URL: <code>https://' . $_SERVER['SERVER_NAME'] . '/phpshop/modules/yandexkassa/payment/check.php</code> <br>
+            PaymentAviso URL: <code>https://' . $_SERVER['SERVER_NAME'] . '/phpshop/modules/yandexkassa/payment/aviso.php</code><br>
+            SuccessURL: <code>http://' . $_SERVER['SERVER_NAME'] . '/yandexkassa/?act=success</code><br>
+            FailURL URL: <code>http://' . $_SERVER['SERVER_NAME'] . '/yandexkassa/?act=fail</code></p>
+                <p>Используйте тестовый режим во вкладке "основное" для проведения тестовых платежей. Поле "Секретное слово" заполняется занными указанными в поле "shopPassword" при регистрации в системе. Поля "<b>ShopID</b>" и "<b>Scid</b>" вам пришлет сотрудник Яндекс.Кассы после регистрации.</p>
                 <p>В настройка "Оплата при статусе" выберите статус заказа, при котором пользователю станет доступной возможность оплатить заказ данным способом. Если выбран статус "Новый заказ", пользователь сможет оплатить заказ сразу после оформления. Сообщение заданное в поле "Описание оплаты" выводится после оформления заказа в случае, когда статус заказа не совпадает со статусом указанным в настройке "Оплата при статусе".</p>
                 <p>В списке "Способы оплаты" выберите те, которые хотите использовать на вашем сайте.</p>
+                
+        <h4>Настройка доставки</h4>
+        <p>Параметр ставки НДС для доставки можно настроить в карточке редактирования доставки.
+        </p>
+
+
                 <h4>Шаблоны дизайна</h4>
                 <p>Шаблон вывода информации о платёжной системе после офрмления: <code>phpshop/modules/yandexkassa/templates/payment_forma.tpl</code><br>
                 Шаблон сообщения об успешной оплате: <code>phpshop/modules/yandexkassa/templates/success_forma.tpl</code><br>
@@ -95,7 +102,7 @@ function actionStart() {
     $Tab2 .= $PHPShopGUI->setInfo($info);
 
     // Вывод формы закладки
-    $PHPShopGUI->setTab(array("Основное", $Tab1), array("Инструкция", $Tab2), array("О Модуле", $Tab3));
+    $PHPShopGUI->setTab(array("Основное", $Tab1,true), array("Инструкция", $Tab2), array("О Модуле", $Tab3));
 
     // Вывод кнопок сохранить и выход в футер
     $ContentFooter =

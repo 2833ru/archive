@@ -3,7 +3,7 @@
     <version>1.0</version>
     <name>NetPay</name>
     <description>Прием оплат через NetPay.</description>
-    <category>sale</category>
+    <category>payment</category>
     <faqlink>http://faq.phpshop.ru/page/netpay.html</faqlink>
     <adminmenu>
         <title>NetPay</title>

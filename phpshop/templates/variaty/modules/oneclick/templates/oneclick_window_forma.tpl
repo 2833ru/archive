@@ -17,8 +17,9 @@
                 <label>Телефон</label>
                 <input type="text" name="oneclick_mod_tel" class="form-control" placeholder="Телефон..." required="">
             </div>
-
+            @oneclick_captcha@
         </div>
+        
         <div class="modal-footer">
             <input type="hidden" name="oneclick_mod_product_id" value="@productUid@">
             <input type="hidden" name="oneclick_mod_send" value="1">

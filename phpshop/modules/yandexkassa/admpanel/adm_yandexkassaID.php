@@ -19,10 +19,10 @@ function actionStart() {
     $log = ob_get_clean();
 
 
-    $Tab1 = $PHPShopGUI->setTextarea(null, PHPShopString::utf8_win1251($log), $float = "none", $width = '99%', $height = '300');
+    $Tab1 = $PHPShopGUI->setTextarea(null, PHPShopString::utf8_win1251($log), $float = "none", $width = '99%', $height = '550');
 
     // Вывод формы закладки
-    $PHPShopGUI->setTab(array("Информация о платеже", $Tab1, 370));
+    $PHPShopGUI->setTab(array("Информация о платеже", $Tab1));
 
 
     $PHPShopGUI->setFooter($ContentFooter);

@@ -435,3 +435,4 @@ function setTooltip() {
     $("[data-hover='tooltip'],a[data-toggle=tooltip], button[data-toggle=tooltip], input[data-toggle=tooltip]").tooltip();
     return;
 }
+

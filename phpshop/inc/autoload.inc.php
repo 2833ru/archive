@@ -106,6 +106,10 @@ $PHPShopCartElement->init('miniCart');
 $PHPShopPhotoElement = new PHPShopPhotoElement();
 $PHPShopPhotoElement->init('getPhotos');
 
+// Recaptcha
+$PHPShopRecaptchaElement = new PHPShopRecaptchaElement();
+$PHPShopRecaptchaElement->init('captcha');
+
 // RSS грабер новостей
 new PHPShopRssParser();
 ?>

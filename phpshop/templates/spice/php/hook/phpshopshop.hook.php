@@ -58,10 +58,11 @@ function template_parent($obj, $dataArray, $rout) {
 
             foreach ($obj->select_value as $k => $value) {
                 $row = $value[3];
+                $row['price'] = number_format($row['price'], $obj->format, '.', ' ');
                 
                 if ($k == 0){
                     $obj->set('checked', 'checked');
-                    $obj->set('productPrice',$row['price']);
+                    $obj->set('productPrice',$row['price'].' '.$row['parent2']);
                     $obj->set('productValutaName',$currency);
                 }
                 else

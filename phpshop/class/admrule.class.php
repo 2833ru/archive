@@ -38,7 +38,7 @@ class PHPShopAdminRule {
             'intro' => 'report',
             'upload' => 'update',
             'currency' => 'valuta',
-            'tpleditor' => 'system'
+            'tpleditor' => 'system',
         );
     }
 

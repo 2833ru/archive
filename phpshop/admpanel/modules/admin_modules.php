@@ -141,7 +141,7 @@ function actionStart() {
                 if (!empty($Info['faqlink']))
                     $wikiPath = $Info['faqlink'];
                 else
-                    $wikiPath = 'http://wiki.phpshop.ru/index.php/Modules#' . str_replace(' ', '_', $Info['name']);
+                    $wikiPath = null;
 
                 if (!empty($Info['trial']) and empty($ChekInstallModule[3])) {
                     $trial = ' (Trial 30 дней)';
@@ -156,7 +156,9 @@ function actionStart() {
                 } else {
                     $status = $ChekInstallModule[1];
 
+                    if(!empty($wikiPath))
                     $drop_menu = array('option', 'manual', 'id' => $row['path']);
+                    else $drop_menu = array('option','id' => $row['path']);
 
 
                     // Меню модуля
@@ -202,13 +204,21 @@ function actionStart() {
 
                         $ChekInstallModule = ChekInstallModule($file, $num);
 
+                        // Инструкция
+                        if (!empty($Info['faqlink']))
+                            $wikiPath = $Info['faqlink'];
+                        else
+                            $wikiPath = null;
+
                         // Дата установки
                         if (!empty($ChekInstallModule[2])) {
                             $InstallDate = date("d-m-Y", $ChekInstallModule[2]);
                             $drop_menu = array('option', 'manual', '|', 'off', 'id' => $file);
                         } elseif ($num < $_SESSION['mod_limit']) {
                             $InstallDate = null;
+                            if(!empty($wikiPath))
                             $drop_menu = array('manual', '|', 'on', 'id' => $file);
+                            else $drop_menu = array('on', 'id' => $file);
                         } else {
                             $InstallDate = null;
                             $drop_menu = null;
@@ -219,11 +229,6 @@ function actionStart() {
                         }
                         else
                             $trial = null;
-
-                        if (!empty($Info['faqlink']))
-                            $wikiPath = $Info['faqlink'];
-                        else
-                            $wikiPath = 'http://wiki.phpshop.ru/index.php/Modules#' . str_replace(' ', '_', $Info['name']);
 
 
                         if (!$PHPShopBase->Rule->CheckedRules('modules', 'edit') or EXPIRES < $Info['sign']) {
@@ -252,6 +257,12 @@ function actionStart() {
                             $new = '<span class="label label-primary">' . $Info['status'] . '</span>';
                         else
                             $new = null;
+                        
+                                                // Инструкция
+                        if (!empty($Info['faqlink']))
+                            $wikiPath = $Info['faqlink'];
+                        else
+                            $wikiPath = null;
 
                         // Дата установки
                         if (!empty($ChekInstallModule[2])) {
@@ -259,7 +270,9 @@ function actionStart() {
                             $drop_menu = array('option', 'manual', '|', 'off', 'id' => $file);
                         } elseif ($num < $_SESSION['mod_limit']) {
                             $InstallDate = null;
+                            if(!empty($wikiPath))
                             $drop_menu = array('manual', '|', 'on', 'id' => $file);
+                            else $drop_menu = array('on', 'id' => $file);
                         } else {
                             $InstallDate = null;
                             $drop_menu = null;
@@ -271,10 +284,7 @@ function actionStart() {
                         else
                             $trial = null;
 
-                        if (!empty($Info['faqlink']))
-                            $wikiPath = $Info['faqlink'];
-                        else
-                            $wikiPath = 'http://wiki.phpshop.ru/index.php/Modules#' . str_replace(' ', '_', $Info['name']);
+
 
 
                         if (!$PHPShopBase->Rule->CheckedRules('modules', 'edit') or EXPIRES < $Info['sign']) {
@@ -303,31 +313,43 @@ function actionStart() {
 
     $tree = '<table class="table table-hover">
         <tr class="treegrid-all">
-           <td><a href="?path=modules" class="treegrid-parent" data-parent="treegrid-all">Все модули</a></td>
+           <td><a href="?path=modules" class="treegrid-parent" data-parent="treegrid-all">Все модули</a> <span id="mod-install-count" class="label label-primary pull-right">63</span></td>
 	</tr>
         <tr class="treegrid-template">
-           <td><a href="?path=modules&cat=template" class="treegrid-parent" data-parent="treegrid-template">Дизайн</a></td>
+           <td><a href="?path=modules&cat=template" class="treegrid-parent" data-parent="treegrid-template">Дизайн</a> <span id="mod-install-count" class="label label-primary pull-right">4</span></td>
 	</tr>
         <tr class="treegrid-form">
-           <td><a href="?path=modules&cat=form" class="treegrid-parent" data-parent="treegrid-form">Юзабилити</a></td>
+           <td><a href="?path=modules&cat=form" class="treegrid-parent" data-parent="treegrid-form">Юзабилити</a> <span id="mod-install-count" class="label label-primary pull-right">15</span></td>
 	</tr>
         <tr class="treegrid-soc">
-           <td><a href="?path=modules&cat=soc" class="treegrid-parent" data-parent="treegrid-soc">Социальные сети</a></td>
+           <td><a href="?path=modules&cat=soc" class="treegrid-parent" data-parent="treegrid-soc">Социальные сети</a> <span id="mod-install-count" class="label label-primary pull-right">4</span></td>
 	</tr>
         <tr class="treegrid-seo">
-           <td><a href="?path=modules&cat=seo" class="treegrid-parent" data-parent="treegrid-seo">SEO</a></td>
+           <td><a href="?path=modules&cat=seo" class="treegrid-parent" data-parent="treegrid-seo">SEO</a> <span id="mod-install-count" class="label label-primary pull-right">5</span></td>
+	</tr>
+        <tr class="treegrid-delivery">
+           <td><a href="?path=modules&cat=delivery" class="treegrid-parent" data-parent="treegrid-delivery">Доставка</a> <span id="mod-install-count" class="label label-primary pull-right">4</span></td>
+	</tr>
+        <tr class="treegrid-crm">
+           <td><a href="?path=modules&cat=crm" class="treegrid-parent" data-parent="treegrid-crm">CRM</a> <span id="mod-install-count" class="label label-primary pull-right">2</span></td>
+	</tr>
+        <tr class="treegrid-payment">
+           <td><a href="?path=modules&cat=payment" class="treegrid-parent" data-parent="treegrid-payment">Платежные системы</a> <span id="mod-install-count" class="label label-primary pull-right">11</span></td>
+	</tr>
+        <tr class="treegrid-yandex">
+           <td><a href="?path=modules&cat=yandex" class="treegrid-parent" data-parent="treegrid-yandex">Яндекс</a> <span id="mod-install-count" class="label label-primary pull-right">5</span></td>
 	</tr>
         <tr class="treegrid-sale">
-           <td><a href="?path=modules&cat=sale" class="treegrid-parent" data-parent="treegrid-sale5">Продажи</a></td>
+           <td><a href="?path=modules&cat=sale" class="treegrid-parent" data-parent="treegrid-sale5">Продажи</a> <span id="mod-install-count" class="label label-primary pull-right">21</span></td>
 	</tr>
         <tr class="treegrid-user">
-           <td><a href="?path=modules&cat=user" class="treegrid-parent" data-parent="treegrid-user">Конверсия</a></td>
+           <td><a href="?path=modules&cat=user" class="treegrid-parent" data-parent="treegrid-user">Конверсия</a> <span id="mod-install-count" class="label label-primary pull-right">8</span></td>
 	</tr>
         <tr class="treegrid-develop">
-           <td><a href="?path=modules&cat=develop" class="treegrid-parent" data-parent="treegrid-develop">Разработчикам</a></td>
+           <td><a href="?path=modules&cat=develop" class="treegrid-parent" data-parent="treegrid-develop">Разработчикам</a> <span id="mod-install-count" class="label label-primary pull-right">9</span></td>
 	</tr>
         <tr class="treegrid-install">
-           <td><a href="?path=modules&install=check" class="treegrid-parent" data-parent="treegrid-install">Установленные</a> <span id="mod-install-count" class="label ' . $label_class . '">' . $num . '</span></td>
+           <td><a href="?path=modules&install=check" class="treegrid-parent" data-parent="treegrid-install">Установленные</a> <span id="mod-install-count" class="label ' . $label_class . ' pull-right">' . $num . '</span></td>
 	</tr>
     </table>
     <script>
@@ -335,9 +357,9 @@ function actionStart() {
     </script>';
 
     $sidebarleft[] = array('title' => 'Категории', 'content' => $tree);
-    $PHPShopInterface->setSidebarLeft($sidebarleft, 2);
+    $PHPShopInterface->setSidebarLeft($sidebarleft, 3);
 
-    $PHPShopInterface->Compile(2);
+    $PHPShopInterface->Compile(3);
 }
 
 ?>

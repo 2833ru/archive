@@ -41,6 +41,9 @@ function order_ddeliverywidget_hook($obj, $row, $rout) {
                         
                          <div id="widget"></div>
                     </div>
+                    <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal" id="ddelivery-close">Закрыть</button>
+                    </div>
                 </div>
             </div>
         </div>

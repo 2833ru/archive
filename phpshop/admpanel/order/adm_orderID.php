@@ -92,6 +92,7 @@ function updateStore($data) {
         $first_d = substr($phone, 0, 1);
         if ($first_d != 8)
             $phone = '7' . $phone;
+        $phone=str_replace(array('(',')','-'),'',$phone);
 
         $lib = str_replace('./phpshop/', $_classPath, $PHPShopBase->getParam('file.sms'));
         include_once $lib;
@@ -302,7 +303,6 @@ function actionStart() {
     // Тип оплаты
     $payment_dropdown = $PHPShopGUI->setSelect('person[order_metod]', $payment_value, 180);
 
-
     // Информация об оплате
     $sidebarright[] = array('title' => 'Информация об оплате', 'content' => $payment_dropdown);
 
@@ -334,7 +334,7 @@ function actionStart() {
     $Tab2 = $PHPShopGUI->loadLib('tab_cart', $data);
 
     // Данные покупателя
-    $Tab3 = $PHPShopGUI->loadLib('tab_userdata', $data);
+    $Tab3 = $PHPShopGUI->loadLib('tab_userdata', $data,false,$order);
 
     // Все заказы пользователя
     $Tab4 = $PHPShopGUI->loadLib('tab_userorders', $data, false, array('status' => $OrderStatusArray, 'currency' => $currency, 'color' => $OrderStatusArray));
@@ -514,15 +514,14 @@ function actionValueEdit() {
     $order = unserialize($data['orders']);
 
     // ИД товара
-    $productID = intval($_REQUEST['selectID']);
+    $productID = urldecode($_REQUEST['selectID']);
 
-    if (empty($order['Cart']['cart'][$productID]['id'])) {
+    if (empty($order['Cart']['cart'][$productID])) {
         foreach ($order['Cart']['cart'] as $key => $val)
             if ($val['id'] == $productID) {
                 $productID = $key;
             }
     }
-
 
     $PHPShopGUI->field_col = 2;
     $PHPShopGUI->_CODE.= $PHPShopGUI->setField('Название', $PHPShopGUI->setInputArg(array('name' => 'name_value', 'type' => 'text.required', 'value' => $order['Cart']['cart'][$productID]['name'])));

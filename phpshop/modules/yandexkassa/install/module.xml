@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="windows-1251"?>
 <module>
-    <version>1.1</version>
-    <name>Yandex Kassa</name>
+    <version>1.3</version>
+    <name>Яндекс.Касса</name>
     <faqlink>http://faq.phpshop.ru/page/yandex-kassa.html</faqlink>
     <description>Прием оплат через Яндекс.Касса для юридических лиц.</description>
-    <category>yandex,sale</category>
+    <category>yandex,payment</category>
     <adminmenu>
         <title>Яндекс.Касса</title>
         <capability>true</capability>

@@ -18,14 +18,14 @@ function tab_cart($data, $option = false) {
 
     $order = unserialize($data['orders']);
     $status = unserialize($data['status']);
-    
+
     $CART = $order['Cart'];
     $PERSON = $order['Person'];
     $cart = $CART['cart'];
     $_SESSION['selectCart']=$cart;
     $num = $data_id = $sum = null;
     $n = 1;
-    
+
     // Знак рубля
     if ($PHPShopOrder->default_valuta_iso == 'RUB')
         $currency = ' <span class="rubznak">p</span>';

@@ -373,7 +373,7 @@ function setEqualHeight(columns) {
         });
 
         if (tallestcolumn > 0) {
-            $(this).find(columns).height(tallestcolumn);
+            $(this).find(columns).css('min-height', tallestcolumn);
         }
     });
 
@@ -718,6 +718,14 @@ $(document).ready(function() {
         $('a[data-toggle="popover"]').attr('data-content', $("#visualcart_tmp").html());
     });
 
+
+    $("[data-source]").on('click', function(event) {
+        if (event.ctrlKey){
+            event.preventDefault();
+            window.open('/phpshop/admpanel/admin.php?path=tpleditor&name=bootstrap&option=pro&file=/' + $(this).attr('data-source'));
+        }
+    });
+
     // Подсказки 
     $('[data-toggle="tooltip"]').tooltip({container: 'body'});
 
@@ -809,9 +817,9 @@ $(document).ready(function() {
     }
 
     // формат ввода телефона
-    $("form[name='forma_order'], input[name=returncall_mod_tel],input[name=tel]").on('click', function() {
+    $("body").on('click', "form[name=forma_order], input[name=returncall_mod_tel],input[name=tel],input[name=oneclick_mod_tel]", function() {
         if (PHONE_FORMAT && PHONE_MASK && $('.bar-padding-fix').is(":hidden")) {
-            $('input[name=tel_new], input[name=returncall_mod_tel],input[name=tel]').mask(PHONE_MASK);
+            $('input[name=tel_new],input[name=returncall_mod_tel],input[name=tel],input[name=oneclick_mod_tel]').mask(PHONE_MASK);
         }
     });
 
@@ -863,21 +871,47 @@ $(document).ready(function() {
 
     // Скрыть пустые блоки в описании товара
     $('.empty-check').each(function() {
-        if ($(this).find('a').html() === undefined || $(this).find('.vendorenabled').html() == '') {
+        if ($(this).find('a').html() === undefined && $(this).find('.vendorenabled').html() === undefined) {
             $(this).fadeOut('slow');
         }
     });
-    
+
+
     // Сворачиваемый блок 
     $('.collapse').on('show.bs.collapse', function() {
         $(this).prev('h4').find('i').removeClass('fa-chevron-down');
         $(this).prev('h4').find('i').addClass('fa-chevron-up');
-        $(this).prev('h4').attr('title','Скрыть');
+        $(this).prev('h4').attr('title', 'Скрыть');
     });
     $('.collapse').on('hidden.bs.collapse', function() {
         $(this).prev('h4').find('i').removeClass('fa-chevron-up');
         $(this).prev('h4').find('i').addClass('fa-chevron-down');
-         $(this).prev('h4').attr('title','Показать');
+        $(this).prev('h4').attr('title', 'Показать');
     });
 
+
+
+
 });
+
+// reCAPTCHA
+if ($("#recaptcha_default").length || $("#recaptcha_returncall").length || $("#recaptcha_oneclick").length) {
+    var ga = document.createElement('script');
+    ga.type = 'text/javascript';
+    ga.async = true;
+    ga.defer = true;
+    ga.src = '//www.google.com/recaptcha/api.js?onload=recaptchaCreate&render=explicit';
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(ga, s);
+}
+recaptchaCreate = function() {
+
+    if ($("#recaptcha_default").length)
+        grecaptcha.render("recaptcha_default", {"sitekey": $("#recaptcha_default").attr('data-key'), "size": $("#recaptcha_default").attr('data-size')});
+
+    if ($("#recaptcha_returncall").length)
+        grecaptcha.render("recaptcha_returncall", {"sitekey": $("#recaptcha_returncall").attr('data-key'), "size": $("#recaptcha_returncall").attr('data-size')});
+
+    if ($("#recaptcha_oneclick").length)
+        grecaptcha.render("recaptcha_oneclick", {"sitekey": $("#recaptcha_oneclick").attr('data-key'), "size": $("#recaptcha_oneclick").attr('data-size')});
+};

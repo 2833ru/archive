@@ -75,7 +75,7 @@ function actionStart() {
     $tree_array[0]['sub'][1000] = 'Главное меню сайта';
     $tree_array[0]['sub'][2000] = 'Начальная страница';
 
-        $tree_select.='<option value="0" ' . $data['category'] . ' data-subtext="<span class=\'glyphicon glyphicon-cog\'></span> Настройка">Внутренняя страница</option>';
+    $tree_select.='<option value="0" ' . $data['category'] . ' data-subtext="<span class=\'glyphicon glyphicon-cog\'></span> Настройка">Внутренняя страница</option>';
     if (is_array($tree_array[0]['sub']))
         foreach ($tree_array[0]['sub'] as $k => $v) {
             $check = treegenerator($tree_array[$k], 1, $data['category']);
@@ -122,21 +122,19 @@ function actionStart() {
     $Tab3.=$PHPShopGUI->setField("Description: ", $PHPShopGUI->setTextarea("description_new", $data['description']));
     $Tab3.=$PHPShopGUI->setField("Keywords: ", $PHPShopGUI->setTextarea("keywords_new", $data['keywords']));
 
-
     $Tab1.=$PHPShopGUI->setCollapse(__('SEO / Мета-данные'), $Tab3);
 
     // Безопасность
     $SecurityValue[] = array('Всем пользователям', 0, $data['secure']);
     $SecurityValue[] = array('Только зарегистрированным пользователям', 1, $data['secure']);
-    $Tab1.=$PHPShopGUI->setCollapse(__('Доступность'), $PHPShopGUI->setField("Показывать", $PHPShopGUI->setSelect("secure_new", $SecurityValue, 300)));
+    $Tab1.=$PHPShopGUI->setCollapse(__('Доступность'), $PHPShopGUI->setField("Показывать", $PHPShopGUI->setSelect("secure_new", $SecurityValue, 300)) .
+            $PHPShopGUI->setField("Витрины", $PHPShopGUI->loadLib('tab_multibase', $data, 'catalog/')));
 
-        // Запрос модуля на закладку
+    // Запрос модуля на закладку
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $data);
 
     // Вывод формы закладки
     $PHPShopGUI->setTab(array("Основное", $Tab1), array("Содержание", $oFCKeditor->AddGUI()));
-
-
 
     // Вывод кнопок сохранить и выход в футер
     $ContentFooter = $PHPShopGUI->setInput("submit", "saveID", "ОК", "right", 70, "", "but", "actionInsert.page.create");
@@ -158,6 +156,12 @@ function actionInsert() {
 
     if (empty($_POST['link_new']))
         $_POST['link_new'] = PHPShopString::toLatin($_POST['name_new']);
+
+    // Мультибаза
+    $_POST['servers_new'] = null;
+    if (is_array($_POST['servers']))
+        foreach ($_POST['servers'] as $v)
+            $_POST['servers_new'].="i" . $v . "i";
 
     // Перехват модуля
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $_POST);

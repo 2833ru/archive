@@ -3,7 +3,7 @@
     <version>1.0</version>
     <name>DeltaKey</name>
     <description>Прием оплат через DeltaKey.</description>
-    <category>sale</category>
+    <category>payment</category>
     <adminmenu>
         <title>Прием оплат через DeltaKey</title>
         <capability>true</capability>

@@ -16,6 +16,7 @@
                                 <td><b>Телефон</b>:</td>
                                 <td><input type="text" name="oneclick_mod_tel" id="oneclick_mod_tel" size="15"> </td>
                             </tr>
+                            <tr><td colspan="2"><p>@captcha@</p></td></tr>
                             <tr>
                                 <td></td>
                                 <td>

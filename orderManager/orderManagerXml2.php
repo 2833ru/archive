@@ -353,10 +353,10 @@ function OrdersReturn($id) {
     $result = mysqli_query($link_db, $sql);
     $row = mysqli_fetch_array($result);
     $id = $row['id'];
-    $datas = $row['datas'];
-    $uid = $row['uid'];
     $order = unserialize($row['orders']);
     $status = unserialize($row['status']);
+    $datas = $row['datas'];  
+    $uid = $row['uid'];
 
     if (empty($row['statusi']))
         $statusi = 0;
@@ -378,7 +378,8 @@ function OrdersReturn($id) {
         "dos_do" => Clean($status['dos_do']),
         "manager" => Clean($status['maneger']),
         "row" => $row,
-        "statusi" => $statusi
+        "statusi" => $statusi,
+        "ofd"=>$row['ofd_status']
     );
     return $array;
 }
@@ -450,7 +451,7 @@ switch ($_REQUEST['command']) {
 		  <datas>' . $val['datas'] . '</datas>
 		  <uid>' . $val['uid'] . '</uid>
 		  <id>' . $val['id'] . '</id>
-		  <name>' . Clean($val['order']['name_person'] . $val['row']['fio'] . " (" . $val['order']['mail'] . ")") . '</name>
+		  <name>' . Clean($val['row']['fio'] . " (" . $val['order']['mail'] . ")") . '</name>
 		  <mail>' . Clean($val['order']['mail']) . '</mail>
 		  <tel>' . Clean($val['order']['tel_code']) . ' ' . Clean($val['order']['tel_name']) . '</tel>
 		  <adres>' . Clean($val['order']['adr_name']) . '</adres>
@@ -522,7 +523,7 @@ switch ($_REQUEST['command']) {
 
             // выводим сгрупппированные данные пользователя
             if ($OrdersReturn['row']['fio'] OR $OrdersReturn['order']['name_person'])
-                $adr_info .= Clean(", ФИО: " . $OrdersReturn['row']['fio'] . $OrdersReturn['order']['name_person']);
+                $adr_info .= Clean(", ФИО: " . $OrdersReturn['row']['fio']);
             if ($OrdersReturn['row']['tel'] or $_POST['person']['tel_code'] or $_POST['person']['tel_name'])
                 $adr_info .= Clean(", тел.: " . $OrdersReturn['row']['tel'] . $_POST['person']['tel_code'] . $_POST['person']['tel_name']);
             if ($OrdersReturn['row']['country'])
@@ -549,7 +550,7 @@ switch ($_REQUEST['command']) {
 	      <data>' . PHPShopDate::dataV($OrdersReturn['order']['data']) . '</data>
           <datas>' . $OrdersReturn['datas'] . '</datas>
 		  <uid>' . $OrdersReturn['row']['uid'] . '</uid>
-		  <name>' . Clean($OrdersReturn['order']['name_person'] . $OrdersReturn['row']['fio']) . '</name>
+		  <name>' . Clean($OrdersReturn['row']['fio']) . '</name>
 		  <mail>' . Clean($OrdersReturn['order']['mail']) . '</mail>
 		  <tel_code>' . Clean($OrdersReturn['order']['tel_code']) . '</tel_code>
 		  <tel_name>' . Clean($OrdersReturn['order']['tel_name'] . $OrdersReturn['row']['tel']) . '</tel_name>
@@ -584,6 +585,7 @@ switch ($_REQUEST['command']) {
 		  <metod_id>' . $OrdersReturn['order']['order_metod'] . '</metod_id>
 		  <statusi>' . $OrdersReturn['statusi'] . '</statusi>
 		  <status>' . $GetOrderStatusArray[$OrdersReturn['statusi']]['name'] . '</status>
+                  <ofd>'.$OrdersReturn['ofd'].'</ofd>   
 		  <time>' . $OrdersReturn['time'] . '</time>
 		  <statuslist2>
 		  ' . $XMLS . '

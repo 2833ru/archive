@@ -160,6 +160,21 @@ class PHPShopPaymentResult {
         }
         return 101;
     }
+    
+    /**
+     * Отправка данных в ОФД
+     * @param array $data данные по заказу
+     */
+    function ofd($data){
+        global $_classPath;
+        
+        $ofd = 'atol';
+        include_once($_classPath.'modules/'.substr($ofd,0,15).'/api.php');
+        
+        if(function_exists('OFDStart')){
+           OFDStart($data);
+        }
+    }
 
     /**
      * Обновление данных по заказу 
@@ -171,7 +186,8 @@ class PHPShopPaymentResult {
             // Приверяем сущ. заказа
             $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['orders']);
             $PHPShopOrm->debug = $this->debug;
-            $row = $PHPShopOrm->select(array('uid'), array('uid' => "='" . $this->true_num($this->inv_id) . "'"), false, array('limit' => 1));
+            $orderUid=$this->true_num($this->inv_id);
+            $row = $PHPShopOrm->select(array('*'), array('uid' => "='" . $orderUid . "'"), false, array('limit' => 1));
             if (!empty($row['uid'])) {
 
                 // Лог оплат
@@ -182,10 +198,13 @@ class PHPShopPaymentResult {
                 // Изменение статуса платежа
                 $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['orders']);
                 $PHPShopOrm->debug = $this->debug;
-                $PHPShopOrm->update(array('statusi_new' => $this->set_order_status_101()), array('uid' => '="' . $this->true_num($this->inv_id) . '"'));
+                $PHPShopOrm->update(array('statusi_new' => $this->set_order_status_101()), array('uid' => '="' . $orderUid . '"'));
 
                 // Сообщение ОК
                 $this->done();
+                
+                // ОФД
+                $this->ofd($row);
             }
             else
                 $this->error();

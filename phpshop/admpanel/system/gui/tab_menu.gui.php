@@ -14,6 +14,7 @@ function tab_menu() {
        <li class="' . $menu_active_currency . '"><a href="?path=system.currency">Валюты</a></li>
        <li class="' . $menu_active_image . '"><a href="?path=system.image">Изображения</a></li>
        <li><a href="?path=tpleditor">Шаблоны дизайна</a></li>
+       <li class="' . $menu_active_servers . '"><a href="?path=system.servers">Витрины</a></li> 
        </ul>';
     
     return $tree;

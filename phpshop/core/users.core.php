@@ -10,13 +10,14 @@ PHPShopObj::loadClass('delivery');
  * Обработчик кабинета пользователя
  * @author PHPShop Software
  * @tutorial http://wiki.phpshop.ru/index.php/PHPShopUsers
- * @version 1.5
+ * @version 1.6
  * @package PHPShopCore
  */
 class PHPShopUsers extends PHPShopCore {
 
     var $activation = false;
     var $debug = false;
+    var $no_captcha = false;
     
 
     /**
@@ -416,7 +417,7 @@ class PHPShopUsers extends PHPShopCore {
                 // если прислан ИД используемого адреса, обновляем его
                 if (isset($_POST['adres_id']) AND is_numeric($_POST['adres_id'])) {
                     $id = intval($_POST['adres_id']);
-                    if (is_array($newAdres))
+                    if (is_array($newAdres) and is_array($data_adres['list'][$id]))
                         $data_adres['list'][$id] = array_merge($data_adres['list'][$id], $newAdres);
                 } else {
                     // Если новый адрес сохраняем его в массив
@@ -751,6 +752,42 @@ class PHPShopUsers extends PHPShopCore {
 
         return base64_decode($str);
     }
+    
+    
+    /**
+     * Проверка ботов
+     * @param array $option параметры проверки [url/captcha]
+     * @return boolean
+     */
+    function secirity($option = array('url' => false, 'captcha' => true)) {
+        global $PHPShopRecaptchaElement;
+        
+
+        // Проверка вхождения ссылок
+        if (!empty($option['url'])) {
+            preg_match_all('/http:?/', $_POST[$option['url']], $url, PREG_SET_ORDER);
+            if (count($url) > 0)
+                return false;
+        }
+
+        // Проверка каптчи
+        if ($option['captcha'] === true) {
+            
+            // Recaptcha
+            if ($PHPShopRecaptchaElement->true()) {
+                $result = $PHPShopRecaptchaElement->check();
+                return $result;
+            }
+            
+            // Обычная каптча
+            elseif(!empty($_SESSION['text']) and strtoupper($_POST['key']) == strtoupper($_SESSION['text'])){
+                return true;
+            }
+            else return false;
+        }
+        
+        return true;
+    }
 
     /**
      * Проверка нового пользователя
@@ -759,7 +796,7 @@ class PHPShopUsers extends PHPShopCore {
     function add_user_check() {
 
         // Проверка на защитную картинку
-        if (empty($_SESSION['text']) or ( strtolower($_POST['key']) != strtolower($_SESSION['text']))) {
+        if (!$this->secirity() and $this->no_captcha == false) {
             $this->error[] = $this->lang('error_key');
             return false;
         }
@@ -882,7 +919,9 @@ class PHPShopUsers extends PHPShopCore {
         // Отключение активации в заказе
         $this->activation = false;
 
-        $_SESSION['text'] = $_POST['key'] = "fromOrder";
+        // Отключаем каптчу регистрации
+        $this->no_captcha = true;
+        
         // логин и есть емейл
         $_POST['mail_new'] = $_POST['login_new'] = $login;
         $_POST['password_new'] = $_POST['password_new2'] = $this->generatePassword();
@@ -961,6 +1000,7 @@ class PHPShopUsers extends PHPShopCore {
      * Экшен добавления нового пользователя
      */
     function action_add_user() {
+        
         // Если пройдена проверка на существующий логин
         if ($this->add_user_check()) {
 
@@ -1053,10 +1093,6 @@ class PHPShopUsers extends PHPShopCore {
             $this->set('formaContent', ParseTemplateReturn('users/register.tpl'));
         else
             $this->set('formaContent', ParseTemplateReturn('phpshop/lib/templates/users/register.tpl', true));
-
-
-        if (empty($_SESSION['cart']))
-            $this->set('formaContent', PHPShopText::alert($this->lang('error_register')));
 
         $this->setHook(__CLASS__, __FUNCTION__);
 

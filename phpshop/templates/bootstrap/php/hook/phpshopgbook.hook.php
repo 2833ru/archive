@@ -6,7 +6,6 @@ function template_attachLink_hook() {
 
 function template_send_gb_hook($obj,$data,$rout){
     if($rout == 'END'){
-        echo 111;
         
         if($obj->get('Error') != '')
             $obj->set('Error','<div class="alert alert-warning alert-dismissible" role="alert">

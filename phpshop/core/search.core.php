@@ -25,9 +25,8 @@ class PHPShopSearch extends PHPShopShopCore {
         // Список экшенов
         $this->action = array("post" => "words", "get" => "words", "nav" => "index");
         parent::__construct();
-        
-        $this->title = __('Поиск'). " - " . $this->PHPShopSystem->getValue("name");
 
+        $this->title = __('Поиск') . " - " . $this->PHPShopSystem->getValue("name");
     }
 
     /**
@@ -45,7 +44,7 @@ class PHPShopSearch extends PHPShopShopCore {
 
         if (isset($_REQUEST['ajax']))
             exit();
-        
+
 
         // Подключаем шаблон
         $this->parseTemplate($this->getValue('templates.search_page_list'));
@@ -196,7 +195,13 @@ class PHPShopSearch extends PHPShopShopCore {
             $this->PHPShopOrm->debug = $this->debug;
             $this->PHPShopOrm->mysql_error = false;
             $this->PHPShopOrm->comment = __CLASS__ . '.' . __FUNCTION__;
-            $this->dataArray = $this->PHPShopOrm->select();
+            
+            $dataArray = $this->PHPShopOrm->select();
+            if (is_array($dataArray) and is_array($this->dataArray))
+                $this->dataArray += $dataArray;
+            elseif(is_array($dataArray))
+                $this->dataArray = $dataArray;    
+            
             $this->PHPShopOrm->clean();
 
             if (!empty($this->dataArray)) {

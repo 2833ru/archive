@@ -4,7 +4,7 @@
     <name>Assist</name>
     <faqlink>http://assist.ru</faqlink>
     <description>Прием оплат через Assist.</description>
-    <category>assist,sale</category>
+    <category>payment</category>
     <adminmenu>
         <title>Прием оплат через Assist</title>
         <capability>true</capability>

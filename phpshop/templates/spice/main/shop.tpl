@@ -91,7 +91,6 @@
                             <div class="pull-right">                           
                                 <!-- Currency Starts -->
                                 <div class="btn-group header-valuta-disp-wrapper">
-                                    <!--@valutaDisp@-->
                                     <h4><i class="fa fa-phone-square" aria-hidden="true"></i> Тел: @telNumMobile@</h4>
                                 </div>
                                 <!-- Currency Ends -->                      

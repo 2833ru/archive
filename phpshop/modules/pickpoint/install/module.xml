@@ -4,7 +4,7 @@
     <name>PickPoint</name>
     <faqlink>http://faq.phpshop.ru/page/pickpoint.html</faqlink>
     <description>Модуль пунктов выдачи товара PickPoint</description>
-    <category>sale</category>
+    <category>sale,delivery</category>
     <adminmenu>
         <title>PickPoint</title>
         <capability>true</capability>

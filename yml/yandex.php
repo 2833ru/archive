@@ -296,7 +296,7 @@ class PHPShopYml {
             $array = array(
                 "id" => $id,
                 "category" => $category,
-                "name" => $name,
+                "name" => str_replace(array('&#43;','&#43'), '+',$name),
                 "picture" => $row['pic_big'],
                 "price" => $price,
                 "oldprice" => $oldprice,

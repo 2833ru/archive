@@ -36,8 +36,8 @@ function getLinkOption($key) {
     include($_classPath . 'modules/ddeliverywidget/class/ddeliverywidget.class.php');
     $DDeliveryHelper = new DDeliveryHelper();
     $result = $DDeliveryHelper->request($key . '/pam.json', false);
-
-    return $result['data']['url'];
+    
+    return str_replace('http://','https://',$result['data']['url']);
 }
 
 function actionStart() {

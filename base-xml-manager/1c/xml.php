@@ -6,10 +6,9 @@
  * @author PHPShop Software
  * @version 1.3
  */
-
-$_classPath = '../../';
-include($_classPath . 'phpshop/class/obj.class.php');
-include($_classPath . "phpshop/lib/phpass/passwordhash.php");
+$_classPath = '../../phpshop/';
+include($_classPath . 'class/obj.class.php');
+include($_classPath . "lib/phpass/passwordhash.php");
 PHPShopObj::loadClass("base");
 PHPShopObj::loadClass("orm");
 PHPShopObj::loadClass("xml");
@@ -20,11 +19,56 @@ PHPShopObj::loadClass("array");
 PHPShopObj::loadClass("product");
 PHPShopObj::loadClass("security");
 PHPShopObj::loadClass("valuta");
+PHPShopObj::loadClass("string");
 
 /*
-  $_POST['log']='root';
-  $_POST['pas']='I4OI1OI1OI6OI4OI1OI1OI6OI10O';
- 
+$_POST['log'] = 'admin';
+$_POST['pas'] = '49O50O51O52O53O54OI10O';
+
+$_POST['sql'] = '<?xml version="1.0" encoding="windows-1251"?>
+  <phpshop>
+  <sql>
+  <from>null</from>
+  <method>ofd</method>
+  <vars>
+  <uid>'.rand(10000,20000).'</uid>
+  <id>'.rand(10000,20000).'</id>
+  <operation>sell</operation>
+  <json><![CDATA[
+  {
+"receipt": {
+"attributes": {
+"email": "dennion@yandex.ru",
+"phone": "89024562233"
+},
+"items": [
+{
+"name": "Товар 1",
+"price": 1499.99,
+"num": 2.00,
+"sum": 2999.98
+},
+{
+"name": "Товар 2",
+"price": 300.00,
+"num": 1.00,
+"sum": 300.00
+}
+],
+"total": 3299.98,
+"payments": [
+{
+"type": 1,
+"sum": 3299.98
+}
+]
+}
+}
+]]></json>
+</vars>
+  </sql>
+  </phpshop>';
+
   $_POST['sql']='<?xml version="1.0" encoding="windows-1251"?>
   <phpshop>
   <sql>
@@ -87,10 +131,10 @@ PHPShopObj::loadClass("valuta");
  */
 
 // Подключаем БД
-$PHPShopBase = new PHPShopBase($_classPath . 'phpshop/inc/config.ini');
+$PHPShopBase = new PHPShopBase($_classPath . 'inc/config.ini',true, false);
 
 // Настройки модулей
-$PHPShopModules = new PHPShopModules($_classPath . "phpshop/modules/");
+$PHPShopModules = new PHPShopModules($_classPath . "modules/");
 
 // Валюты
 $PHPShopValutaArray = new PHPShopValutaArray();
@@ -101,14 +145,38 @@ $PHPShopSystem = new PHPShopSystem();
 class PHPShop1C extends PHPShopBaseXml {
 
     function __construct() {
+        global $PHPShopModules;
+
         $this->debug = false;
-        $this->true_method = array('select', 'option', 'insert', 'update', 'delete', 'image', 'order');
+        $this->PHPShopModules = $PHPShopModules;
+        $this->true_method = array('select', 'option', 'insert', 'update', 'delete', 'image', 'order','ofd');
         $this->true_from = array('table_name', 'table_name1', 'table_name2', 'table_name3', 'table_name24',
             'table_name5', 'table_name6', 'table_name7', 'table_name8', 'table_name11',
             'table_name14', 'table_name15', 'table_name17', 'table_name27', 'table_name29', 'table_name32',
-            'table_name9', 'table_name48', 'table_name50', 'table_name51', 'table_name35');
+            'table_name9', 'table_name48', 'table_name50', 'table_name51', 'table_name35','null');
 
         parent::__construct();
+    }
+
+    function ofd() {
+        global $_classPath;
+        
+        $vars = readDatabase($this->sql, "vars", false);
+        $data = json_fix_utf(json_decode(PHPShopString::win_utf8($vars[0]['json']), true));
+        
+        $ofd = 'atol';
+        include_once($_classPath . 'modules/' . substr($ofd, 0, 15) . '/api.php');
+
+        if (is_array($data)) {
+            
+            // № Чека
+            $data['id']=$vars[0]['id'];
+            $data['uid']=$vars[0]['uid'];
+            
+            $this->PHPShopModules->checkInstall('atol');
+            $status = OFDStart($data,$vars[0]['operation'],true);
+            echo json_encode(array('status' => $status['status'], 'data' =>$status['data']));
+        }
     }
 
     function order() {
@@ -145,7 +213,7 @@ class PHPShop1C extends PHPShopBaseXml {
                 // Если цена товара пришла из 1С
                 if (PHPShopSecurity::true_param($vars[0]['price'], $vars[0]['currency'])) {
                     //$data['price'] = PHPShopProductFunction::GetPriceValuta($data['id'], $vars[0]['price'], $vars[0]['currency']);
-                    $data['price']=$vars[0]['price'];
+                    $data['price'] = $vars[0]['price'];
                 }
                 $orders['Cart']['cart'][$data['id']] = array(
                     'id' => $data['id'],
@@ -160,10 +228,10 @@ class PHPShop1C extends PHPShopBaseXml {
                 exit("Error Art");
         }
 
-        
+
         // Скидка
-        if(PHPShopSecurity::true_param($vars[0]['discount'])){
-            $orders['Person']['discount']=$vars[0]['discount'];
+        if (PHPShopSecurity::true_param($vars[0]['discount'])) {
+            $orders['Person']['discount'] = $vars[0]['discount'];
         }
 
         // Пересчет общих данных корзины
@@ -180,9 +248,9 @@ class PHPShop1C extends PHPShopBaseXml {
         }
 
         $order_data["orders_new"] = serialize($orders);
-        
+
         // Итого
-        $order_data['sum_new'] =  $orders['Cart']['sum'] + $orders['Cart']['dostavka'];
+        $order_data['sum_new'] = $orders['Cart']['sum'] + $orders['Cart']['dostavka'];
 
         // Запись обновленного заказа
         $PHPShopOrm = new PHPShopOrm($this->PHPShopBase->getParam('base.' . $this->xml['from']));
@@ -234,7 +302,7 @@ class PHPShop1C extends PHPShopBaseXml {
             'order' => 'order',
             'payment' => 'order',
             'valuta' => 'order',
-            'foto'=>'catalog',
+            'foto' => 'catalog',
         );
 
         if ($correct_path[$path[1]])

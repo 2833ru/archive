@@ -59,7 +59,7 @@ function template_parent($obj, $dataArray, $rout) {
 
             foreach ($obj->select_value as $k => $value) {
                 $row = $value[3];
-                
+                $row['price'] = number_format($row['price'], $obj->format, '.', ' ');
                 if ($k == 0){
                     $obj->set('checked', 'checked');
                     $obj->set('productPrice',$row['price']);
@@ -72,7 +72,7 @@ function template_parent($obj, $dataArray, $rout) {
                 if(empty($row['parent']) or $obj->parent_id == $row['id'])
                     $row['parent'] = $row['name'];
 
-                $obj->set('parentName', $row['parent']);
+                $obj->set('parentName', $row['parent'].' '.$row['parent2']);
                 $obj->set('parentId', $value[1]);
                 $obj->set('parentCheckedId', $value[1]);
                 $obj->set('parentPrice',$row['price']);

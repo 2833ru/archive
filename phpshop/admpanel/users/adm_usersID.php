@@ -141,7 +141,7 @@ function actionUpdate() {
         "update" => rules_zero($_POST[update_rul_1]),
         "modules" => rules_zero($_POST[modules_rul_1]) . "-" . rules_zero($_POST[modules_rul_2]) . "-" . rules_zero($_POST[modules_rul_3]) . "-" . rules_zero($_POST[modules_rul_4]) . "-" . rules_zero($_POST[modules_rul_5])
     );
-
+    
     $_POST['status_new'] = serialize($statusUser);
 
     // Оповещение пользователя

@@ -4,8 +4,7 @@
     <name>Мой Склад</name>
     <faqlink>http://faq.phpshop.ru/page/moysklad.html</faqlink>
     <description>Модуль CRM Мой Склад.</description>
-    <category>sale</category>
-    <sign>1423218824</sign>
+    <category>sale,crm</category>
     <adminmenu>
         <title>Мой Склад</title>
         <capability>true</capability>

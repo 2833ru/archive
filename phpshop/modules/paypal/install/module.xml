@@ -4,7 +4,7 @@
     <name>PayPal</name>
     <faqlink>http://faq.phpshop.ru/page/paypal.html</faqlink>
     <description>Прием оплат через PayPal.</description>
-    <category>sale</category>
+    <category>payment</category>
     <adminmenu>
         <title>Прием оплат через PayPal</title>
         <capability>true</capability>

@@ -431,7 +431,7 @@ $().ready(function() {
         var id = $(this).attr('data-id');
         var order_id = $('#footer input[name=rowID]').val();
         var parent = $(this).closest('.data-row').attr('data-row');
-        data.push({name: 'selectID', value: id});
+        data.push({name: 'selectID', value: escape(id)});
         data.push({name: 'ajax', value: 1});
         data.push({name: 'actionList[selectID]', value: 'actionValueEdit'});
         data.push({name: 'parentID', value: parent});

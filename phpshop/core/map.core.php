@@ -85,9 +85,8 @@ class PHPShopMap extends PHPShopCore {
     function category() {
 
         // Мультибаза
-        if ($this->PHPShopSystem->ifSerilizeParam('admoption.base_enabled')) {
-            $where['servers'] = " REGEXP 'i" . $this->PHPShopSystem->getSerilizeParam('admoption.base_id') . "i'";
-        }
+        if (defined("HostID"))
+            $where['servers'] = " REGEXP 'i" . HostID . "i'";
         else
             $where = null;
 

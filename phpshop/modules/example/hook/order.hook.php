@@ -16,7 +16,7 @@ function delivery_hook($obj) {
 $addHandler=array
         (
         'ordercartforma'=>'ordercartforma_hook',
-        'delivery'=>'delivery_hook'
+        '#delivery'=>'delivery_hook'
 
 );
 

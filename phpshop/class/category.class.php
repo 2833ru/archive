@@ -39,11 +39,11 @@ class PHPShopCategory extends PHPShopObj {
      * @return string
      */
     function getContent() {
-        if(empty($this->cache))
-        return parent::getParam("content");
+        if (empty($this->cache))
+            return parent::getParam("content");
         else {
             $PHPShopOrm = new PHPShopOrm($this->objBase);
-            $data=$PHPShopOrm->select(array('content'), array('id' => '=' . intval($this->objID)), false, array('limit' => 1));
+            $data = $PHPShopOrm->select(array('content'), array('id' => '=' . intval($this->objID)), false, array('limit' => 1));
             return $data['content'];
         }
     }
@@ -150,7 +150,7 @@ class PHPShopPageCategory extends PHPShopObj {
  * Массив категории товаров
  * Упрощенный доступ к категориями
  * @author PHPShop Software
- * @version 1.1
+ * @version 1.2
  * @package PHPShopArray
  */
 class PHPShopCategoryArray extends PHPShopArray {
@@ -160,6 +160,11 @@ class PHPShopCategoryArray extends PHPShopArray {
      * @param string $sql SQL условие выборки
      */
     function __construct($sql = false) {
+
+        // Мультибаза
+        if (defined("HostID"))
+            $sql['servers'] = " REGEXP 'i" . HostID . "i'";
+
         $this->objSQL = $sql;
         $this->cache = false;
         $this->order = array('order' => 'num,name');
@@ -168,7 +173,6 @@ class PHPShopCategoryArray extends PHPShopArray {
     }
 
 }
-
 
 /**
  * Категории фотогалереи
@@ -219,7 +223,6 @@ class PHPShopPhotoCategory extends PHPShopObj {
 
 }
 
-
 /**
  * Массив категории фотогалереи
  * Упрощенный доступ к категориями фотогалереи
@@ -242,4 +245,5 @@ class PHPShopPhotoCategoryArray extends PHPShopArray {
     }
 
 }
+
 ?>

@@ -1,8 +1,5 @@
 <?php
 
-if (!defined("OBJENABLED"))
-    exit(header('Location: /?error=OBJENABLED'));
-
 class PHPShopReturncall extends PHPShopCore {
 
     /**
@@ -69,11 +66,8 @@ class PHPShopReturncall extends PHPShopCore {
         else
             $message = $this->system['title'];
 
-        // Защитная каптча
-        if ($this->system['captcha_enabled'] == 1) {
-            $captcha = PHPShopParser::file($GLOBALS['SysValue']['templates']['returncall']['returncall_captcha_forma'], true, false, true);
-            $this->set('returncall_captcha', $captcha);
-        }
+        $PHPShopRecaptchaElement = new PHPShopRecaptchaElement();
+        $this->set('returncall_captcha', $PHPShopRecaptchaElement->captcha('returncall', 'normal'));
 
         // Подключаем шаблон
         $this->set('pageTitle', $message);
@@ -82,22 +76,22 @@ class PHPShopReturncall extends PHPShopCore {
     }
 
     /**
+     * Проверка ботов
+     * @param array $option параметры проверки [url|captcha|referer]
+     * @return boolean
+     */
+    function security($option = array('url' => false, 'captcha' => true, 'referer' => true)) {
+        global $PHPShopRecaptchaElement;
+
+        return $PHPShopRecaptchaElement->security($option);
+    }
+
+    /**
      * Экшен записи при получении $_POST[returncall_mod_send]
      */
     function returncall_mod_send() {
 
-        $error = false;
-
-        // Проверка каптчи
-        if ($this->system['captcha_enabled'] == 1) {
-
-            if (empty($_SESSION['mod_returncall_captcha']) or strtolower($_SESSION['mod_returncall_captcha']) != strtolower($_POST['key']) or !strpos($_SERVER["HTTP_REFERER"], $_SERVER['SERVER_NAME']))
-                $error = true;
-        }
-
-        preg_match_all('/http:?/', $_POST['returncall_mod_message'], $url, PREG_SET_ORDER);
-        
-        if (PHPShopSecurity::true_param($_POST['returncall_mod_name'], $_POST['returncall_mod_tel'], empty($error)) and count($url)==0) {
+        if ($this->security() and PHPShopSecurity::true_param($_POST['returncall_mod_name'], $_POST['returncall_mod_tel'])) {
             $this->write();
             header('Location: ./done.html');
             exit();
@@ -127,7 +121,7 @@ class PHPShopReturncall extends PHPShopCore {
         $this->PHPShopOrm->insert($insert);
 
         $zag = $this->PHPShopSystem->getValue('name') . " - Обратный звонок - " . PHPShopDate::dataV($date);
-        
+
 
         $message = "
 Доброго времени!
@@ -144,7 +138,7 @@ class PHPShopReturncall extends PHPShopCore {
 Сообщение:          " . $insert['message_new'] . "
 Дата:               " . PHPShopDate::dataV($insert['date_new']) . "
 IP:                 " . $_SERVER['REMOTE_ADDR'] . "
-REFERER:            ".$_SERVER['HTTP_REFERER']." 
+REFERER:            " . $_SERVER['HTTP_REFERER'] . " 
 ---------------
 
 С уважением,

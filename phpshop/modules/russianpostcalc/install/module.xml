@@ -4,7 +4,7 @@
     <name>Калькулятор Почты России</name>
     <faqlink>http://faq.phpshop.ru/page/russianpostcalc.html</faqlink>
     <description>Модуль расчета стоимости доставки Почтой России</description>
-    <category>sale</category>
+    <category>sale,delivery</category>
     <adminmenu>
         <title>Калькулятор Почты</title>
         <capability>true</capability>

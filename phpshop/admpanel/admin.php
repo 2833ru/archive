@@ -207,7 +207,7 @@ if (empty($adm_title)) {
 
                                 </ul>
                             </li>
-                            <li class="dropdown <?php echo $menu_active_system . $menu_active_system_company . $menu_active_system_seo . $menu_active_system_sync . $menu_active_tpleditor . $menu_active_system_image; ?>">
+                            <li class="dropdown <?php echo $menu_active_system . $menu_active_system_company . $menu_active_system_seo . $menu_active_system_sync . $menu_active_tpleditor . $menu_active_system_image. $menu_active_system_servers; ?>">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Настройки <span class="caret"></span></a>
                                 <ul class="dropdown-menu" role="menu">
                                     <li><a href="?path=system">Основные</a></li>
@@ -216,6 +216,7 @@ if (empty($adm_title)) {
                                     <li><a href="?path=system.seo">SEO заголовки</a></li>
                                     <li><a href="?path=system.currency">Валюты</a></li>
                                     <li><a href="?path=system.image">Изображения</a></li>
+                                    <li><a href="?path=system.servers">Витрины</a></li>
                                     <li class="divider"></li>
                                     <li><a href="?path=tpleditor"><span class="glyphicon glyphicon-picture"></span> Шаблоны дизайна</a></li>
                                 </ul>

@@ -1927,6 +1927,11 @@ img.template:hover{
 #chatopenwindow{
     margin-right:7px;
 }
+
+.paymOneEl label {
+   cursor: pointer;
+}
+
 .chat{ 
     position: fixed; bottom: 20px; left: 20px;
     border-radius: 0 !important;

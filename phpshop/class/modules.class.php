@@ -482,7 +482,9 @@ class PHPShopModules {
                 // Включаем таймер
                 $time = microtime(true);
 
-                $user_func_result = call_user_func_array($hook_function_name, array(&$obj, &$data, $rout));
+                $result = call_user_func_array($hook_function_name, array(&$obj, &$data, $rout));
+                if (!empty($result))
+                    $user_func_result = $result;
 
                 // Выключаем таймер
                 $seconds = round(microtime(true) - $time, 6);

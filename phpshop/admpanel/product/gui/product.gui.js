@@ -130,9 +130,7 @@ $().ready(function() {
             data: data,
             dataType: "json",
             success: function(json) {
-
                 $('#selectModal').modal('hide');
-
                 if (json['success'] == 1) {
 
                     if ($('#modal-form input[name="parent_new"]').val() !== '')
@@ -140,10 +138,8 @@ $().ready(function() {
                     else
                         $('[data-row="' + parent + '"] :nth-child(1) input:text').val($('#modal-form input[name="name_new"]').val());
 
-
                     $('[data-row="' + parent + '"] :nth-child(2) input:text').val($('#modal-form input[name="items_new"]').val());
                     $('[data-row="' + parent + '"] :nth-child(3) input:text').val($('#modal-form input[name="price_new"]').val());
-
 
                     // Вывод
                     if (json['enabled'] == 1 && json['sklad'] == 0)
@@ -151,16 +147,12 @@ $().ready(function() {
                     else
                         $('[data-row="' + parent + '"] :nth-child(5)').html('<span class="pull-right text-muted glyphicon glyphicon-eye-close" data-toggle="tooltip" data-placement="top" title="Скрыто"></span>');
 
-
                     showAlertMessage(locale.save_done);
                 } else
                     showAlertMessage(locale.save_false, true);
             }
-
         });
-
     });
-
 
     // Редактировать значение подтипа - 1 шаг 
     $("body").on('click', ".data-row .value-edit", function(event) {

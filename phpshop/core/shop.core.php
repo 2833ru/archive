@@ -63,7 +63,7 @@ class PHPShopShop extends PHPShopShopCore {
         $this->page = $this->PHPShopNav->getPage();
         if (strlen($this->page) == 0)
             $this->page = 1;
-        
+
         // Сортировка по цене среди мультивалютных товаров
         $this->multi_currency_search = $this->PHPShopSystem->getSerilizeParam('admoption.multi_currency_search');
     }
@@ -303,10 +303,9 @@ class PHPShopShop extends PHPShopShopCore {
         $this->category_name = $this->PHPShopCategory->getName();
 
         // 404 ошибка мультибазы
-        /*
-          if ($this->errorMultibase($this->category))
-          return $this->setError404();
-         */
+        if ($this->errorMultibase($this->category))
+            return $this->setError404();
+
 
         // Единица измерения
         if (empty($row['ed_izm']))
@@ -529,7 +528,7 @@ class PHPShopShop extends PHPShopShopCore {
         return true;
 
     $this->select_value = array();
-    
+
     // ИД главного товара
     $this->parent_id = $row['id'];
     $row['parent'] = PHPShopSecurity::CleanOut($row['parent']);
@@ -545,13 +544,20 @@ class PHPShopShop extends PHPShopShopCore {
         $this->set('ComEndCart', '-->');
 
         // Собираем массив товаров
-        if (is_array($parent))
-            foreach ($parent as $value) {
-                if (PHPShopProductFunction::true_parent($value))
-                    $Product[$value] = $this->select(array('*'), array('uid' => '="' . $value . '"', 'enabled' => "='1'", 'sklad' => "!='1'"), false, false, __FUNCTION__);
-                else
-                    $Product[intval($value)] = $this->select(array('*'), array('id' => '=' . intval($value), 'enabled' => "='1'", 'sklad' => "!='1'"), false, false, __FUNCTION__);
-            }
+        /*
+          if (is_array($parent))
+          foreach ($parent as $value) {
+          if (PHPShopProductFunction::true_parent($value))
+          $Product[$value] = $this->select(array('*'), array('uid' => '="' . $value . '"', 'enabled' => "='1'", 'sklad' => "!='1'"), false, false, __FUNCTION__);
+          else
+          $Product[intval($value)] = $this->select(array('*'), array('id' => '=' . intval($value), 'enabled' => "='1'", 'sklad' => "!='1'"), false, false, __FUNCTION__);
+          } */
+
+        // Подтипы из 1С
+        if ($this->PHPShopSystem->ifSerilizeParam('1c_option.update_option'))
+            $Product = $this->select(array('*'), array('uid' => ' IN (' . $row['parent'] . ')', 'enabled' => "='1'", 'sklad' => "!='1'"), array('order' => 'num'), false, __FUNCTION__, false, false);
+        else
+            $Product = $this->select(array('*'), array('id' => ' IN (' . $row['parent'] . ')', 'enabled' => "='1'", 'sklad' => "!='1'"), array('order' => 'num'), false, __FUNCTION__, false, false);
 
         // Цена главного товара
         if (!empty($row['price']) and empty($row['priceSklad']) and (!empty($row['items']) or (empty($row['items']) and $sklad_status == 1))) {
@@ -631,7 +637,7 @@ function CID() {
     $this->category_name = $this->PHPShopCategory->getName();
 
     // Запрос на подкаталоги
-    $parent_category_row = $this->select(array('*'), array('parent_to' => '=' . $this->category), false, array('limit' => 1), __FUNCTION__, array('base' => $this->getValue('base.categories')));
+    $parent_category_row = $this->select(array('*'), array('parent_to' => '=' . $this->category . "  or dop_cat LIKE '%#" . intval($this->category) . "#%'"), false, array('limit' => 1), __FUNCTION__, array('base' => $this->getValue('base.categories')));
 
     // Перехват модуля
     $this->setHook(__CLASS__, __FUNCTION__, $parent_category_row, 'MIDDLE');
@@ -697,9 +703,10 @@ function CID_Product($category = null) {
     if ($this->setHook(__CLASS__, __FUNCTION__, false, 'START'))
         return true;
 
-    // 404 если каталога не существует
-    if (empty($this->category_name))
+    // 404 если каталога не существует или мультибаза
+    if (empty($this->category_name) or $this->errorMultibase($this->category))
         return $this->setError404();
+    
 
     // Валюта
     $this->set('productValutaName', $this->currency());
@@ -820,7 +827,7 @@ function CID_Product($category = null) {
     else
         $search_where = array('max(price) as max', 'min(price) as min', 'baseinputvaluta');
 
-    $data = $this->select($search_where, array('category' => '=' . intval($this->category), 'enabled' => "='1'", 'price' => '>1'),array('group'=>'price'));
+    $data = $this->select($search_where, array('category' => '=' . intval($this->category), 'enabled' => "='1'", 'price' => '>1'), array('group' => 'price'));
 
     $kurs = $this->Valuta[$data['baseinputvaluta']]['kurs'];
     if (empty($kurs))
@@ -936,7 +943,7 @@ function CID_Category() {
     $this->PHPShopCategory = new PHPShopCategory($this->category);
 
     // Скрытый каталог
-    if ($this->PHPShopCategory->getParam('skin_enabled') == 1)
+    if ($this->PHPShopCategory->getParam('skin_enabled') == 1 or $this->errorMultibase($this->category))
         return $this->setError404();
 
     // Название категории
@@ -945,10 +952,9 @@ function CID_Category() {
     // Условия выборки
     $where = array('parent_to' => '=' . $this->category, 'skin_enabled' => "!='1' or dop_cat LIKE '%#" . $this->category . "#%'");
 
-    /* // Мультибаза
-      if ($this->PHPShopSystem->ifSerilizeParam('admoption.base_enabled')) {
-      $where['servers'] = " REGEXP 'i" . $this->PHPShopSystem->getSerilizeParam('admoption.base_id') . "i'";
-      } */
+    // Мультибаза
+    if (defined("HostID"))
+        $where['servers'] = " REGEXP 'i" . HostID . "i'";
 
     // Сортировка каталога
     switch ($this->PHPShopCategory->getValue('order_to')) {
