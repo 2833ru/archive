@@ -2,13 +2,24 @@
 .bootstrap-theme{
 color:#fff;
 }
-.header-area-background-block,.footer-links{
+#header-area,#footer-area{
 -webkit-filter:hue-rotate(150deg) !important;
 -ms-filter:hue-rotate(150deg) !important;
 filter:hue-rotate(150deg) !important;
 -o-filter:hue-rotate(150deg) !important;
 -moz-filter:hue-rotate(150deg) !important;
 -editor-filter:150;
+}
+#header-area{
+background:url(../images/header-bg.jpg) no-repeat center;
+background-size:cover;
+}
+#footer-area{
+background:url(../images/header-bg.jpg) no-repeat center;
+background-size:cover;
+}
+.header-color,.header-color a,.header-color .btn,.header-color h4,.header-links a{
+color:#ffffff !important;
 }
 .side-heading,.panel-default > .panel-heading,.panel-success > .panel-heading,.product-col .btn-cart:hover,.product-info .product-details .btn-cart:hover,.product-info-box .heading,.btn-primary, .pagination > .active > a{
 background:#ff749a !important;

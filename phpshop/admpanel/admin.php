@@ -25,6 +25,13 @@ $PHPShopBase->chekAdmin();
 $PHPShopSystem = new PHPShopSystem();
 $_SESSION['imageResultPath'] = $PHPShopSystem->getSerilizeParam('admoption.image_result_path');
 $_SESSION['imageResultDir'] = $PHPShopBase->getParam('dir.dir');
+if ($PHPShopSystem->ifSerilizeParam('admoption.dadata_enabled')) {
+    $DADATA_TOKEN = $PHPShopSystem->getSerilizeParam('admoption.dadata_token');
+    if (empty($DADATA_TOKEN))
+        $DADATA_TOKEN = 'b13e0b4fd092a269e229887e265c62aba36a92e5';
+}
+else
+    $DADATA_TOKEN = null;
 
 // Редактор GUI
 $PHPShopGUI = new PHPShopGUI();
@@ -162,7 +169,7 @@ if (empty($adm_title)) {
         <![endif]-->
     </head>
 
-    <body role="document" id="body">
+    <body role="document" id="body" data-token="<?php echo $DADATA_TOKEN; ?>">
 
         <!-- jQuery plugins -->
         <link href="./css/jquery.dataTables.css" rel="stylesheet">
@@ -203,11 +210,11 @@ if (empty($adm_title)) {
                                     <li><a href="?path=modules">Управление модулями</a></li>
                                     <li class="divider"></li>
                                     <li class="dropdown-header">Установленные модули</li>
-                                    <?php echo modulesMenu(); ?>
+<?php echo modulesMenu(); ?>
 
                                 </ul>
                             </li>
-                            <li class="dropdown <?php echo $menu_active_system . $menu_active_system_company . $menu_active_system_seo . $menu_active_system_sync . $menu_active_tpleditor . $menu_active_system_image. $menu_active_system_servers; ?>">
+                            <li class="dropdown <?php echo $menu_active_system . $menu_active_system_company . $menu_active_system_seo . $menu_active_system_sync . $menu_active_tpleditor . $menu_active_system_image . $menu_active_system_servers; ?>">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Настройки <span class="caret"></span></a>
                                 <ul class="dropdown-menu" role="menu">
                                     <li><a href="?path=system">Основные</a></li>
@@ -305,8 +312,8 @@ if (empty($adm_title)) {
                                 <ul class="dropdown-menu" role="menu">
                                     <li><a href="?path=catalog"><span>Товары</span><span class="dropdown-header">Просмотр, добавление и редактирование товаров</span></a></li>
                                     <li><a href="?path=catalog&action=new"><span>Каталоги</span><span class="dropdown-header">Просмотр, добавление и редактирование категорий товаров</span></a></li>
-
                                     <li><a href="?path=sort">Характеристики<span class="dropdown-header">Просмотр, добавление и редактирование дополнительных полей товаров</span></a></li>
+                                    <li><a href="?path=sort.parent">Варианты подтипов<span class="dropdown-header">Просмотр, добавление и редактирование вариантов подтипов товаров</span></a></li>
                                     <li class="divider"></li>
                                     <li><a href="?path=report.searchjurnal"><span class="glyphicon glyphicon-sunglasses"></span> Журнал поиска товаров</a></li>
                                 </ul>
@@ -323,7 +330,7 @@ if (empty($adm_title)) {
                                 </ul>
                             </li>
 
-                            <li class="dropdown <?php echo $menu_active_menu . $menu_active_gbook . $menu_active_page_catalog . $menu_active_page . $menu_active_news . $menu_active_news_rss; ?>">
+                            <li class="dropdown <?php echo $menu_active_menu . $menu_active_gbook . $menu_active_page_catalog . $menu_active_page . $menu_active_news . $menu_active_news_rss . $menu_active_photo_catalog; ?>">
                                 <a href="#" class="dropdown-toggle " data-toggle="dropdown" role="button" aria-expanded="false">Веб-сайт <span class="caret"></span></a>
                                 <ul class="dropdown-menu" role="menu">
                                     <li><a href="?path=page.catalog">Страницы<span class="dropdown-header">Создание и публикация страниц</span></a></li>
@@ -393,7 +400,6 @@ if (empty($adm_title)) {
                                     if (function_exists($notification_function)) {
                                         call_user_func($notification_function);
                                     }
-                                    
                                 }
                                 $i_notif++;
                             }
@@ -495,7 +501,7 @@ if (empty($adm_title)) {
                         </div>
                         <div class="modal-body">
 
-                            <?php if (!empty($selectModalBody)) echo $selectModalBody; ?>
+<?php if (!empty($selectModalBody)) echo $selectModalBody; ?>
 
                         </div>
                         <div class="modal-footer">

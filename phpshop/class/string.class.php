@@ -87,7 +87,7 @@ class PHPShopString {
             $str = '_' . $str;
 
         $str = str_replace("&nbsp;", "", $str);
-        //$str = str_replace("/", "-", $str); // Добавлено для SeoPro
+        $str = str_replace("/", "-", $str); // Добавлено для SeoPro
         $str = str_replace("\\", "", $str);
         $str = str_replace("(", "", $str);
         $str = str_replace(")", "", $str);
@@ -111,6 +111,7 @@ class PHPShopString {
         $str = str_replace("™", "", $str);
         $str = str_replace("’", "", $str);
         $str = str_replace("®", "", $str);
+        $str = str_replace(array('&#43;', '&#43'), '+', $str);
 
         $new_str = '';
         $_Array = array(" " => "_", "а" => "a", "б" => "b", "в" => "v", "г" => "g", "д" => "d", "е" => "e", "ё" => "e", "ж" => "zh", "з" => "z", "и" => "i", "й" => "y", "к" => "k", "л" => "l", "м" => "m", "н" => "n", "о" => "o", "п" => "p", "р" => "r", "с" => "s", "т" => "t", "у" => "u", "ф" => "f", "х" => "h", "ц" => "c", "ч" => "ch", "ш" => "sh", "щ" => "sch", "ъ" => "i", "ы" => "y", "ь" => "i", "э" => "e", "ю" => "u", "я" => "ya", "А" => "a", "Б" => "b", "В" => "v", "Г" => "g", "Д" => "d", "Е" => "e", "Ё" => "e", "Ж" => "zh", "З" => "z", "И" => "i", "Й" => "y", "К" => "k", "Л" => "l", "М" => "m", "Н" => "n", "О" => "o", "П" => "p", "Р" => "r", "С" => "s", "Т" => "t", "Ы" => "Y", "У" => "u", "Ф" => "f", "Х" => "h", "Ц" => "c", "Ч" => "ch", "Ш" => "sh", "Щ" => "sch", "Э" => "e", "Ю" => "u", "Я" => "ya", "." => "_", "$" => "i", "%" => "i", "&" => "_and_");
@@ -128,7 +129,7 @@ class PHPShopString {
 
     // Отрезаем до точки с заменой 
     static function mySubstr($str, $a, $add = "...") {
-        $str = htmlspecialchars(strip_tags(trim($str)),ENT_QUOTES, 'windows-1251');
+        $str = htmlspecialchars(strip_tags(trim($str)), ENT_QUOTES, 'windows-1251');
         $len = strlen($str);
 
         if ($len < $a)
@@ -164,6 +165,34 @@ class PHPShopString {
                 $price = str_replace('.', ',', $price);
         }
         return trim($price);
+    }
+
+    /*
+     * Конвертер назвние цвета в html код
+     * @param string $str цвет
+     * @return string
+     */
+
+    static function getColor($str) {
+        $colorArray = array(
+            'белый' => '#ffffff',
+            'черный' => '#000000',
+            'красный' => '#FF0000',
+            'зеленый' => '#008000',
+            'синий' => '#0000FF',
+            'голубой' => '#00FFFF',
+            'желтый' => '#FFFF00',
+            'розовый' => '#FFC0CB',
+            'оранжевый' => '#FFA500',
+            'фиолетовый' => '#EE82EE',
+            'коричневый' => '#A0522D',
+            'серый' => '#808080',
+            'серебряный' => '#C0C0C0'
+        );
+        $code = $colorArray[trim(mb_strtolower($str, 'windows-1251'))];
+        if (empty($code) and !empty($str))
+            $code = '#C0C0C0';
+        return $code;
     }
 
     /**

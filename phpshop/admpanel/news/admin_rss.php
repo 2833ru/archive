@@ -13,7 +13,7 @@ function actionStart() {
     $data = $PHPShopOrm->select(array('*'), false, array('order' => 'last_load desc'), array("limit" => "1000"));
     if (is_array($data))
         foreach ($data as $row) {
-            $PHPShopInterface->setRow($row['id'], array('name' => $row['link'], 'link' => '?path='.$_GET['path'].'&id=' . $row['id'], 'align' => 'left'), PHPShopDate::get($row['start_date']), PHPShopDate::get($row['end_date']), PHPShopDate::get($row['last_load']), array('action' => array('edit', 'delete','id'=>$row['id']), 'align' => 'center'), array('status' => array('enable'=>$row['enabled'], 'align' => 'right','caption'=>array('Выкл', 'Вкл'))));
+            $PHPShopInterface->setRow($row['id'], array('name' => $row['link'], 'link' => '?path='.$_GET['path'].'&id=' . $row['id'], 'align' => 'left'), PHPShopDate::get($row['start_date']), PHPShopDate::get($row['end_date']), PHPShopDate::get($row['last_load']), array('action' => array('edit', '|','delete','id'=>$row['id']), 'align' => 'center'), array('status' => array('enable'=>$row['enabled'], 'align' => 'right','caption'=>array('Выкл', 'Вкл'))));
         }
 
     $PHPShopInterface->Compile();

@@ -40,8 +40,8 @@ class PHPShopIndex extends PHPShopCore {
         $row = parent::getFullInfoItem(array('id,name,content'), array('category' => "=2000", 'enabled' => "='1'"));
 
         // Определяем переменные
-        $this->set('mainContent', Parser($row['content']));
-        $this->set('mainContentTitle', Parser($row['name']));
+        $this->set('mainContent', Parser($row['content'],$this->getValue('templates.index')));
+        $this->set('mainContentTitle', Parser($row['name'],$this->getValue('templates.index')));
         $this->PHPShopNav->objNav['id']=$row['id'];
 
         // Перехват модуля

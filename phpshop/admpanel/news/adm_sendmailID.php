@@ -152,7 +152,7 @@ function actionUpdate() {
 
         // Рассылка пользователям
         $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['shopusers']);
-        $data = $PHPShopOrm->select(array('mail', 'name'), false, array('order' => 'id desc'), array('limit' => $_POST['send_limit']));
+        $data = $PHPShopOrm->select(array('mail', 'name'), array('sendmail'=>"='1'"), array('order' => 'id desc'), array('limit' => $_POST['send_limit']));
 
         if (is_array($data))
             foreach ($data as $row) {

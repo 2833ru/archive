@@ -565,9 +565,8 @@ class PHPShopShopCore extends PHPShopCore {
         else
             $this->set('productSklad', '');
 
-
+        // Цена
         $price = $this->price($row);
-
 
         // Расчет минимальной и максимальной цены
         if ($price > $this->price_max)
@@ -590,6 +589,8 @@ class PHPShopShopCore extends PHPShopCore {
             $this->set('ComEndCart', '');
             $this->set('ComStartNotice', PHPShopText::comment('<'));
             $this->set('ComEndNotice', PHPShopText::comment('>'));
+            $this->set('elementCartHide', null);
+            $this->set('elementNoticeHide', 'hide hidden');
 
             // Если нет новой цены
             if (empty($row['price_n'])) {
@@ -603,7 +604,7 @@ class PHPShopShopCore extends PHPShopCore {
                 $productPrice = $price;
                 $productPriceNew = $this->price($row, true);
                 $this->set('productPrice', $productPrice);
-                $this->set('productPriceRub', PHPShopText::strike($productPriceNew . " " . $this->currency));
+                $this->set('productPriceRub', PHPShopText::strike($productPriceNew . " " . $this->currency, $this->format));
             }
         }
 
@@ -617,6 +618,8 @@ class PHPShopShopCore extends PHPShopCore {
             $this->set('ComStartCart', PHPShopText::comment('<'));
             $this->set('ComEndCart', PHPShopText::comment('>'));
             $this->set('productNotice', $this->lang('product_notice'));
+            $this->set('elementNoticeHide', null);
+            $this->set('elementCartOptionHide', 'hide hidden');
         }
 
         // Если цены показывать только после авторизации
@@ -628,13 +631,21 @@ class PHPShopShopCore extends PHPShopCore {
         }
 
         // Проверка на нулевую цену 
-        if (empty($row['price']) or (!empty($row['parent']) and empty($this->parent_price_enabled))) {
+        if (empty($row['price'])) {
             $this->set('ComStartCart', PHPShopText::comment('<'));
             $this->set('ComEndCart', PHPShopText::comment('>'));
-            $this->set('productPrice', null);
-            $this->set('productValutaName', '');
         }
 
+        // Проверка подтипа
+        if (!empty($row['parent'])) {
+            $this->set('elementCartHide', 'hide hidden');
+            $this->set('ComStartCart', PHPShopText::comment('<'));
+            $this->set('ComEndCart', PHPShopText::comment('>'));
+            
+            if (empty($row['sklad'])) 
+            $this->set('elementCartOptionHide', null);
+        }
+        else $this->set('elementCartOptionHide', 'hide hidden');
 
         // Перехват модуля, занесение в память наличия модуля для оптимизации
         if ($this->memory_get(__CLASS__ . '.' . __FUNCTION__, true)) {

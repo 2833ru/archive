@@ -20,43 +20,67 @@
     </div>
 </div>
 
-
-<div class="page-header">
-    <h2>Личные данные</h2>
+<div class="col-xs-12">
+    <div class="page-header">
+        <h1 class="main-heading2">Личные данные</h1>
+    </div>
 </div>
 
 <form role="form" method="post" name="forma_message" class="template-sm">
     <div class="form-group">
-        <label>Ссылка на товар с меньшей ценой</label>
-        <input type="text" name="link_to_page" value="@php  echo $_POST[link_to_page]; php@" class="form-control"  required="">
+        <div class="">
+        </div>
+        <div class="col-sm-6">
+            <input placeholder="Ссылка на товар с меньшей ценой" type="text" name="link_to_page" value="@php  echo $_POST[link_to_page]; php@" class="form-control"  required="">
+        </div>
     </div>
     <div class="form-group">
-        <label>Имя</label>
-        <input type="text" name="name_person" value="@php  echo $_POST[name_person]; php@" class="form-control"  required="">
+        <div class="">
+        </div>
+        <div class="col-sm-6">
+            <input placeholder="Имя" type="text" name="name_person" value="@php  echo $_POST[name_person]; php@" class="form-control"  required="">
+        </div>
     </div>
     <div class="form-group">
-        <label>E-mail</label>
-        <input type="email" name="mail" value="@php  echo $_POST[mail]; php@" class="form-control" required="">
+        <div class="">
+        </div>
+        <div class="col-sm-6">
+            <input placeholder="E-mail" type="email" name="mail" value="@php  echo $_POST[mail]; php@" class="form-control" required="">
+        </div>
     </div>
     <div class="form-group">
-        <label>Телефон</label>
-        <input type="text" name="tel_name" value="@php  echo $_POST[tel_name]; php@" class="form-control">
+        <div class="">
+        </div>
+        <div class="col-sm-6">
+            <input placeholder="Телефон" type="text" name="tel_name" value="@php  echo $_POST[tel_name]; php@" class="form-control">
+        </div>
     </div>
     <div class="form-group">
-        <label>Компания</label>
-        <input type="text" name="org_name" value="@php  echo $_POST[org_name]; php@" class="form-control">
+        <div class="">
+        </div>
+        <div class="col-sm-6">
+            <input placeholder="Компания" type="text" name="org_name" value="@php  echo $_POST[org_name]; php@" class="form-control">
+        </div>
     </div>
     <div class="form-group">
-        <label>Дополнительная информация</label>
-        <textarea name="adr_name" class="form-control">@php  echo $_POST[adr_name]; php@</textarea>
+        <div class="">
+        </div>
+        <div class="col-sm-6">
+            <textarea placeholder="Дополнительная информация" name="adr_name" class="form-control">@php  echo $_POST[adr_name]; php@</textarea>
+        </div>
     </div>
     <div class="form-group">
-        <span class="pull-right">
+        <div class="">
+        </div>
+        <div class="col-sm-6">
+            @captcha@
+        </div>
+    </div>
+    <div class="form-group">
+        <div class=""></div>
+        <div class="col-sm-6">
             <input type="hidden" name="send_price_link" value="ok">
             <button type="submit" class="btn btn-primary">Пожаловаться на цену</button>
-        </span>
-        @captcha@
-
+        </div>
     </div>
-
 </form>    

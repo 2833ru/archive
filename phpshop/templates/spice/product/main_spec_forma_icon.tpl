@@ -19,14 +19,14 @@
                 <span class="price-old">@productPriceRub@</span>
             </div>
             <div class="cart-button button-group">
-                <button class="btn btn-wishlist addToWishList" role="button" data-uid="@productUid@"><i class="fa fa-heart"></i></button>
-                <button class="btn btn-wishlist addToCompareList" role="button" data-uid="@productUid@"><i class="fa fa-bar-chart-o"></i></button>
                 @ComStartCart@
                 <button type="button" class="btn btn-cart addToCartList" role="button" data-num="1" data-uid="@productUid@" data-cart="@productSaleReady@">
                     <i class="fa fa-shopping-cart"></i>                     
                     <span>@productSale@</span>
                 </button>
                 @ComEndCart@
+                <button class="btn btn-wishlist addToWishList" role="button" data-uid="@productUid@" data-title="Отложить" data-placement="top" data-toggle="tooltip"><i class="fa fa-heart"></i></button>
+                <button class="btn btn-wishlist addToCompareList" role="button" data-uid="@productUid@" data-title="Сравнить" data-placement="top" data-toggle="tooltip"><i class="fa fa-bar-chart-o"></i></button>
 
                 @ComStartNotice@
                 <a class="btn btn-cart" href="/users/notice.html?productId=@productUid@" title="@productNotice@">

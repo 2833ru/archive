@@ -273,7 +273,7 @@ class PHPShop1C extends PHPShopBaseXml {
 
         $PHPShopOrm = new PHPShopOrm($this->PHPShopBase->getParam('base.table_name19'));
         $PHPShopOrm->debug = $this->debug;
-        $data = $PHPShopOrm->select(array('login,password,status'), array('enabled' => "='1'"), false, array('limit' => 10));
+        $data = $PHPShopOrm->select(array('login,password,status'), array('enabled' => "='1'"), false, array('limit' => 30));
         if (is_array($data)) {
             foreach ($data as $v)
                 if ($_POST['log'] == $v['login'] and $hasher->CheckPassword($this->decode($_POST['pas']), $v['password'])) {

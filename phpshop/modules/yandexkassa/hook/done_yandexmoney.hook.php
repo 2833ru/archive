@@ -18,7 +18,7 @@ function send_to_order_mod_yandexkassa_hook($obj, $value, $rout) {
             $inv_id = $mrh_ouid[0] . $mrh_ouid[1];
 
             // Сумма покупки
-            $out_summ = $obj->get('total');
+            $out_summ = floatval(number_format($obj->get('total'), 2, '.', ''));
 
             // Платежная форма
             $payment_forma .= PHPShopText::setInput('hidden', 'shopId', trim($option['merchant_id']), false, 10);
@@ -27,13 +27,15 @@ function send_to_order_mod_yandexkassa_hook($obj, $value, $rout) {
             $payment_forma.=PHPShopText::setInput('hidden', 'customerNumber', $value['mail'], false, 10);
             $payment_forma.=PHPShopText::setInput('hidden', 'orderNumber', $inv_id, false, 10);
             $payment_forma.=PHPShopText::setInput('hidden', 'cms_name', 'phpshop', false, 10);
-            $payment_forma.=PHPShopText::setInput('hidden', 'cps_phone', $_POST['tel_new'], false, 10);
+            $payment_forma.=PHPShopText::setInput('hidden', 'cps_phone', '+7' . str_replace(array('(', ')', ' ', '+', '-'), '', $_POST['tel_new']), false, 10);
             $payment_forma.=PHPShopText::setInput('hidden', 'cps_email', $_POST['mail'], false, 10);
 
 
             // ОФД
-
-            $ym_merchant_receipt['customerContact'] = $_POST['mail'];
+            if (!empty($_POST['tel_new']))
+                $ym_merchant_receipt['customerContact'] = '+7' . str_replace(array('(', ')', ' ', '+', '-'), '', $_POST['tel_new']);
+            else
+                $ym_merchant_receipt['customerContact'] = $_POST['mail'];
 
             // НДС
             if ($PHPShopSystem->getParam('nds_enabled') == '') {
@@ -59,10 +61,16 @@ function send_to_order_mod_yandexkassa_hook($obj, $value, $rout) {
                 $cart = $obj->PHPShopCart->getArray();
 
                 foreach ($cart as $product) {
+
+                    // Скидка
+                    if($obj->discount > 0)
+                    $price = $product['price']  - ($product['price']  * $obj->discount  / 100);
+                    else $price = $product['price'];
+
                     $ym_merchant_receipt['items'][] = array(
                         'text' => $product['name'],
                         'quantity' => floatval(number_format($product['num'], 3, '.', '')),
-                        'price' => array('amount' => floatval(number_format($product['price'], 2, '.', ''))),
+                        'price' => array('amount' => floatval(number_format($price, 2, '.', ''))),
                         'tax' => $tax
                     );
                 }
@@ -101,7 +109,7 @@ function send_to_order_mod_yandexkassa_hook($obj, $value, $rout) {
                 $action = 'https://money.yandex.ru/eshop.xml';
 
             // Данные в лог
-            $PHPShopYandexkassaArray->log(array('action' => $action, 'shopId' => $option['merchant_id'], 'scid' => trim($option['merchant_scid']), 'sum' => $out_summ, 'customerNumber' => $value['mail'], 'orderNumber' => $inv_id,'ym_merchant_receipt'=>$ym_merchant_receipt), $inv_id, 'форма готова к отправке', 'данные формы для отправки на оплату');
+            $PHPShopYandexkassaArray->log(array('action' => $action, 'shopId' => $option['merchant_id'], 'scid' => trim($option['merchant_scid']), 'sum' => $out_summ, 'customerNumber' => $value['mail'], 'orderNumber' => $inv_id, 'ym_merchant_receipt' => $ym_merchant_receipt), $inv_id, 'форма готова к отправке', 'данные формы для отправки на оплату');
 
             $obj->set('payment_forma', PHPShopText::form($payment_forma, 'yandexpay', 'post', $action, '_blank'));
             $obj->set('payment_info', $option['title_end']);

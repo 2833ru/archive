@@ -1,5 +1,10 @@
 
 $(document).ready(function() {
+
+    if(document.designMode != 'off'){
+		$('.style-toggle').hide();
+	}
+
     var path = $('#body').attr('data-path');
     var subpath = $('#body').attr('data-subpath');
     var id = $('#body').attr('data-id');

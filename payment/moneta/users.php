@@ -1,6 +1,6 @@
 <?php
 
-function payanyway_users_repay($obj, $PHPShopOrderFunction) {
+function moneta_users_repay($obj, $PHPShopOrderFunction) {
     global $PHPShopBase, $SysValue;
 
     // регистрационная информация

@@ -5,7 +5,7 @@ function query_multibase($obj) {
     $multi_cat = null;
 
     // Мультибаза
-    if(defined("HostID")) {
+    if (defined("HostID")) {
 
         $where['servers'] = " REGEXP 'i" . HostID . "i'";
         $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['categories']);
@@ -118,12 +118,12 @@ function query_filter($obj) {
 
     // Все страницы
     if ($p == "all") {
-        $sql = "select * from " . $SysValue['base']['table_name2'] . " where $sort $prewords $multibase and enabled='1' and parent_enabled='0'";
+        $sql = "select * from " . $SysValue['base']['table_name2'] . " where $sort $prewords $multibase and enabled='1' and parent_enabled='0' order by num, name";
     }
     else
         while ($q < $p) {
 
-            $sql = "select * from " . $SysValue['base']['table_name2'] . " where  $string ($sort) $prewords $sortV $multibase and enabled='1' and parent_enabled='0' LIMIT $num_ot, $num_row";
+            $sql = "select * from " . $SysValue['base']['table_name2'] . " where  $string ($sort) $prewords $sortV $multibase and enabled='1' and parent_enabled='0' order by num, name LIMIT $num_ot, $num_row";
             $q++;
             $num_ot = $num_ot + $num_row;
         }
@@ -159,7 +159,6 @@ function query_filter($obj) {
     return $sql;
 }
 
-
 /**
  * Выдача переадресации поиска из БД
  * @package PHPShopCoreFunction
@@ -173,20 +172,27 @@ function search_base($obj, $words) {
     $PHPShopOrm = new PHPShopOrm();
     $PHPShopOrm->mysql_error = false;
     $PHPShopOrm->debug = $obj->debug;
-    $result = $PHPShopOrm->query("select uid from " . $GLOBALS['SysValue']['base']['table_name26'] . " where name REGEXP 'i" . $words . "i'");
-    while (@$row = mysqli_fetch_array(@$result)) {
+    $result = $PHPShopOrm->query("select * from " . $GLOBALS['SysValue']['base']['search_base'] . " where name REGEXP 'i" . PHPShopSecurity::true_search($words) . "i'  and enabled='1' limit 1");
+    $row = mysqli_fetch_array($result);
+
+    // Переадресация на товары
+    if (!empty($row['uid'])) {
+
         $uid = $row['uid'];
-        $uids = explode(",", $uid);
-        foreach ($uids as $v)
-            $string.="id=$v or ";
-    }
+        if (strstr($row['uid'], ','))
+            $uids = explode(",", $uid);
+        else
+            $uids[] = $uid;
 
-    if (!empty($string)) {
-        $string = substr($string, 0, strlen($string) - 3);
-        $string = " OR (($string) AND enabled='1')";
-    }
+        if (is_array($uids))
+            $string = ' or id IN (' . @implode(",", $uids) . ') ';
 
-    return $string;
+        return $string;
+    }
+    // Переадресация на категорию
+    else if (!empty($row['category'])) {
+        header('Location: /' . $GLOBALS['dir']['dir'] . 'shop/CID_' . $row['category'] . '.html');
+    }
 }
 
 ?>

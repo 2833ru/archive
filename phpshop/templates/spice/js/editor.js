@@ -1,5 +1,10 @@
 
 $(document).ready(function() {
+
+    if ($('.editor_var').length) {
+        $('.style-toggle').hide();
+    }
+
     var path = $('#body').attr('data-path');
     var subpath = $('#body').attr('data-subpath');
     var id = $('#body').attr('data-id');
@@ -69,10 +74,11 @@ $(document).ready(function() {
             $.cookie('debug_template', 1, {
                 path: '/'
             });
-        else $.removeCookie('debug_template', {
-            path: '/'
-        });
-        
+        else
+            $.removeCookie('debug_template', {
+                path: '/'
+            });
+
         window.location.reload();
 
     });
@@ -122,7 +128,7 @@ $(document).ready(function() {
     $(".saveTheme").on('click', function() {
 
         var data = 'type=json&parser=css&';
-        $('.color-value').each(function() {
+        $('.color-value,.image-value').each(function() {
             data += 'color[' + $(this).attr('id').split('color-').join('') + '][' + $(this).attr('name') + ']=' + $(this).val() + '&';
         });
 
@@ -147,7 +153,7 @@ $(document).ready(function() {
 
         $('.color').colorpicker('update');
         $('.color').colorpicker('reposition');
-        
+
         window.location.replace($(this).attr('data-random'));
     });
 
@@ -183,6 +189,40 @@ $(document).ready(function() {
                 path: '/'
             });
         }
+    });
+
+
+    // Файл-менеджер elfinder
+    $('#elfinderModal').on('show.bs.modal', function(event) {
+        $('.elfinder-modal-content').attr('data-option', $(event.relatedTarget).attr('data-return'));
+        var path = $(event.relatedTarget).attr('data-path');
+
+        if (typeof path == 'undefined')
+            path = $('.elfinder-modal-content').attr('data-path');
+
+        var option = $('.elfinder-modal-content').attr('data-option');
+        $('.elfinder-modal-content').attr('src', '/phpshop/admpanel/editors/default/elfinder/elfinder.php?path=' + path + '&' + option);
+    });
+
+    // Filemanager в отдельное окно
+    $('#filemanagerwindow').on('click', function() {
+        var w = '1240';
+        var h = '550';
+        var url = $('.elfinder-modal-content').attr('src');
+        filemanager = window.open(url + '&resizable=1', "chat", "dependent=1,left=100,top=100,width=" + w + ",height=" + h + ",location=0,menubar=0,resizable=1,scrollbars=0,status=0,titlebar=0,toolbar=0");
+        filemanager.focus();
+        $('#elfinderModal').modal('hide');
+    });
+
+    // Смена файла изображения
+    $('body').on('change', '.image-value', function() {
+        $($(this).attr('data-option')).css('cssText', 'background: url(' + $(this).val() + ') no-repeat center; background-size: cover');
+    });
+
+    // Ошибка авторизации
+    $('[data-toggle="alert"]').click(function(e) {
+      e.preventDefault();
+      alert('Для управления текущей страницей требуется авторизоваться');
     });
 
 });

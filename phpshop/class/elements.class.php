@@ -20,6 +20,7 @@ class PHPShopElements {
      * @var bool режим отладки
      */
     var $debug = false;
+    var $template_debug = false;
 
     /**
      * @var bool кэширование
@@ -105,7 +106,7 @@ class PHPShopElements {
      * @return string
      */
     function parseTemplate($template, $mod = false) {
-        return ParseTemplateReturn($template, $mod);
+        return ParseTemplateReturn($template, $mod, $this->template_debug);
     }
 
     /**

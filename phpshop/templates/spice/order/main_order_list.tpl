@@ -1,35 +1,38 @@
-<!-- Breadcrumb Starts -->
+
 <ol class="breadcrumb hidden-xs">
     <li><a href="/" >Главная</a></li>
-    <li class="active">Ваша корзина</li>
+    <li class="active"><b>Ваша корзина</b></li>
 </ol>
-<!-- Breadcrumb Ends -->
 
-<!-- Main Heading Starts -->
-<div class="page-header">
-    <h2>Ваша корзина</h2>
-</div>
-<!-- Main Heading Ends -->
+<style type="text/css">
 
-<!-- Top button Order Page Start -->
-<div class="row top-button-order-row">
-	<div class="col-md-12">
-		<div class="pull-right">
-			<a href="?cart=clean" class="btn btn-main"><span class="glyphicon glyphicon-remove"></span> Очистить корзину</a> 
-	    	<a href="phpshop/forms/cart/index.html" target="_blank" class="btn btn-main hidden-xs"><span class="glyphicon glyphicon-print"></span> Печатная форма корзины</a>
+		.order-page-sidebar-user-block {
+			display: block;
+		}
+		.sidebar-right .side-heading, .sidebar-right .sidebar-nav, .sidebar-right #faset-filter, .sidebar-right .panel.panel-default {
+			display: none;
+		}
+		.main-container{padding-top: 5px;margin-top: 0px;}
+</style>
+
+
+
+		<div class="col-xs-12 col-lg-12">
+			<div class="row top-button-order-row">
+				<div class="pull-left">
+						<h1 class="main-heading2">Заказ №@orderNum@</h1>
+				</div>
+				<div class="pull-right">
+					<a href="?cart=clean" class="btn btn-main"><span class="glyphicon glyphicon-remove"></span> Очистить корзину</a> 
+				    <a href="phpshop/forms/cart/index.html" target="_blank" class="btn btn-main hidden-xs"><span class="glyphicon glyphicon-print"></span> Печатная форма корзины</a>
+				</div>
+			</div>
+			<div class="row order-row-fix">
+				<div class="table-responsive order-page-table-wrapper img_fix">
+			    	@orderContentCart@
+			    </div>
+			</div>
+			<div class="row order-bottom-content">
+				@orderContent@
+			</div>
 		</div>
-	</div>
-</div>
-<!-- Top button Order Page End -->
-
-<!-- Shopping Cart Table Starts -->
-<div class="table-responsive shopping-cart-table img_fix">
-    @orderContentCart@
-</div>
-<!-- Shopping Cart Table Ends -->
-
-<!-- Shipping Section Starts -->
-<section class="registration-area">
-	@orderContent@
-</section>
-<!-- Shipping Section Ends -->

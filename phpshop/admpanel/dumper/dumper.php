@@ -1,5 +1,9 @@
 <?php
 
+// Снятие ограничение для больших папок
+if(function_exists('set_time_limit'))
+    set_time_limit(0);
+
 /**
  * Резервная копия БД
  * @param string $dbname имя БД

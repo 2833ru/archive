@@ -13,6 +13,7 @@ class PHPShopBrandsElement extends PHPShopElements {
      */
     var $limitOnLine = 5;
     var $firstClassName = 'span-first-child';
+    var $debug = false;
 
     /**
      * Конструктор
@@ -33,7 +34,7 @@ class PHPShopBrandsElement extends PHPShopElements {
         $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['sort_categories']);
         $PHPShopOrm->debug = $this->debug;
         $PHPShopOrm->mysql_error = false;
-        $result = $PHPShopOrm->query("select * from " . $GLOBALS['SysValue']['base']['sort_categories'] . " where (brand='1' and goodoption!='1') order by num");
+        $result = $PHPShopOrm->query("select * from " . $GLOBALS['SysValue']['base']['sort_categories'] . " where brand='1' order by num");
         while (@$row = mysqli_fetch_assoc($result)) {
             $arrayVendor[$row['id']] = $row;
         }
@@ -45,35 +46,47 @@ class PHPShopBrandsElement extends PHPShopElements {
         $sortValue = substr($sortValue, 0, strlen($sortValue) - 2);
 
         if (!empty($sortValue)) {
+            
             // Массив значений 
             $i = 0;
-            $result = $PHPShopOrm->query("select distinct name, id, icon, category from " . $GLOBALS['SysValue']['base']['sort'] . " where $sortValue group by name");
+            $result = $PHPShopOrm->query("select name, id, icon, category from " . $GLOBALS['SysValue']['base']['sort'] . " where $sortValue order by name");
+
             while (@$row = mysqli_fetch_array($result)) {
-                $arrayVendorValue[$row['category']]['name'].= ", " . $row['name'];
-                if ($arrayVendor[$row['category']]['brand']) {
+                $arrayVendorValue[$row['name']][] = array('name' => $row['name'], 'id' => $row['id'], 'category' => $row['category'], 'icon' => $row['icon']);
+            }
+
+            // Проверка на уникального имени
+            if (is_array($arrayVendorValue)) {
+                foreach ($arrayVendorValue as $k => $v) {
+                    
                     if ($i % $this->limitOnLine == 0) {
-                        $this->set('brandFirstClass', $this->firstClassName);
+                      $this->set('brandFirstClass', $this->firstClassName);
+                      } else {
+                      $this->set('brandFirstClass', '');
+                      }
+                      $i++;
+
+                    if (is_array($v[1])) {
+                        $link = null;
+                        foreach ($v as $val) {
+                            $link.='v[' . $val['category'] . ']=' . $val['id'] . '&';
+
+                            if (!empty($val['icon']))
+                                $this->set('brandIcon', $val['icon']);
+                        }
+                        $this->set('brandName', $v[0]['name']);
+                        $this->set('brandPageLink', $GLOBALS['SysValue']['dir']['dir'] . '/selection/?' . substr($link, 0, strlen($link) - 1));
+                        $this->set('brandsList', ParseTemplateReturn('brands/top_brands_one.tpl'), true);
                     } else {
-                        $this->set('brandFirstClass', '');
+
+                        $this->set('brandIcon', $v[0]['icon']);
+                        $this->set('brandName', $v[0]['name']);
+                        $this->set('brandPageLink', $GLOBALS['SysValue']['dir']['dir'] . '/selection/?v[' . $v[0]['category'] . ']=' . $v[0]['id']);
+                        $this->set('brandsList', ParseTemplateReturn('brands/top_brands_one.tpl'), true);
                     }
-                    $i++;
-
-                    $this->set('brandIcon', $row['icon']);
-                    $this->set('brandName', $row['name']);
-                    $desc = '';
-                    if ($row['page']) {
-                        $PHPShopOrm->clean();
-                        $res = $PHPShopOrm->query("select content from " . $GLOBALS['SysValue']['base']['page'] . " where link = '$row[page]' LIMIT 1");
-                        $page = mysqli_fetch_array($res);
-                        $desc = $page['content'];
-                    }
-
-                    $this->set('brandPageLink', $GLOBALS['SysValue']['dir']['dir'] . '/selection/?v[' . $row['category'] . ']=' . $row['id']);
-                    $this->set('brandDescr', $desc);
-
-                    $this->set('brandsList', ParseTemplateReturn('brands/top_brands_one.tpl'), true);
                 }
             }
+
         }
         if ($this->get('brandsList'))
             return ParseTemplateReturn('brands/top_brands_main.tpl');
@@ -174,6 +187,7 @@ class PHPShopProductIconElements extends PHPShopProductElements {
      */
     function __construct() {
         $this->objBase = $GLOBALS['SysValue']['base']['products'];
+        $this->template_debug = true;
         parent::__construct();
 
         // HTML опции верстки
@@ -275,7 +289,7 @@ class PHPShopProductIconElements extends PHPShopProductElements {
         $randMultibase = $this->randMultibase();
         if (!empty($randMultibase))
             $where['category'] = ' IN (' . $randMultibase . '0)';
-        
+
         // Выборка новинок
         if ($memory_spec != 2 and $memory_spec != 3)
             $this->dataArray = $this->select(array('*'), $where, array('order' => 'RAND()'), array('limit' => $this->limitspec), __FUNCTION__);

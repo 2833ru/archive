@@ -35,7 +35,7 @@ $().ready(function() {
     // Настройка полей - 1 шаг
     $(".option").on('click', function(event) {
         event.preventDefault();
-       
+
         var data = [];
         data.push({name: 'selectID', value: 1});
         data.push({name: 'ajax', value: 1});

@@ -27,7 +27,7 @@ function tab_sorts($data) {
 	</optgroup>
 	';
     }
-    $disp = '<select name=sort_new[] class="selectpicker" data-container=".sidebarcontainer"  data-style="btn btn-default btn-sm" data-width="auto" data-size="auto"  multiple>'.$dis.'</select>';
+    $disp = '<select name=sort_new[] class="selectpicker show-menu-arrow" data-live-search="true" data-container=""  data-style="btn btn-default btn-sm" data-width="auto" data-size="auto"  multiple>'.$dis.'</select>';
     return $disp;
 }
 
@@ -50,4 +50,22 @@ function tab_sorts_val($n, $sort) {
     return $dis;
 }
 
+function tab_parent($data) {
+    global $SysValue,$link_db;
+    
+    $dis = '<option value="0">Не выбрано</option>';
+    $sql = "select * from " . $SysValue['base']['parent_name'] . " where enabled='1' order by name ";
+    $result = mysqli_query($link_db,$sql);
+    while ($row = mysqli_fetch_array($result)) {
+
+        if ($row['id'] == $data['parent_title'])
+            $sel = "selected";
+        else  $sel = null;
+        
+        $dis.="<option value=" . $row['id'] . " " . $sel . ">" . $row['name']. "</option>\n";
+            
+    }
+    $disp = '<select name="parent_title_new" class="selectpicker show-menu-arrow" data-container=""  data-style="btn btn-default btn-sm" data-width="auto" data-size="auto">'.$dis.'</select>';
+    return $disp;
+}
 ?>

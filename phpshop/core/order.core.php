@@ -123,8 +123,8 @@ class PHPShopOrder extends PHPShopCore {
         $cart = $this->PHPShopCart->display('ordercartforma');
         $this->set('display_cart', $cart);
         $this->set('cart_num', $this->PHPShopCart->getNum());
-        $this->set('cart_sum', $this->PHPShopCart->getSum(false));
         $this->set('discount', $PHPShopOrder->ChekDiscount($this->PHPShopCart->getSum()));
+        $this->set('cart_sum', $PHPShopOrder->returnSumma($this->PHPShopCart->getSum(false), $this->get('discount')));
         $this->set('cart_weight', $this->PHPShopCart->getWeight());
 
         // Стоимость доставки
@@ -134,7 +134,7 @@ class PHPShopOrder extends PHPShopCore {
         $this->set('delivery_price', 0);
 
         // Итоговая стоимость
-        $this->set('total', $PHPShopOrder->returnSumma($this->get('cart_sum'), $this->get('discount')) + $this->get('delivery_price'));
+        $this->set('total', $PHPShopOrder->returnSumma($this->PHPShopCart->getSum(false), $this->get('discount')) + $this->get('delivery_price'));
 
         // Перехват модуля
         $this->setHook(__CLASS__, __FUNCTION__, false, 'END');

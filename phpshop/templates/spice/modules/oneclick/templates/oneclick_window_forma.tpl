@@ -1,4 +1,4 @@
-<div class="modal fade bs-example-modal-sm" id="oneClickModal@productUid@" tabindex="-1" role="dialog"  aria-hidden="true">
+<div class="modal fade bs-example-modal-sm  oneclick-modal" id="oneClickModal@productUid@" tabindex="-1" role="dialog"  aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">

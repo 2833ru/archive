@@ -3,7 +3,7 @@
 /**
  * Библиотека парсинга данных
  * @author PHPShop Software
- * @version 1.7
+ * @version 1.8
  * @package PHPShopParser
  */
 class PHPShopParser {
@@ -41,7 +41,7 @@ class PHPShopParser {
 
     static function replacedir($string) {
         $replaces = array(
-             "/(\"|\'|=)images\//i" => "\\1".$GLOBALS['SysValue']['dir']['dir'] . $GLOBALS['SysValue']['dir']['templates'] . chr(47) . $_SESSION['skin'] . "/images/",
+            "/(\"|\'|=)images\//i" => "\\1" . $GLOBALS['SysValue']['dir']['dir'] . $GLOBALS['SysValue']['dir']['templates'] . chr(47) . $_SESSION['skin'] . "/images/",
             "/!images!\//i" => "images/",
             "/java\//i" => "/java/",
             "/css\//i" => "/css/",
@@ -79,7 +79,7 @@ class PHPShopParser {
             echo "Error Tpl File: $path";
 
         $replaces = array(
-            "/(\"|\'|=)images\//i" => "\\1".$GLOBALS['SysValue']['dir']['dir'] . $GLOBALS['SysValue']['dir']['templates'] . chr(47) . $_SESSION['skin'] . "/images/",
+            "/(\"|\'|=)images\//i" => "\\1" . $GLOBALS['SysValue']['dir']['dir'] . $GLOBALS['SysValue']['dir']['templates'] . chr(47) . $_SESSION['skin'] . "/images/",
             "/!images!\//i" => "images/",
             "/java\//i" => "/java/",
             "/phpshop\//i" => "/phpshop/",
@@ -185,21 +185,21 @@ class PHPShopCssParser {
     }
 
     function setParam($element, $param, $value, $add = ' !important') {
-        
+
         switch ($param) {
 
             // Фильтр
             case "filter":
                 $filters = array('filter', '-webkit-filter', '-ms-filter', '-o-filter', '-moz-filter');
                 foreach ($filters as $set) {
-                    $this->css_array[$element][$set] = 'hue-rotate(' . $value . 'deg)'.$add;
+                    $this->css_array[$element][$set] = 'hue-rotate(' . $value . 'deg)' . $add;
                 }
                 $this->css_array[$element]['-editor-filter'] = $value;
 
                 break;
 
             // Остальное
-            default: $this->css_array[$element][$param] = $value.$add;
+            default: $this->css_array[$element][$param] = $value . $add;
         }
     }
 
@@ -243,7 +243,7 @@ function ParseTemplate($TemplateName) {
     $root = $path_parts['dirname'] . "/";
     if ($path_parts['dirname'] != $dirSlesh) {
         $replaces = array(
-            "/(\"|\'|=)images\//i" => "\\1".$SysValue['dir']['templates'] . chr(47) . $_SESSION['skin'] . "/images/",
+            "/(\"|\'|=)images\//i" => "\\1" . $SysValue['dir']['templates'] . chr(47) . $_SESSION['skin'] . "/images/",
             "/!images!\//i" => "images/",
             "/\/favicon.ico/i" => $root . "favicon.ico",
             "/java\//i" => $root . "java/",
@@ -280,7 +280,7 @@ function ParseTemplate($TemplateName) {
         );
     } else {
         $replaces = array(
-            "/(\"|\'|=)images\//i" => "\\1".$SysValue['dir']['templates'] . chr(47) . $_SESSION['skin'] . "/images/",
+            "/(\"|\'|=)images\//i" => "\\1" . $SysValue['dir']['templates'] . chr(47) . $_SESSION['skin'] . "/images/",
             "/!images!\//i" => "images/",
             "/java\//i" => "/java/",
             "/css\//i" => "/css/",
@@ -297,7 +297,7 @@ function ParseTemplate($TemplateName) {
  * @param bool $mod шаблон для модуля
  * @return string
  */
-function ParseTemplateReturn($TemplateName, $mod = false) {
+function ParseTemplateReturn($TemplateName, $mod = false, $debug = false) {
     global $SysValue;
 
     if ($mod)
@@ -306,7 +306,19 @@ function ParseTemplateReturn($TemplateName, $mod = false) {
         $file = tmpGetFile($SysValue['dir']['templates'] . chr(47) . $_SESSION['skin'] . chr(47) . $TemplateName);
     $dis = Parser($file);
 
-    return $dis;
+    $add = ' id="data-source" data-toggle="tooltip" data-placement="auto" data-source="' . $TemplateName . '" title="Показать [Ctrl + &crarr;]" ';
+
+
+    if ($debug and !empty($_COOKIE['debug_template'])) {
+        if (strstr($dis, '<li') or strstr($dis, 'class="product-col"'))
+            $result = str_replace(array('<li', 'class="product-col"'), array('<li' . $add, 'class="product-col"' . $add), $dis);
+        else
+            $result = '<div ' . $add . '>' . $dis . '</div>';
+    }
+    else
+        $result = $dis;
+
+    return $result;
 }
 
 // Обработка PHP тегов
@@ -385,10 +397,26 @@ function SysValueReturn($m) {
  * Парсер PHP тегов в тексте
  * @package PHPShopParser
  * @param string $string текст
+ * @param string $debug имя файла шаблона для отладки
  * @return string
  */
-function Parser($string) {
-    return @preg_replace_callback("/@([a-zA-Z0-9_]+)@/", 'SysValueReturn', @preg_replace_callback("/(@php)(.*)(php@)/sU", "evalstr",  str_replace('&#43;', '+',$string)));
+function Parser($string,$debug=false) {
+    
+    $dis = @preg_replace_callback("/@([a-zA-Z0-9_]+)@/", 'SysValueReturn', @preg_replace_callback("/(@php)(.*)(php@)/sU", "evalstr", str_replace('&#43;', '+', $string)));
+    
+    $add = ' id="data-source" data-toggle="tooltip" data-placement="auto" data-source="' . $debug . '" title="Показать [Ctrl + &crarr;]" ';
+
+    if ($debug and !empty($_COOKIE['debug_template'])) {
+        if (strstr($dis, '<li') or strstr($dis, 'class="product-col"'))
+            $result = str_replace(array('<li', 'class="product-col"'), array('<li' . $add, 'class="product-col"' . $add), $dis);
+        else
+            $result = '<div ' . $add . '>' . $dis . '</div>';
+    }
+    else
+        $result = $dis;
+
+
+    return $result;
 }
 
 /**
@@ -406,4 +434,5 @@ function tmpGetFile($path) {
     else
         return false;
 }
+
 ?>

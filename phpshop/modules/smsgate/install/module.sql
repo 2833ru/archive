@@ -9,7 +9,23 @@ CREATE TABLE IF NOT EXISTS `smsgate_modules_sms_message` (
   `done_order_template_sms` text NOT NULL default '',
   `order_template_admin_sms` text NOT NULL default '',
   `change_status_order_template_sms` text NOT NULL default '',
+  `cascade_domen_api` varchar(50) NOT NULL default '',
+  `cascade_sender` varchar(50) NOT NULL default '',
+  `cascade_enabled` enum('0','1') NOT NULL default '0',
+  `order_template_viber` text NOT NULL default '',
+  `order_template_viber_button_text` text NOT NULL default '',
+  `order_template_viber_button_url` text NOT NULL default '',
+  `order_template_viber_image_url` text NOT NULL default '',
+  `order_template_admin_viber` text NOT NULL default '',
+  `order_template_admin_viber_button_text` text NOT NULL default '',
+  `order_template_admin_viber_button_url` text NOT NULL default '',
+  `order_template_admin_viber_image_url` text NOT NULL default '',
+  `change_status_order_template_viber` text NOT NULL default '',
+  `change_status_order_template_viber_button_text` text NOT NULL default '',
+  `change_status_order_template_viber_button_url` text NOT NULL default '',
+  `change_status_order_template_viber_image_url` text NOT NULL default '',
+  `version` FLOAT(2) DEFAULT '2.0' NOT NULL,
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
 
-INSERT INTO `smsgate_modules_sms_message` VALUES (1,'phpshop4.incore1.ru','','','','INCORE','','','','');
+INSERT INTO `smsgate_modules_sms_message` VALUES (1,'phpshop4.incore1.ru','','','','INCORE','','','','','phpshop5.incore1.ru','Com-info','0','','','','','','','','','','','','','2.0');

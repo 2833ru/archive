@@ -563,4 +563,75 @@ class PHPShopModules {
 
 }
 
+class PHPShopTemplates {
+
+    function __construct($path = false) {
+        $this->server = str_replace('www.', '', getenv('SERVER_NAME'));
+        $this->PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['templates_key']);
+        $this->PHPShopOrm->debug = false;
+        $this->PHPShopOrm->mysql_error = false;
+
+        if ($path) {
+            $this->path = $path;
+            $this->checkKeyBase();
+        }
+    }
+
+    function crc16($data) {
+        $crc = 0xFFFF;
+        for ($i = 0; $i < strlen($data); $i++) {
+            $x = (($crc >> 8) ^ ord($data[$i])) & 0xFF;
+            $x ^= $x >> 4;
+            $crc = (($crc << 8) ^ ($x << 12) ^ ($x << 5) ^ $x) & 0xFFFF;
+        }
+        return $crc;
+    }
+
+    function checkKeyBase($path = false) {
+
+        if ($path)
+            $this->path = $path;
+
+        if ($this->path) {
+            $data = $this->PHPShopOrm->select(array('*'), array('path' => "='" . $this->path . "'",), false, array('limit' => 1));
+            $this->key = $data['key'];
+
+            if (is_array($data)) {
+                if ($data['verification'] == md5($data['path'] . $data['date'] . $this->server . $this->key) and $data['date'] > time()) {
+                    $result = true;
+                } elseif ($this->checkKey($this->path, $this->key)) {
+                    $result = true;
+                } else {
+                    $result = false;
+                }
+            }
+            else
+                $result = false;
+        }
+
+        $this->setWarning($result);
+        return $result;
+    }
+
+    function checkKey($path, $key) {
+
+        $str = $path . $this->server;
+        if ($this->crc16(substr($str, 0, 5)) . "-" . $this->crc16(substr($str, 5, 10)) . "-" . $this->crc16(substr($str, 10, 15)) . "-" . $this->crc16(substr($str, 15, 20)) == $key)
+            return true;
+    }
+
+    function setWarning($result) {
+        if (!$result) {
+            if (empty($_SESSION['template'][SkinName]))
+                $_SESSION['template'][SkinName] = time() + 15;
+            else if ($_SESSION['template'][SkinName] < time())
+                echo ('<style>.container{opacity:0.5;}</style><div class="alert alert-danger alert-dismissible text-center" role="alert">
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+  <span class="glyphicon glyphicon-exclamation-sign"></span> <strong>Внимание!</strong> Для использования этого шаблона требуется купить <a href="/phpshop/admpanel/admin.php?path=tpleditor" target="_blank" class="alert-link">лицензию</a>.</div>');
+        }
+    }
+
+
+}
+
 ?>

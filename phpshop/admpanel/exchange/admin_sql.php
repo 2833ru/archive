@@ -210,7 +210,7 @@ UPDATE ' . $GLOBALS['SysValue']['base']['categories'] . ' set sort=\'\';', '');
     $query_value[] = array('Удалить фотогалерею у товаров', 'TRUNCATE ' . $GLOBALS['SysValue']['base']['foto'].';', '');
     $query_value[] = array('Удалить страницу', 'DELETE FROM ' . $GLOBALS['SysValue']['base']['page'] . ' WHERE ID=', '');
     $query_value[] = array('Очистить базу', $TRUNCATE, '');
-    $query_value[] = array('Уничтожить базу', $DROP, '');
+    $query_value[] = array('Уничтожить базу (!)', $DROP, '');
 
     // Оптимизация по ссылке
     if ($_GET['query'] == 'optimize')

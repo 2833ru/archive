@@ -26,6 +26,15 @@
     </div>
 
     <div class="form-group">
+        <label class="col-xs-12 col-sm-2 control-label">Рассылка</label>
+        <div class="checkbox col-xs-4">
+            <label>
+                <input type="checkbox" name="sendmail_new" value="1" @user_sendmail_checked@> Отказаться от новостных рассылок
+            </label>
+        </div>
+    </div>
+
+    <div class="form-group">
         <label class="col-xs-12 col-sm-2 control-label">Пароль</label>
         <div class="col-xs-4">
             <input type="password" class="form-control input-width-fix" name="password_new" value="@user_password@" required="">

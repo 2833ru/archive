@@ -169,7 +169,7 @@ class PHPShopCategoryArray extends PHPShopArray {
         $this->cache = false;
         $this->order = array('order' => 'num,name');
         $this->objBase = $GLOBALS['SysValue']['base']['categories'];
-        parent::__construct("id", "name", "parent_to", "skin_enabled");
+        parent::__construct("id", "name", "parent_to", "skin_enabled","parent_title");
     }
 
 }

@@ -12,6 +12,22 @@ PHPShopObj::loadClass("product");
 $TitlePage = __('Новый товар');
 $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['products']);
 
+$colorArray = array(
+    'белый'=>'#ffffff',
+    'черный'=>'#000000',
+    'красный'=>'#FF0000',
+    'зеленый'=>'#008000',
+    'синий'=>'#0000FF',
+    'голубой'=>'#00FFFF',
+    'желтый'=>'#FFFF00',
+    'розовый'=>'#FFC0CB',
+    'оранжевый'=>'#FFA500',
+    'фиолетовый'=>'#EE82EE',
+    'коричневый'=>'#A0522D',
+    'серый'=>'#808080',
+    'серебряный'=>'#C0C0C0'
+);
+
 // Построение дерева категорий
 function treegenerator($array, $i, $curent) {
     global $tree_array;
@@ -189,7 +205,7 @@ function actionStart() {
             }
             else
                 $check = false;
-            $valuta_area.=$PHPShopGUI->setRadio('baseinputvaluta_new', $val['id'], $val['name'], $check);
+            $valuta_area.=$PHPShopGUI->setRadio('baseinputvaluta_new', $val['id'], $val['name'], $check,false,false,array('code'=>$val['code']));
         }
 
     // Цены
@@ -204,7 +220,7 @@ function actionStart() {
     // Валюта
     $Tab_price.=$PHPShopGUI->setField(__('Валюта:'), $valuta_area);
 
-    $Tab1.=$PHPShopGUI->setCollapse(__('Цены'), $Tab_price);
+    $Tab1.=$PHPShopGUI->setCollapse(__('Цены'), $Tab_price,  'in' , true, true, array('type'=>'price'));
 
     // YML
     $data['yml_bid_array'] = unserialize($data['yml_bid_array']);
@@ -449,6 +465,10 @@ function actionInsert() {
 
     // Права пользователя
     $_POST['user_new'] = $_SESSION['idPHPSHOP'];
+    
+     // Конвертер цвета
+    if(isset($_POST['parent2_new']) and empty($_POST['color_new']))
+        $_POST['color_new'] = PHPShopString::getColor($_POST['parent2_new']);
 
     // Перехват модуля
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $_POST);
@@ -583,8 +603,6 @@ function fotoAdd() {
             $thumb->adaptiveResize($img_w, $img_h);
         else
             $thumb->resize($img_w, $img_h);
-
-
 
         $watermark = $PHPShopSystem->getSerilizeParam('admoption.watermark_image');
         $watermark_text = $PHPShopSystem->getSerilizeParam('admoption.watermark_text');

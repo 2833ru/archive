@@ -84,9 +84,10 @@ function promotions_write($obj, $data, $rout) {
             "dostavka" => $deliveryn);
 
         // Статус заказа
+        /*
         $obj->status = array(
             "maneger" => "",
-            "time" => "");
+            "time" => "");*/
 
         // Итого
         $obj->total = $obj->PHPShopOrder->returnSumma($obj->sum, $obj->discount) + $obj->delivery;

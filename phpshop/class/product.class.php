@@ -86,7 +86,7 @@ class PHPShopProductArray extends PHPShopArray {
 
     /**
      *  онструктор
-     * @param string $sql SQL условие выборки
+     * @param array $sql SQL условие выборки
      */
     function __construct($sql = false) {
         $this->objSQL = $sql;

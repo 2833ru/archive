@@ -188,21 +188,23 @@ $().ready(function() {
     });
 
     // Дерево категорий
+    /*
     if (typeof(TREEGRID_LOAD) != 'undefined')
     $('.tree').treegrid({
         saveState: true,
         expanderExpandedClass: 'glyphicon glyphicon-triangle-bottom',
         expanderCollapsedClass: 'glyphicon glyphicon-triangle-right'
-    });
+    });*/
 
     $('.data-tree .dropdown-toggle').addClass('btn-xs');
 
     // Раскрытие категорий
+    /*
     if (typeof(TREEGRID_LOAD) != 'undefined')
     $(".treegrid-parent").on('click', function(event) {
         event.preventDefault();
         $('.' + $(this).attr('data-parent')).treegrid('toggle');
-    });
+    });*/
 
     // Редактировать категорию в дереве
     $(".tree .edit").on('click', function(event) {

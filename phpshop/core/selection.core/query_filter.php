@@ -1,9 +1,9 @@
 <?php
 
 /**
- * Cортировка товаров
+ * Cортировка товаров по бренду
  * @author PHPShop Software
- * @version 1.3
+ * @version 1.4
  * @package PHPShopCoreFunction
  * @param obj $obj объект класса
  * @return mixed
@@ -33,25 +33,29 @@ function query_filter($obj) {
     $num_row = $obj->num_row;
     $num_ot = 0;
     $q = 0;
-    $sortV = null;
-    $sort = null;
+    $sort =  $sortQuery = null;
+
 
     // Сортировка по характеристикам
-    if (empty($_POST['v']))
-        @$v = $SysValue['nav']['query']['v'];
-    if (is_array($v))
+    if (is_array($v)) {
+        $sort.= ' and (';
         foreach ($v as $key => $value) {
-            if (!empty($value)) {
+
+            // Обычный отбор []
+            if (PHPShopSecurity::true_num($key) and PHPShopSecurity::true_num($value)) {
                 $hash = $key . "-" . $value;
-                $sortV.=" and vendor REGEXP 'i" . $hash . "i' ";
+                $sort.=" vendor REGEXP 'i" . $hash . "i' or";
                 $sortQuery .= "&v[$key]=$value";
             }
         }
+        $sort = substr($sort, 0, strlen($sort) - 2);
+        $sort.=")";
+    }
+
 
     // Сортировка принудительная пользователем
     switch ($f) {
         case(1): $order_direction = "";
-
             break;
         case(2): $order_direction = " desc";
             break;
@@ -74,19 +78,19 @@ function query_filter($obj) {
 
     // Все страницы
     if ($p == "all") {
-        $sql = "select * from " . $SysValue['base']['table_name2'] . " where enabled='1' $sortV  $string and parent_enabled='0' $string";
+        $sql = "select * from " . $SysValue['base']['table_name2'] . " where enabled='1' and parent_enabled='0' $sort  $string";
     }
     else
         while ($q < $p) {
 
-            $sql = "select * from " . $SysValue['base']['table_name2'] . " where enabled='1' and parent_enabled='0' $sortV  $string LIMIT $num_ot, $num_row";
+            $sql = "select * from " . $SysValue['base']['table_name2'] . " where enabled='1' and parent_enabled='0' $sort  $string LIMIT $num_ot, $num_row";
             $q++;
             $num_ot = $num_ot + $num_row;
         }
 
     $obj->selection_order = array(
         'sortQuery' => $sortQuery,
-        'sortV' => $sortV
+        'sortV' => $sort
     );
 
     // Возвращаем SQL запрос

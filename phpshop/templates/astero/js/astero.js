@@ -162,4 +162,15 @@ $(document).ready(function() {
                     }
                 });
             });
+    //$('.main-navbar-list-catalog-wrapper > li > a').removeAttr('data-toggle data-hover data-delay aria-expanded');
+
+    $('.main-menu-button').on('click', function(){
+        if ($('#main-menu').hasClass('main-menu-fix')) {
+            $('#main-menu').removeClass('main-menu-fix');
+            $('body').removeClass('overflow-fix');
+        }else{
+            $('#main-menu').addClass('main-menu-fix');
+            $('body').addClass('overflow-fix');
+        }
+    });
 });

@@ -540,3 +540,117 @@ img.template:hover{
        display:none !important;
     }
 }*/
+
+/* 
+* PHPShop Editor 
+*/
+.editor_var{
+    overflow: hidden;
+}
+.editor_empty{
+    color:#6C809A;
+    text-align: center;
+    padding:5px;
+    background: #FFE785;
+    border: dashed 1px #6C809A;
+    border-radius:4px;
+    margin:3px;
+}
+.editor_empty a{
+    text-decoration:none !important;
+    color:#6C809A !important;
+}
+
+/* Размеры и цвета */
+.big_size_block{
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    margin-top: 20px;
+}
+.big_size_block h4{
+    font-family: "MyriadProRegular";
+    font-size: 16px;
+    font-weight: normal;
+    text-align: left;
+    color: #000000;
+}
+/*input-size*/
+.checkbox_size_wrap{
+    width: 50%;
+}
+.wrap_size, .wrap_color{
+    display: flex;
+    flex-direction: row;
+}
+
+.input_size + .label_size{
+    cursor: pointer;
+}
+.input_size{
+    display: none;
+}
+.label_size{
+    min-width: 50px;
+    height: 40px;
+    padding: 10px;
+    text-align: center;
+    vertical-align: middle;
+    border: solid 1px #ceced2;
+    font-weight: normal;
+    cursor: pointer;
+    background-color: #fff;
+	border-radius: 4px;
+}
+
+.label_size:hover, .label_color:hover, .label_active{
+    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.87);
+    border: solid 1px #2c99d5;
+    -webkit-transition: all 0.5s ease;
+    -moz-transition: all 0.5s ease;
+    -ms-transition: all 0.5s ease;
+    -o-transition: all 0.5s ease;
+    transition: all 0.5s ease;
+}
+.input_size:checked + .label_size:hover{
+    content: '';
+    box-shadow: 0 0 31px 0 rgba(0, 0, 0, 0.87);
+}
+.not-active{
+    background: linear-gradient(45deg, #ceced2 25%, #e8e8ed 0, 
+        #e8e8ed 50%, #ceced2 0, #ceced2 75%, #e8e8ed 0);
+    background-size:30px 30px;
+    color: #9a9a9d;
+    cursor: inherit !important;
+}
+.checkbox_size,.checkbox_color{
+    padding-right: 10px;
+    display: inline-block;
+}
+/*input-color*/
+.checbox_color_wrap{
+    width: 50%;
+}
+.input_color + .label_color{
+    cursor: pointer;
+}
+.input_color{
+    display: none;
+}
+.label_color{
+    width: 50px;
+    height: 40px;
+    border: solid 1px #ceced2;
+    cursor: pointer;
+	border-radius: 4px;
+}
+
+.not-active:hover{
+    box-shadow: none;
+    border: solid 1px #ceced2;
+}
+.input_color:checked + .label_color:hover{
+    content: '';
+    box-shadow: 0 1px 6px 0 rgba(0, 0, 0, 0.5);
+    border: solid 1px #2c99d5;
+}

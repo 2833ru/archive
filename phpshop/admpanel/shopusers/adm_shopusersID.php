@@ -41,7 +41,8 @@ function actionStart() {
     // Размер названия поля
     $PHPShopGUI->field_col = 2;
     $PHPShopGUI->setActionPanel(__("Покупатели") . '<span class="hidden-xs"> / ' . $data['name'] . '</span>', array('Отправить письмо', 'Создать заказ', 'Заказы пользователя', 'Сообщения пользователя', '|', 'Удалить'), array('Сохранить', 'Сохранить и закрыть'));
-    $PHPShopGUI->addJSFiles('./js/validator.js');
+    $PHPShopGUI->addJSFiles('./js/validator.js','./js/jquery.suggestions.min.js','./order/gui/dadata.gui.js');
+    $PHPShopGUI->addCSSFiles('./css/suggestions.min.css');
 
     // Статусы пользователей
     $PHPShopUserStatus = new PHPShopUserStatusArray();

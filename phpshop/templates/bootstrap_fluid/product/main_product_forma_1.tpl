@@ -12,7 +12,11 @@
                 <p>@productDes@</p>
                 <h3>@productPrice@ <span class="rubznak">@productValutaName@</span></h3>
                 <h5>@productPriceRub@</h5>
-                <div class="pull-right">@ComStartCart@<button class="btn btn-primary addToCartList" data-uid="@productUid@" role="button">@productSale@</button>@ComEndCart@ <button class="btn btn-default addToWishList" role="button" data-uid="@productUid@">Отложить</button></div>
+                <div class="pull-right">
+                    <a class="btn btn-primary addToCartList @elementCartOptionHide@" href="/shop/UID_@productUid@.html">@productSale@</a>
+                    <button class="btn btn-primary addToCartList @elementCartHide@" data-uid="@productUid@" role="button">@productSale@</button>
+                    <button class="btn btn-default addToWishList" role="button" data-uid="@productUid@">Отложить</button>
+                </div>
             </div>
         </div>
     </div>

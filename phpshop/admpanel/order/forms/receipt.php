@@ -1,5 +1,4 @@
 <?php
-
 $_classPath = "../../../";
 include($_classPath . "class/obj.class.php");
 PHPShopObj::loadClass("base");
@@ -31,16 +30,17 @@ $SysValue['bank'] = unserialize($LoadItems['System']['bank']);
 
 $sql = "select * from " . $SysValue['base']['table_name1'] . " where id=" . intval($_GET['orderID']);
 $n = 1;
-@$result = mysqli_query($link_db,$sql);
+@$result = mysqli_query($link_db, $sql);
 $row = mysqli_fetch_array(@$result);
-$id = $row['id'];
-$datas = $row['datas'];
 $ouid = $row['uid'];
 $order = unserialize($row['orders']);
-$status = unserialize($row['status']);
-$dis=$sum=$num=null;
+$dis = $sum = $num = null;
 if (is_array($order['Cart']['cart']))
     foreach ($order['Cart']['cart'] as $val) {
+
+        if (!empty($val['uid']))
+            $val['name'].= ' (' . $val['uid'] . ')';
+
         $dis.="
   <tr class=tablerow>
 		<td class=tablerow>" . $n . "</td>
@@ -55,7 +55,7 @@ if (is_array($order['Cart']['cart']))
         $goodid = $val['id'];
         $goodnum = $val['num'];
         $wsql = 'select weight from ' . $SysValue['base']['table_name2'] . ' where id=\'' . $goodid . '\'';
-        $wresult = mysqli_query($link_db,$wsql);
+        $wresult = mysqli_query($link_db, $wsql);
         $wrow = mysqli_fetch_array($wresult);
         $cweight = $wrow['weight'] * $goodnum;
         if (!$cweight) {
@@ -118,7 +118,7 @@ $LoadBanc = unserialize($LoadItems['System']['bank']);
 
     <TABLE cellSpacing=0 cellPadding=0 width="100%" border=0><TBODY>
             <TR>
-                <TH scope=row align=middle width="50%" rowSpan=3><img src="<?php echo $PHPShopSystem->getLogo(); ?>" alt="" border="0"></TH>
+                <TH scope=row align=middle width="50%" rowSpan=3><img src="<?php echo $PHPShopSystem->getLogo(); ?>" alt="" border="0" style="max-width: 200px;height: auto;"></TH>
                 <TD align=right>
                     <BLOCKQUOTE>
                         <P>Товарный чек <SPAN class=style4><?php echo @$chek_num ?> от <?php echo PHPShopDate::dataV(date("U"), "update") ?></SPAN> </P></BLOCKQUOTE></TD></TR>
@@ -170,10 +170,11 @@ $LoadBanc = unserialize($LoadItems['System']['bank']);
     </tr>
     <tr>
         <td colspan=5 align=right style="border-top: 1px solid #000000;border-left: 1px solid #000000;border-right: 1px solid #000000;">Итого:
-            <?php echo $my_total;
-            if ($LoadItems['System']['nds_enabled']) { 
-                echo "в т.ч. НДС: ".$my_nds;
-             } 
+            <?php
+            echo $my_total;
+            if ($LoadItems['System']['nds_enabled']) {
+                echo "в т.ч. НДС: " . $my_nds;
+            }
             ?>
 
         </td>

@@ -1,7 +1,7 @@
 <?php
 session_start();
 if (empty($_SESSION['idPHPSHOP']))
-    exit('Неавторизованый запрос');
+    exit('Неавторизованный запрос');
 
 if (empty($_GET['return']))
     $_GET['return'] = 'icon_new';
@@ -76,7 +76,7 @@ if (ini_get("mbstring.func_overload") > 0 and function_exists('ini_set')) {
                         // Window
                         else if (window.opener) {
                             window.opener.window.$('[data-icon="<?php echo $_GET['return']; ?>"]').html(file);
-                            window.opener.window.$('input[name="<?php echo $_GET['return']; ?>"]').val(file);
+                            window.opener.window.$('input[name="<?php echo $_GET['return']; ?>"],#<?php echo $_GET['return']; ?>').val(file).change();
                             window.opener.window.$('.img-thumbnail[data-thumbnail="<?php echo $_GET['return']; ?>"]').attr('src', file);
                             window.opener.window.$('[data-icon="<?php echo $_GET['return']; ?>"]').prev('.glyphicon').removeClass('hide');
                             self.close();
@@ -89,7 +89,7 @@ if (ini_get("mbstring.func_overload") > 0 and function_exists('ini_set')) {
                         // Modal
                         else if (parent.window) {
                             parent.window.$('[data-icon="<?php echo $_GET['return']; ?>"]').html(file);
-                            parent.window.$('input[name="<?php echo $_GET['return']; ?>"]').val(file);
+                            parent.window.$('input[name="<?php echo $_GET['return']; ?>"],#<?php echo $_GET['return']; ?>').val(file).change();
                             parent.window.$('.img-thumbnail[data-thumbnail="<?php echo $_GET['return']; ?>"]').attr('src', file);
                             parent.window.$('[data-icon="<?php echo $_GET['return']; ?>"]').prev('.glyphicon').removeClass('hide');
                             parent.window.$('#elfinderModal').modal('hide');
@@ -146,7 +146,7 @@ if (ini_get("mbstring.func_overload") > 0 and function_exists('ini_set')) {
                             'rm', '|', 'edit', 'resize', '|', 'archive', 'extract', '|', 'info'
                         ]
                     },
-                    onlyMimes: ["image/png", "application/x-shockwave-flash", "application/zip", "text/x-comma-separated-values", "image/jpeg", "image/gif", "application/rar", 'application/vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'text/x-sql', 'application/x-gzip', 'text/x-tpl', 'application/pdf', 'application/x-rar']
+                    onlyMimes: ["image/png", "application/x-shockwave-flash", "application/zip", "text/x-comma-separated-values", "image/jpeg", "image/gif", "application/rar", 'application/vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'text/x-sql', 'application/x-gzip', 'text/x-tpl', 'application/pdf', 'application/x-rar','video/mp4','application/mp4','image/svg+xml']
                 }).elfinder('instance');
 
 

@@ -75,7 +75,8 @@ function actionStart() {
     }
     elseif ($License['License']['HardwareLocked'] == 'Showcase')
         $ShowcaseLimit = 'без ограничений';
-    else $ShowcaseLimit = 'нет';
+    else
+        $ShowcaseLimit = 'нет';
 
 
 
@@ -89,7 +90,10 @@ function actionStart() {
             $PHPShopGUI->setField("Файл лицензии", $licFilepath, false, false, false, 'text-right') .
             $PHPShopGUI->setField("Серийный номер", $serialNumber, false, __('Требуется для активации Pro 1С'), false, 'text-right') .
             $PHPShopGUI->setField("Версия PHP", phpversion(), false, false, false, 'text-right') .
-            $PHPShopGUI->setField("Версия MySQL", @mysqli_get_server_info($PHPShopBase->link_db), false, false, false, 'text-right'));
+            $PHPShopGUI->setField("Версия MySQL", @mysqli_get_server_info($PHPShopBase->link_db), false, false, false, 'text-right').
+            $PHPShopGUI->setField("Max execution time", @ini_get('max_execution_time').' сек.', false, __('Максимальное время работы'), false, 'text-right').
+            $PHPShopGUI->setField("Memory limit", @ini_get('memory_limit'), false, __('Выделяемая память'), false, 'text-right')
+            );
 
     if (!empty($TechPodUntilUnixTime) and time() > $TechPodUntilUnixTime)
         $Tab1 .= $PHPShopGUI->setField(false, '</form><form method="post" target="_blank" enctype="multipart/form-data" action="http://www.phpshop.ru/order.html" name="product_upgrade" id="product_support" style="display:none">

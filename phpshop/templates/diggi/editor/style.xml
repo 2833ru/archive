@@ -10,13 +10,42 @@
         </var>
     </element>
     <element>
-        <name>#header-area, .copyright, .header-wrap.inner</name>
+        <name>#header-area</name>
         <description>Шапка</description>
-        <content>Цвет заливки шапки и подвала</content>
+        <content>Изображение в шапке</content>
         <var>
             <name>background</name>
+            <type>image</type>
+        </var>
+    </element>
+    <element>
+        <name>#footer-area</name>
+        <description>Подвал</description>
+        <content>Изображение в подвале</content>
+        <var>
+            <name>background</name>
+            <type>image</type>
+        </var>
+    </element>
+    <element>
+        <name>#header-area,#footer-area</name>
+        <description>Фон</description>
+        <content>Цвет заливки шапки и подвала</content>
+        <var>
+            <name>background-color</name>
+            <type>color</type>
+            <theme>true</theme>
+        </var>
+    </element>
+    <element>
+        <name>.header-color,.header-color a,.header-color .btn,.header-color h4,.header-links a</name>
+        <description>Текст</description>
+        <content>Цвет текста и ссылок в шапке</content>
+        <var>
+            <name>color</name>
             <type>color</type>
             <important>true</important>
+            <theme>true</theme>
         </var>
     </element>
     <element>
@@ -40,7 +69,7 @@
         </var>
     </element>
     <element>
-        <name>#main-menu > .container, #main-menu.navbar-fixed-top, .header-wrap.inner #main-menu.navbar-fixed-top</name>
+        <name>#main-menu > .container .navbar-collapse, #main-menu > .container .navbar-header, #main-menu.navbar-fixed-top, .header-wrap.inner #main-menu.navbar-fixed-top</name>
         <description>Навигация</description>
         <content>Цвет основной навигации</content>
         <var>
@@ -50,7 +79,7 @@
         </var>
     </element>
     <element>
-        <name>.footer-links, #cart .dropdown-menu, .btn-success, .btn-info, .btn-main, .btn-primary, .pagination > .active > a, #cart .btn-block1 a:hover</name>
+        <name>.copyright, #cart .dropdown-menu, .btn-success, .btn-info, .btn-main, .btn-primary, .pagination > .active > a</name>
         <description>Кнопки</description>
         <content>Цвет основных кнопок</content>
         <var>
@@ -89,7 +118,7 @@
             <important>true</important>
         </var>
     </element>
-        <element>
+    <element>
         <name>.product-info-box .heading, .sidebar-nav > li > a:hover, .news-list a:hover, .description-link:hover, .product-filter .display label.active,.dl-horizontal.total,.product-info a, .product-col .btn-wishlist:hover, .product-col .btn-wishlist:focus, .product-col .btn-compare:hover, .product-col .btn-compare:focus, a</name>
         <description>Ссылки </description>
         <content>Цвет ссылок в тексте</content>

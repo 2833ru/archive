@@ -1,12 +1,11 @@
-<table class="table table-bordered">
+<table class="table">
     <thead>         
-        <tr>
-            <td class="text-center  hidden-xs">Изображение</td>
-            <td class="text-center">Наименование</td>
-            <td class="page-cart-td-quantity text-center">Кол-во</td>
-            <td class="text-center  hidden-xs">Операции</td>
-            <td class="text-center hidden-xs">Цена 1 шт.</td>
-            <td class="text-center">Стоимость</td>
+        <tr class="order-page-top-head">
+            <td colspan="2" class="order-top-name">Наименование</td>
+            <td class="order-top-quantity">Кол-во</td>
+            <td class="order-top-one-price">Цена 1 шт.</td>
+            <td class="order-top-all-price">Стоимость</td>
+            <td class="order-top-remove-product"></td>
         </tr>
     </thead>
     <tbody>
@@ -14,19 +13,28 @@
     </tbody>
     <tfoot>
         <tr>
-            <td style="border-right: none;" class="hidden-xs"></td>
-            <td style="border-right: none; border-left: none;"></td>
-            <td style="border-right: none; border-left: none;" class="hidden-xs"></td>
-            <td style="border-right: none; border-left: none;" class="hidden-xs"></td>
-            <td style="border-left: none;" class="text-right">
-            <strong>Итого:</strong>
-            </td>
-            <td class="text-left">
-               <span id="WeightSumma" class="hidden">@cart_weight@</span> @cart_sum@ @currency@
-            </td>
         </tr>
     </tfoot>
 </table>
+<div class="order-page-top-totals">
+    <div class="order-page-top-totals-title">
+        итого
+    </div>
+    <div class="order-page-top-totals-body">
+        <div class="order-page-top-totals-discount">
+            <span class="order-page-top-label-left">Скидка :</span>
+            <span class="order-page-top-label-right" id="SkiSummaAll"><span id="SkiSumma">@discount@</span> <span class="rubznak">@currency@</span></span>
+        </div>
+        <div class="order-page-top-totals-delivery">
+            <span class="order-page-top-label-left">Доставка :</span>
+            <span class="order-page-top-label-right"><span id="DosSumma">@delivery_price@</span> <span class="rubznak">@currency@</span> <span id="deliveryInfo"></span></span>
+        </div>
+        <div class="order-page-top-totals-paymetnt-with-discount">
+            <span class="order-page-top-label-left">К оплате с учетом скидки: </span>
+            <span  class="order-page-top-label-right"><span id="WeightSumma" class="hidden">@cart_weight@</span><span id="TotalSumma">@total@</span> <span class="rubznak">@currency@</span></span>
+        </div>
+    </div>
+</div>
 <input type="hidden" id="OrderSumma" name="OrderSumma"  value="@cart_sum@">
 <script>
     $(function() {

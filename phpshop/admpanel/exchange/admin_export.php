@@ -298,8 +298,6 @@ function actionSave() {
                     $csv_line.='"' . $PHPShopUserStatusArray->getParam($row['status'] . '.name') . '"' . $delim;
                 }
 
-
-
                 // Сериализованное значение
                 elseif (PHPShopString::is_serialized($row[$cols_name])) {
                     $csv_line.=serializeSelect($row[$cols_name], $cols_name);

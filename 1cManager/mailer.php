@@ -16,7 +16,7 @@ function GetNumOrders($cid) {
 
 // Сообщение пользователю
 function SendMailUser($id,$flag="accounts") {
-    global $link_db;
+    global $link_db,$PHPShopSystem ;
 
     // Счет-фактура, поиск номера заказа
     if($flag == "invoice") $id = GetNumOrders($id);
@@ -41,7 +41,6 @@ function SendMailUser($id,$flag="accounts") {
 ";
 
     // Отправление сообщения
-    $PHPShopMail = new PHPShopMail($mail,$PHPShopSystem->getParam('adminmail2'),"Бухгалтерские документы по заказу №".$row['uid'],'', 'text/plain', true, false);
-    $PHPShopMail->sendMailNow($content);
+    $PHPShopMail = new PHPShopMail($mail,$PHPShopSystem->getParam('adminmail2'),"Бухгалтерские документы по заказу №".$row['uid'],$content);
 }
 ?>

@@ -13,7 +13,8 @@ function template_CID_Product($obj, $data, $rout) {
             case 2:
                 $obj->set('gridSetBactive', 'active');
                 break;
-            default: if ($obj->cell == 1)
+            default:
+                if ($obj->cell == 1)
                     $obj->set('gridSetAactive', 'active');
                 else
                     $obj->set('gridSetBactive', 'active');
@@ -43,52 +44,125 @@ function template_CID_Product($obj, $data, $rout) {
     }
 }
 
+
 /**
  * Вывод подтипов в подробном описании 
  */
 function template_parent($obj, $dataArray, $rout) {
-    
+
+
+
     if ($rout == 'END') {
-        
+
         $currency = $obj->currency;
-        
+
+        $true_color_array = $true_size_color_array = $color_array = array();
+        $size = $color = null;
 
         if (count($obj->select_value > 0)) {
-            $obj->set('parentList', '');
 
-            foreach ($obj->select_value as $k => $value) {
+            foreach ($obj->select_value as $value) {
+
                 $row = $value[3];
-                $row['price'] = number_format($row['price'], $obj->format, '.', ' ');
-                
-                if ($k == 0){
-                    $obj->set('checked', 'checked');
-                    $obj->set('productPrice',$row['price'].' '.$row['parent2']);
-                    $obj->set('productValutaName',$currency);
+                if (!empty($value[3]['parent_enabled'])) {
+                    $row['price'] = number_format($obj->price($row), $obj->format, '.', ' ');
+                    $obj->set('productPrice', $row['price']);
+                    $obj->set('productValutaName', $currency);
+                    $obj->set('parentName', $value[0]);
+                    $obj->set('parentCheckedId', $value[1]);
+
+                    $size_color_array[] = array('id' => $value[3]['id'], 'size' => $value[3]['parent'], 'price' => $row['price'], 'color' => array($value[3]['parent2']));
+
+                    if (!empty($value[3]['color']))
+                        $color_array[$value[3]['parent2']] = $value[3]['color'];
+                    else if(!empty($value[3]['parent2']))
+                        $color_array[$value[3]['parent2']] = PHPShopString::getColor($value[3]['parent2']);
                 }
-                else
-                    $obj->set('checked', null);
-                
-                // Короткое имя
-                if(empty($row['parent']) or $obj->parent_id == $row['id'])
-                    $row['parent'] = $row['name'];
-
-                $obj->set('parentName', $row['parent']);
-                $obj->set('parentId', $value[1]);
-                $obj->set('parentCheckedId', $value[1]);
-                $obj->set('parentPrice',$row['price']);
-
-                $disp = ParseTemplateReturn("product/product_odnotip_product_parent_one.tpl");
-                $obj->set('parentList', $disp, true);
             }
 
-            if (empty($dataArray['sklad'])){
-                $obj->set('productParentList', ParseTemplateReturn("product/product_odnotip_product_parent.tpl"));
+            if (is_array($size_color_array)) {
+                foreach ($size_color_array as $v) {
+
+                    if (empty($true_size_color_array[$v['size']])) {
+                        $true_size_color_array[$v['size']] = $v;
+                    } else {
+                        $true_size_color_array[$v['size']]['color'][] = $v['color'][0];
+                    }
+                }
             }
             
-             
+
+            if (is_array($true_size_color_array) and count($true_size_color_array)>0) {
+                $parentSizeEnabled = true;
+                foreach ($true_size_color_array as $key => $val) {
+
+                    // Размер
+                    if (empty($key)) {
+                        $obj->set('parentSizeHide', 'hide hidden');
+                        $obj->set('parentSizeChecked', 'checked');
+                        $parentSizeEnabled = false;
+                    } else {
+                        $obj->set('parentSizeChecked', null);
+                    }
+
+                    $obj->set('parentSize', $key);
+                    $obj->set('parentId', $val['id']);
+                    $obj->set('parentPrice', $val['price']);
+                    $size.= ParseTemplateReturn("product/product_odnotip_product_parent_one.tpl");
+
+                    // Цвет
+                    foreach ($val['color'] as $colors) {
+                        $true_color_array[$colors][] = $val['id'];
+                    }
+                }
+            }
+
+            if (is_array($color_array)) {
+                foreach ($color_array as $true_name => $true_colors) {
+                    $obj->set('parentColor', $true_colors);
+                    $obj->set('parentName', $true_name);
+                    $id = null;
+
+                    if (is_array($true_color_array[$true_name]))
+                        foreach ($true_color_array[$true_name] as $ids) {
+                            $id.=' select-color-' . $ids;
+                        }
+
+                    $obj->set('parentColorId', $id);
+                    $color.= ParseTemplateReturn("product/product_odnotip_product_parent_one_color.tpl");
+                }
+            }
+
+            // Отладка
+            /*
+              print_r($true_size_color_array);
+              print_r($true_color_array);
+              print_r($color_array);
+             */
+
+            if ($parentSizeEnabled)
+                $obj->set('parentListSizeTitle', $obj->parent_title);
+
+            $obj->set('parentListSize', $size, true);
+
+            if (!empty($color))
+                $obj->set('parentListColorTitle', __('Цвет'));
+
+            $obj->set('parentListColor', $color, true);
+            $obj->set('parentSizeMessage', $obj->lang('select_size'));
+
+            // Наличие
+            if (!$obj->get('elementCartOptionHide'))
+                $obj->set('elementCartOptionHide', null);
+
+            $obj->set('ComStartCart', null);
+            $obj->set('ComEndCart', null);
+            //$obj->set('productParentJson',json_safe_encode($true_color_array));
+            $obj->set('productParentList', ParseTemplateReturn("product/product_odnotip_product_parent.tpl"));
         }
     }
 }
+
 function template_UID($obj, $dataArray, $rout) {
     if ($rout == 'MIDDLE') {
         if ($obj->get('optionsDisp') != '' and $obj->get('parentList') == '') {
@@ -109,7 +183,9 @@ function template_UID($obj, $dataArray, $rout) {
  * Шаблон вывода характеристик
  */
 function sorttemplatehook($value, $n, $title, $vendor) {
+    $limit = 5;
     $disp = null;
+    $num = 0;
 
     if (is_array($value)) {
         foreach ($value as $p) {
@@ -135,9 +211,21 @@ function sorttemplatehook($value, $n, $title, $vendor) {
     <span class="filter-item"  title="' . $p[0] . '">' . $text . '</span>
   </label>
 </div>';
+            $num++;
         }
     }
-    return '<h4>' . $title . '</h4>' . $disp;
+
+    if ($num > $limit) {
+        $style = "collapse";
+        $chevron = 'fa fa-chevron-down';
+        $help = 'Показать';
+    } else {
+        $style = "collapse in";
+        $chevron = 'fa fa-chevron-up';
+        $help = 'Скрыть';
+    }
+
+    return '<div class="faset-filter-block-wrapper"><h4>' . $title . '</h4>' . $disp.'</div></div>';
 }
 
 /**
@@ -179,8 +267,8 @@ function template_image_gallery($obj, $array) {
             if (!file_exists($_SERVER['DOCUMENT_ROOT'] . $name_bigstr))
                 $name_bigstr = $name;
 
-            $bxslider.= '<div><a class href="#"><img src="' . $name . '" /></a></div>';
-            $bxsliderbig.= '<li><a class href=\'#\'><img src=\'' . $name_bigstr . '\'></a></li>';
+            $bxslider.= '<div><a class href="#"><img src="' . $name . '" title="'.$array['name'].'" alt="'.$array['name'].'" /></a></div>';
+            $bxsliderbig.= '<li><a class href=\'#\'><img src=\'' . $name_bigstr . '\' title=\''.$array['name'].'\' alt=\''.$array['name'].'\'></a></li>';
             $bxpager.='<a data-slide-index=\'' . $i . '\' href=\'\'><img class=\'img-thumbnail\'  src=\'' . $name_s . '\'></a>';
             $i++;
         }
@@ -190,7 +278,7 @@ function template_image_gallery($obj, $array) {
             $bxpager = null;
 
 
-        $obj->set('productFotoList', '<img class="bxslider-pre" alt="' . $array['name'] . '" src="' . $array['pic_big'] . '" /><div class="bxslider hide">' . $bxslider . '</div><div class="bx-pager">' . $bxpager . '</div>');
+        $obj->set('productFotoList', '<img class="bxslider-pre" alt="' . $array['name'] . '" title="' . $array['name'] . '" src="' . $array['pic_big'] . '" /><div class="bxslider hide">' . $bxslider . '</div><div class="bx-pager">' . $bxpager . '</div>');
         $obj->set('productFotoListBig', '<ul class="bxsliderbig" data-content="' . $bxsliderbig . '" data-page="' . $bxpager . '"></ul><div class="bx-pager-big">' . $bxpager . '</div>');
         return true;
     }

@@ -53,13 +53,13 @@ $key_name = array(
     'num_row' => 'Товаров в длину',
     'num_cow' => 'Товаров на странице',
     'count' => 'Содержит товаров',
-    'cat_seo_name'=>'SEO ссылка',
-    'sum'=>'Сумма'
+    'cat_seo_name' => 'SEO ссылка',
+    'sum' => 'Сумма'
 );
 
 
 // Стоп лист
-$key_stop = array('password', 'wishlist', 'data_adres', 'sort', 'yml_bid_array', 'vendor', 'status', 'files', 'datas', 'price_search','vid','name_rambler','servers','skin','skin_enabled','secure_groups','icon_description');
+$key_stop = array('password', 'wishlist', 'data_adres', 'sort', 'yml_bid_array', 'vendor', 'status', 'files', 'datas', 'price_search', 'vid', 'name_rambler', 'servers', 'skin', 'skin_enabled', 'secure_groups', 'icon_description');
 
 switch ($subpath[2]) {
     case 'catalog':
@@ -107,58 +107,70 @@ function sort_encode($sort, $category) {
                     $sort_name = $sort_list_array[0];
                     $sort_value = $sort_list_array[1];
 
+                    // Получить ИД набора характеристик в каталоге
+                    $PHPShopOrm = new PHPShopOrm();
+                    $PHPShopOrm->debug = $debug;
+                    $result_1 = $PHPShopOrm->query('select sort,name from ' . $GLOBALS['SysValue']['base']['categories'] . ' where id="' . $category . '"  limit 1',__FUNCTION__,__LINE__);
+                    $row_1 = mysqli_fetch_array($result_1);
+
+                    $cat_sort = unserialize($row_1['sort']);
+                    
+                    $cat_name = $row_1['name'];
+                    
+                    // Отсутствует в базе
+                    if (is_array($cat_sort))
+                        $where_in=' and a.id IN (' . @implode(",", $cat_sort) . ') ';
+                    else $where_in=null;
+
                     $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['sort_categories']);
                     $PHPShopOrm->debug = $debug;
 
-                    $result = $PHPShopOrm->query('select a.id as parent, b.id from ' . $GLOBALS['SysValue']['base']['sort_categories'] . ' AS a 
-        JOIN ' . $GLOBALS['SysValue']['base']['sort'] . ' AS b ON a.id = b.category where a.name="' . $sort_name . '" and b.name="' . $sort_value . '" limit 1');
+                    $result_2 = $PHPShopOrm->query('select a.id as parent, b.id from ' . $GLOBALS['SysValue']['base']['sort_categories'] . ' AS a 
+        JOIN ' . $GLOBALS['SysValue']['base']['sort'] . ' AS b ON a.id = b.category where a.name="' . $sort_name . '" and b.name="' . $sort_value . '" '.$where_in.' limit 1',__FUNCTION__,__LINE__);
+                    $row_2 = mysqli_fetch_array($result_2);
 
                     // Присутствует в  базе
-                    if ($row = mysqli_fetch_array($result)) {
-                        $return[$row['parent']][] = $row['id'];
+                    if (!empty($where_in) and isset($row_2['id'])) {
+                        $return[$row_2['parent']][] = $row_2['id'];
                     }
                     // Отсутствует в базе
                     else {
-
+                        
+                        
                         // Проверка характеристики
-                        $sort_name_present = $PHPShopBase->getNumRows('sort_categories', 'where name="' . $sort_name . '" limit 1');
+                        if(!empty($where_in))
+                        $sort_name_present = $PHPShopBase->getNumRows('sort_categories', 'as a where a.name="' . $sort_name . '" '.$where_in.' limit 1');
 
                         // Создаем новую характеристику
                         if (empty($sort_name_present) and !empty($category)) {
 
-                            // Получить ИД набора характеристик в каталоге
-                            $PHPShopOrm = new PHPShopOrm();
-                            $PHPShopOrm->debug = $debug;
-                            $result = $PHPShopOrm->query('select sort,name from ' . $GLOBALS['SysValue']['base']['categories'] . ' where id="' . $category . '"  limit 1');
+                            // Есть
+                            if (!empty($cat_sort[0])) {
+                                $PHPShopOrm = new PHPShopOrm();
+                                $PHPShopOrm->debug = $debug;
 
-                            if ($row = mysqli_fetch_array($result)) {
-                                $cat_sort = unserialize($row['sort']);
-                                $cat_name = $row['name'];
-
-                                // Есть
-                                if (!empty($cat_sort[0])) {
-                                    $result = $PHPShopOrm->query('select category from ' . $GLOBALS['SysValue']['base']['sort_categories'] . ' where id="' . intval($cat_sort[0]) . '"  limit 1');
-                                    $row = mysqli_fetch_array($result);
-                                    $cat_set = $row['category'];
-                                }
-                                // Нет, создать новый набор
-                                else {
-
-                                    // Создание набора характеристик
-                                    $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['sort_categories']);
-                                    $PHPShopOrm->debug = $debug;
-                                    $cat_set = $PHPShopOrm->insert(array('name_new' => 'Для каталога ' . $cat_name, 'category_new' => 0));
-                                }
+                                $result_3 = $PHPShopOrm->query('select category from ' . $GLOBALS['SysValue']['base']['sort_categories'] . ' where id="' . intval($cat_sort[0]) . '"  limit 1',__FUNCTION__,__LINE__);
+                                $row_3 = mysqli_fetch_array($result_3);
+                                $cat_set = $row_3['category'];
                             }
+                            // Нет, создать новый набор
+                            else {
+
+                                // Создание набора характеристик
+                                $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['sort_categories']);
+                                $PHPShopOrm->debug = $debug;
+                                $cat_set = $PHPShopOrm->insert(array('name_new' => 'Для каталога ' . $cat_name, 'category_new' => 0),'_new',__FUNCTION__,__LINE__);
+                            }
+
 
                             $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['sort_categories']);
                             $PHPShopOrm->debug = $debug;
-                            if ($parent = $PHPShopOrm->insert(array('name_new' => $sort_name, 'category_new' => $cat_set))) {
+                            if ($parent = $PHPShopOrm->insert(array('name_new' => $sort_name, 'category_new' => $cat_set),'_new',__FUNCTION__,__LINE__)) {
 
                                 // Создаем новое значение характеристики
                                 $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['sort']);
                                 $PHPShopOrm->debug = $debug;
-                                $slave = $PHPShopOrm->insert(array('name_new' => $sort_value, 'category_new' => $parent));
+                                $slave = $PHPShopOrm->insert(array('name_new' => $sort_value, 'category_new' => $parent),'_new',__FUNCTION__,__LINE__);
 
                                 $return[$parent][] = $slave;
                                 $cat_sort[] = $parent;
@@ -166,7 +178,7 @@ function sort_encode($sort, $category) {
                                 // Обновляем набор каталога товаров
                                 $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['categories']);
                                 $PHPShopOrm->debug = $debug;
-                                $PHPShopOrm->update(array('sort_new' => serialize($cat_sort)), array('id' => '=' . $category));
+                                $PHPShopOrm->update(array('sort_new' => serialize($cat_sort)), array('id' => '=' . $category),'_new',__FUNCTION__,__LINE__);
                             }
                         }
                         // Дописываем значение 
@@ -175,12 +187,12 @@ function sort_encode($sort, $category) {
                             // Получаем ИД существующей характеристики
                             $PHPShopOrm = new PHPShopOrm();
                             $PHPShopOrm->debug = $debug;
-                            $result = $PHPShopOrm->query('select id from ' . $GLOBALS['SysValue']['base']['sort_categories'] . ' where name="' . $sort_name . '"  limit 1');
+                            $result = $PHPShopOrm->query('select a.id  from ' . $GLOBALS['SysValue']['base']['sort_categories'] . ' AS a where a.name="' . $sort_name . '" '.$where_in.' limit 1',__FUNCTION__,__LINE__);
                             if ($row = mysqli_fetch_array($result)) {
                                 $parent = $row['id'];
                                 $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['sort']);
                                 $PHPShopOrm->debug = $debug;
-                                $slave = $PHPShopOrm->insert(array('name_new' => $sort_value, 'category_new' => $parent));
+                                $slave = $PHPShopOrm->insert(array('name_new' => $sort_value, 'category_new' => $parent),'_new',__FUNCTION__,__LINE__);
 
                                 $return[$parent][] = $slave;
                             }
@@ -265,7 +277,7 @@ function csv_update($data) {
 
                 $PHPShopOrm->debug = false;
                 $PHPShopOrm->mysql_error = false;
-                
+
                 // Списывание со склада
                 if (isset($row['items'])) {
                     switch ($GLOBALS['admoption_sklad_status']) {

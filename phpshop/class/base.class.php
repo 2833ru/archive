@@ -182,7 +182,7 @@ class PHPShopBase {
     function getNumRows($from_base, $query) {
         $sql = "select COUNT('id') as count from " . $this->SysValue['base'][$from_base] . " " . $query;
         $result = mysqli_query($this->link_db, $sql);
-        $row = mysqli_fetch_array(@$result);
+        $row = @mysqli_fetch_array($result);
         $num = $row['count'];
         return intval($num);
     }
@@ -214,8 +214,10 @@ class PHPShopBase {
         }
 
         // UTF-8 Env Fix
-        if (ini_get("mbstring.func_overload") > 0 and function_exists('ini_set')) {
-            ini_set("mbstring.internal_encoding", null);
+        if (floatval(phpversion()) < 5.6) {
+            if (ini_get("mbstring.func_overload") > 0 and function_exists('ini_set')) {
+                ini_set("mbstring.internal_encoding", null);
+            }
         }
     }
 
@@ -261,7 +263,7 @@ class PHPShopBase {
 function parse_ini_file_true($file, $process_sections) {
     if (function_exists('parse_ini_file'))
         return @parse_ini_file($file, $process_sections);
-    elseif(is_file($file))
+    elseif (is_file($file))
         return parse_ini_string(@file_get_contents($file), $process_sections);
 }
 

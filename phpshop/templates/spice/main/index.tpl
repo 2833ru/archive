@@ -17,7 +17,7 @@
         <link href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@css/bootstrap.min.css" rel="stylesheet">
 
     </head>
-    <body id="body" data-dir="@ShopDir@" data-path="@php echo $GLOBALS['PHPShopNav']->objNav['path']; php@" data-id="@php echo $GLOBALS['PHPShopNav']->objNav['id']; php@">
+    <body id="body" data-dir="@ShopDir@" data-path="@php echo $GLOBALS['PHPShopNav']->objNav['path']; php@" data-id="@php echo $GLOBALS['PHPShopNav']->objNav['id']; php@" data-token="@dadataToken@">
         
         <!-- jQuery -->
         <script src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@js/jquery-1.11.0.min.js"></script>
@@ -28,6 +28,7 @@
         <link href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@css/bootstrap-select.min.css" rel="stylesheet">
         <link href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@css/bar.css" rel="stylesheet">
         <link href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@css/swiper.min.css" rel="stylesheet">
+        <link href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@css/suggestions.min.css" rel="stylesheet">
 
         <!-- Template -->
         <link href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@css/animate.css" rel="stylesheet">
@@ -39,8 +40,6 @@
 
         <!-- Fonts -->
         <link href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@css/font-awesome.min.css" rel="stylesheet">
-        <link href="//fonts.googleapis.com/css?family=Roboto+Condensed:300italic,400italic,700italic,400,300,700" rel="stylesheet" type="text/css">
-
 
         <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
         <!--[if lt IE 9]>
@@ -60,7 +59,7 @@
                         <!-- Header Links Starts -->
                         <div class="col-sm-12 col-xs-12 col-md-8">
                             <div class="header-links">
-                                <ul class="nav navbar-nav pull-left">
+                                <ul class="nav navbar-nav pull-left header-color">
                                     <li>
                                         <a class="hidden-xs hidden-sm link" href="/">
                                             <i class="fa fa-home" title="Домой"></i>
@@ -90,7 +89,7 @@
                         <div class="col-sm-4 col-md-4 hidden-xs hidden-sm">
                             <div class="pull-right">                           
                                 <!-- Currency Starts -->
-                                <div class="btn-group header-valuta-disp-wrapper">
+                                <div class="btn-group header-valuta-disp-wrapper header-color">
                                     <h4><i class="fa fa-phone-square" aria-hidden="true"></i> Тел: @telNumMobile@</h4>
                                 </div>
                                 <!-- Currency Ends -->                      
@@ -109,17 +108,25 @@
                 <div class="main-header">
                     <!-- Row Starts -->
                     <div class="row">
+                        <div class="col-md-12 hidden-xs hidden-sm">
+                            <div class="returncall-wrapper returncall-desctop header-links pull-right header-color">
+                                @returncall@
+                            </div>
+                        </div>
                         <!-- Logo Starts -->
                         <div class="col-md-6 wrapper-fix">
                             <div id="logo">
                                 <a href="/" title="@name@">
                                     <img src="@logo@" alt="@name@" class="img-responsive" /></a>
                             </div>
+                            <div class="returncall-wrapper hidden-md hidden-lg header-color">
+                                @returncall@
+                            </div>
                         </div>
                         <!-- Logo Starts -->
                         <!-- Search Starts -->
                         <div class="col-md-3 hidden-xs">
-                            <form id="search_form" action="/search/" role="search" method="post">
+                            <form id="search_form" action="/search/" role="search" method="post" class="header-color">
                                 <div class="input-group">
                                     <input class="form-control input-lg" name="words" maxlength="50" id="search"  placeholder="Искать..." required="" type="search" data-trigger="manual" data-container="body" data-toggle="popover" data-placement="bottom" data-html="true"  data-content="">
                                     <span class="input-group-btn">
@@ -133,7 +140,7 @@
                         <!-- Search Ends -->                        
                         <!-- Shopping Cart Starts -->
                         <div class="col-md-3 visible-md hidden-sm hidden-xs visible-lg">
-                            <div id="cart" class="btn-group btn-block">
+                            <div id="cart" class="btn-group btn-block header-color">
                                 <button id="cartlink" type="button" data-toggle="dropdown" class="btn btn-block btn-lg dropdown-toggle" data-trigger="click" data-container="body"  data-placement="bottom" data-html="true" data-url="/order/" data-content='@visualcart@'>
                                     <i class="fa fa-shopping-cart"></i>
                                     <span>Корзина:</span> 
@@ -197,7 +204,7 @@
         </div>
         <!-- Slider Section Ends -->
         <!-- Main Container Starts -->
-        <div class="main-container container">
+        <div class="main-container container main-page">
             <!-- Featured Products Starts -->
             <section class="products-list">
                 <div class="page-header visible-lg visible-md product-head">
@@ -403,10 +410,10 @@
                             @facebookAuth@ @twitterAuth@
                         </div>
                         <div class="modal-footer">
-                            <span class="pull-left"><a href="/users/sendpassword.html" class="btn btn-default">Забыли?</a>
+                            <button type="submit" class="btn btn-primary pull-left">Войти</button>
+                            <span class="pull-right"><a href="/users/sendpassword.html" class="btn btn-default">Забыли?</a>
                             </span>
                             <input type="hidden" value="1" name="user_enter">
-                            <button type="submit" class="btn btn-primary">Войти</button>
                         </div>
                     </form>   
                 </div>
@@ -438,6 +445,42 @@
         </div>
         <!--/ Модальное окно мобильного поиска -->
 
+        <!-- Модальное окно returncall-->
+        <div class="modal fade bs-example-modal-sm" id="returnCallModal" tabindex="-1" role="dialog"  aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                        <h4 class="modal-title">@leftMenuName@</h4>
+                    </div>
+                     <form role="form" method="post" name="user_forma" action="@ShopDir@/returncall/">
+                    <div class="modal-body">
+                       
+                            <div class="form-group">
+                                <input type="text" name="returncall_mod_name" class="form-control" placeholder="Имя..." required="">
+                            </div>
+                            <div class="form-group">
+                                <input type="text" name="returncall_mod_tel" class="form-control" placeholder="Телефон..." required="">
+                            </div>
+                            <div class="form-group">
+                                <input placeholder="Время звонка:" class="form-control" type="text" name="returncall_mod_time_start">
+                            </div>
+                            <div class="form-group">
+                                <textarea placeholder="Сообщение" class="form-control" name="returncall_mod_message"></textarea>
+                            </div>
+                            @returncall_captcha@
+                           
+                       
+                    </div>
+                     <div class="modal-footer">
+                                <input type="hidden" name="returncall_mod_send" value="1">
+                                <button type="submit" class="btn btn-primary">Заказать звонок</button>
+                     </div>
+                     </form>
+                </div>
+            </div>
+        </div>
+
 
         <!-- JQuery Plugins  -->
         <script src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@js/bootstrap.min.js"></script>
@@ -448,4 +491,5 @@
         <script src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@js/jquery-ui.min.js"></script>
         <script src="java/jqfunc.js"></script>
         <script src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@/js/jquery.cookie.js"></script>
+        <script src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@js/jquery.suggestions.min.js"></script>
         @visualcart_lib@

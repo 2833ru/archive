@@ -9,7 +9,7 @@
         </div>
     </td>
     <td class="action">
-        <img src="images/cart-add.png" alt="В корзину" title="В корзину" onclick="AddToCart(@prodId@);">&nbsp;&nbsp;
+        <img src="images/cart-add.png" class="@wishlistCartHide@" alt="В корзину" title="В корзину" onclick="AddToCart(@prodId@);">&nbsp;&nbsp;
         <a href="?delete=@prodId@"><img src="images/remove.png" alt="Удалить из отложенных" title="Удалить из отложенных"></a>
     </td>
 </tr>

@@ -1,28 +1,5 @@
-<nav class="visible-xs">
-    <ul class="pager">
-        <li class="previous"><a href="/shop/CID_@catalogUId@.html"><span aria-hidden="true">&larr;</span> @catalogCategory@</a></li>
-    </ul>
-</nav>
 
-<!-- Breadcrumb Starts -->
-    <ol class="breadcrumb hidden-xs">
-        @breadCrumbs@
-    </ol>
-<!-- Breadcrumb Ends -->
-
-<!-- Main Heading Starts -->
-    <h2 class="main-heading2 hidden-xs">
-        @catalogCategory@
-    </h2>
-<!-- Main Heading Ends -->
-
-<!-- Category Intro Content Starts -->
-    <div class="row cat-intro">
-        <div class="col-md-12">
-             @catalogContent@
-        </div>
-    </div>
-<!-- Category Intro Content Ends -->
+@ProductCatalogContent@
 
 <!-- Product Filter Starts -->
     <div class="product-filter" id="filter-well">
@@ -65,7 +42,7 @@
         </div> 
         <a name="sort"></a>
         <form method="post" action="/shop/CID_@productId@@nameLat@.html" name="sort" id="sorttable" class="hide">
-            <table><tr>@vendorDisp@ <td>@vendorSelectDisp@</td></tr></table>
+            <table><tr>@vendorDisp@<td>@vendorSelectDisp@</td></tr></table>
         </form>                      
     </div>
 <!-- Product Filter Ends -->
@@ -135,6 +112,9 @@
     if (AJAX_SCROLL_HIDE_PAGINATOR) {
         $(".pagination").hide();
     }
+    
+    var price_min = new Number('@price_min@');
+    var price_max = new Number('@price_max@');
 
     $(document).ready(function () {
 
@@ -152,7 +132,7 @@
             step: 5,
             min: new Number('@price_min@'),
             max: new Number('@price_max@'),
-            values: [new Number('@price_min@'), new Number('@price_max@')],
+            values: [price_min, price_max],
             slide: function (event, ui) {
                 $("input[name=min]").val(ui.values[ 0 ]);
                 $("input[name=max]").val(ui.values[ 1 ]);

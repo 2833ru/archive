@@ -45,7 +45,7 @@ class PHPShopGbook extends PHPShopCore {
             $this->set('Error', __("Сообщение успешно добавлено. Отзыв будет размещен только после проверки модератором"));
 
         // Выборка данных
-        $this->dataArray = parent::getListInfoItem(array('*'), array('flag' => "='1'"), array('order' => 'id DESC'));
+        $this->dataArray = parent::getListInfoItem(array('*'), array('flag' => "='1'"), array('order' => 'datas DESC'));
 
         if (is_array($this->dataArray))
             foreach ($this->dataArray as $row) {

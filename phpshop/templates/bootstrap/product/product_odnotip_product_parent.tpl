@@ -1,19 +1,16 @@
 
-<!-- Окно выбора подтипов товара  -->
-<div class="modal fade bs-example-modal-sm" id="parentModal" tabindex="-1" role="dialog"  aria-hidden="true">
-    <div class="modal-dialog modal-sm">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                <h4 class="modal-title" id="myModalLabel"><span class="glyphicon glyphicon-tasks"></span>  Выбор опций</h4>
-            </div>
-            <div class="modal-body">
-
-                <div class="list-group">
-                    @parentList@
-                </div>
-            </div>
-        </div>
+<div>
+    <label class="control-label">@parentListSizeTitle@</label>
+    <div  id="parentSize">
+        @parentListSize@
     </div>
 </div>
- <button class="btn btn-primary @elementCartHide@" role="button" data-toggle="modal" data-target="#parentModal"><span class="glyphicon glyphicon-tasks"></span> @productSelect@</button>
+
+<div style="padding-bottom:20px">
+    <label class="control-label">@parentListColorTitle@</label>
+    <div  id="parentColor">
+        @parentListColor@
+    </div>
+</div>
+
+<div class="hide" id="parentSizeMessage" >@parentSizeMessage@</div>

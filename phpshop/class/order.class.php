@@ -474,7 +474,7 @@ class PHPShopOrderStatusArray extends PHPShopArray {
      */
     function __construct() {
         $this->objBase = $GLOBALS['SysValue']['base']['order_status'];
-        parent::__construct('id', 'name', 'color', 'sklad_action', 'cumulative_action');
+        parent::__construct('id', 'name', 'color', 'sklad_action', 'cumulative_action','mail_action');
     }
 
 }

@@ -92,7 +92,7 @@ function updateStore($data) {
         $first_d = substr($phone, 0, 1);
         if ($first_d != 8)
             $phone = '7' . $phone;
-        $phone=str_replace(array('(',')','-'),'',$phone);
+        $phone = str_replace(array('(', ')', '-'), '', $phone);
 
         $lib = str_replace('./phpshop/', $_classPath, $PHPShopBase->getParam('file.sms'));
         include_once $lib;
@@ -185,9 +185,11 @@ function actionStart() {
     $PHPShopOrm->debug = false;
     $data = $PHPShopOrm->select(array('*'), array('id' => '=' . intval($_REQUEST['id'])), false, array('limit' => 1));
 
-    $PHPShopGUI->addJSFiles('./order/gui/order.gui.js');
+    $PHPShopGUI->addJSFiles('./js/jquery.suggestions.min.js','./order/gui/order.gui.js','./order/gui/dadata.gui.js');
     if (strlen($data['street']) > 5)
         $PHPShopGUI->addJSFiles('//api-maps.yandex.ru/2.0/?load=package.standard&lang=ru-RU');
+    
+    $PHPShopGUI->addCSSFiles('./css/suggestions.min.css');
 
     $PHPShopGUI->action_select['Все заказы пользователя'] = array(
         'name' => 'Все заказы пользователя',
@@ -334,7 +336,7 @@ function actionStart() {
     $Tab2 = $PHPShopGUI->loadLib('tab_cart', $data);
 
     // Данные покупателя
-    $Tab3 = $PHPShopGUI->loadLib('tab_userdata', $data,false,$order);
+    $Tab3 = $PHPShopGUI->loadLib('tab_userdata', $data, false, $order);
 
     // Все заказы пользователя
     $Tab4 = $PHPShopGUI->loadLib('tab_userorders', $data, false, array('status' => $OrderStatusArray, 'currency' => $currency, 'color' => $OrderStatusArray));
@@ -384,23 +386,23 @@ function sendUserMail($data) {
         PHPShopParser::set('ouid', $data['uid']);
         PHPShopParser::set('date', PHPShopDate::dataV($data['datas']));
 
-        // Доступные статусы заказов
+        // Доступные статусы заказов если стоит флаг #mail_action
         $PHPShopOrderStatusArray = new PHPShopOrderStatusArray();
-        PHPShopParser::set('status', $PHPShopOrderStatusArray->getParam($_POST['statusi_new'] . '.name'));
-        PHPShopParser::set('user', $data['user']);
-        PHPShopParser::set('company', $PHPShopSystem->getParam('name'));
-//        $title = $PHPShopSystem->getValue('name') . ' - статус заказа ' . $data['uid'] . ' изменен';
-        $title = 'Cтатус заказа ' . $data['uid'] . ' изменен';
-        $order = unserialize($data['orders']);
+        if ($PHPShopOrderStatusArray->getParam($_POST['statusi_new'] . '.mail_action') == 1) {
+            PHPShopParser::set('status', $PHPShopOrderStatusArray->getParam($_POST['statusi_new'] . '.name'));
+            PHPShopParser::set('user', $data['user']);
+            PHPShopParser::set('company', $PHPShopSystem->getParam('name'));
+            $title = 'Cтатус заказа ' . $data['uid'] . ' изменен';
+            $order = unserialize($data['orders']);
 
-        PHPShopParser::set('mail', $order['Person']['mail']);
-        PHPShopParser::set('user_name', $order['Person']['name_person']);
+            PHPShopParser::set('mail', $order['Person']['mail']);
+            PHPShopParser::set('user_name', $order['Person']['name_person']);
 
-
-        $PHPShopMail = new PHPShopMail($order['Person']['mail'], $PHPShopSystem->getValue('adminmail2'), $title, '', true, true);
-        $content = PHPShopParser::file('../lib/templates/order/status.tpl', true);
-        if (!empty($content)) {
-            $PHPShopMail->sendMailNow($content);
+            $PHPShopMail = new PHPShopMail($order['Person']['mail'], $PHPShopSystem->getValue('adminmail2'), $title, '', true, true);
+            $content = PHPShopParser::file('../lib/templates/order/status.tpl', true);
+            if (!empty($content)) {
+                $PHPShopMail->sendMailNow($content);
+            }
         }
     }
 }
@@ -443,23 +445,23 @@ function actionUpdate() {
 
         // Скидка
         $discount = $PHPShopOrder->ChekDiscount($order['Cart']['sum']);
-        if($order['Person']['discount']>$discount)
+        if ($order['Person']['discount'] > $discount)
             $discount = $order['Person']['discount'];
-    
-        
-        $order['Person']['discount']=$discount;
-        
-                // Сериализация данных заказа
+
+
+        $order['Person']['discount'] = $discount;
+
+        // Сериализация данных заказа
         $_POST['orders_new'] = serialize($order);
 
         // Итого
-        $_POST['sum_new'] = $PHPShopOrder->returnSumma($PHPShopCart->getSum(false), $order['Person']['discount'])+ $order['Cart']['dostavka'];
+        $_POST['sum_new'] = $PHPShopOrder->returnSumma($PHPShopCart->getSum(false), $order['Person']['discount']) + $order['Cart']['dostavka'];
     }
     // Только смена статуса
     else {
-        
+
         // Комментарий и время обработки
-        $status=unserialize($data['status']);
+        $status = unserialize($data['status']);
         $status['time'] = PHPShopDate::dataV();
         $_POST['status_new'] = serialize($status);
     }

@@ -4,6 +4,10 @@
     src: url('../fonts/rouble.eot?#iefix') format('embedded-opentype'), url('../fonts/rouble.woff') format('woff'), url('../fonts/rouble.ttf') format('truetype');
 }
 
+.tree .no_tree{
+    padding: 5px 0px 5px 5px !important;
+}
+
 .rubznak {
     font-family: ALSRubl;
 } 

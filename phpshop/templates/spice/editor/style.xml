@@ -10,13 +10,21 @@
         </var>
     </element>
     <element>
-        <name>#header-area, .copyright</name>
+        <name>#header-area</name>
         <description>Ўапка</description>
-        <content>÷вет заливки шапки и подвала</content>
+        <content>»зображение в шапке</content>
         <var>
             <name>background</name>
+            <type>image</type>
+        </var>
+    </element>
+    <element>
+        <name>#header-area,#footer-area</name>
+        <description>Ўапка</description>
+        <content>÷вет заливки шапки</content>
+        <var>
+            <name>background-color</name>
             <type>color</type>
-            <important>true</important>
         </var>
     </element>
     <element>
@@ -89,7 +97,7 @@
             <important>true</important>
         </var>
     </element>
-        <element>
+    <element>
         <name>.sidebar-nav > li > a:hover, .news-list a:hover, .product-filter .display label.active,.dl-horizontal.total,.product-info a, .product-col .btn-wishlist:hover, .product-col .btn-wishlist:focus, .product-col .btn-compare:hover, .product-col .btn-compare:focus, a</name>
         <description>—сылки </description>
         <content>÷вет ссылок в тексте</content>

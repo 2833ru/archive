@@ -19,19 +19,20 @@ function actionStart() {
     // bootstrap-colorpicker
     $PHPShopGUI->addCSSFiles('./css/bootstrap-colorpicker.min.css');
     $PHPShopGUI->addJSFiles('./js/bootstrap-colorpicker.min.js');
-
+    $PHPShopGUI->field_col = 2;
     $PHPShopGUI->setActionPanel(__("Редактирование Статуса: " . $data['name']), array('Удалить'), array('Сохранить', 'Сохранить и закрыть'));
 
-    $Field1 = $PHPShopGUI->setInput("text", "name_new", $data['name'],null,500) .
-            $PHPShopGUI->setCheckbox("sklad_action_new", 1, "Списание со склада товаров в заказе", $data['sklad_action']) .
-            $PHPShopGUI->setCheckbox("cumulative_action_new", 1, "Учет скидки покупателя", $data['cumulative_action']);
-    
-    
     // Содержание закладки 1
-    $Tab1 = $PHPShopGUI->setField("Название:", $Field1);
-    
-    
-    $Tab1.=$PHPShopGUI->setField('Цвет',$PHPShopGUI->setInputColor('color_new',$data['color']));
+    $Tab1 = $PHPShopGUI->setField("Название:", $PHPShopGUI->setInput("text", "name_new", $data['name'], null, 500));
+
+
+    $Tab1.=$PHPShopGUI->setField('Цвет', $PHPShopGUI->setInputColor('color_new', $data['color']));
+
+    $Tab1.=$PHPShopGUI->setField("Дополнительно", 
+            $PHPShopGUI->setCheckbox('mail_action_new', 1, 'E-mail уведомление покупателю о смене статуса заказа', $data['mail_action']).'<br>'.
+            $PHPShopGUI->setCheckbox("sklad_action_new", 1, "Списание со склада товаров в заказе", $data['sklad_action']) .'<br>'.
+            $PHPShopGUI->setCheckbox("cumulative_action_new", 1, "Учет скидки покупателя", $data['cumulative_action'])
+            );
 
     // Запрос модуля на закладку
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $data);
@@ -62,7 +63,7 @@ function actionDelete() {
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $_POST);
 
     $action = $PHPShopOrm->delete(array('id' => '=' . $_POST['rowID']));
-    return array('success'=>$action);
+    return array('success' => $action);
 }
 
 /**
@@ -79,15 +80,15 @@ function actionSave() {
 // Функция обновления
 function actionUpdate() {
     global $PHPShopOrm, $PHPShopModules;
-    
-        // Корректировка пустых значений
-    $PHPShopOrm->updateZeroVars('sklad_action_new', 'cumulative_action_new');
+
+    // Корректировка пустых значений
+    $PHPShopOrm->updateZeroVars('sklad_action_new', 'cumulative_action_new','mail_action_new');
 
     // Перехват модуля
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $_POST);
 
     $action = $PHPShopOrm->update($_POST, array('id' => '=' . $_POST['rowID']));
-    return array('success'=>$action);
+    return array('success' => $action);
 }
 
 // Обработка событий

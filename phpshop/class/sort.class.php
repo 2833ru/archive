@@ -314,7 +314,28 @@ class PHPShopSortCategoryArray extends PHPShopArray {
         $this->objBase = $GLOBALS['SysValue']['base']['sort_categories'];
         parent::__construct('id', 'name', 'category', 'filtr', 'page', 'optionname', 'goodoption');
     }
+}
 
+/**
+ * Массив с названием опций товаров
+ * @author PHPShop Software
+ * @version 1.0
+ * @package PHPShopArray
+ */
+class PHPShopParentNameArray extends PHPShopArray {
+
+    /**
+     * Конструктор
+     * @param array $sql SQL условие выборки
+     * @param bull $debug отладка
+     */
+    function __construct($sql = false, $debug = false) {
+        $this->objSQL = $sql;
+        $this->debug = $debug;
+        $this->order = array('order' => 'name');
+        $this->objBase = $GLOBALS['SysValue']['base']['parent_name'];
+        parent::__construct('id', 'name');
+    }
 }
 
 /**

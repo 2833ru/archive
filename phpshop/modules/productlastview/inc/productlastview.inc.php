@@ -182,17 +182,20 @@ class ProductLastView extends PHPShopElements {
         $GLOBALS['PHPShopOrder'] = new PHPShopOrderFunction();
 
         // Валюта
-        $this->currency = $GLOBALS['PHPShopOrder']->default_valuta_code;
+        $this->currency = $GLOBALS['PHPShopOrder']->default_valuta_iso;
 
+        if ($GLOBALS['PHPShopOrder']->default_valuta_iso == 'RUR' or $GLOBALS['PHPShopOrder']->default_valuta_iso == "RUB")
+            $this->currency = 'p';
 
         $this->set('productlastview_pic_width', $this->option['pic_width']);
 
         // Если есть товары в корзине
         if (count($this->_PRODUCT) > 0) {
             $list = $this->display('productlastviewform', array('currency' => $this->currency));
-            $this->set('productlastview_list', '<table>' . $list . '</table>', true);
+            $this->set('productlastview_list', $list, true);
 
-            $product = parseTemplateReturn($GLOBALS['SysValue']['templates']['productlastview']['productlastview_forma'], true);
+            //$product = parseTemplateReturn($GLOBALS['SysValue']['templates']['productlastview']['productlastview_forma'], true);
+            $product = PHPShopParser::file($GLOBALS['SysValue']['templates']['productlastview']['productlastview_forma'], true, false, true);
 
             $this->set('leftMenuContent', $product);
             $this->set('leftMenuName', $this->option['title']);
@@ -227,45 +230,35 @@ PHPShopObj::loadClass('parser');
 function productlastviewform($val, $option) {
     global $SysValue;
 
-    // Проверка подтипа товара, выдача ссылки главного товара
-    if (empty($val['parent'])) {
-        PHPShopParser::set('productlastview_product_id', $val['id']);
+    // Учет модуля SEOURLPRO
+    if (!empty($GLOBALS['SysValue']['base']['seourlpro']['seourlpro_system'])) {
 
-        // Учет модуля SEOURL
-        if (!empty($GLOBALS['SysValue']['base']['seourl']['seourl_system'])) {
-            PHPShopParser::set('productlastview_product_seo', '_' . PHPShopString::toLatin($val['name']));
-        }
-        // Учет модуля SEOURLPRO
-        elseif (!empty($GLOBALS['SysValue']['base']['seourlpro']['seourlpro_system'])) {
+        //Запрос к базе товаров
+        $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['products']);
+        $data = $PHPShopOrm->select(array('*'), array('id' => '=' . intval($val['id'])), false, array('limit' => 1));
 
-            //Запрос к базе товаров
-            $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['products']);
-            $url = $PHPShopOrm->select(array('*'), array('id' => '=' . intval($val['id'])), false, array('limit' => 1));
+        if (empty($data['prod_seo_name']))
+            $url = '/id/' . str_replace("_", "-", PHPShopString::toLatin($data['name'])) . '-' . $data['id'];
+        else
+            $url = '/id/' . $data['prod_seo_name'] . '-' . $data['id'];
 
-            if($GLOBALS['PHPShopSeoPro']) {
-                if (!empty($url['prod_seo_name'])) {
-                    $GLOBALS['PHPShopSeoPro']->setMemory($row['id'], $url['prod_seo_name'], 2, false);
-                }
-                else{
-                    $GLOBALS['PHPShopSeoPro']->setMemory($val['id'], $val['name'], 2);
-                }
-                
-            }
-
-            PHPShopParser::set('productlastview_product_seo', null);
-        }
-    } else {
-        PHPShopParser::set('productlastview_product_id', $val['parent']);
-        PHPShopParser::set('productlastview_product_seo', null);
+        PHPShopParser::set('productlastview_product_url', $url);
+    }
+    else {
+        $url = '/shop/UID_' . $val['id'];
+        PHPShopParser::set('productlastview_product_url', $url);
     }
 
+    PHPShopParser::set('productlastview_product_id', $val['id']);
     PHPShopParser::set('productlastview_product_xid', $val['id']);
     PHPShopParser::set('productlastview_product_name', $val['name']);
     PHPShopParser::set('productlastview_product_pic_small', $val['pic_small']);
     PHPShopParser::set('productlastview_product_price', $val['price']);
     PHPShopParser::set('productlastview_product_currency', $option['currency']);
+    PHPShopParser::set('productlastview_product_rating', $option['rate']);
+    PHPShopParser::set('productlastview_product_price_old', $val['price_n']);
 
-    $dis = parseTemplateReturn($SysValue['templates']['productlastview']['productlastview_product'], true);
+    $dis = PHPShopParser::file($SysValue['templates']['productlastview']['productlastview_product'], true, false, true);
     return $dis;
 }
 

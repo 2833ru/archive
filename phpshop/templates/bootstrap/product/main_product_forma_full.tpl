@@ -27,24 +27,29 @@
 
                 </div>
                 <div class="review hidden-xs"> @rateUid@ </div>
-                
+
                 @promotionInfo@ 
             </div>
 
-            <div class="row">
-                <div class="col-xs-5">
-                    @ComStart@
-                    @optionsDisp@
-                    @ComStartCart@
+            @optionsDisp@
+            @productParentList@
 
+            <div class="row">
+                <div class="col-xs-5 @elementCartOptionHide@">
                     <div class="input-group" style="max-width: 150px">
-                        <input class="form-control addToCartListNum" data-uid="@productUid@"  type="text" style="min-width:50px" maxlength="3" value="1" placeholder="1" required="">
+                        <input class="form-control" data-uid="@productUid@"  type="text" style="min-width:50px" maxlength="3" value="1" placeholder="1" required="" name="quant[2]">
                         <span class="input-group-btn">
-                            <button class="btn btn-primary addToCartList" role="button" data-num="1" data-uid="@productUid@">@productSale@</button>
+                            <button class="btn btn-primary addToCartFull" role="button" data-num="1" data-uid="@productUid@">@productSale@</button>
                         </span>    
                     </div>
-
-                    @ComEndCart@ @ComEnd@ @productParentList@
+                </div>
+                <div class="col-xs-5 @elementCartHide@">
+                    <div class="input-group" style="max-width: 150px">
+                        <input class="form-control" data-uid="@productUid@"  type="text" style="min-width:50px" maxlength="3" value="1" placeholder="1" required="" name="quant[1]">
+                        <span class="input-group-btn">
+                            <button class="btn btn-primary addToCartFull" role="button" data-num="1" data-uid="@productUid@">@productSale@</button>
+                        </span>    
+                    </div>
                 </div>
                 <div class="col-xs-3">
                     <button class="btn btn-info addToCompareList visible-lg" role="button" data-uid="@productUid@">Сравнить</button>

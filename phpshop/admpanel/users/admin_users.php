@@ -42,7 +42,7 @@ function actionStart() {
 
 
     $PHPShopInterface->setActionPanel($TitlePage, array('Удалить выбранные','Черный список','Журнал авторизации'), array('Добавить Администратора', 'Журнал авторизации'));
-    $PHPShopInterface->setCaption(array(null, "2%"), array("Логин", "15%"), array("Имя", "20%"), array("E-mail", "20%"), array("Вход", "20%"), array("", "10%"), array("Статус &nbsp;&nbsp;&nbsp;", "10%", array('align' => 'right')));
+    $PHPShopInterface->setCaption(array(null, "2%"), array("Логин", "20%"), array("Имя", "35%"), array("E-mail", "35%"), array("", "10%"), array("Статус &nbsp;&nbsp;&nbsp;", "10%", array('align' => 'right')));
 
 
     // Таблица с данными
@@ -51,9 +51,11 @@ function actionStart() {
     $data = $PHPShopOrm->select(array('*'), false, array('order' => 'id DESC'), array('limit' => 1000));
     if (is_array($data))
         foreach ($data as $row) {
+        
+            
 
             $PHPShopInterface->setRow(
-                    $row['id'], array('name' => $row['login'], 'link' => '?path=users&id=' . $row['id'], 'align' => 'left'), $row['name'], array('name' => $row['mail'], 'link' => 'mailto:' . $row['mail']), array('name' => PHPShopDate::get($row['datas'], true)), array('action' => array('edit', 'delete', 'id' => $row['id']), 'align' => 'center'), array('status' => array('enable' => $row['enabled'], 'align' => 'right', 'caption' => array('Выкл', 'Вкл'))));
+                    $row['id'], array('name' => $row['login'], 'link' => '?path=users&id=' . $row['id'], 'align' => 'left'), $row['name'], array('name' => $row['mail'], 'link' => 'mailto:' . $row['mail']), array('action' => array('edit', 'delete', 'id' => $row['id']), 'align' => 'center'), array('status' => array('enable' => $row['enabled'], 'align' => 'right', 'caption' => array('Выкл', 'Вкл'))));
         }
     $PHPShopInterface->Compile();
 }

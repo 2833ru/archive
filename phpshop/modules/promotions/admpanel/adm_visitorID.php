@@ -10,11 +10,11 @@ function addCartPromotions($data) {
     if($promocode=='*'):
         // Корзина
         $Tab5 = $PHPShopGUI->loadLib('tab_cart_newo', $data, '../../phpshop/modules/promotions/admpanel/');
-        $PHPShopGUI->addTab(array("Корзина",$Tab5,350));
+        $PHPShopGUI->addTab(array("Корзина",$Tab5));
     elseif($promocode!=''):
 	    // Корзина
 	    $Tab5 = $PHPShopGUI->loadLib('tab_cart_new', $data, '../../phpshop/modules/promotions/admpanel/');
-	    $PHPShopGUI->addTab(array("Корзина промо-акции",$Tab5,350));
+	    $PHPShopGUI->addTab(array("Корзина промо-акции",$Tab5));
     endif;
 }
 

@@ -1,5 +1,5 @@
 <div class="page-header">
-    <h2>@pageTitle@</h2>
+    <h1 class="main-heading2">@pageTitle@</h1>
 </div>
 @catContent@
 @pageContent@

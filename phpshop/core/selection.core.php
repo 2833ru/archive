@@ -69,7 +69,7 @@ class PHPShopSelection extends PHPShopShopCore {
         $PHPShopSortArray = new PHPShopSortArray(array('name' => "='$name'", 'id' => '!=' . $id));
 
         if (is_array($PHPShopSortArray->getArray()))
-            foreach ($PHPShopSortArray->getArray() as $key => $val)
+            foreach ($PHPShopSortArray->getArray() as $val)
                 $_GET['v'][$val['category']] = $val['id'];
     }
 

@@ -31,7 +31,7 @@
     position: fixed;
     -right: 0;
     top: 0;
-    z-index: 1032;
+    z-index: 1034;
     -webkit-box-shadow: -3px 0px 50px -2px rgba(0,0,0,0.14);
     -moz-box-shadow: -3px 0px 50px -2px rgba(0,0,0,0.14);
     box-shadow: -3px 0px 50px -2px rgba(0,0,0,0.14);
@@ -80,10 +80,16 @@
 .style-selector-wrapper .panel-default > .panel-heading{
     background:#1B1B1B !important;
     color: #fff;
+    text-transform: none;
     border-top-left-radius: 0px;
     border-top-right-radius: 0px;
 
 }
+
+.style-selector-wrapper .panel-default > .panel-heading > h3{
+    text-transform: none;
+}
+
 .style-selector-wrapper .panel{
     margin-bottom: 0px;
 }
@@ -99,4 +105,11 @@
 
 #adminModal .modal-body{
     padding: 0px;
+}
+
+.style-selector-wrapper .nav-pills > li > a {
+    border-radius: 2px;
+}
+.style-selector-wrapper .nav > li > a {
+    padding: 5px 10px;
 }

@@ -23,7 +23,7 @@ function actionStart() {
     );
 
     $PHPShopInterface->setActionPanel(__("Переадресация поиска"), array('Удалить выбранные'), array('Добавить Переадресацию', 'Журнал'));
-    $PHPShopInterface->setCaption(array(null, "2%"), array("Запрос", "40%"), array("ID Товаров", "40%"), array("", "10%"), array("Статус", "10%"));
+    $PHPShopInterface->setCaption(array(null, "2%"), array("Запрос", "30%"), array("Товары", "40%"), array("Каталог", "15%"), array("", "10%"), array("Статус", "10%"));
 
 
     // Таблица с данными
@@ -32,8 +32,11 @@ function actionStart() {
     $data = $PHPShopOrm->select(array('*'), false, array('order' => 'id DESC'), array('limit' => 1000));
     if (is_array($data))
         foreach ($data as $row) {
+        
+            if(empty($row['category'])) $row['category']=null;
+            else $row['category']=array('name' =>  $row['category'], 'align' => 'left', 'link' => '?path=catalog&cat=' . $row['category']);
 
-            $PHPShopInterface->setRow($row['id'], array('name' => str_replace(array('i', 'ii'), array('', ','), $row['name']), 'align' => 'left', 'link' => '?path=' . $_GET['path'] . '&id=' . $row['id']), $row['uid'], array('action' => array('edit', 'delete', 'id' => $row['id']), 'align' => 'center'), array('status' => array('enable' => $row['enabled'], 'align' => 'right', 'caption' => array('Выкл', 'Вкл'))));
+            $PHPShopInterface->setRow($row['id'], array('name' => str_replace(array('i', 'ii'), array('', ','), $row['name']), 'align' => 'left', 'link' => '?path=' . $_GET['path'] . '&id=' . $row['id']), $row['uid'],$row['category'], array('action' => array('edit', '|','delete', 'id' => $row['id']), 'align' => 'center'), array('status' => array('enable' => $row['enabled'], 'align' => 'right', 'caption' => array('Выкл', 'Вкл'))));
         }
     $PHPShopInterface->Compile();
 }

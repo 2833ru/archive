@@ -8,12 +8,12 @@ function tab_menu_sort() {
 
     $tree = '<table class="tree table table-hover">
         <tr class="treegrid-0 data-tree">
-		<td><a href="?path=sort">Показать все</a></td>
+		<td class="no_tree"><a href="?path=sort">Показать все</a></td>
 	</tr>';
     if (is_array($SortCategoryArray))
         foreach ($SortCategoryArray as $k => $v) {
             $tree.='<tr class="treegrid-' . $k . ' data-tree">
-		<td><a href="?path=sort&cat=' . $k . '">' . $v['name'] . '</a><span class="pull-right">' . $PHPShopInterface->setDropdownAction(array('edit', 'delete', 'id' => $k)) . '</span></td>
+		<td class="no_tree"><a href="?path=sort&cat=' . $k . '">' . $v['name'] . '</a><span class="pull-right">' . $PHPShopInterface->setDropdownAction(array('edit', '|', 'delete', 'id' => $k)) . '</span></td>
 	</tr>';
         }
     $tree.='</table><script>

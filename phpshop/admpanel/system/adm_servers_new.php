@@ -43,6 +43,8 @@ function actionStart() {
     $Tab1 = $PHPShopGUI->setField("Название:", $PHPShopGUI->setInputText(null, "name_new", $data['name'], 300));
     $Tab1 .= $PHPShopGUI->setField("Адрес:", $PHPShopGUI->setInputText('http://', "host_new", $data['host'], 300), false);
     $Tab1.=$PHPShopGUI->setField("Статус", $PHPShopGUI->setRadio("enabled_new", 1, "Вкл.", $data['enabled']) . $PHPShopGUI->setRadio("enabled_new", 0, "Выкл.", $data['enabled']));
+       $Tab1.=$PHPShopGUI->setField('Заголовок (Title)', $PHPShopGUI->setTextarea('title_new', $data['title'], false, false, 100));
+    $Tab1.=$PHPShopGUI->setField('Описание (Description)', $PHPShopGUI->setTextarea('descrip_new', $data['descrip'], false, false, 100));
 
     if (empty($data['skin']))
         $data['skin'] = $PHPShopSystem->getParam('skin');
@@ -74,7 +76,7 @@ function actionInsert() {
     global $PHPShopOrm, $PHPShopModules, $PHPShopBase;
 
     $License = @parse_ini_file_true("../../license/" . PHPShopFile::searchFile("../../license/", 'getLicense'), 1);
-    $_POST['code_new'] = md5($License['License']['Serial'] . getenv('SERVER_NAME') . $_POST['host_new'] . $PHPShopBase->getParam("connect.host") . $PHPShopBase->getParam("connect.user_db") . $PHPShopBase->getParam("connect.pass_db"));
+    $_POST['code_new'] = md5($License['License']['Serial'] . str_replace('www.','',getenv('SERVER_NAME')) . $_POST['host_new'] . $PHPShopBase->getParam("connect.host") . $PHPShopBase->getParam("connect.user_db") . $PHPShopBase->getParam("connect.pass_db"));
 
     // Перехват модуля
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $_POST);

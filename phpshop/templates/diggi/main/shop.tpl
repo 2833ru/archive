@@ -17,11 +17,10 @@
         <link href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@css/bootstrap.min.css" rel="stylesheet">
 
     </head>
-    <body id="body" data-dir="@ShopDir@" data-path="@php echo $GLOBALS['PHPShopNav']->objNav['path']; php@" data-id="@php echo $GLOBALS['PHPShopNav']->objNav['id']; php@" data-subpath="@php echo $GLOBALS['PHPShopNav']->objNav['name']; php@">
+    <body id="body" data-dir="@ShopDir@" data-path="@php echo $GLOBALS['PHPShopNav']->objNav['path']; php@" data-id="@php echo $GLOBALS['PHPShopNav']->objNav['id']; php@" data-subpath="@php echo $GLOBALS['PHPShopNav']->objNav['name']; php@" data-token="@dadataToken@">
 
         <!-- jQuery -->
         <script src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@js/jquery-1.11.0.min.js"></script>
-
 
         <!-- jQuery Plugins -->
         <script src="java/jqfunc.js"></script>
@@ -29,6 +28,7 @@
         <link href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@css/jquery-ui.min.css" rel="stylesheet">
         <link href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@css/bootstrap-select.min.css" rel="stylesheet">
         <link href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@css/bar.css" rel="stylesheet">
+        <link href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@css/suggestions.min.css" rel="stylesheet">
 
         <!-- Template -->
         <link href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@css/animate.css" rel="stylesheet">
@@ -40,7 +40,6 @@
 
         <!-- Fonts -->
         <link href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@css/font-awesome.min.css" rel="stylesheet">
-        <link href="//fonts.googleapis.com/css?family=Roboto+Condensed:400,700italic,700,400italic,300italic,300" rel="stylesheet">
 
         <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
         <!--[if lt IE 9]>
@@ -56,48 +55,56 @@
                 <!-- Nested Container Starts -->
                 <div class="container">
                     <!-- Row Starts -->
-                    <div class="row">
+                    <div class="col-xs-12">
+                        <div class="header-links header-color">
+                            <ul class="nav navbar-nav pull-left">
+                                <li>
+                                    <a class="hidden-xs hidden-sm hidden-md link" href="/">
+                                        <i class="fa fa-home" title="Домой"></i>
+                                        <span class="hidden-sm hidden-xs">
+                                            Домой
+                                        </span>
+                                    </a>                                       
+                                </li>
+                                @wishlist@
+                                <li>
+                                    <a class="hidden-xs hidden-sm link" href="/compare/">
+                                        <i class="fa fa-plus" title="Сравнить"></i>
+                                        <span class="hidden-sm hidden-xs">Сравнить (<span id="numcompare">@numcompare@</span>)</span>
+                                    </a>
+                                    <a href="/compare/" class="btn btn-main btn-sm hidden-md hidden-lg">
+                                        <i class="fa fa-plus" title="Сравнить"></i>
+                                        Сравнить (<span id="numcompare">@numcompare@</span>)
+                                    </a>
+                                </li>
+                                @usersDisp@
+                            </ul>
+                        </div>
+                    </div>
                         <!-- Logo Starts -->
                         <div class="col-md-2 col-sm-12 col-xs-12 wrapper-fix">
                             <div id="logo">
                                 <a href="/" title="@name@">
-                                    <img src="@logo@" alt="@name@" class="img-responsive" /></a>
+                                    <img src="@logo@" alt="@name@" class="img-responsive" />
+                                </a>
                             </div>
                         </div>
                         <!-- Logo Starts -->
                         <!-- Header Links Starts -->
-                        <div class="col-sm-12 col-xs-12 col-md-6">
-                            <div class="header-links">
-                                <ul class="nav navbar-nav pull-left">
-                                    <li>
-                                        <a class="hidden-xs hidden-sm hidden-md link" href="/">
-                                            <i class="fa fa-home" title="Домой"></i>
-                                            <span class="hidden-sm hidden-xs">
-                                                Домой
-                                            </span>
-                                        </a>                                       
-                                    </li>
-                                    @wishlist@
-                                    <li>
-                                        <a class="hidden-xs hidden-sm link" href="/compare/">
-                                            <i class="fa fa-plus" title="Сравнить"></i>
-                                            <span class="hidden-sm hidden-xs">Сравнить (<span id="numcompare">@numcompare@</span>)</span>
-                                        </a>
-                                        <a href="/compare/" class="btn btn-main btn-sm hidden-md hidden-lg">
-                                            <i class="fa fa-plus" title="Сравнить"></i>
-                                            Сравнить (<span id="numcompare">@numcompare@</span>)
-                                        </a>
-                                    </li>
-                                    @usersDisp@
-                                </ul>
-
+                        <div class="col-sm-12 col-xs-12 col-md-7 text-center header-color">
+                            <div class="btn-group header-valuta-disp-wrapper">
+                                <h4><i class="fa fa-phone-square" aria-hidden="true"></i> Тел: @telNumMobile@</h4>
+                            </div>
+                            <div class="returncall-wrapper header-links header-color">
+                                @returncall@
                             </div>
                         </div>
                         <!-- Header Links Ends -->
                         <!-- Shopping Cart Starts -->
-                        <div class="col-md-4 col-lg-2 visible-md hidden-sm hidden-xs visible-lg">
-                            <div id="cart" class="btn-group pull-right">
+                        <div class="col-md-3 col-lg-3  visible-md hidden-sm hidden-xs visible-lg">
+                            <div id="cart" class="btn-group pull-right header-color">
                                 <button id="cartlink" type="button" data-toggle="dropdown" class="btn btn-block btn-lg dropdown-toggle" data-trigger="click" data-container="body"  data-placement="bottom" data-html="true" data-url="/order/" data-content='@visualcart@'>
+                                    <span class="cart-title">Корзина</span>
                                     <i class="fa fa-shopping-cart"></i>
                                     <span id="cart-total"><span><span id="num">@num@</span>шт.</span></span>
                                     <i class="fa fa-caret-down"></i>
@@ -106,18 +113,6 @@
                             </div>
                         </div>
                         <!-- Shopping Cart Ends -->
-                        <!-- Currency & Languages Starts -->
-                        <div class="col-sm-4 col-md-2 hidden-xs hidden-sm hidden-md no-p">
-                            <div class="pull-right">                           
-                                <!-- Currency Starts -->
-                                <div class="btn-group header-valuta-disp-wrapper">
-                                    <h4><i class="fa fa-phone-square" aria-hidden="true"></i> Тел: @telNumMobile@</h4>
-                                </div>
-                                <!-- Currency Ends -->                      
-                            </div>
-                        </div>
-                        <!-- Currency & Languages Ends -->
-                    </div>
                     <!-- Row Ends -->
                 </div>
                 <!-- Nested Container Ends -->
@@ -129,11 +124,11 @@
                     <!-- Nav Header Starts -->
                     <div class="navbar-header">
                         <a class="navbar-brand visible-xs pull-right" href="tel:@telNumMobile@">
-                            <span class="glyphicon glyphicon-phone"></span> @telNumMobile@
+                                <span class="glyphicon glyphicon-phone"></span> @telNumMobile@
                         </a>
                         <button type="button" class="btn btn-navbar navbar-toggle main-menu-button" data-toggle="collapse" data-target=".navbar-cat-collapse">
                             <span class="sr-only">Toggle Navigation</span>
-                            <i class="fa fa-bars"></i>
+                                <i class="fa fa-bars"></i>
                         </button>
                     </div>
                     <!-- Nav Header Ends -->
@@ -142,7 +137,7 @@
                         <ul class="nav navbar-nav main-navbar-top">
                             <li class="main-navbar-top-catalog">
                                 <a href="#" id="nav-catalog-dropdown-link" class="nav-catalog-dropdown-link" aria-expanded="false">Каталог
-                                </a>
+                                    </a>
                                 <ul class="main-navbar-list-catalog-wrapper fadeIn animated">
                                     @leftCatal@
                                 </ul>
@@ -179,25 +174,35 @@
             </div>
         </div>
         <!-- Main Container Starts -->
-        <div class="main-container container">
+        <div class="main-container container shop-page">
             <!-- Nested Row Starts -->
             <div class="row">
                 <!-- Sidebar Starts -->
-                <div class="col-md-3 visible-lg visible-md" id="sidebar-right">
+                <div class="col-xs-12 col-md-3 sidebar-right" id="sidebar-right">
+                    <div class="order-page-sidebar-user-block hidden-xs hidden-sm">
+                        <h5 class="user-title">Мой кабинет</h5>
+                        <ul class="user-list">
+                            <li><a href="/users/">@UsersLogin@</a></li>
+                            <li><a href="/users/order.html">Отследить заказ</a></li>
+                            <li><a href="/users/notice.html">Уведомления о товарах</a></li>
+                            <li><a href="/users/message.html">Связь с менеджерами</a></li>
+                            @php if($_SESSION['UsersId']) echo '<li><a href="?logout=true">Выйти</a></li>'; php@
+                        </ul>
+                    </div>
                     <!-- Categories Links Starts -->
-                    <h3 class="side-heading">Категории</h3>
-                    <ul class="list-group sidebar-nav">
+                    <h3 class="side-heading hidden-xs hidden-sm">Категории</h3>
+                    <ul class="list-group sidebar-nav hidden-xs hidden-sm">
                         @leftCatal@
                     </ul>
                     <!-- Categories Links Ends -->
                     <!-- Фасетный фильтр -->
-                    <div class="hide sidebar-nav" id="faset-filter">
-                        <h3 class="side-heading">Фильтр товаров</h3>                    
-                        <div class="list-group">
+                    <div class="hide" id="faset-filter">
+                        <h3 class="side-heading filter-title">Фильтр товаров <a href="?" id="faset-filter-reset" data-toggle="tooltip" data-placement="top" title="Сбросить фильтр"><span class="glyphicon glyphicon-remove"></span></a></h3>                    
+                        <div class="list-group filter-body-fix">
                             <div id="faset-filter-body">Загрузка...</div>
                             <div id="price-filter-body">
-                                <h4 data-toggle="collapse" data-target="#price-filter-form" title="Показать">Цена <i class="fa fa-chevron-down"></i></h4>
-                                <form method="get" id="price-filter-form" class="collapse">
+                                <h4>Цена</h4>
+                                <form method="get" id="price-filter-form">
                                     <div class="row">
                                         <div class="col-md-6" id="price-filter-val-min">
                                             <span>от</span>
@@ -215,17 +220,26 @@
                         </div>
                     </div>
                     <!--/ Фасетный фильтр -->
-                    @productDay@
-                    <h3 class="side-heading">Полезная информация</h3>
-                    <div class="list-group sidebar-nav">
-                        @pageCatal@
+                    <div class="sidebar-fix-block  hidden-xs hidden-sm">
+                        @productDay@
+                        <h3 class="side-heading">Полезная информация</h3>
+                        <div class="list-group sidebar-nav">
+                            @pageCatal@
+                        </div>
+                        @rightMenu@
                     </div>
-                    @rightMenu@
                 </div>
                 <!-- Sidebar Ends -->
                 <!-- Primary Content Starts -->
-                <div class="col-md-9 col-xs-12">
+                <div class="col-md-9 col-xs-12 middle-content-block">
                     @DispShop@
+
+                    
+                </div>
+                <div class="col-xs-12">
+                    <div class="banner-block">
+                        @banersDisp@
+                    </div>
                 </div>
                 <!-- Primary Content Ends -->
             </div>
@@ -370,10 +384,10 @@
                             @facebookAuth@ @twitterAuth@
                         </div>
                         <div class="modal-footer">
-                            <span class="pull-left"><a href="/users/sendpassword.html" class="btn btn-default">Забыли?</a>
+                            <button type="submit" class="btn btn-primary pull-left">Войти</button>
+                            <span class="pull-right"><a href="/users/sendpassword.html" class="btn btn-default">Забыли?</a>
                             </span>
                             <input type="hidden" value="1" name="user_enter">
-                            <button type="submit" class="btn btn-primary">Войти</button>
                         </div>
                     </form>   
                 </div>
@@ -405,6 +419,7 @@
         </div>
         <!--/ Модальное окно мобильного поиска -->
 
+
         <!-- JQuery Plugins  -->
         <script src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@js/bootstrap.min.js"></script>
         <script src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@js/swiper.js"></script>
@@ -417,4 +432,5 @@
         <script src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@js/jquery.waypoints.min.js"></script>
         <script src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@js/inview.min.js"></script>
         <script src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@js/jquery.maskedinput.min.js"></script>
+        <script src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@js/jquery.suggestions.min.js"></script>
         @visualcart_lib@

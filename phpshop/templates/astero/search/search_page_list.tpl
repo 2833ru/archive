@@ -1,12 +1,9 @@
-
 <ol class="breadcrumb hidden-xs">
     <li><a href="/" >Главная</a></li>
     <li class="active">Расширенный поиск</li>
 </ol>
 
-<div class="page-header hidden-xs">
-    <h2>Расширенный поиск</h2>
-</div>
+    <h1 class="main-heading2">Расширенный поиск</h1>
 
 <div class="well">
     <form  action="/search/" role="form">
@@ -41,6 +38,6 @@
     </form>
 </div>
 
-@productPageDis@
+<div class="template-product-list products-list">@productPageDis@</div>
 
 @searchPageNav@

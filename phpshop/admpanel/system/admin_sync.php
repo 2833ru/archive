@@ -24,7 +24,9 @@ function actionStart() {
             $PHPShopGUI->setCheckbox('option[update_content]', 1, 'Подробное описание', $option['update_content']) . '<br>' .
             $PHPShopGUI->setCheckbox('option[update_category]', 1, 'Родительская категория', $option['update_category']) . '<br>' .
             $PHPShopGUI->setCheckbox('option[update_sort]', 1, 'Характериcтики и свойства', $option['update_sort']). '<br>' .
-            $PHPShopGUI->setCheckbox('option[update_option]', 1, 'Подтипы', $option['update_option'])
+            $PHPShopGUI->setCheckbox('option[update_option]', 1, 'Подтипы', $option['update_option']). '<br>' .
+            $PHPShopGUI->setCheckbox('option[update_price]', 1, 'Цены', $option['update_price']). '<br>' .
+            $PHPShopGUI->setCheckbox('option[update_item]', 1, 'Склад', $option['update_item'])
     );
 
 

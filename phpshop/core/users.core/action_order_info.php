@@ -72,12 +72,10 @@ function action_order_info($obj, $tip) {
             $total = PHPShopText::tr(PHPShopText::b(__('Итого с учетом скидки ') . $PHPShopOrderFunction->getDiscount() . '%'), PHPShopText::b($PHPShopOrderFunction->getNum() + 1) . ' ' . __('шт.'), PHPShopText::b($PHPShopOrderFunction->getTotal()) . ' ' . $currency);
 
             // Комментарии по заказу
-            if ($PHPShopOrderFunction->getSerilizeParam('status.maneger') != '' and $PHPShopOrderFunction->getParam('ddelivery_token') != '')
+            if ($PHPShopOrderFunction->getSerilizeParam('status.maneger') != '')
                 $comment = PHPShopText::p(PHPShopText::message($PHPShopOrderFunction->getSerilizeParam('status.maneger')));
             else
                 $comment = null;
-
-
 
             // Документооборот
             $docs = userorderdoclink($row, $obj);
@@ -184,7 +182,9 @@ function usercartforma($val, $option) {
  */
 function userdeleveryforma($val, $option) {
     global $PHPShopModules;
-
+    
+    echo $option->objID;
+    
     // Перехват модуля в начале функции
     $hook = $PHPShopModules->setHookHandler(__FUNCTION__, __FUNCTION__, $option, $val,  'START');
     if ($hook)
@@ -232,8 +232,9 @@ function userorderdoclink($val, $obj) {
                 $link_html = '../files/docsSave.php?orderId=' . $n . '&list=accounts&tip=html&datas=' . $row['datas'];
                 $link_doc = '../files/docsSave.php?orderId=' . $n . '&list=accounts&tip=doc&datas=' . $row['datas'];
                 $link_xls = '../files/docsSave.php?orderId=' . $n . '&list=accounts&tip=xls&datas=' . $row['datas'];
+                $link_pdf = '../files/docsSave.php?orderId=' . $n . '&list=accounts&tip=pdf&datas=' . $row['datas'];
                 $dis.=PHPShopText::tr(PHPShopText::a($link_def, __('Счет на оплату'), false, false, false, '_blank', 'b'), PHPShopDate::dataV($row['datas']), PHPShopText::a($link_html, __('HTML'), __('Формат Web'), false, false, '_blank', 'b') . ' ' .
-                        PHPShopText::a($link_doc, __('DOC'), __('Формат Word'), false, false, '_blank', 'b') . ' ' .
+                        PHPShopText::a($link_pdf, __('PDF'), __('Формат PDF'), false, false, '_blank', 'b') . ' ' .
                         PHPShopText::a($link_xls, __('XLS'), __('Формат Excel'), false, false, '_blank', 'b'));
             }
 
@@ -243,8 +244,9 @@ function userorderdoclink($val, $obj) {
                 $link_html = '../files/docsSave.php?orderId=' . $n . '&list=invoice&tip=html&datas=' . $row['datas'];
                 $link_doc = '../files/docsSave.php?orderId=' . $n . '&list=invoice&tip=doc&datas=' . $row['datas'];
                 $link_xls = '../files/docsSave.php?orderId=' . $n . '&list=invoice&tip=xls&datas=' . $row['datas'];
+                $link_pdf = '../files/docsSave.php?orderId=' . $n . '&list=invoice&tip=pdf&datas=' . $row['datas'];
                 $dis.=PHPShopText::tr(PHPShopText::a($link_def, __('Счет-фактура'), false, false, false, '_blank', 'b'), PHPShopDate::dataV($row['datas_f']), PHPShopText::a($link_html, __('HTML'), __('Формат Web'), false, false, '_blank', 'b') . ' ' .
-                        PHPShopText::a($link_doc, __('DOC'), __('Формат Word'), false, false, '_blank', 'b') . ' ' .
+                        PHPShopText::a($link_pdf, __('PDF'), __('Формат PDF'), false, false, '_blank', 'b') . ' ' .
                         PHPShopText::a($link_xls, __('XLS'), __('Формат Excel'), false, false, '_blank', 'b'));
             }
         }

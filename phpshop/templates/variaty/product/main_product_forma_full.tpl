@@ -41,7 +41,7 @@
           <div class="visible-desktop"> @cloud@ </div>
         </div>
         <form method="post" action="page">
-          <div class="controls-row @elementCartHide@"> @optionsDisp@
+          <div class="controls-row @elementCartOptionHide@"> @optionsDisp@
             @productParentList@ </div>
           <div>
 		   @ComStartCart@

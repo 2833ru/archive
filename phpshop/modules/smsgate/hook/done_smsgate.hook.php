@@ -16,13 +16,20 @@ function write_hook($obj, $row, $rout) {
         $cart = unserialize($row['orders_new']);
         
         // получение шаблона
+        $orderTpl      = $PHPShopSmsgate->getTplOrder();
+        $orderTplAdmin = $PHPShopSmsgate->getTplAdminOrder();
+
+        if ($PHPShopSmsgate->getCascadeEnabled()) {
+            $orderTpl      = $PHPShopSmsgate->getTplOrderViber();
+            $orderTplAdmin = $PHPShopSmsgate->getTplAdminOrderViber();
+        }
+
         $PHPShopSystem = new PHPShopSystem();
         $nameShop = $PHPShopSystem->objRow['name'];
         $PHPShopValuta = new PHPShopValuta($PHPShopSystem->objRow['dengi']);
         $currency = $PHPShopValuta->getCode();
 
-        $orderTpl = $PHPShopSmsgate->getTplOrder();
-        
+
         foreach($cart['Cart']['cart'] as $k=>$v){
           $productName[] = $v['name'] . ' - ' . $v['price'] . ' ' . $currency .', ' . $v['num'] . ' шт.';
         }
@@ -56,8 +63,6 @@ function write_hook($obj, $row, $rout) {
         // отправка админу
         $PHPShopDelivery = new PHPShopDelivery($row['dostavka_metod']);
         
-        $orderTplAdmin = $PHPShopSmsgate->getTplAdminOrder();
-        
         // массив данных для вставки при парсинге строки
         $datainsertAdmin = array(
           '@NameShop@'        => $nameShop, 
@@ -82,11 +87,21 @@ function write_hook($obj, $row, $rout) {
         );
         $msgToAdmin = $PHPShopSmsgate->parseString($orderTplAdmin, $datainsertAdmin);
 
-        // сообщение админу       
-        $PHPShopSmsgate->sendSmsAdmin($msgToAdmin);
 
-        // отправка покупателю
-        $PHPShopSmsgate->sendSmsgate($phone,$msgToUser);
+        if ($PHPShopSmsgate->getCascadeEnabled()) {
+            // сообщение админу
+            $PHPShopSmsgate->sendSmsAdmin($msgToAdmin, 'order_template_admin_viber');
+
+            // отправка покупателю
+            $PHPShopSmsgate->sendSmsgate($phone,$msgToUser, 'order_template_viber');
+        } else {
+            // сообщение админу
+            $PHPShopSmsgate->sendSmsAdmin($msgToAdmin);
+
+            // отправка покупателю
+            $PHPShopSmsgate->sendSmsgate($phone,$msgToUser);
+        }
+
     }
 }
 

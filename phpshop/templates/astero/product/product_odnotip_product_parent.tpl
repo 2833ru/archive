@@ -1,23 +1,31 @@
-<div class="form-group">
-    <label class="control-label text-uppercase">Выберите товар из списка</label>
-    @parentList@
+
+<div>
+    <label class="control-label text-uppercase">@parentListSizeTitle@</label>
+    <div  id="parentSize">
+        @parentListSize@
+    </div>
 </div>
-<div class="cart-button button-group cart-list-button-wrapper">
-    <button type="button" class="btn btn-cart addToCartListParent" role="button" data-num="1" data-uid="@parentId@" data-parent="@productUid@">
-        <i class="fa fa-shopping-cart"></i>                                 
-            @productSale@
-    </button>                                   
+
+<div>
+    <label class="control-label text-uppercase">@parentListColorTitle@</label>
+    <div id="parentColor">
+        @parentListColor@
+    </div>
 </div>
-<div class="cart-button button-group compare-list-button-wrapper">
-    <button type="button" class="btn btn-cart addToWishList" role="button" data-uid="@productUid@">
-        <i class="fa fa-heart" aria-hidden="true"></i>                            
-            Отложить
-    </button>                                   
+
+<span class="hide" id="parentSizeMessage">@parentSizeMessage@</span>
+
+<label class="control-label text-uppercase @elementCartOptionHide@">Количество</label>
+<div class="quant input-group @elementCartOptionHide@">
+    <span class="input-group-btn">
+        <button type="button" class="btn btn-default btn-default_l btn-number"  data-type="minus" data-field="quant[2]">
+            <span class="glyphicon glyphicon-minus"></span>
+        </button>
+    </span>
+    <input type="text" name="quant[2]" class="form-control form-control_gr input-number" value="1" min="1" max="100">
+    <span class="input-group-btn">
+        <button type="button" class=" btn btn-default btn-default_r btn-number" data-type="plus" data-field="quant[2]">
+            <span class="glyphicon glyphicon-plus"></span>
+        </button>
+    </span>
 </div>
-<div class="cart-button button-group compare-list-button-wrapper">
-    <button type="button" class="btn btn-cart addToCompareList" role="button" data-uid="@productUid@">
-        <i class="fa fa-refresh" aria-hidden="true"></i>                            
-            Сравнить
-    </button>                                   
-</div>
-<input type="hidden" id="parentId" value="@parentCheckedId@"/>

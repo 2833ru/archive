@@ -3,6 +3,40 @@ $().ready(function() {
     // Id каталога
     var cat = $.getUrlVar('cat');
 
+    // Дерево категорий
+    $('#tree [role="progressbar"]').css('width', '90%');
+    if ($('#tree').length) {
+
+        $.ajax({
+            type: "GET",
+            url: "./catalog/gui/tree.gui.php",
+            data: "id=" + $.getUrlVar('id') + '&cat=' + $.getUrlVar('cat') + '&action=' + $.getUrlVar('action'),
+            dataType: "html",
+            async: false,
+            success: function(json)
+            {
+                $('#tree').treeview({
+                    data: json,
+                    enableLinks: false,
+                    showIcon: true,
+                    color: $('#temp').css('color'),
+                    showBorder: false,
+                    selectedBackColor: $('#temp').css('color'),
+                    onhoverColor: "#fff",
+                    backColor: "transparent",
+                    expandIcon: 'glyphicon glyphicon-triangle-right',
+                    collapseIcon: 'glyphicon glyphicon-triangle-bottom'
+                });
+
+                // Путь node
+                $('#tree').treeview('getExpanded').forEach(function(entry) {
+                    $('#tree').treeview('revealNode', [entry['nodeId'], {silent: true}]);
+                });
+            }
+        });
+    }
+
+
     // Настройка полей - 2 шаг
     $("body").on('click', "#selectModal .modal-footer .option-send", function(event) {
         event.preventDefault();
@@ -248,40 +282,6 @@ $().ready(function() {
             }
         });
     });
-
-    // Дерево категорий
-    $('#tree [role="progressbar"]').css('width', '90%');
-    if ($('#tree').length) {
-
-        $.ajax({
-            type: "GET",
-            url: "./catalog/gui/tree.gui.php",
-            data: "id=" + $.getUrlVar('id') + '&cat=' + $.getUrlVar('cat') + '&action=' + $.getUrlVar('action'),
-            dataType: "html",
-            async: false,
-            success: function(json)
-            {
-                $('#tree').treeview({
-                    data: json,
-                    enableLinks: false,
-                    showIcon: true,
-                    color: $('#temp').css('color'),
-                    showBorder: false,
-                    selectedBackColor: $('#temp').css('color'),
-                    onhoverColor: "#fff",
-                    backColor: "transparent",
-                    expandIcon: 'glyphicon glyphicon-triangle-right',
-                    collapseIcon: 'glyphicon glyphicon-triangle-bottom'
-                });
-
-                // Путь node
-                $('#tree').treeview('getExpanded').forEach(function(entry) {
-                    $('#tree').treeview('revealNode', [entry['nodeId'], {silent: true}]);
-                });
-
-            }
-        });
-    }
 
     // Ссылка в Node
     $('#tree').on('nodeSelected', function(event, data) {

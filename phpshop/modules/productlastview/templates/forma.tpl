@@ -1,3 +1,3 @@
 <div id="productlastview">
-    @productlastview_list@
+    <table>@productlastview_list@</table>
 </div>

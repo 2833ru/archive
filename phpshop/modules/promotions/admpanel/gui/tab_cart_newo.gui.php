@@ -148,7 +148,7 @@ function tab_cart_newo($data, $option = false) {
     $blank.=$PHPShopGUI->setButton(__('Торг-12'), 'qrcode', 'btn-print-order','/phpshop/modules/promotions/admpanel/formso/forma5.php?orderID=' . $data['id']);
     
      // Гарантия
-    $blank.=$PHPShopGUI->setButton(__('Гарантия'), 'briefcase', 'btn-print-order','forms/forma3.php?orderID=' . $data['id']);
+    $blank.=$PHPShopGUI->setButton(__('Гарантия'), 'briefcase', 'btn-print-order','order/forms/warranty.php?orderID=' . $data['id']);
 
     $disp = '<div id="blank" style="display:none;">'.$blank.'</div>';
 

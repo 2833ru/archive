@@ -318,14 +318,15 @@ class PHPShopText {
     /**
      * Зачеркнутый текст
      * @param string $string текст
+     * @param int $format формат цены
      * @return string
      */
-    static function strike($string) {
+    static function strike($string,$format=0) {
 
         // Знак рубля
         if (strstr($string, " ")) {
             $string_array = explode(" ", $string);
-            return '<span style="text-decoration: line-through">' . $string_array[0] . '</span> <span class="rubznak">' . $string_array[1] . '</span>';
+            return '<span style="text-decoration: line-through">' . number_format($string_array[0], $format, '.', ' ') . '</span> <span class="rubznak">' . $string_array[1] . '</span>';
         }
         else
             return '<span style="text-decoration: line-through">' . $string . '</span>';

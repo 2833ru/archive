@@ -22,18 +22,19 @@ $SysValue['bank'] = unserialize($LoadItems['System']['bank']);
 $pathTemplate = $SysValue['dir']['templates'] . chr(47) . $_SESSION['skin'];
 
 
-$sql = "select * from " . $SysValue['base']['table_name1'] . " where id=" . intval($_GET['orderID']);
+$sql = "select * from " . $SysValue['base']['orders'] . " where id=" . intval($_GET['orderID']);
 $n = 1;
 @$result = mysqli_query($link_db, $sql);
 $row = mysqli_fetch_array(@$result);
-$id = $row['id'];
-$datas = $row['datas'];
 $ouid = $row['uid'];
 $order = unserialize($row['orders']);
-$status = unserialize($row['status']);
 $dis=null;
 if (is_array($order['Cart']['cart']))
     foreach ($order['Cart']['cart'] as $val) {
+    
+    if(!empty($val['uid'])) 
+        $val['name'].= ' ('.$val['uid'].')';
+    
         $dis.="
   <tr class=tablerow>
 		<td class=tablerow>" . $n . "</td>
@@ -140,7 +141,7 @@ if ($PERSON['discount'] > 0) {
     </div>
     <div align="center"><table align="center" width="100%">
             <tr>
-                <td align="center"><img src="<?php echo $PHPShopSystem->getLogo(); ?>" alt="" border="0"></td>
+                <td align="center"><img src="<?php echo $PHPShopSystem->getLogo(); ?>" alt="" border="0" style="max-width: 200px;height: auto;"></td>
                 <td align="center"><h4 align=center>Заказ&nbsp;№&nbsp;<?php echo $ouid ?>&nbsp;от&nbsp;<?php echo $datas ?></h4></td>
             </tr>
         </table>

@@ -72,7 +72,7 @@ $LoadBanc = unserialize($LoadItems['System']['bank']);
 
     <TABLE cellSpacing=0 cellPadding=0 width="100%" border=0><TBODY>
             <TR>
-                <TH scope=row align=middle width="50%" rowSpan=3><img src="<?php echo $PHPShopSystem->getLogo(); ?>" alt="" border="0"></TH>
+                <TH scope=row align=middle width="50%" rowSpan=3><img src="<?php echo $PHPShopSystem->getLogo(); ?>" alt="" border="0" style="max-width: 200px;height: auto;"></TH>
                 <TD align=right>
                     <BLOCKQUOTE>
                         <P><b>Гарантийное обязательство</b> <SPAN class=style4>№<?php echo @$chek_num ?> от <?php echo $datas ?></SPAN> </P></BLOCKQUOTE></TD></TR>

@@ -1,7 +1,10 @@
-<div class="page-header text-center">
-    <h2>@pageTitle@</h2>
-</div>
-@catContent@
-<p>@pageContent@</p>
 
-<p>@odnotipDisp@</p>
+<div class="page-header">
+    <h1 class="main-heading2">@pageTitle@</h1>
+</div>
+	<div class="content-bg-fix">
+		@catContent@
+		<p>@pageContent@</p>
+
+		<p>@odnotipDisp@</p>
+	</div>

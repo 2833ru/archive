@@ -4,7 +4,7 @@
 </ol>
 
 <div class="page-header">
-    <h2>—сылки</h2>
+    <h1 class="main-heading2">—сылки</h1>
 </div>
 
 <div class="news-list">

@@ -26,11 +26,17 @@ function treegenerator($array, $i, $parent) {
             else
                 $selected = null;
 
+            // Проверка зацикливания
+            if ($k == $_GET['id'])
+                $disabled = ' disabled ';
+            else
+                $disabled = null;
+
             if (empty($check['select'])) {
-                $tree_select.='<option value="' . $k . '" ' . $selected . '>' . $del . $v . '</option>';
+                $tree_select.='<option value="' . $k . '" ' . $selected . $disabled . '>' . $del . $v . '</option>';
                 $i = 1;
             } else {
-                $tree_select.='<option value="' . $k . '" ' . $selected . '>' . $del . $v . '</option>';
+                $tree_select.='<option value="' . $k . '" ' . $selected . $disabled . '>' . $del . $v . '</option>';
             }
 
             $tree_select.=$check['select'];
@@ -118,7 +124,13 @@ function actionStart() {
             else
                 $selected = null;
 
-            $tree_select.='<option value="' . $k . '"  ' . $selected . '>' . $v . '</option>';
+            // Проверка зацикливания
+            if ($k == $_GET['id'])
+                $disabled = ' disabled ';
+            else
+                $disabled = null;
+
+            $tree_select.='<option value="' . $k . '"  ' . $selected .$disabled. '>' . $v . '</option>';
             $tree_select.=$check['select'];
         }
     $tree_select.='</select>';
@@ -179,14 +191,16 @@ function actionStart() {
     $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['categories']);
     $subcategory_data = $PHPShopOrm->select(array('id'), array('parent_to' => '=' . intval($data['id'])), false, array('limit' => 1));
 
-    if (!is_array($subcategory_data))
+    if (!is_array($subcategory_data)) {
         $Tab8 = $PHPShopGUI->setCollapse(__('Характеристики'), $PHPShopGUI->loadLib('tab_sorts', $data), 'in', false);
+        $Tab8 .= $PHPShopGUI->setCollapse(__('Варианты подтипов'), tab_parent($data) . $PHPShopGUI->setHelp('Управление вариантами подтипов товаров находится в разделе <a href="?path=sort.parent" title="Перейти">Варианты подтипов</a>'), 'in', true);
+    }
     else
         $Tab8 = $PHPShopGUI->setHelp('Характеристики доступны только в подкаталогах с товарами.');
 
     // Мультибаза
     $Tab9.=$PHPShopGUI->setCollapse(__('Показывать на витринах'), $PHPShopGUI->loadLib('tab_multibase', $data));
-    
+
     // Запрос модуля на закладку
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $data);
 
@@ -276,11 +290,11 @@ function actionUpdate() {
     }
 
     // Мультибаза
-      $_POST['servers_new'] = null;
-      if (is_array($_POST['servers']))
-      foreach ($_POST['servers'] as $v)
-      $_POST['servers_new'].="i" . $v . "i";
-    
+    $_POST['servers_new'] = null;
+    if (is_array($_POST['servers']))
+        foreach ($_POST['servers'] as $v)
+            $_POST['servers_new'].="i" . $v . "i";
+
 
     // Доп каталоги
     if (!empty($_POST['dop_cat_new']) and substr($_POST['dop_cat_new'], 1) != '#') {
@@ -309,7 +323,7 @@ function iconAdd() {
     // Копируем от пользователя
     if (!empty($_FILES['file']['name'])) {
         $_FILES['file']['ext'] = PHPShopSecurity::getExt($_FILES['file']['name']);
-        if (in_array($_FILES['file']['ext'], array('gif', 'png', 'jpg', 'jpeg'))) {
+        if (in_array($_FILES['file']['ext'], array('gif', 'png', 'jpg', 'jpeg', 'svg'))) {
             if (move_uploaded_file($_FILES['file']['tmp_name'], $_SERVER['DOCUMENT_ROOT'] . $GLOBALS['dir']['dir'] . $path . $_FILES['file']['name'])) {
                 $file = $GLOBALS['dir']['dir'] . $path . $_FILES['file']['name'];
             }

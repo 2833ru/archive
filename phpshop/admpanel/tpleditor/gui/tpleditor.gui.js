@@ -1,6 +1,32 @@
 
 $().ready(function() {
 
+    $("body").on('click', ".template-map .nav a", function(event) {
+        event.preventDefault();
+    });
+
+    $('[data-toggle="popover"]').popover(
+            {
+                template: '<div class="popover" role="tooltip"><div class="arrow"></div><h3 class="popover-title"></h3><div class="popover-content"></div></div>',
+                placement: 'auto',
+                html: true
+            }
+    );
+
+    $('[data-toggle="popover"]').css('cursor', 'pointer').attr('title', 'Подсказка');
+    $('.panel[data-toggle="popover"]').hover(
+            function() {
+                $(this).toggleClass('panel-primary text-primary').css('box-shadow', '0 0 6px rgba(122,122,122,0.2)');
+            }, function() {
+        $(this).toggleClass('panel-primary text-primary').css('box-shadow', 'none');
+    });
+    $('.template-image[data-toggle="popover"]').hover(
+            function() {
+                $(this).css('box-shadow', '0 0 6px rgba(122,122,122,0.2)');
+            }, function() {
+        $(this).css('box-shadow', 'none');
+    });
+
     // Модальное окно таблицы описаний переменных
     $('#selectModal').on('show.bs.modal', function(event) {
         $('#selectModal .modal-title').html(locale.templater_table_title + $('[data-target="#selectModal"]').attr('data-title'));
@@ -8,6 +34,43 @@ $().ready(function() {
         $('#selectModal .modal-footer [data-dismiss="modal"]').html(locale.close);
         $('#selectModal .modal-body').css('max-height', ($(window).height() - 200) + 'px');
         $('#selectModal .modal-body').css('overflow-y', 'auto');
+    });
+
+    // Ввод серийного номера
+    $('body').on('click', '.skin-serial', function() {
+        var serial = prompt('Ключ', $(this).attr('data-key'));
+        var parent = $(this).closest('.panel');
+        if (serial) {
+
+            var data = [];
+            data.push({name: 'ajax', value: 1});
+            data.push({name: 'path', value: $(this).attr('data-path')});
+            data.push({name: 'key_new', value: serial});
+            data.push({name: 'editID', value: 1});
+            data.push({name: 'actionList[editID]', value: 'actionSerial.system.edit'});
+            $.ajax({
+                mimeType: 'text/html; charset=windows-1251',
+                url: '?path=tpleditor',
+                type: 'post',
+                data: data,
+                dataType: "json",
+                async: false,
+                success: function(json) {
+                    if (json['success'] == 1) {
+                        showAlertMessage(json['result']);
+                        parent.removeClass('panel-warning');
+                        parent.addClass('panel-success');
+                        parent.find('[data-toggle="tooltip"]').hide();
+                        parent.find('.active').removeClass('hide');
+                        
+                    } else {
+                        showAlertMessage(json['result'], true, true);
+                         parent.removeClass('panel-success');
+                         parent.addClass('panel-warning');
+                    }
+                }
+            });
+        }
     });
 
     // Загрузка шаблона
@@ -20,6 +83,7 @@ $().ready(function() {
         parent.find('.panel-heading').append(' - Загружается...');
         id.addClass('glyphicon glyphicon-save');
         data.push({name: 'template_load', value: path});
+        data.push({name: 'template_type', value: $(this).attr('data-type')});
         data.push({name: 'editID', value: 1});
         data.push({name: 'ajax', value: 1});
         data.push({name: 'actionList[editID]', value: 'actionLoad.system.edit'});
@@ -40,9 +104,9 @@ $().ready(function() {
                 } else {
                     showAlertMessage(json['result'], true);
                     parent.addClass('panel-warning');
-                     if (confirm(locale.confirm_load_template)) {
-                         window.open('http://'+json['zip']);
-                     }
+                    if (confirm(locale.confirm_load_template)) {
+                        window.open('http://' + json['zip']);
+                    }
                 }
             }
         });
@@ -72,14 +136,29 @@ $().ready(function() {
         //$('#editor').height($('.tree').height() - $('#editor').offset().top + 100);
         $('#editor').height($(window).height());
         editor.resize();
+
+        // Поиск
+        if ($.getUrlVar('search') !== undefined) {
+            editor.find('@' + $.getUrlVar('search') + '@');
+            editor.clearSelection();
+        }
     }
 
     // Вставить @VAR@ в Ace
-    $(".editor_var").on('click', function() {
-        editor.insert($(this).attr('data-insert'));
-        $(this).removeClass('btn-info');
-        $(this).addClass('btn-default');
-        $(this).find('.glyphicon').addClass('glyphicon-tag');
+    $("body").on('click', ".editor_var", function() {
+
+        // Вставить
+        if ($(this).hasClass('btn-info')) {
+            editor.insert($(this).attr('data-insert'));
+            $(this).removeClass('btn-info');
+            $(this).addClass('btn-default');
+            $(this).find('.glyphicon').addClass('glyphicon-tag');
+        }
+        // Найти
+        else {
+            editor.find($(this).attr('data-insert'));
+            editor.clearSelection();
+        }
     });
 
     // Увеличить Ace

@@ -1,5 +1,6 @@
+<!-- Product -->
 <div itemscope itemtype="http://schema.org/Product">
-    <div class="row product-info product-page-wrapper">
+    <div class="row product-info product-page-wrapper" >
         <!-- Left Starts -->
         <div class="col-sm-5 images-block">
             <div id="fotoload">
@@ -10,11 +11,11 @@
         <!-- Right Starts -->
         <div class="col-sm-7 product-details">
             <!-- Product Name Starts -->
-            <h2 itemprop="name">@productName@</h2>
+            <h1 itemprop="name">@productName@</h1>
             <!-- Product Name Ends -->
             <hr>
             <!-- Manufacturer Starts -->
-            <ul class="list-unstyled manufacturer">
+            <ul class="list-unstyled manufacturer product-page-list">
                 <li>
                     @productArt@
                 </li>
@@ -27,7 +28,7 @@
                         @rateUid@
                     </div>
                 </li>
-                <li> @promotionInfo@ </li>
+                <li>@promotionInfo@</li>
                 <li>@oneclick@</li>
                 <li><a href="/pricemail/UID_@productUid@.html">@productBestPrice@</a></li>
             </ul>
@@ -37,7 +38,7 @@
             <div class="price" itemprop="offers" itemscope itemtype="http://schema.org/Offer">
                 <span class="price-head">Цена :</span>
                 <span class="price-new" itemprop="price">@productPrice@</span> 
-                <span itemprop="priceCurrency" class="price-new rubznak" content="RUB">@productValutaName@</span>
+                <span class="price-new rubznak" itemprop="priceCurrency" content="RUB">@productValutaName@</span>
                 <span class="price-old">@productPriceRub@</span>
             </div>
             <!-- Price Ends -->
@@ -46,35 +47,52 @@
 
             <div class="options fix-wrapper">
 
-                @optionsDisp@
-
-                @ComStartCart@
-                <div class="form-group">
-                    <label class="control-label text-uppercase" for="input-quantity">Количество</label>
-                    <input type="text" name="quantity" value="1" size="2" id="input-quantity" class="form-control addToCartListNum" data-uid="@productUid@"  type="text" maxlength="3" placeholder="1" required="">
+                <div class="product-page-option-wrapper">
+                    @optionsDisp@
                 </div>
-                <div class="cart-button button-group cart-list-button-wrapper">
-                    <button type="button" class="btn btn-cart addToCartList" role="button" data-num="1" data-uid="@productUid@" data-cart="@productSaleReady@">
+                @productParentList@
+
+
+
+                <label class="control-label text-uppercase @elementCartHide@">Количество</label>
+                <div class="quant input-group @elementCartHide@">
+                    <span class="input-group-btn">
+                        <button type="button" class="btn btn-default btn-default_l btn-number"  data-type="minus" data-field="quant[2]">
+                            <span class="glyphicon glyphicon-minus"></span>
+                        </button>
+                    </span>
+                    <input type="text" name="quant[2]" class="form-control form-control_gr input-number" value="1" min="1" max="100">
+                    <span class="input-group-btn">
+                        <button type="button" class=" btn btn-default btn-default_r btn-number" data-type="plus" data-field="quant[2]">
+                            <span class="glyphicon glyphicon-plus"></span>
+                        </button>
+                    </span>
+                </div>
+                <p></p>
+                <div class="cart-button button-group cart-list-button-wrapper @elementCartHide@">
+                    <button type="button" class="btn btn-cart addToCartFull" role="button" data-num="1" data-uid="@productUid@" data-cart="@productSaleReady@">
+                        <i class="fa fa-shopping-cart"></i>                                 
+                        <span>@productSale@</span>
+                    </button>                                   
+                </div>
+               <div class="cart-button button-group cart-list-button-wrapper  @elementCartOptionHide@">
+                    <button type="button" class="btn btn-cart addToCartFull" role="button" data-num="1" data-uid="@productUid@" data-cart="@productSaleReady@">
                         <i class="fa fa-shopping-cart"></i>                                 
                         <span>@productSale@</span>
                     </button>                                   
                 </div>
                 <div class="cart-button button-group compare-list-button-wrapper">
-                    <button type="button" class="btn btn-cart addToWishList" role="button" data-uid="@productUid@">
+                    <button type="button" class="btn btn-cart addToWishList" role="button" data-uid="@productUid@" data-title="Отложить" data-placement="top" data-toggle="tooltip">
                         <i class="fa fa-heart" aria-hidden="true"></i>                            
                         Отложить
                     </button>                                   
                 </div>
                 <div class="cart-button button-group compare-list-button-wrapper">
-                    <button type="button" class="btn btn-cart addToCompareList" role="button" data-uid="@productUid@">
+                    <button type="button" class="btn btn-cart addToCompareList" role="button" data-uid="@productUid@" data-title="Сравнить" data-placement="top" data-toggle="tooltip">
                         <i class="fa fa-refresh" aria-hidden="true"></i>                            
                         Сравнить
                     </button>                                   
                 </div>
-
-                @ComEndCart@ 
-
-                @productParentList@
 
 
                 @ComStartNotice@
@@ -88,8 +106,6 @@
 
             </div>
 
-            <!-- Available Options Ends -->
-            <hr>
         </div>
         <!-- Right Ends -->
     </div>
@@ -119,7 +135,7 @@
         <div class="content panel-smart">
             <div id="commentList"></div>
             <button role="button" class="btn btn-info btn-show-comment-add-block" onclick="$('#addComment').slideToggle();
-                $(this).hide();"><span class="glyphicon glyphicon-plus-sign"></span> Новый комментарий</button>
+                    $(this).hide();"><span class="glyphicon glyphicon-plus-sign"></span> Новый комментарий</button>
             <div id='addComment' class="well well-sm" style='display:none;margin-top:30px;'>
                 <h3>Оставьте свой отзыв</h3>
                 <textarea id="message" class="commentTexttextarea form-control"></textarea>

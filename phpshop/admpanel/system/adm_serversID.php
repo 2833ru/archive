@@ -50,6 +50,9 @@ function actionStart() {
     $Tab1 = $PHPShopGUI->setField("Название:", $PHPShopGUI->setInputText(null, "name_new", $data['name'], 300));
     $Tab1 .= $PHPShopGUI->setField("Адрес:", $PHPShopGUI->setInputText('http://', "host_new", $data['host'], 300));
     $Tab1.=$PHPShopGUI->setField("Статус", $PHPShopGUI->setRadio("enabled_new", 1, "Вкл.", $data['enabled']) . $PHPShopGUI->setRadio("enabled_new", 0, "Выкл.", $data['enabled']));
+    $Tab1.=$PHPShopGUI->setField('Заголовок (Title)', $PHPShopGUI->setTextarea('title_new', $data['title'], false, false, 100));
+    $Tab1.=$PHPShopGUI->setField('Описание (Description)', $PHPShopGUI->setTextarea('descrip_new', $data['descrip'], false, false, 100));
+
 
     if (empty($data['skin']))
         $data['skin'] = $PHPShopSystem->getParam('skin');
@@ -62,14 +65,16 @@ function actionStart() {
     $sql_value[] = array('Выключить все страницы', 4, 0);
     $sql_value[] = array('Включить все меню', 5, 0);
     $sql_value[] = array('Выключить все меню', 6, 0);
+    $sql_value[] = array('Включить все слайдеры', 7, 0);
+    $sql_value[] = array('Выключить все слайдеры', 8, 0);
 
     $Tab1.=$PHPShopGUI->setField("Пакетная обработка", $PHPShopGUI->setSelect('sql', $sql_value));
-    
+
     // Запрос модуля на закладку
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $data);
 
     // Вывод формы закладки
-    $PHPShopGUI->setTab(array("Основное", $Tab1, true),array("Инструкция", $PHPShopGUI->loadLib('tab_showcase', false, './system/')));
+    $PHPShopGUI->setTab(array("Основное", $Tab1, true), array("Инструкция", $PHPShopGUI->loadLib('tab_showcase', false, './system/')));
 
 
     // Вывод кнопок сохранить и выход в футер
@@ -112,7 +117,7 @@ function actionUpdate() {
 
     if (empty($_POST['ajax'])) {
         $License = @parse_ini_file_true("../../license/" . PHPShopFile::searchFile("../../license/", 'getLicense'), 1);
-        $_POST['code_new'] = md5($License['License']['Serial'] . getenv('SERVER_NAME') . $_POST['host_new'] . $PHPShopBase->getParam("connect.host") . $PHPShopBase->getParam("connect.user_db") . $PHPShopBase->getParam("connect.pass_db"));
+        $_POST['code_new'] = md5($License['License']['Serial'] . str_replace('www.','',getenv('SERVER_NAME')) . $_POST['host_new'] . $PHPShopBase->getParam("connect.host") . $PHPShopBase->getParam("connect.user_db") . $PHPShopBase->getParam("connect.pass_db"));
     }
 
     // Команды
@@ -145,6 +150,16 @@ function actionUpdate() {
         case 6:
             $PHPShopOrmCat = new $PHPShopOrm();
             $PHPShopOrmCat->query('update ' . $GLOBALS['SysValue']['base']['menu'] . ' set `servers`=REPLACE(`servers`,"i' . $_POST['rowID'] . 'i",  "")');
+            break;
+
+        case 7:
+            $PHPShopOrmCat = new $PHPShopOrm();
+            $PHPShopOrmCat->query('update ' . $GLOBALS['SysValue']['base']['slider'] . ' set `servers`=CONCAT("i' . $_POST['rowID'] . 'i", `servers` )');
+            break;
+
+        case 8:
+            $PHPShopOrmCat = new $PHPShopOrm();
+            $PHPShopOrmCat->query('update ' . $GLOBALS['SysValue']['base']['slider'] . ' set `servers`=REPLACE(`servers`,"i' . $_POST['rowID'] . 'i",  "")');
             break;
     }
 

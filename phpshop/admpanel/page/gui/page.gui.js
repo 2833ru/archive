@@ -1,5 +1,5 @@
 
-$(document).ready(function() {
+$().ready(function() {
 
     // Указать ID товара в виде тега - Поиск
     $("body").on('click', "#selectModal .search-action", function(event) {

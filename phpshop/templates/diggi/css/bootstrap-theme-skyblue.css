@@ -2,8 +2,19 @@
 .bootstrap-theme{
 color:#fff;
 }
-#header-area, .copyright, .header-wrap.inner{
-background:#3bc6e4 !important;
+#header-area{
+background:url() no-repeat center;
+background-size:cover;
+}
+#footer-area{
+background:url() no-repeat center;
+background-size:cover;
+}
+#header-area,#footer-area{
+background-color:#3bc6e4;
+}
+.header-color,.header-color a,.header-color .btn,.header-color h4,.header-links a{
+color:#ffffff !important;
 }
 .product-info-box .heading:before, .product-head, .side-heading, .panel-default > .panel-heading,.panel-success > .panel-heading,.product-col .btn-cart:hover,.product-info .product-details .btn-cart:hover,.btn-primary, .pagination > .active > a{
 background:#252a2f !important;
@@ -11,10 +22,10 @@ background:#252a2f !important;
 .comments-raiting-wrapper, .product-col .price span.price-new, .product-col h4 a:hover, .product-col h4 a:focus,.product-info .product-details .manufacturer,.product-info .product-details .price-new,.breadcrumb li.active, .breadcrumb li b{
 color:#252a2f !important;
 }
-#main-menu > .container, #main-menu.navbar-fixed-top, .header-wrap.inner #main-menu.navbar-fixed-top{
+#main-menu > .container .navbar-collapse, #main-menu > .container .navbar-header, #main-menu.navbar-fixed-top, .header-wrap.inner #main-menu.navbar-fixed-top{
 background:#1588a3 !important;
 }
-.footer-links, #cart .dropdown-menu, .btn-success, .btn-info, .btn-main, .btn-primary, .pagination > .active > a, #cart .btn-block1 a:hover{
+.copyright, #cart .dropdown-menu, .btn-success, .btn-info, .btn-main, .btn-primary, .pagination > .active > a{
 background:#303030 !important;
 }
 #main-menu .navbar-form .form-control, #main-menu .navbar-form .btn, #main-menu .navbar-nav > li > a:hover, .dropdown-menu.mega-menu, #main-menu .navbar-nav > li.open a,.main-navbar-list-catalog-wrapper, .user-dropdown > .dropdown-menu,.nav-catalog-dropdown-link.open, .sidebar-nav ul.active, .sidebar-nav ul.active li a, #main-menu .navbar-nav > li.active a{
@@ -38,10 +49,10 @@ background:#fff !important;
 .footer-links a{
 color:#8b8b8b !important;
 }
-.header-links a, .header-valuta-disp-wrapper > h4{
+.header-links a{
 color:#ffffff !important;
 }
-#main-menu .navbar-nav > li > a, #cart .btn .fa-shopping-cart,.product-col .btn-cart,.product-info .product-details .btn-cart{
+#main-menu .navbar-nav > li > a, .product-col .btn-cart,.product-info .product-details .btn-cart{
 color:#fff;
 }
 .header-valuta-disp-wrapper .btn-default{

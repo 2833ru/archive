@@ -123,7 +123,8 @@ $(document).ready(function() {
             return false;
         }
     });
-    $('.main-navbar-list-catalog-wrapper > li > a').on('click', function() {
+    $('.main-navbar-list-catalog-wrapper > li > a').removeAttr('data-toggle data-hover data-delay aria-expanded');
+    /*$('.main-navbar-list-catalog-wrapper > li > a').on('click', function() {
         if ($(this).hasClass('active')) {
             $(this).removeClass('active');
             $(this).siblings('ul').removeClass('active');
@@ -133,7 +134,7 @@ $(document).ready(function() {
             $(this).siblings('ul').addClass('active');
             $(this).siblings('ul').addClass('fadeIn animated');
         }
-    });
+    });*/
     var pathname = self.location.pathname;
     //Р°РєС‚РёРІР°С†РёСЏ РјРµРЅСЋ
     $(".sidebar-nav li").each(function(index) {
@@ -169,7 +170,7 @@ $(document).ready(function() {
 
 
         //Активация слайдеров на главной странице
-		if(document.designMode == 'off'){
+	if(!$('.editor_var').length){
         $('.spec-main-icon-slider > .swiper-wrapper .col-md-3.col-sm-6').unwrap();
         $('.spec-main-icon-slider > .swiper-wrapper > div').addClass('swiper-slide');
             var swiper = new Swiper('.spec-main-icon-slider', {
@@ -180,7 +181,6 @@ $(document).ready(function() {
                 preventClicks: false,
                 effect: 'slide',
                 preventClicksPropagation: false,
-                spaceBetween: 10,
                 breakpoints: {
                     768: {
                         slidesPerView: 1
@@ -204,7 +204,6 @@ $(document).ready(function() {
                 preventClicks: false,
                 effect: 'slide',
                 preventClicksPropagation: false,
-                spaceBetween: 10,
                 breakpoints: {
                     768: {
                         slidesPerView: 1
@@ -218,4 +217,13 @@ $(document).ready(function() {
                 }
             });
 		}
+    $('.main-menu-button').on('click', function(){
+        if ($('#main-menu').hasClass('main-menu-fix')) {
+            $('#main-menu').removeClass('main-menu-fix fadeIn');
+            $('body').removeClass('overflow-fix');
+        }else{
+            $('#main-menu').addClass('main-menu-fix fadeIn');
+            $('body').addClass('overflow-fix');
+        }
+    });
 });

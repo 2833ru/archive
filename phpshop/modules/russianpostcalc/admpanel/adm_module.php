@@ -22,7 +22,7 @@ function actionStart() {
     $data = $PHPShopOrm->select();
 
     // Доставка
-    $PHPShopDeliveryArray = new PHPShopDeliveryArray();
+    $PHPShopDeliveryArray = new PHPShopDeliveryArray(array('is_folder'=>"!='1'"));
 
     $DeliveryArray = $PHPShopDeliveryArray->getArray();
     if (is_array($DeliveryArray))

@@ -3,7 +3,7 @@
 /**
  * Cортировка товаров
  * @author PHPShop Software
- * @version 1.4
+ * @version 1.5
  * @package PHPShopCoreFunction
  * @param obj $obj объект класса
  * @return mixed
@@ -11,17 +11,28 @@
 function query_filter($obj) {
 
     $sort = null;
-    $n = $obj->category;
+
+    // Категория. Если есть массив категорий, используем массив
+    if($obj->category_array){
+        $categories_str = implode("','", $obj->category_array);
+        $catt = "(category IN ('$categories_str')) ";
+    }else{
+        $n = $obj->category;
+        // Учет добавочных категорий
+        $catt = '(category=' . $n . ' OR dop_cat LIKE \'%#' . $n . '#%\') ';
+    }
 
     $v = @$_REQUEST['v'];
     $s = intval($_REQUEST['s']);
     $f = intval($_REQUEST['f']);
+    $l = @$_REQUEST['l'];
 
     if ($obj->PHPShopNav->isPageAll())
         $p = PHPShopSecurity::TotalClean($p, 1);
 
     // Кол-во товаров на странице
     $num_row = $obj->PHPShopCategory->getParam('num_row');
+
     if (!empty($num_row))
         $num_row = $num_row;
     else // если 0 делаем по формуле кол-во колонок * 2 строки.
@@ -49,6 +60,11 @@ function query_filter($obj) {
                 $sort.=" and vendor REGEXP 'i" . $hash . "i' ";
             }
         }
+    }
+    
+    // Сортировка по алфавиту ?l=a
+    if(!empty($l)){
+        $sort.= " and name LIKE '".strtoupper(substr(urldecode($l),0,1))."%' ";
     }
 
     // Направление сортировки из настроек каталога. Вторая часть логики в sort.class.php
@@ -115,9 +131,6 @@ function query_filter($obj) {
             default: $order = array('order' => 'num, name' . $order_direction);
         }
     }
-
-    // Учет добавочных категорий
-    $catt = '(category=' . $n . ' OR dop_cat LIKE \'%#' . $n . '#%\') ';
 
     // Преобзазуем массив уловия сортировки в строку
     foreach ($order as $key => $val)

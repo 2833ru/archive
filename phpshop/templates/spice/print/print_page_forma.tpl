@@ -28,7 +28,7 @@
             <hr>
             <div class="media">
                 <div class="media-left">
-                    <a href="http://@serverShop@/shop/UID_@productId@.html"><IMG src="http://@serverShop@@productImg@" alt="@productName@" title="@productName@" border="0" hspace="10"></a>
+                    <a href="http://@serverShop@/shop/UID_@productId@.html"><IMG src="http://@serverShop@@productImg@" alt="@productName@" title="@productName@" border="0" hspace="10" style="max-width:200px;height:auto"></a>
                 </div>
                 <div class="media-body">
                     <div class="panel panel-default">

@@ -82,7 +82,7 @@ function actionStart() {
     $PHPShopOrm = new PHPShopOrm();
     $PHPShopOrm->debug = false;
     $PHPShopOrm->sql = 'SELECT a.*, b.name, b.login FROM ' . $GLOBALS['SysValue']['base']['messages'] . ' AS a 
-        JOIN ' . $GLOBALS['SysValue']['base']['shopusers'] . ' AS b ON a.UID = b.id ' . $where . ' ORDER BY a.DateTime desc limit ' . $limit;
+        LEFT JOIN ' . $GLOBALS['SysValue']['base']['shopusers'] . ' AS b ON a.UID = b.id ' . $where . ' ORDER BY a.DateTime desc limit ' . $limit;
 
     $data = $PHPShopOrm->select();
     if (is_array($data))

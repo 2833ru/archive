@@ -124,7 +124,7 @@ class AddToTemplateVisualCart extends PHPShopElements {
             }
 
             // Дата обновления корзины для первого вызова
-            setcookie("cart_update_time", time(), 0, "/", $_SERVER['SERVER_NAME'], 0);
+            @setcookie("cart_update_time", time(), 0, "/", $_SERVER['SERVER_NAME'], 0);
         }
     }
 

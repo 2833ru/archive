@@ -11,6 +11,8 @@
         </div>
         <div class="btn-sale">
             <h3>@productPrice@ <span class="rubznak">@productValutaName@</span> <sup class="text-muted small">@productPriceRub@</sup></h3>
-            @ComStartCart@<button class="btn btn-primary addToCartList btn-sm" data-uid="@productUid@" role="button">@productSale@</button>@ComEndCart@ <button class="btn btn-default addToWishList btn-sm" role="button" data-uid="@productUid@">Отложить</button></div>
+            <a class="btn btn-primary addToCartList btn-sm @elementCartOptionHide@" href="/shop/UID_@productUid@.html">@productSale@</a>
+            <button class="btn btn-primary addToCartList btn-sm @elementCartHide@" data-uid="@productUid@" role="button">@productSale@</button> 
+            <button class="btn btn-default addToWishList btn-sm" role="button" data-uid="@productUid@">Отложить</button></div>
     </div>
 </div>

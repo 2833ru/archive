@@ -1,0 +1,1 @@
+ALTER TABLE `phpshop_products` ADD `vendor_code` varchar(255) DEFAULT '';

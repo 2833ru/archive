@@ -17,7 +17,7 @@
         <link href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@css/bootstrap.min.css" rel="stylesheet">
 
     </head>
-    <body id="body" data-dir="@ShopDir@" data-path="@php echo $GLOBALS['PHPShopNav']->objNav['path']; php@" data-id="@php echo $GLOBALS['PHPShopNav']->objNav['id']; php@" data-subpath="@php echo $GLOBALS['PHPShopNav']->objNav['name']; php@">
+    <body id="body" data-dir="@ShopDir@" data-path="@php echo $GLOBALS['PHPShopNav']->objNav['path']; php@" data-id="@php echo $GLOBALS['PHPShopNav']->objNav['id']; php@" data-subpath="@php echo $GLOBALS['PHPShopNav']->objNav['name']; php@" data-token="@dadataToken@">
 
         <!-- Template -->
         <link href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@css/animate.css" rel="stylesheet">
@@ -29,7 +29,6 @@
 
         <!-- Fonts -->
         <link href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@css/font-awesome.min.css" rel="stylesheet">
-        <link href="https://fonts.googleapis.com/css?family=Roboto+Condensed:400,700italic,700,400italic,300italic,300" rel="stylesheet">
 
         <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
         <!--[if lt IE 9]>
@@ -47,24 +46,20 @@
         <link href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@css/jquery-ui.min.css" rel="stylesheet">
         <link href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@css/bootstrap-select.min.css" rel="stylesheet">
         <link href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@css/bar.css" rel="stylesheet">
+        <link href="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@css/suggestions.min.css" rel="stylesheet">
 
         <!-- Header Section Starts -->
         <header id="header-area">
             <!-- Nested Container Starts -->
             <div class="container">
                 <!-- Header Top Starts -->
-                <div class="row">
+                <div class="header-top">
+                    <!-- Row Starts -->
+                    <div class="row">
                         <!-- Header Links Starts -->
                         <div class="col-sm-12 col-xs-12 col-md-8">
-                            <div class="header-links">
+                            <div class="header-links header-color">
                                 <ul class="nav navbar-nav pull-left">
-                                    <li>
-                                        <a class="hidden-xs hidden-sm link" href="/">                                            
-                                            <span class="">
-                                                Домой
-                                            </span>
-                                        </a>
-                                    </li>
                                     @wishlist@
                                     <li>
                                         <a class="hidden-xs hidden-sm link" href="/compare/">                                    
@@ -73,13 +68,6 @@
                                         <a href="/compare/" class="btn btn-main btn-sm hidden-md hidden-lg">
                                             <i class="fa fa-refresh" aria-hidden="true"></i>
                                             Сравнить (<span id="numcompare">@numcompare@</span>)
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a class="hidden-xs hidden-sm link" href="/order/">
-                                            <span class="">
-                                                Корзина
-                                            </span>
                                         </a>
                                     </li>
                                     @usersDisp@
@@ -91,7 +79,7 @@
                         <div class="col-sm-4 col-md-4 hidden-xs hidden-sm">
                             <div class="pull-right">                           
                                 <!-- Currency Starts -->
-                                <div class="btn-group header-valuta-disp-wrapper">
+                                <div class="btn-group header-valuta-disp-wrapper header-color">
                                     <h4><i class="fa fa-phone-square" aria-hidden="true"></i> Тел: @telNumMobile@</h4>
                                 </div>
                                 <!-- Currency Ends -->                      
@@ -99,14 +87,21 @@
                         </div>
                         <!-- Currency & Languages Ends -->
                     </div>
+                    <!-- Row Ends -->
+                </div>
                 <!-- Header Top Ends -->
                 <!-- Main Header Starts -->
                 <div class="main-header">
                     <!-- Row Starts -->
                     <div class="row">
+                        <div class="col-md-12 hidden-xs hidden-sm">
+                            <div class="returncall-wrapper returncall-desctop header-links pull-right header-color">
+                                @returncall@
+                            </div>
+                        </div>
                         <!-- Search Starts -->
                         <div class="col-sm-3 hidden-xs">
-                            <form id="search_form" action="/search/" role="search" method="post">
+                            <form id="search_form" action="/search/" role="search" method="post" class="header-color">
                                 <div class="input-group">
                                     <input class="form-control input-lg" name="words" maxlength="50" id="search"  placeholder="Искать..." required="" type="search" data-trigger="manual" data-container="body" data-toggle="popover" data-placement="bottom" data-html="true"  data-content="">
                                     <span class="input-group-btn">
@@ -124,16 +119,18 @@
                                 <a href="/">
                                     <img src="@logo@" alt="@name@" class="img-responsive" /></a>
                             </div>
+                            <div class="returncall-wrapper header-links hidden-md hidden-lg header-color">
+                                @returncall@
+                            </div>
                         </div>
                         <!-- Logo Starts -->
                         <!-- Shopping Cart Starts -->
-                        <div class="col-md-3 col-sm-4 col-xs-12">
-                            <div id="cart" class="btn-group btn-block">
-                                <button id="cartlink" type="button" data-toggle="dropdown" class="btn btn-block btn-lg dropdown-toggle" data-trigger="click" data-container="body" data-placement="bottom" data-html="true" data-url="/order/" data-content='@visualcart@'>
+                        <div class="col-md-3 col-sm-4 col-xs-12 hidden-xs">
+                            <div id="cart" class="btn-group btn-block header-color">
+                                <button id="cartlink" type="button" data-toggle="dropdown" class="btn btn-block btn-lg dropdown-toggle" data-trigger="click" data-container="body"  data-placement="bottom" data-html="true" data-url="/order/" data-content='@visualcart@'>
                                     <i class="fa fa-shopping-cart"></i>
                                     <span>Корзина:</span> 
-                                    <span id="cart-total"><span><span id="num">@num@</span>шт. -</span><span id="sum"> @sum@</span> <span class="rubznak">@productValutaName@</span></span>
-                                    <i class="fa fa-caret-down"></i>
+                                    <span id="cart-total"><span><span id="num">@num@</span>шт. - </span><span id="sum"> @sum@</span> <span class="rubznak">@productValutaName@</span></span>
                                 </button>
                                 @visualcart@
                             </div>
@@ -145,10 +142,10 @@
                 <!-- Main Header Ends -->
             </div>
             <!-- Nested Container Ends -->
-
+            
             <!-- Header Area Background Block Starts -->
             <div class="header-area-background-block"></div>
-            <!-- Header Area Background Block Ends -->     
+            <!-- Header Area Background Block Ends -->
         </header>
         <!-- Header Section Ends -->
 
@@ -191,30 +188,33 @@
         <!-- Main Menu Ends -->
 
         <!-- Main Container Starts -->
-        <div class="main-container container">
+        <div class="main-container container shop-page">
             <!-- Nested Row Starts -->
             <div class="row">
-                <!-- Primary Content Starts -->
-                <div class="col-md-9 col-xs-12">
-                    @DispShop@
-                    @getPhotos@
-                </div>
-                <!-- Primary Content Ends -->
                 <!-- Sidebar Starts -->
-                <div class="col-md-3 visible-lg visible-md">
+                <div class="col-xs-12 col-md-3 sidebar-right">
+                    <div class="order-page-sidebar-user-block hidden-xs hidden-sm">
+                        <h5 class="user-title">Личный кабинет</h5>
+                        <ul class="user-list">
+                            <li><a href="/users/">@UsersLogin@</a></li>
+                            <li><a href="/users/order.html">Отследить заказ</a></li>
+                            <li><a href="/users/notice.html">Уведомления о товарах</a></li>
+                            <li><a href="/users/message.html">Связь с менеджерами</a></li>
+                            @php if($_SESSION['UsersId']) echo '<li><a href="?logout=true">Выйти</a></li>'; php@
+                        </ul>
+                    </div>
                     <!-- Categories Links Starts -->
-                    <h3 class="side-heading">Категории</h3>
-                    <ul class="list-group sidebar-nav">
+                    <h3 class="side-heading hidden-xs hidden-sm">Категории</h3>
+                    <ul class="list-group sidebar-nav hidden-xs hidden-sm">
                         @leftCatal@
                     </ul>
 
                     <!-- Categories Links Ends -->
                     <!-- Фасетный фильтр -->
                     <div class="hide" id="faset-filter">
-                        <h3 class="side-heading">Фильтр товаров</h3>                    
-                        <div class="list-group">
+                        <h3 class="side-heading filter-title">Фильтр товаров <a href="?" id="faset-filter-reset" data-toggle="tooltip" data-placement="top" title="Сбросить фильтр"><span class="glyphicon glyphicon-remove"></span></a></h3>                    
+                        <div class="list-group filter-body-fix">
                             <div id="faset-filter-body">Загрузка...</div>
-
                             <div id="price-filter-body">
                                 <h4>Цена</h4>
                                 <form method="get" id="price-filter-form">
@@ -235,20 +235,32 @@
                         </div>
                     </div>
                     <!--/ Фасетный фильтр -->
-                    
-                    <!-- Товар дня -->
-                    @productDay@
-                    <!-- Товар дня -->
-                    
-                    <h3 class="side-heading">Полезная информация</h3>
-                    <div class="list-group sidebar-nav">
-                        @pageCatal@
-                    </div>  
-                    
-                    @rightMenu@
-
+                    <div class="sidebar-fix-block  hidden-xs hidden-sm">
+                        <!-- Товар дня -->
+                        @productDay@
+                        <!-- Товар дня -->
+                        
+                        <h3 class="side-heading">Полезная информация</h3>
+                        <div class="list-group sidebar-nav">
+                            @pageCatal@
+                        </div>  
+                        
+                        @rightMenu@
+                    </div>
                 </div>
                 <!-- Sidebar Ends -->
+                <!-- Primary Content Starts -->
+                <div class="col-md-9 col-xs-12">
+                    @DispShop@
+                    @getPhotos@
+                </div>
+                <div class="col-xs-12">
+                    
+                        <div class="banner-block">
+                            @banersDisp@
+                        </div>
+                </div>
+                <!-- Primary Content Ends -->
             </div>
             <!-- Nested Row Ends -->
         </div>
@@ -267,7 +279,7 @@
                 <!-- Container Starts -->
                 <div class="container">
                     <!-- Information Links Starts -->
-                    <div class="col-md-2 col-sm-4 col-xs-12">
+                    <div class="col-md-3 col-sm-4 col-xs-12">
                         <h5>Информация</h5>
                         <ul>
                             @topMenu@
@@ -391,10 +403,10 @@
                             @facebookAuth@ @twitterAuth@
                         </div>
                         <div class="modal-footer">
-                            <span class="pull-left"><a href="/users/sendpassword.html" class="btn btn-default">Забыли?</a>
+                            <button type="submit" class="btn btn-primary pull-left">Войти</button>
+                            <span class="pull-right"><a href="/users/sendpassword.html" class="btn btn-default">Забыли?</a>
                             </span>
                             <input type="hidden" value="1" name="user_enter">
-                            <button type="submit" class="btn btn-primary">Войти</button>
                         </div>
                     </form>   
                 </div>
@@ -425,6 +437,42 @@
             </div>
         </div>
         <!--/ Модальное окно мобильного поиска -->
+
+    <!-- Модальное окно returncall-->
+        <div class="modal fade bs-example-modal-sm" id="returnCallModal" tabindex="-1" role="dialog"  aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                        <h4 class="modal-title">@leftMenuName@</h4>
+                    </div>
+                     <form role="form" method="post" name="user_forma" action="@ShopDir@/returncall/">
+                    <div class="modal-body">
+                       
+                            <div class="form-group">
+                                <input type="text" name="returncall_mod_name" class="form-control" placeholder="Имя..." required="">
+                            </div>
+                            <div class="form-group">
+                                <input type="text" name="returncall_mod_tel" class="form-control" placeholder="Телефон..." required="">
+                            </div>
+                            <div class="form-group">
+                                <input placeholder="Время звонка:" class="form-control" type="text" name="returncall_mod_time_start">
+                            </div>
+                            <div class="form-group">
+                                <textarea placeholder="Сообщение" class="form-control" name="returncall_mod_message"></textarea>
+                            </div>
+                            @returncall_captcha@
+                           
+                       
+                    </div>
+                     <div class="modal-footer">
+                                <input type="hidden" name="returncall_mod_send" value="1">
+                                <button type="submit" class="btn btn-primary">Заказать звонок</button>
+                     </div>
+                     </form>
+                </div>
+            </div>
+        </div>
         
 
         <!-- JQuery Plugins  -->
@@ -438,4 +486,5 @@
         <script src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@js/jquery.waypoints.min.js"></script>
         <script src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@js/inview.min.js"></script>
         <script src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@js/jquery.maskedinput.min.js"></script>
+        <script src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin'].chr(47); php@js/jquery.suggestions.min.js"></script>
         @visualcart_lib@

@@ -114,7 +114,7 @@ class PHPShopSeoPro {
 
     function setLatin($str, $enabled = true) {
         if ($enabled) {
-            $str = PHPShopString::toLatin($str);
+            $str = PHPShopString::toLatin(trim($str));
             $str = str_replace("_", "-", $str);
             //$str = str_replace("/", "-", $str);
         }

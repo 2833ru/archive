@@ -32,13 +32,19 @@ class PHPShopArray {
      * Ћимит 
      * @var int 
      */
-    var $limit = 1000;
+    var $limit = 3000;
 
     /**
      * @var bool режим отладки
      */
     var $debug = false;
     var $cache = true;
+
+    /**
+     * вывод ошибок mysql
+     * @var bool 
+     */
+    var $mysql_error = false;
 
     /**
      * @var int многомерный [1] одномерный масив [2] или [3] простой массив
@@ -66,10 +72,10 @@ class PHPShopArray {
 
         $this->objArg = func_get_args();
 
-       // ƒополнительные аргументы
-       if (is_array($this->args) and count($this->args)>0)
-           $this->objArg= array_merge($this->objArg,$this->args);
-       
+        // ƒополнительные аргументы
+        if (is_array($this->args) and count($this->args) > 0)
+            $this->objArg = array_merge($this->objArg, $this->args);
+
         $this->objArgNum = func_num_args();
         $this->setArray();
     }
@@ -89,6 +95,7 @@ class PHPShopArray {
 
 
         $PHPShopOrm = new PHPShopOrm($this->objBase);
+        $PHPShopOrm->mysql_error = $this->mysql_error;
         $PHPShopOrm->debug = $this->debug;
         $PHPShopOrm->cache = $this->cache;
         $data = $PHPShopOrm->select($select, $this->objSQL, $this->order, array('limit' => $this->limit));

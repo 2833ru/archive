@@ -77,7 +77,7 @@ class DocSave {
                         break;
 
                     default:
-                        $f_r = ".htm";
+                        $f_r = ".pdf";
                         break;
                 }
 

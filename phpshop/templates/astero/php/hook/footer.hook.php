@@ -1,7 +1,7 @@
 <?php
 
 function footer_copy_hook() {
-    $sign = 1479292547;
+    $sign = 1483019617;
     if (!empty($GLOBALS['RegTo']['SupportExpires']) and $GLOBALS['RegTo']['SupportExpires'] < $sign){
         echo ('<div class="container"><div class="alert alert-danger alert-dismissible text-center" role="alert">
   <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>

@@ -27,6 +27,7 @@ class PHPShopCore {
      * @var bool 
      */
     var $debug = false;
+    var $template_debug = true;
 
     /**
      * вывод SQL ошибок
@@ -173,8 +174,8 @@ class PHPShopCore {
     function navigation($id, $name, $title = false) {
         $dis = null;
         // Шаблоны разделителя навигации
-        $spliter = ParseTemplateReturn($this->getValue('templates.breadcrumbs_splitter'));
-        $home = ParseTemplateReturn($this->getValue('templates.breadcrumbs_home'));
+        $spliter = ParseTemplateReturn($this->getValue('templates.breadcrumbs_splitter'), false, $this->template_debug);
+        $home = ParseTemplateReturn($this->getValue('templates.breadcrumbs_home'), false, $this->template_debug);
 
         // Если нет шаблона разделителей
         if (empty($spliter))
@@ -243,6 +244,13 @@ class PHPShopCore {
 
         if ($this->PHPShopSystem) {
 
+
+            // Мультибаза
+            if (defined("HostID")) {
+                $this->PHPShopSystem->setParam("title", HostTitle);
+                $this->PHPShopSystem->setParam("descrip", HostDescription);
+            }
+
             if (!empty($this->title))
                 $this->set('pageTitl', $this->title);
             else
@@ -259,11 +267,13 @@ class PHPShopCore {
                 $this->set('pageKeyw', $this->PHPShopSystem->getValue("keywords"));
         }
 
+
         // Навигация хлебные крошки если не заполнено
         if ($this->get('breadCrumbs') == '') {
             if (strstr($this->title, '-'))
                 $title = explode("-", $this->title);
-            else $title[0]=$this->title;
+            else
+                $title[0] = $this->title;
             $this->navigation(false, $title[0]);
         }
     }
@@ -481,7 +491,7 @@ class PHPShopCore {
         else
             $template_file = $this->getValue('dir.templates') . chr(47) . $_SESSION['skin'] . chr(47) . $template;
         if (is_file($template_file)) {
-            $dis = ParseTemplateReturn($template, $mod);
+            $dis = ParseTemplateReturn($template, $mod, $this->template_debug);
 
             // Замена в шаблоне
             if (is_array($replace)) {
@@ -517,7 +527,7 @@ class PHPShopCore {
      */
     function parseTemplate($template, $mod = false, $replace = null) {
         $this->set('productPageDis', $this->ListInfoItems);
-        $dis = ParseTemplateReturn($template, $mod);
+        $dis = ParseTemplateReturn($template, $mod, $this->template_debug);
 
         // Замена в шаблоне
         if (is_array($replace)) {
@@ -761,8 +771,8 @@ class PHPShopCore {
         $this->title = "Ошибка 404  - " . $this->PHPShopSystem->getValue("name");
 
         // Заголовок ошибки
-        header("HTTP/1.0 404 Not Found");
-        header("Status: 404 Not Found");
+        @header("HTTP/1.0 404 Not Found");
+        @header("Status: 404 Not Found");
 
         // Подключаем шаблон
         $this->parseTemplate($this->getValue('templates.error_page_forma'));

@@ -16,7 +16,7 @@ PHPShopObj::loadClass("valuta");
 PHPShopObj::loadClass("security");
 
 // Подключение к БД
-$PHPShopBase = new PHPShopBase($_classPath . "/inc/config.ini");
+$PHPShopBase = new PHPShopBase($_classPath . "/inc/config.ini",true,true);
 
 // Подключение хука
 function loadHooks() {

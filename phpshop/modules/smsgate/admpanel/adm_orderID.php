@@ -1,40 +1,54 @@
 <?php
 
-function sendSmsgate($data) {
+function sendSmsgate($data)
+{
 
     // SMS оповещение пользователю о смене статуса заказа
     if ($data['statusi'] != $_POST['statusi_new']) {
 
-    // Статусы заказов
-      $PHPShopOrderStatusArray = new PHPShopOrderStatusArray();
-      $GetOrderStatusArray = $PHPShopOrderStatusArray->getArray();
+        // Статусы заказов
+        $PHPShopOrderStatusArray = new PHPShopOrderStatusArray();
+        $GetOrderStatusArray = $PHPShopOrderStatusArray->getArray();
 
-      // Настройки модуля
-      include_once(dirname(__FILE__) . '/mod_option.php');
-      $PHPShopSmsgate = new PHPShopSmsgate();
+        // Настройки модуля
+        include_once(dirname(__FILE__) . '/mod_option.php');
+        $PHPShopSmsgate = new PHPShopSmsgate();
 
-      // получение шаблона
-      $PHPShopSystem = new PHPShopSystem();
-      $nameShop = $PHPShopSystem->objRow['name'];
-      $statusOrderTpl = $PHPShopSmsgate->getTplStatusOrder();
+        // получение шаблона
+        $statusOrderTpl = $PHPShopSmsgate->getTplStatusOrder();
 
-      // массив данных для вставки при парсинге строки
-      $datainsert = array(
-        '@NameShop@'    => $nameShop, 
-        '@OrderNum@'    => $data['uid'],
-        '@OrderStatus@' => $_POST['statusi_new'] ? $GetOrderStatusArray[$_POST['statusi_new']]['name'] : 'Подтвержден'
-      );
+        if ($PHPShopSmsgate->getCascadeEnabled()) {
+            $statusOrderTpl = $PHPShopSmsgate->getTplStatusOrderViber();
+        }
 
-      // телефон на который отправляется сообщение
-      $phone = array($PHPShopSmsgate->true_num($data['tel']));
 
-      // сообщение
-      $msg = $PHPShopSmsgate->parseString($statusOrderTpl, $datainsert);
+        $PHPShopSystem = new PHPShopSystem();
+        $nameShop = $PHPShopSystem->objRow['name'];
 
-      $PHPShopSmsgate->sendSmsgate($phone,$msg);
-      
+        // массив данных для вставки при парсинге строки
+        $datainsert = array(
+            '@NameShop@' => $nameShop,
+            '@OrderNum@' => $data['uid'],
+            '@OrderStatus@' => $_POST['statusi_new'] ? $GetOrderStatusArray[$_POST['statusi_new']]['name'] : 'Подтвержден'
+        );
+
+        // телефон на который отправляется сообщение
+        $phone = array($PHPShopSmsgate->true_num($data['tel']));
+
+        // сообщение
+        $msg = $PHPShopSmsgate->parseString($statusOrderTpl, $datainsert);
+
+
+        if ($PHPShopSmsgate->getCascadeEnabled()) {
+            $PHPShopSmsgate->sendSmsgate($phone, $msg, 'change_status_order_template_viber');
+        } else {
+            $PHPShopSmsgate->sendSmsgate($phone, $msg);
+        }
+
+
+
     }
-    
+
 }
 
 $addHandler = array(

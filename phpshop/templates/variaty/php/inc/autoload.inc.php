@@ -101,7 +101,7 @@ function create_theme_menu2($file) {
     $return = null;
     if (preg_match("/^style-theme2-([a-zA-Z0-9_]{1,30}).css$/", $file, $match)) {
 
-        return '<div class="bootstrap-theme" data-for="2" style="background:url(images/backgrounds/' . $match[1] . '.png);" title="' . $match[1] . '" data-skin="style-theme2-' . $match[1] . '"></div>';
+        return '<div class="bootstrap-theme" data-for="2" style="background:url(phpshop/templates/'.$_SESSION['skin'].'/images/backgrounds/' . $match[1] . '.png);" title="' . $match[1] . '" data-skin="style-theme2-' . $match[1] . '"></div>';
     }
 }
 

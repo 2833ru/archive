@@ -10,12 +10,41 @@
         </var>
     </element>
     <element>
-        <name>.header-area-background-block,.footer-links</name>
+        <name>#header-area,#footer-area</name>
         <description>Палитра</description>
         <content>Цветовая палитра</content>
         <var>
             <name>filter</name>
             <type>slider</type>
+        </var>
+    </element>
+    <element>
+        <name>#header-area</name>
+        <description>Шапка</description>
+        <content>Изображение в шапке</content>
+        <var>
+            <name>background</name>
+            <type>image</type>
+        </var>
+    </element>
+    <element>
+        <name>#footer-area</name>
+        <description>Подвал</description>
+        <content>Изображение в подвале</content>
+        <var>
+            <name>background</name>
+            <type>image</type>
+        </var>
+    </element>
+        <element>
+        <name>.header-color,.header-color a,.header-color .btn,.header-color h4,.header-links a</name>
+        <description>Текст</description>
+        <content>Цвет текста и ссылок в шапке</content>
+        <var>
+            <name>color</name>
+            <type>color</type>
+            <important>true</important>
+            <theme>true</theme>
         </var>
     </element>
     <element>

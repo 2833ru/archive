@@ -4,7 +4,7 @@
  * Элемент стандартных системных переменных
  * @author PHPShop Software
  * @tutorial http://wiki.phpshop.ru/index.php/PHPShopCoreElement
- * @version 1.2
+ * @version 1.3
  * @package PHPShopElements
  */
 class PHPShopCoreElement extends PHPShopElements {
@@ -110,6 +110,16 @@ class PHPShopCoreElement extends PHPShopElements {
 
         // Логотип
         $this->set('logo', $this->PHPShopSystem->getLogo());
+
+        // DaData.ru
+        if ($this->PHPShopSystem->getSerilizeParam('admoption.dadata_enabled')) {
+            $dadataToken = $this->PHPShopSystem->getSerilizeParam('admoption.dadata_token');
+            if (empty($dadataToken))
+                $dadataToken = 'b13e0b4fd092a269e229887e265c62aba36a92e5';
+            $this->set('dadataToken', $dadataToken);
+        }
+        else
+            $this->set('dadataToken', null);
     }
 
     /**
@@ -137,6 +147,7 @@ class PHPShopUserElement extends PHPShopElements {
      */
     function __construct() {
         $this->debug = false;
+        $this->template_debug = true;
         $this->objBase = $GLOBALS['SysValue']['base']['shopusers'];
         parent::__construct();
 
@@ -165,7 +176,6 @@ class PHPShopUserElement extends PHPShopElements {
     function logout() {
         unset($_SESSION['UsersId']);
         unset($_SESSION['UsersStatus']);
-        unset($_SESSION['UsersId']);
         unset($_SESSION['UsersLogin']);
         unset($_SESSION['UsersName']);
         unset($_SESSION['UsersMail']);
@@ -363,6 +373,7 @@ class PHPShopPageCatalogElement extends PHPShopElements {
      * Конструктор
      */
     function __construct() {
+        $this->template_debug = true;
         $this->objBase = $GLOBALS['SysValue']['base']['page_categories'];
         parent::__construct();
     }
@@ -396,6 +407,7 @@ class PHPShopPageCatalogElement extends PHPShopElements {
 
                     $this->set('catalogName', $row['name']);
                     $this->set('catalogId', $row['id']);
+                    $this->set('catalogPodcatalog', null);
 
                     // Перехват модуля
                     $this->setHook(__CLASS__, __FUNCTION__, $row, 'MIDDLE');
@@ -485,6 +497,7 @@ class PHPShopTextElement extends PHPShopElements {
      */
     function PHPShopTextElement() {
         $this->objBase = $GLOBALS['SysValue']['base']['table_name14'];
+        $this->template_debug = true;
         parent::__construct();
     }
 
@@ -726,6 +739,7 @@ class PHPShopNewsElement extends PHPShopElements {
      */
     function __construct() {
         $this->debug = false;
+        $this->template_debug = true;
         $this->objBase = $GLOBALS['SysValue']['base']['table_name8'];
         parent::__construct();
     }
@@ -794,6 +808,8 @@ class PHPShopSliderElement extends PHPShopElements {
      * @var bool Показывать слайдер только на главной
      */
     var $disp_only_index = true;
+    var $template_debug = false;
+    var $debug = false;
 
     /**
      * @var int  Кол-во изображений
@@ -804,7 +820,6 @@ class PHPShopSliderElement extends PHPShopElements {
      * Конструктор
      */
     function __construct() {
-        $this->debug = false;
         $this->objBase = $GLOBALS['SysValue']['base']['slider'];
         parent::__construct();
     }
@@ -828,8 +843,15 @@ class PHPShopSliderElement extends PHPShopElements {
         }
         else
             $view = true;
+
+        // Мультибаза
+        if (defined("HostID"))
+            $where['servers'] = " REGEXP 'i" . HostID . "i'";
+
+        $where['enabled'] = '="1"';
+
         if (!empty($view)) {
-            $result = $this->PHPShopOrm->select(array('image', 'alt', 'link'), array('enabled' => '="1"'), array('order' => 'num, id DESC'), array("limit" => $this->limit));
+            $result = $this->PHPShopOrm->select(array('image', 'alt', 'link'), $where, array('order' => 'num, id DESC'), array("limit" => $this->limit));
 
             // Проверка на еденичню запись
             if ($this->limit > 1)
@@ -996,6 +1018,7 @@ class PHPShopBannerElement extends PHPShopElements {
 
     function __construct() {
         $this->debug = false;
+        $this->template_debug = true;
         $this->objBase = $GLOBALS['SysValue']['base']['table_name15'];
         parent::__construct();
     }
@@ -1277,6 +1300,9 @@ class PHPShopRecaptchaElement extends PHPShopElements {
      */
     public function true(){
     return $this->recaptcha;
+
+
+
 
 
     }

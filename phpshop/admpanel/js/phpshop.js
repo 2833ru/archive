@@ -401,7 +401,7 @@ $().ready(function() {
     });
 
     // Редактировать из списка dropdown
-    $("#dropdown_action").on('mouse', function() {
+    $("body").on('mouse',"#dropdown_action", function() {
         $("input:checkbox[name=items]").each(function() {
             this.checked = !this.checked && !this.disabled;
         });

@@ -38,11 +38,11 @@ function actionStart() {
     // Содержание закладки 2
     $Tab1.= $PHPShopGUI->setField("Ответ", $oFCKeditor->AddGUI());
 
-    // Вывод формы закладки
-    $PHPShopGUI->setTab(array("Основное", $Tab1));
-
     // Запрос модуля на закладку
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, null);
+
+    // Вывод формы закладки
+    $PHPShopGUI->setTab(array("Основное", $Tab1));
 
     // Вывод кнопок сохранить и выход в футер
     $ContentFooter = $PHPShopGUI->setInput("submit", "saveID", "ОК", "right", 70, "", "but", "actionInsert.gbook.create");

@@ -73,8 +73,23 @@
             <moving>true</moving>
         </var>
         <var>
+            <name>company</name>
+            <description>Название комании</description>
+            <moving>true</moving>
+        </var>
+        <var>
+            <name>streetAddress</name>
+            <description>Адрес комании</description>
+            <moving>true</moving>
+        </var>
+        <var>
             <name>serverName</name>
             <description>Адрес сайта</description>
+            <moving>true</moving>
+        </var>
+        <var>
+            <name>logo</name>
+            <description>Логотип сайта</description>
             <moving>true</moving>
         </var>
         <var>
@@ -159,7 +174,7 @@
         </var>
         <var>
             <name>mainContent</name>
-            <description>Привественного сообщения</description>
+            <description>Привественное сообщение</description>
             <moving>true</moving>
         </var>
         <var>

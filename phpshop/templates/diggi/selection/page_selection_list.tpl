@@ -1,5 +1,5 @@
 <div class="page-header">
-    <h2>@sortName@</h2>
+    <h1 class="main-heading2">@sortName@</h1>
 </div>
 
 

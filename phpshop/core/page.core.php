@@ -314,7 +314,7 @@ class PHPShopPage extends PHPShopCore {
         // Выборка данных
         $PHPShopOrm = new PHPShopOrm($this->getValue('base.page_categories'));
         $PHPShopOrm->debug = $this->debug;
-        $dataArray = $PHPShopOrm->select(array('name', 'id'), array('parent_to' => '=' . $this->category), array('order' => 'num'), array('limit' => 100));
+        $dataArray = $PHPShopOrm->select(array('name', 'id'), array('parent_to' => '=' . $this->category), array('order' => 'num,id desc'), array('limit' => 100));
         if (is_array($dataArray))
             foreach ($dataArray as $row) {
 

@@ -18,7 +18,7 @@ function userorderpaymentlink_mod_yandexkassa_hook($obj, $PHPShopOrderFunction) 
             $inv_id = $mrh_ouid[0] . "" . $mrh_ouid[1];
 
             // Сумма покупки
-            $out_summ = $PHPShopOrderFunction->getTotal();
+            $out_summ = floatval(number_format($PHPShopOrderFunction->getTotal(), 2, '.', ''));
 
             // Платежная форма
             $payment_forma .= PHPShopText::setInput('hidden', 'shopId', trim($option['merchant_id']), false, 10);
@@ -55,8 +55,16 @@ function userorderpaymentlink_mod_yandexkassa_hook($obj, $PHPShopOrderFunction) 
             // Корзина
             if (is_array($order['Cart']['cart'])) {
 
+
                 foreach ($order['Cart']['cart'] as $product) {
-                    $ym_merchant_receipt['items'][] = array('text' => $product['name'], 'quantity' => floatval(number_format($product['num'], 3, '.', '')), 'price' => array('amount' => floatval(number_format($product['price'], 2, '.', ''))), 'tax' => $tax);
+
+                    // Скидка
+                    if ($order['Person']['discount'] > 0)
+                        $price = $product['price'] - ($product['price'] * $order['Person']['discount'] / 100);
+                    else
+                        $price = $product['price'];
+
+                    $ym_merchant_receipt['items'][] = array('text' => $product['name'], 'quantity' => floatval(number_format($product['num'], 3, '.', '')), 'price' => array('amount' => floatval(number_format($price, 2, '.', ''))), 'tax' => $tax);
                 }
             }
 
@@ -83,7 +91,7 @@ function userorderpaymentlink_mod_yandexkassa_hook($obj, $PHPShopOrderFunction) 
             }
 
             $payment_forma.="<input type='hidden' name='ym_merchant_receipt' value='" . PHPShopString::json_safe_encode($ym_merchant_receipt) . "'>";
-            
+
             // Тип оплаты
             $v = $PHPShopYandexkassaArray->get_pay_variants_array(unserialize($option['pay_variants']), true);
             $payment_forma.=PHPShopText::select('paymentType', $v, 250, 'left', false, false, false, 1, false, 'form-control') . ' ';
@@ -96,7 +104,7 @@ function userorderpaymentlink_mod_yandexkassa_hook($obj, $PHPShopOrderFunction) 
                 $action = 'https://money.yandex.ru/eshop.xml';
 
             // данные в лог
-            $PHPShopYandexkassaArray->log(array('action' => $action, 'shopId' => $option['merchant_id'], 'scid' => trim($option['merchant_scid']), 'sum' => $out_summ, 'customerNumber' => $PHPShopOrderFunction->getMail(), 'orderNumber' => $inv_id,'ym_merchant_receipt'=>$ym_merchant_receipt), $inv_id, 'форма готова к отправке', 'данные формы для отправки на оплату');
+            $PHPShopYandexkassaArray->log(array('action' => $action, 'shopId' => $option['merchant_id'], 'scid' => trim($option['merchant_scid']), 'sum' => $out_summ, 'customerNumber' => $PHPShopOrderFunction->getMail(), 'orderNumber' => $inv_id, 'ym_merchant_receipt' => $ym_merchant_receipt), $inv_id, 'форма готова к отправке', 'данные формы для отправки на оплату');
 
             $return = PHPShopText::form($payment_forma, 'yandexpay', 'post', $action, '_blank');
         } elseif ($PHPShopOrderFunction->getSerilizeParam('orders.Person.order_metod') == 10004)

@@ -106,3 +106,10 @@
 #adminModal .modal-body{
     padding: 0px;
 }
+
+.style-selector-wrapper .nav-pills > li > a {
+    border-radius: 2px;
+}
+.style-selector-wrapper .nav > li > a {
+    padding: 5px 10px;
+}

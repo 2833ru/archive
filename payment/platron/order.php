@@ -53,6 +53,7 @@ $disp= "
 <input type=\"hidden\" name=\"amount\" value=\"$arrReq[pg_amount]\">
 <input type=\"hidden\" name=\"pg_salt\" value=\"$arrReq[pg_salt]\">
 <input type=\"hidden\" name=\"pg_sig\" value=\"$arrReq[pg_sig]\">
+<input type=\"hidden\" name=\"partner\" value=\"phpshop\">
 	<table>
 <tr>
 	<td><img src=\"images/shop/icon-client-new.gif\" alt=\"\" width=\"16\" height=\"16\" border=\"0\" align=\"left\">

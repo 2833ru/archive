@@ -157,7 +157,7 @@ switch ($_SERVER["PATH_INFO"]) {
 
 
                     // Точки
-                    
+
                     if (!empty($delivery['yandex_outlet'])) {
                         if (strstr($delivery['yandex_outlet'], ',')) {
                             $outlet = explode(",", $delivery['yandex_outlet']);
@@ -359,15 +359,22 @@ switch ($_SERVER["PATH_INFO"]) {
             $update['city_new'] = iconv("utf-8", "cp1251", $data['order']['delivery']['address']['city']);
             $full_adress = $data['order']['delivery']['address']['house'];
 
+            // Телефон
+            if (!empty($data['order']['buyer']['phone']))
+                $update['tel_new'] = iconv("utf-8", "cp1251", $data['order']['buyer']['phone']);
+            else
+                $update['tel_new'] = iconv("utf-8", "cp1251", $data['order']['delivery']['address']['phone']);
+
             // Корпус 
             if (!empty($data['order']['delivery']['address']['block']))
                 $full_adress.= ' k' . $data['order']['delivery']['address']['block'];
 
             $update['house_new'] = iconv("utf-8", "cp1251", $full_adress);
             $update['status_new'] = serialize(array('maneger' => iconv("utf-8", "cp1251", $data['order']['notes'])));
-            $update['tel_new'] = iconv("utf-8", "cp1251", $data['order']['delivery']['address']['phone']);
+            $update['door_phone_new'] = iconv("utf-8", "cp1251", $data['order']['delivery']['address']['entryphone']);
             $update['porch_new'] = iconv("utf-8", "cp1251", $data['order']['delivery']['address']['entrance']);
-            $update['flat_new'] = iconv("utf-8", "cp1251", $data['order']['delivery']['address']['entryphone']);
+            $update['flat_new'] = iconv("utf-8", "cp1251", $data['order']['delivery']['address']['apartment']);
+
             $update['user_new'] = checkUser($data);
 
             // Статус заказа подтвержден клиентом 
@@ -431,6 +438,10 @@ switch ($_SERVER["PATH_INFO"]) {
         header("HTTP/1.1 200");
         die('OK');
         exit();
+        break;
+
+    case "/order/items":
+        setYandexcartLog($data);
         break;
 
     default:

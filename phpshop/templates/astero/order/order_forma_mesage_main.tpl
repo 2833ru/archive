@@ -1,11 +1,21 @@
+<style type="text/css">
 
-<ol class="breadcrumb hidden-xs">
-    <li><a href="/" >Главная</a></li>
-    <li class="active">Оформление заказа</li>
-</ol>
 
-<div class="page-header">
-    <h2>Оформление заказа</h2>
-</div>
+		.sidebar-right .side-heading, .sidebar-right .sidebar-nav, .sidebar-right #faset-filter, .sidebar-right .panel.panel-default {
+			display: none;
+		}
+		.order-page-sidebar-user-block,
+		.sidebar-right .user-title.side-heading {
+			display: block;
+		}
+		.main-container{padding-top: 10px;margin-top: 0;}
+		.main-container > .row {
+			margin-left: 0;
+			margin-right: 0;
+			padding-top: 15px;
+			background-color: #fff;margin-top: 0px;
+		}
+</style>
+    <h2 class="main-heading2">Оформление заказа</h2>
 
 @orderMesage@

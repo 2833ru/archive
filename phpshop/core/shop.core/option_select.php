@@ -3,7 +3,7 @@
 /**
  * Выбор опций товаров
  * @author PHPShop Software
- * @version 1.3
+ * @version 1.4
  * @package PHPShopCoreFunction
  * @param obj $obj объект класса
  * @return mixed
@@ -39,7 +39,7 @@ function option_select($obj, $data) {
             $opt_sel = option_select_add($vendor_array, $id, $name, $numel, $xid, $row['optionname'], $obj->debug);
             if (!empty($opt_sel)) {
                 $num++;
-                $disp.= '<tr><td>' . $opt_sel . '</td></tr>';
+                $disp.= '<div>' . $opt_sel . '</div>';
                 $adder.='+document.getElementById("opt' . $numel . $xid . '").value';
                 $numel++;
             }
@@ -47,14 +47,11 @@ function option_select($obj, $data) {
     }
 
     if (!empty($num)) {
-        $disp = '<script>
-function alloptions' . $xid . '() {
-var optsvalue=""' . $adder . '
-document.getElementById("allOptionsSet' . $xid . '").value=optsvalue;
-}
-</script>
-<table class="table-optionsDisp">' . $disp . '</table><input type="hidden" id="allOptionsSet' . $xid . '" value="">';
+        $disp = '<script>function alloptions' . $xid . '() { var optsvalue=""' . $adder . ';document.getElementById("allOptionsSet' . $xid . '").value=optsvalue; }</script>
+<div class="table-optionsDisp optionsDisp">' . $disp . '</div>
+<input type="hidden" id="allOptionsSet' . $xid . '" value="">';
 
+        $obj->set('optionMessage', $obj->lang('select_size'));
         $obj->set('optionsDisp', $disp);
     }
 }
@@ -79,11 +76,11 @@ function option_select_add($vendor_array, $n, $title, $numel, $xid, $optionname,
     if (!empty($vendor_array[$n]) and !is_array($vendor_array[$n]))
         return '';
 
-    $dis = null;
+    $dis = $disp = null;
     $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['sort']);
     $PHPShopOrm->debug = $debug;
     $PHPShopOrm->comment = 'phpshopshop.' . __FUNCTION__;
-    $data = $PHPShopOrm->select(array('*'), array('category' => '=' . $n), array('order' => 'num,name'), array('limit' => 100));
+    $data = $PHPShopOrm->select(array('*'), array('category' => '=' . intval($n)), array('order' => 'num,name'), array('limit' => 100));
 
     if (is_array($data))
         foreach ($data as $row)
@@ -102,12 +99,17 @@ function option_select_add($vendor_array, $n, $title, $numel, $xid, $optionname,
                         if ($id == $v)
                             $sel = "selected";
                     }
-                $dis.='<option value="[' . $ct . $name . ']" ' . $sel . ' >' . $name . '</option>' . "\n";
+                $dis.='<option value="[' . $ct . $name . ']" >' . $name . '</option>' . "\n";
             }
 
     if (!empty($dis)) {
-        $disp = '<select name=v[' . $n . '] size=1 id="opt' . $numel . $xid . '" onChange="alloptions' . $xid . '()" class="form-control">
-    <option value="" selected>-- ' . $title . ' --</option>' . $dis . '</select>';
+        
+ 
+        if(empty($optionname)) $requared='req';
+        else $requared=null;
+
+        $disp = '<select name=v[' . $n . '] size=1 id="opt' . $numel . $xid . '" onChange="alloptions' . $xid . '()" class="form-control '.$requared.'" >
+    <option value="">-- ' . $title . ' --</option>' . $dis . '</select>';
     }
 
     return $disp;

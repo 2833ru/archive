@@ -4,46 +4,59 @@ var is_change = false;
 
 $().ready(function() {
 
+    // Смена кода валюты
+    $("body").on('change', '#baseinputvaluta_new', function() {
+        $('[data-type="price"] .input-group-addon').html($(this).attr('data-code'));
+    });
+
     // Добавить подтип
-    $("body").on('change', '.editable-add', function() {
+    $("body").on('click', 'button[name=addOption]', function() {
+
         var parent = $(this).closest('.data-row');
-        var name = $(this).val();
+        var name = $(this).closest('.data-row').find('input[name=name_option_new]').val();
         var items = $(this).closest('.data-row').find('input[name=items_option_new]').val();
         var price = $(this).closest('.data-row').find('input[name=price_option_new]').val();
+        var parent2 = $(this).closest('.data-row').find('input[name=name2_option_new]').val();
 
-        var data = [];
+        if (name != '' || parent2 != '') {
 
-        data.push({name: 'actionList[saveID]', value: 'actionInsert.catalog.create'});
-        data.push({name: 'saveID', value: 1});
-        data.push({name: 'parent_new', value: escape(name)});
-        data.push({name: 'items_new', value: items});
-        data.push({name: 'price_new', value: price});
-        data.push({name: 'name_new', value: escape($('input[name="name_new"]').val() + ' ' + name)});
-        data.push({name: 'parent_enabled_new', value: 1});
-        data.push({name: 'enabled_new', value: 1});
-        data.push({name: 'ajax', value: 1});
-        data.push({name: 'parent', value: $('input[name="rowID"]').val()});
-        data.push({name: 'category_new', value: $('select[name="category_new"]').val()});
-        data.push({name: 'baseinputvaluta_new', value: $('input[name="baseinputvaluta_new"]:checked').val()});
+            var data = [];
 
-        $.ajax({
-            mimeType: 'text/html; charset=windows-1251',
-            url: '?path=product&action=new',
-            type: 'post',
-            data: data,
-            dataType: "json",
-            async: false,
-            success: function(json) {
-                if (json['success'] != '') {
-                    parent.before('<tr class="data-row" data-row="' + json['success'] + '"><td style="text-align:left"><input style="width:100%" data-id="' + json['success'] + '" data-edit="parent_new" class="editable form-control input-sm"  value="' + name + '"></td><td style="text-align:left"><input style="width:100%" class="editable form-control input-sm" data-edit="items_new" data-id="' + json['success'] + '" value="' + parseInt(0 + items) + '"></td><td style="text-align:left"><input style="width:100%" class="editable form-control input-sm" data-edit="price_new" data-id="' + json['success'] + '" value="' + parseInt(0 + price) + '"></td><td style="text-align:center"><div class="dropdown" id="dropdown_action"><a href="#" class="dropdown-toggle btn btn-default btn-sm" data-toggle="dropdown" role="button" aria-expanded="false"><span class="glyphicon glyphicon-cog"></span> <span class="caret"></span></a><ul class="dropdown-menu" role="menu" ><li><a href="#" data-id="' + json['success'] + '" class="value-edit">Редактировать</a></li><li class="divider"></li><li><a href="#" data-id="' + json['success'] + '" class="value-delete">Удалить <span class="glyphicon glyphicon-trash"></span></a></li></ul></div></td><td></td></tr>');
-                    showAlertMessage(locale.save_done);
+            data.push({name: 'actionList[saveID]', value: 'actionInsert.catalog.create'});
+            data.push({name: 'saveID', value: 1});
+            data.push({name: 'parent_new', value: escape(name)});
+            data.push({name: 'items_new', value: items});
+            data.push({name: 'price_new', value: price});
+            data.push({name: 'parent2_new', value: escape(parent2)});
+            data.push({name: 'name_new', value: escape($('input[name="name_new"]').val() + ' ' + name + ' ' + parent2)});
+            data.push({name: 'parent_enabled_new', value: 1});
+            data.push({name: 'enabled_new', value: 1});
+            data.push({name: 'ajax', value: 1});
+            data.push({name: 'parent', value: $('input[name="rowID"]').val()});
+            data.push({name: 'category_new', value: $('select[name="category_new"]').val()});
+            data.push({name: 'baseinputvaluta_new', value: $('input[name="baseinputvaluta_new"]:checked').val()});
 
-                } else
-                    showAlertMessage(locale.save_false, true);
-            }
-        });
-        $(this).val('');
-        $(this).closest('.data-row').find('input[name=items_value]').val('');
+            $.ajax({
+                mimeType: 'text/html; charset=windows-1251',
+                url: '?path=product&action=new',
+                type: 'post',
+                data: data,
+                dataType: "json",
+                async: false,
+                success: function(json) {
+                    if (json['success'] != '') {
+                        parent.before('<tr class="data-row" data-row="' + json['success'] + '"><td style="text-align:left"><input style="width:100%" data-id="' + json['success'] + '" data-edit="parent_new" class="editable form-control input-sm"  value="' + name + '"></td><td style="text-align:left"><input style="width:100%" data-id="' + json['success'] + '" data-edit="parent2_new" class="editable form-control input-sm"  value="' + parent2 + '"></td><td style="text-align:left"><input style="width:100%" class="editable form-control input-sm" data-edit="items_new" data-id="' + json['success'] + '" value="' + parseInt(0 + items) + '"></td><td style="text-align:left"><input style="width:100%" class="editable form-control input-sm" data-edit="price_new" data-id="' + json['success'] + '" value="' + parseInt(0 + price) + '"></td><td style="text-align:center"><div class="dropdown" id="dropdown_action"><a href="#" class="dropdown-toggle btn btn-default btn-sm" data-toggle="dropdown" role="button" aria-expanded="false"><span class="glyphicon glyphicon-cog"></span> <span class="caret"></span></a><ul class="dropdown-menu" role="menu" ><li><a href="#" data-id="' + json['success'] + '" class="value-edit">Редактировать</a></li><li class="divider"></li><li><a href="#" data-id="' + json['success'] + '" class="value-delete">Удалить <span class="glyphicon glyphicon-trash"></span></a></li></ul></div></td><td></td></tr>');
+
+                        showAlertMessage(locale.save_done);
+
+                    } else
+                        showAlertMessage(locale.save_false, true);
+                }
+            });
+            $(this).closest('.data-row').find('input[name=name2_option_new]').val('');
+            $(this).closest('.data-row').find('input[name=name_option_new]').val('');
+            $(this).closest('.data-row').find('input[name=items_value]').val('');
+        }
     });
 
 
@@ -115,7 +128,6 @@ $().ready(function() {
         var id = $('input[name=rowID]').val();
         var parent = $('input[name=parentID]').val();
 
-
         var data = [];
         data.push({name: 'editID', value: '1'});
         data.push({name: 'actionList[rowID]', value: 'actionUpdate.catalog.edit'});
@@ -133,19 +145,24 @@ $().ready(function() {
                 $('#selectModal').modal('hide');
                 if (json['success'] == 1) {
 
-                    if ($('#modal-form input[name="parent_new"]').val() !== '')
-                        $('[data-row="' + parent + '"] :nth-child(1) input:text').val($('#modal-form input[name="parent_new"]').val());
-                    else
-                        $('[data-row="' + parent + '"] :nth-child(1) input:text').val($('#modal-form input[name="name_new"]').val());
+                    $('[data-row="' + parent + '"] :nth-child(1) input:text').val($('#modal-form input[name="parent_new"]').val());
+                    $('[data-row="' + parent + '"] :nth-child(2) input:text').val($('#modal-form input[name="parent2_new"]').val());
 
-                    $('[data-row="' + parent + '"] :nth-child(2) input:text').val($('#modal-form input[name="items_new"]').val());
-                    $('[data-row="' + parent + '"] :nth-child(3) input:text').val($('#modal-form input[name="price_new"]').val());
+                    if ($('#modal-form input[name="color_new"]').val() != '#ffffff')
+                        $('[data-row="' + parent + '"] :nth-child(2) input:text').css('color', $('#modal-form input[name="color_new"]').val());
+
+                    $('[data-row="' + parent + '"] :nth-child(3) input:text').val($('#modal-form input[name="items_new"]').val());
+                    $('[data-row="' + parent + '"] :nth-child(4) input:text').val($('#modal-form input[name="price_new"]').val());
 
                     // Вывод
                     if (json['enabled'] == 1 && json['sklad'] == 0)
-                        $('[data-row="' + parent + '"] :nth-child(5)').html('');
+                        $('[data-row="' + parent + '"] :nth-child(6)').html('');
                     else
-                        $('[data-row="' + parent + '"] :nth-child(5)').html('<span class="pull-right text-muted glyphicon glyphicon-eye-close" data-toggle="tooltip" data-placement="top" title="Скрыто"></span>');
+                        $('[data-row="' + parent + '"] :nth-child(6)').html('<span class="pull-right text-muted glyphicon glyphicon-eye-close" data-toggle="tooltip" data-placement="top" title="Скрыто"></span>');
+
+                    // Цена главного товара
+                    if ($('input[name="price_new"]').val() == 0)
+                        $('input[name="price_new"]').val($('#modal-form input[name="price_new"]').val());
 
                     showAlertMessage(locale.save_done);
                 } else
@@ -180,6 +197,16 @@ $().ready(function() {
                 $('#selectModal .modal-footer .btn-delete').removeClass('hidden');
                 $('#selectModal .modal-footer .btn-delete').addClass('value-delete');
                 $('#selectModal .modal-body').html(data);
+
+                $('.color').colorpicker({
+                    format: 'hex',
+                });
+
+                /*
+                 $('.color').colorpicker().on('hidePicker', function() {
+                 $('input[name="parent2_new"]').val( $(this).colorpicker('getValue', '#ffffff'));
+                 });
+                 */
 
                 $('.elfinder-modal-content').attr('data-option', 'return=lfile');
                 $('#selectModal').modal('show');
@@ -512,13 +539,13 @@ $().ready(function() {
     // Редактировать файл товара - 2 шаг
     $("body").on('click', "#selectModal .modal-footer .file-edit-send", function(event) {
         event.preventDefault();
-        var id = $(this).closest('.data-row').attr('data-row');
+        var id = $('input[name=selectID]').val();
 
         var name = $('input[name=modal_file_name]').val();
         $('.file-list [data-row="' + id + '"] .file-edit > a').html(name);
         $('.file-list [data-row="' + id + '"] input[name="files_new[' + id + '][name]"]').val(name);
         $('.file-list [data-row="' + id + '"] .file-edit-path > a').html('<span class="glyphicon glyphicon-floppy-disk"></span>' + $('input[name=lfile]').val());
-        $('.file-list [data-row="' + id + '"] .file-edit input[name="files_new[' + id + '][path]"]').val($('input[name=lfile]').val());
+        $('.file-list [data-row="' + id + '"] input[name="files_new[' + id + '][path]"]').val($('input[name=lfile]').val());
         $('#selectModal').modal('hide');
 
     });

@@ -160,8 +160,15 @@ function actionUpdate() {
     if (!empty($_POST['generationphoto']))
         setGenerationPhoto();
 
+    // Обновление SEO ссылок брендов
+    $PHPShopOrmVendor = new PHPShopOrm($GLOBALS['SysValue']['base']['sort']);
+    foreach ($_POST['sort_seo_name'] as $id=>$seo_url){
+        $PHPShopOrmVendor->update(array("sort_seo_name_new" => "$seo_url"), array('id' => '=' . $id));
+    }
+    unset($_POST['sort_seo_name']);
+
     $action = $PHPShopOrm->update($_POST);
-    header('Location: ?path=modules&install=check');
+    header('Location: ?path=modules&id='.$_GET['id']);
     return $action;
 }
 
@@ -178,6 +185,7 @@ function actionStart() {
     $Tab1 = $PHPShopGUI->setField('SEO пагинация', $PHPShopGUI->setRadio('paginator_new', 2, 'Включить', $data['paginator']) . $PHPShopGUI->setRadio('paginator_new', 1, 'Выключить', $data['paginator']),false,'Добавляет в теги Title и Description нумерацию страниц для уникальности индексации');
     $Tab1.=$PHPShopGUI->setField('Описание каталога на внутренних страницах', $PHPShopGUI->setRadio('cat_content_enabled_new', 1, 'Включить', $data['cat_content_enabled']) . $PHPShopGUI->setRadio('cat_content_enabled_new', 2, 'Выключить', $data['cat_content_enabled']),false,'Убирает описание каталога для внутренних страниц для сохранения уникальности первой.');
     $Tab1.= $PHPShopGUI->setField('Совет',$PHPShopGUI->setInfo($Info));
+    $Tab1 .= $PHPShopGUI->setField('SEO пагинация брендов', $PHPShopGUI->setRadio('seo_brands_enabled_new', 2, 'Включить', $data['seo_brands_enabled']) . $PHPShopGUI->setRadio('seo_brands_enabled_new', 1, 'Выключить', $data['seo_brands_enabled']),false, false);
 
     $Tab2 = $PHPShopGUI->setPay($serial = false, false, $data['version'], true);
 

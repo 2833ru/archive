@@ -164,7 +164,7 @@ class PHPShopSecurity {
     /**
      * Проверка дял поиска
      * @param string $search
-     * @return strong
+     * @return string
      */
     static function true_search($search) {
         $count = strlen($search);

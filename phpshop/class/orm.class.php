@@ -291,7 +291,7 @@ class PHPShopOrm {
     function setError($name, $action, $stylesheet = false) {
 
         if ($this->comment)
-            $comment = '<br>Комментарий: ' . $this->comment;
+            $comment = ' <code>' . $this->comment . '</code>';
         else
             $comment = null;
 
@@ -302,7 +302,7 @@ class PHPShopOrm {
 
         $error.='<div class="alert alert-info alert-dismissible" id="debug-message" role="alert" style="margin:10px">
   <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-  <strong><span class="glyphicon glyphicon-alert"></span> ' . $name . '</strong> ' . $action . '
+  <strong><span class="glyphicon glyphicon-alert"></span> ' . $name . '</strong> ' . $action . $comment . '
 </div>';
         echo $error;
     }
@@ -328,7 +328,7 @@ class PHPShopOrm {
      * @param string $prefix префикс полей в форме [_new]
      * @return mixed
      */
-    function update($value, $where = false, $prefix = '_new') {
+    function update($value, $where = false, $prefix = '_new', $class_name = false, $function_name = false) {
 
         $this->_SQL = 'update ' . $this->objBase . ' set ';
         $_KEY = $this->findKey();
@@ -355,8 +355,10 @@ class PHPShopOrm {
             $this->_SQL = $this->sql;
 
         // Трассировка
-        if ($this->debug)
+        if ($this->debug) {
+            $this->comment = $class_name . '.' . $function_name;
             $this->setError("SQL Запрос: ", $this->_SQL);
+        }
 
         // Выполнение
         if (mysqli_query($this->link_db, $this->_SQL)) {
@@ -427,12 +429,16 @@ class PHPShopOrm {
      * @param string $sql запро к БД в формате SQL
      * @return mixed
      */
-    function query($sql) {
+    function query($sql, $class_name = false, $function_name = false) {
         $this->_SQL = $sql;
 
         // Трассировка
-        if ($this->debug)
+        if ($this->debug) {
+            if (!empty($class_name) and !empty($function_name))
+                $this->comment = $class_name . '.' . $function_name;
+            else $this->comment = null;
             $this->setError("SQL Запрос: ", $this->_SQL);
+        }
 
         if ($this->mysql_error)
             $result = mysqli_query($this->link_db, $this->_SQL) or die($this->setError("SQL Ошибка для [" . $this->_SQL . "] ", mysqli_error($this->link_db) . ""));
@@ -466,7 +472,7 @@ class PHPShopOrm {
      * @param string $prefix префикс полей в форме [_new]
      * @return mixed
      */
-    function insert($value, $prefix = '_new') {
+    function insert($value, $prefix = '_new', $class_name = false, $function_name = false) {
         $this->_SQL = 'insert into ' . $this->objBase . ' set ';
         $_KEY = $this->findKey();
 
@@ -481,8 +487,11 @@ class PHPShopOrm {
             $this->_SQL = $this->sql;
 
         // Трассировка
-        if ($this->debug)
+        if ($this->debug) {
+            $this->comment = $class_name . '.' . $function_name;
             $this->setError("SQL Запрос: ", $this->_SQL);
+        }
+
 
         // Выполнение
         if (mysqli_query($this->link_db, $this->_SQL))

@@ -1,16 +1,5 @@
-<!-- Main Heading Starts -->
-    <h2 class="main-heading2">
-        @catalogCategory@
-    </h2>
-<!-- Main Heading Ends -->
 
-<!-- Category Intro Content Starts -->
-    <div class="row cat-intro">
-        <div class="col-md-12">
-             @catalogContent@
-        </div>
-    </div>
-<!-- Category Intro Content Ends -->
+@ProductCatalogContent@
 
 <!-- Product Filter Starts -->
     <div class="product-filter" id="filter-well">
@@ -123,6 +112,9 @@
     if (AJAX_SCROLL_HIDE_PAGINATOR) {
         $(".pagination").hide();
     }
+    
+    var price_min = new Number('@price_min@');
+    var price_max = new Number('@price_max@');
 
     $(document).ready(function () {
 
@@ -140,7 +132,7 @@
             step: 5,
             min: new Number('@price_min@'),
             max: new Number('@price_max@'),
-            values: [new Number('@price_min@'), new Number('@price_max@')],
+            values: [price_min, price_max],
             slide: function (event, ui) {
                 $("input[name=min]").val(ui.values[ 0 ]);
                 $("input[name=max]").val(ui.values[ 1 ]);

@@ -13,20 +13,39 @@ function send_to_order_ddeliverywidget_hook($obj, $row, $rout) {
     $helper = new DDeliveryHelper($apiKey, false);
 
 
-    if (in_array($_POST['d'],@explode(",",$option['delivery_id'])) and !empty($_POST['ddeliverySum'])) {
+    if (in_array($_POST['d'], @explode(",", $option['delivery_id'])) and !empty($_POST['ddeliverySum'])) {
 
         if ($rout == 'START') {
 
-            $obj->delivery_mod = $_POST['ddeliverySum'];
+            $obj->delivery_mod = number_format($_POST['ddeliverySum'], 0, '.', ' ');
 
             // Token
             $_POST['ddelivery_token_new'] = $sessionId;
 
-            //$ddelivery_info = json_fix_utf($helper->getOrder($sessionId));
+            $ddelivery_info = json_fix_utf($helper->getOrder($sessionId));
+
+            // Заполняем данные
+            if ($ddelivery_info['success'] == 1) {
+
+                // ПВЗ
+                if (!empty($ddelivery_info['data']['to_street'])){
+                    $_POST['street_new'] = $ddelivery_info['data']['to_street'];
+                    $_POST['flat_new'] = $ddelivery_info['data']['to_flat'];
+                    $_POST['house_new'] = $ddelivery_info['data']['to_house'];
+                    $_POST['city_new'] = $ddelivery_info['data']['city'];
+                }
+                // Point
+                else{
+                    $_POST['street_new'] = $ddelivery_info['data']['company_info']['address'];
+                    $_POST['city_new'] = $ddelivery_info['data']['company_info']['city'];
+                }
+
+                
+            }
 
             // Информация по доставке в комментарий заказа
             $obj->manager_comment = $_POST['ddeliveryReq'];
-            $obj->set('deliveryInfo',$_POST['ddeliveryReq']);
+            $obj->set('deliveryInfo', $_POST['ddeliveryReq']);
         }
 
 

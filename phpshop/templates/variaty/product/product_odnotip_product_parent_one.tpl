@@ -1,1 +1,1 @@
-<div><input type="radio" id="parentIdNt" name="parentIdNt" value="@parentId@" @checked@/> @parentName@</div>
+<div><label><input type="radio" id="parentIdNt" name="parentIdNt" value="@parentId@" @checked@/> @parentName@</label></div>

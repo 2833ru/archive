@@ -18,7 +18,7 @@ function MessageList($UID = 0) {
         $UID = $row['UID'];
         $AID = $row['AID'];
         if ($AID) { //Получаем имя администратора, если сообщение от админа
-            $sqlad = 'select * from ' . $SysValue['base']['table_name19'] . ' WHERE id=' . $AID;
+            $sqlad = 'select * from ' . $SysValue['base']['table_name19'] . ' WHERE id=' . intval($AID);
             $resultad = mysqli_query($link_db,$sqlad);
             $rowad = mysqli_fetch_array($resultad);
             if (strlen($rowad['name'])) {
@@ -28,7 +28,7 @@ function MessageList($UID = 0) {
             }
             $color = 'style="background:#C0D2EC;"';
         } else { //или имя пользователя
-            $sqlus = 'select * from ' . $SysValue['base']['table_name27'] . ' WHERE id=' . $UID;
+            $sqlus = 'select * from ' . $SysValue['base']['table_name27'] . ' WHERE id=' . intval($UID);
             $resultus = mysqli_query($link_db,$sqlus);
             $rowus = mysqli_fetch_array($resultus);
             $name = $rowus['name'];
@@ -81,7 +81,7 @@ function Page_messages($UID = 0) {
 function NumFrom($from_base, $query) {
     global $SysValue,$link_db;
     $sql = "select COUNT('id') as count from " . $SysValue['base'][$from_base] . " " . $query;
-    @$result = mysqli_query(@$sql);
+    @$result = mysqli_query($link_db,$sql);
     @$row = mysqli_fetch_array(@$result);
     @$num = $row['count'];
     return @$num;
@@ -140,7 +140,7 @@ function Nav_messages($UID = 0) {
 }
 
 /**
- * Отпарвление сообщение менеджеру из личного кабинета пользователя
+ * Отправление сообщение менеджеру из личного кабинета пользователя
  * @package PHPShopCoreDepricated
  * @param int $UsersId ИД пользователя
  * @return string

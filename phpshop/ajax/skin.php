@@ -53,7 +53,11 @@ if (!empty($_SESSION['logPHPSHOP']) and PHPShopSecurity::true_skin($_COOKIE[$_RE
                     // Есть изменение CSS
                     if (is_array($_POST['color'][$i])) {
                         foreach ($_POST['color'][$i] as $color => $value)
-                            if (!empty($value)){
+                            if (isset($value)){
+                                
+                                // Изображение
+                                if($optionIndex[$i]['var']['type'] == 'image')
+                                    $value='url('.$value.') no-repeat center';
                                 
                                 if($optionIndex[$i]['var']['important'] == 'true')
                                     $add=' !important';

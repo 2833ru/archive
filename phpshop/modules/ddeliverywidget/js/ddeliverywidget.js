@@ -18,10 +18,10 @@ function ddeliverywidgetStart() {
             $("#TotalSumma").html(Number(data['client_price']) + Number($('#OrderSumma').val()));
             $('input[name="ddeliverySum"').val(data['client_price']);
 
-            $('input[name="city_new"]').val(data['city_name']).attr('disabled', 'true');
-            $('input[name="flat_new"]').val(data['to_flat']).attr('disabled', 'true');
-            $('input[name="house_new"]').val(data['to_house']).attr('disabled', 'true');
-            $('input[name="street_new"]').val(data['to_street']).attr('disabled', 'true');
+            $('input[name="city_new"]').val(data['city_name']);
+            $('input[name="flat_new"]').val(data['to_flat']);
+            $('input[name="house_new"]').val(data['to_house']);
+            $('input[name="street_new"]').val(data['to_street']);
             $('input[name="ddeliveryReq"]').val(data['info']);
             $('#deliveryInfo').html(data['info']);
             $('#ddelivery-close').text('Продолжить').addClass('btn-success');

@@ -2,8 +2,12 @@
 .bootstrap-theme{
 color:#fff;
 }
-#header-area, .copyright{
-background:#a93f4c !important;
+#header-area{
+background:url() no-repeat center;
+background-size:cover;
+}
+#header-area,#footer-area{
+background-color:#a93f4c;
 }
 .side-heading, .panel-default > .panel-heading,.panel-success > .panel-heading,.product-col .btn-cart:hover,.product-info .product-details .btn-cart:hover,.btn-primary, .pagination > .active > a, .header-top{
 background:#383838 !important;
@@ -38,7 +42,7 @@ background:#fff !important;
 .footer-links a{
 color:#8b8b8b !important;
 }
-.header-links a, .header-valuta-disp-wrapper > h4{
+.header-links a{
 color:#ffffff !important;
 }
 #main-menu .navbar-nav > li > a{
@@ -49,4 +53,16 @@ background:transparent !important;
 }
 #cart .dropdown-menu table td a{
 color:#fff;
+}
+.header-color, .header-color a,.header-color .btn,.header-color h4 {
+    color: #000;
+}
+.header-color input::-moz-placeholder {
+    color: #878a8c;
+}
+.header-color input:-ms-input-placeholder {
+    color: #878a8c;
+}
+.header-color input::-webkit-input-placeholder {
+    color: #878a8c;
 }

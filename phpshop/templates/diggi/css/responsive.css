@@ -19,7 +19,6 @@
 	#main-menu{
 		top:110px;
 	}
-		#main-menu.navbar > .container, 
 		#main-menu.navbar > .container > .navbar-collapse{
 			padding-left:0;
 			padding-right:0;
@@ -30,9 +29,9 @@
 			}
 			#main-menu .navbar-nav > li:first-of-type > a{
 				padding-left:40px;
-				-webkit-border-radius:5px 0 0 5px;
-				   -moz-border-radius:5px 0 0 5px;
-				        border-radius:5px 0 0 5px;
+				-webkit-border-radius:0px;
+				   -moz-border-radius:0px;
+				        border-radius:0px;
 			}
 			
 /* Search Styles Starts */
@@ -116,7 +115,6 @@
 	#main-menu{
 		top:90px;
 	}
-		#main-menu.navbar > .container, 
 		#main-menu.navbar > .container > .navbar-collapse{
 			padding-left:0;
 			padding-right:0;
@@ -127,9 +125,9 @@
 			}
 			#main-menu .navbar-nav > li:first-of-type > a{
 				padding-left:30px;
-				-webkit-border-radius:5px 0 0 5px;
-				   -moz-border-radius:5px 0 0 5px;
-				        border-radius:5px 0 0 5px;
+				-webkit-border-radius:0px;
+				   -moz-border-radius:0px;
+				        border-radius:0px;
 			}
 			
 /* Search Styles Starts */
@@ -240,7 +238,6 @@
 	#main-menu{
 		top:115px;
 	}
-		#main-menu.navbar > .container, 
 		#main-menu.navbar > .container > .navbar-collapse{
 			padding-left:0;
 			padding-right:0;
@@ -251,9 +248,9 @@
 			}
 			#main-menu .navbar-nav > li:first-of-type > a{
 				padding-left:30px;
-				-webkit-border-radius:5px 0 0 5px;
-				   -moz-border-radius:5px 0 0 5px;
-				        border-radius:5px 0 0 5px;
+				-webkit-border-radius:0px;
+				   -moz-border-radius:0px;
+				        border-radius:0px;
 			}
 			
 /* Search Styles Starts */
@@ -396,7 +393,7 @@
 	
 /* Header Top Styles Starts */
 	.header-wrap.inner .header-top {
-		margin-top: 0;
+		-margin-top: 0;
 	}
 	.header-top{
 		top:15px;
@@ -430,8 +427,8 @@
 		top:115px;
 	}
 		#main-menu.navbar > .container{
-			margin-left:10px;
-			margin-right:10px;
+			-margin-left:10px;
+			-margin-right:10px;
 		}
 		#main-menu .navbar-toggle, 
 		#main-menu .navbar-toggle:focus {
@@ -632,7 +629,7 @@
 
 	.header-top div.col-xs-12.text-center, 
 	.header-top div.col-xs-12:last-of-type{
-		display:none;
+		-display:none;
 	}
 	
 /* Cart Styles Starts */

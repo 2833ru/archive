@@ -53,6 +53,7 @@ var locale = {
             previous: "« Назад"
         },
         search: "Поиск:",
+        sSearchPlaceholder: "на странице...",
         lengthMenu: "Показать _MENU_ записей",
         sProcessing:   "Подождите...",
         sZeroRecords:  "Записи отсутствуют.",

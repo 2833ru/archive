@@ -1,5 +1,5 @@
 <div class="page-header hidden-xs">
-    <h2>Расширенный поиск</h2>
+    <h1 class="main-heading2">Расширенный поиск</h1>
 </div>
 
 <div class="well">

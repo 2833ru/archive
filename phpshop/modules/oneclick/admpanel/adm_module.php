@@ -55,8 +55,7 @@ function actionStart() {
 
     $info = 'Для произвольной вставки элемента, следует выбрать параметр вывода "Кнопка купить" и вставить переменную
         <kbd>@oneclick@</kbd> в свой шаблон в нужное вам место.
-        <p>Для персонализации формы вывода, отредактируйте шаблоны phpshop/modules/oneclick/templates/</p>
-        ";
+        <p>Для персонализации формы вывода, отредактируйте шаблоны <code>phpshop/modules/oneclick/templates/</code></p>
 ';
 
     $Tab2 = $PHPShopGUI->setInfo($info);

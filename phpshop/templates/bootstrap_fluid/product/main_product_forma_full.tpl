@@ -9,15 +9,15 @@
         <div class="col-md-5">
             <div class="text-right hidden-xs">
                 <div class="share42init"></div>
-                <script src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@/js/share/share42.js"></script>
+                <script  src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@/js/share/share42.js"></script>
             </div>
             <div class="alert alert-warning">
                 <h1 itemprop="name">@productName@</h1>
-                
+
                 <div itemprop="offers" itemscope itemtype="http://schema.org/Offer">
                     <h2 class="text-primary"><span itemprop="price">@productPrice@</span> <span itemprop="priceCurrency" class="rubznak" content="RUB">@productValutaName@</span>
                     </h2> @productPriceRub@</div> 
-                
+
 
                 <div class="pull-right">@oneclick@</div>
                 <p><br></p>
@@ -27,23 +27,29 @@
 
                 </div>
                 <div class="review hidden-xs"> @rateUid@ </div>
-           @promotionInfo@ 
+
+                @promotionInfo@ 
             </div>
 
+            @optionsDisp@
+            @productParentList@
 
             <div class="row">
-                <div class="col-xs-5">
-                    @ComStart@
-                    @optionsDisp@
-                    @ComStartCart@
+                <div class="col-xs-5 @elementCartOptionHide@">
                     <div class="input-group" style="max-width: 150px">
-                        <input class="form-control addToCartListNum" data-uid="@productUid@"  type="text" style="min-width:50px" maxlength="3" value="1" placeholder="1" required="">
+                        <input class="form-control" data-uid="@productUid@"  type="text" style="min-width:50px" maxlength="3" value="1" placeholder="1" required="" name="quant[2]">
                         <span class="input-group-btn">
-                            <button class="btn btn-primary addToCartList" role="button" data-num="1" data-uid="@productUid@">@productSale@</button>
+                            <button class="btn btn-primary addToCartFull" role="button" data-num="1" data-uid="@productUid@">@productSale@</button>
                         </span>    
                     </div>
-
-                    @ComEndCart@ @ComEnd@ @productParentList@
+                </div>
+                <div class="col-xs-5 @elementCartHide@">
+                    <div class="input-group" style="max-width: 150px">
+                        <input class="form-control" data-uid="@productUid@"  type="text" style="min-width:50px" maxlength="3" value="1" placeholder="1" required="" name="quant[1]">
+                        <span class="input-group-btn">
+                            <button class="btn btn-primary addToCartFull" role="button" data-num="1" data-uid="@productUid@">@productSale@</button>
+                        </span>    
+                    </div>
                 </div>
                 <div class="col-xs-3">
                     <button class="btn btn-info addToCompareList visible-lg" role="button" data-uid="@productUid@">Сравнить</button>
@@ -52,9 +58,9 @@
                     <button class="btn btn-default addToWishList" role="button" data-uid="@productUid@">Отложить</button>
                 </div>
             </div>
-            
-            <div class="promo">@promotionInfo@</div>
-            
+
+            <div class="promo">@promotionInfo@</div> 
+
         </div>
     </div>
     <div class="row">
@@ -75,8 +81,8 @@
                 <div role="tabpanel" class="tab-pane" id="settings">  
                     <br>
                     <div class="row">
-                        <div class="col-xs-6">@vendorDisp@</div>
-                        <div class="col-xs-6">@brandUidDescription@</div>
+                        <div class="col-md-8">@vendorDisp@</div>
+                        <div class="col-md-4">@brandUidDescription@</div>
                     </div>
 
                 </div>
@@ -122,6 +128,7 @@
         </div>
     </div>
 </div>
+
 
 <!-- Модальное окно фотогалереи -->
 <div class="modal bs-example-modal" id="sliderModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">

@@ -81,7 +81,8 @@ class PHPShopCart {
                 "uid" => $objProduct->getParam("uid"),
                 "num" => abs($this->_CART[$xid]['num'] + $num),
                 "ed_izm" => $objProduct->getParam("ed_izm"),
-                "pic_small" => $objProduct->getParam("pic_small")
+                "pic_small" => $objProduct->getParam("pic_small"),
+                "weight"=>$objProduct->getParam("weight")
             );
 
             $weight = $objProduct->getParam("weight");

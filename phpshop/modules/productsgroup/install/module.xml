@@ -4,7 +4,6 @@
     <name>Группы товаров</name>
     <description>Модуль группы товаров.</description>
     <category>sale</category>
-    <status>new</status>
     <adminmenu>
         <title>Группы товаров</title>
         <capability>true</capability>

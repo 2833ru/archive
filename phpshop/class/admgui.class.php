@@ -21,6 +21,7 @@ class PHPShopGUI {
     var $sidebarLeftRight = 2;
     var $dropdown_action_form = true;
     var $tab_key = 0;
+    var $nav_style = 'nav-pills';
 
     /**
      * Конструктор
@@ -62,7 +63,7 @@ class PHPShopGUI {
      * @param bool $drag_off загрузка перетаскиванием
      * @param array $option настройки
      */
-    function setIcon($data, $id = "icon_new", $drag_off = false, $option = array('load' => true, 'server' => true, 'url' => true, 'multi' => false, 'view'=>false), $width = false) {
+    function setIcon($data, $id = "icon_new", $drag_off = false, $option = array('load' => true, 'server' => true, 'url' => true, 'multi' => false, 'view' => false), $width = false) {
 
         if (!empty($data)) {
             $name = '<span data-icon="' . $id . '">' . $data . '</span>';
@@ -97,18 +98,19 @@ class PHPShopGUI {
 
         $dis = '
         <div class="row">
-           <div class="col-md-2 btn-file"><a href="#" class="link-thumbnail">' . $icon . '</a>' . $drag.'</div>';
+           <div class="col-md-2 btn-file"><a href="#" class="link-thumbnail">' . $icon . '</a>' . $drag . '</div>';
 
-        if(empty($option['view']))
-        $dis.='
+        if (empty($option['view']))
+            $dis.='
            <div class="col-md-10">
              <p><span class="remove glyphicon glyphicon-remove-sign ' . $icon_hide . '" data-return="' . $id . '" data-toggle="tooltip" data-placement="top" title="Удалить эту запись"></span> ' . $name . '</p><input type="hidden" name="' . $id . '" value="' . $data . '">
                <div class="btn-group btn-group-sm" role="group" aria-label="...">
                  ' . $add . '
               </div>
           </div>';
-        else $dis.='<input type="hidden" name="' . $id . '" value="' . $data . '">';
-          
+        else
+            $dis.='<input type="hidden" name="' . $id . '" value="' . $data . '">';
+
         $dis.='</div>';
 
         return $dis;
@@ -119,7 +121,7 @@ class PHPShopGUI {
      * @param string $data путь
      * @param string $id имя поля
      */
-    function setFile($data = null, $id = "lfile", $option = array('load' => true, 'server' => 'file', 'url' => true,'view'=>false)) {
+    function setFile($data = null, $id = "lfile", $option = array('load' => true, 'server' => 'file', 'url' => true, 'view' => false)) {
 
         if (!empty($data)) {
             $name = '<span data-icon="' . $id . '">' . $data . '</span>';
@@ -139,14 +141,15 @@ class PHPShopGUI {
             $add.='<button type="button" class="btn btn-default" id="promtUrl" data-target="' . $id . '">URL</button><input type="hidden" name="furl" id="furl" value="0">';
 
 
-        if(empty($option['view']))
-        $dis.='
+        if (empty($option['view']))
+            $dis.='
              <p><span class="remove glyphicon glyphicon-remove-sign ' . $icon_hide . '" data-return="' . $id . '" data-toggle="tooltip" data-placement="top" title="Удалить эту запись"></span> ' . $name . '</p><input type="hidden" name="' . $id . '" id="' . $id . '" value="' . $data . '" >
                <div class="btn-group btn-group-sm" role="group" aria-label="...">
                  ' . $add . '
               </div>
         ';
-        else $dis.='<input type="hidden" name="' . $id . '" id="' . $id . '" value="' . $data . '" >';
+        else
+            $dis.='<input type="hidden" name="' . $id . '" id="' . $id . '" value="' . $data . '" >';
 
         return $dis;
     }
@@ -701,39 +704,61 @@ class PHPShopGUI {
 
     /**
      * Прорисовка элемента Fieldset с легендой
-     * @param string $title заголовок легенды
-     * @param string $content содержание
-     * @param integer $size размер сетки описаняи поля 1-12
+     * @param mixed $title заголовок легенды
+     * @param mixed $content содержание
+     * @param mixed $size размер сетки описаняи поля 1-12
      * @param string $help подсказка
      * @param string $class класс стиля
      * @return string
      */
     function setField($title, $content, $size = 1, $help = null, $class = null, $label = 'control-label') {
 
-        if (!strpos($title, ':') and !empty($title))
-            $title.=':';
-
-        // Поддержка старых размеров
-        $old_size = array(
-            'none' => 1,
-            'left' => 1,
-            'right' => 1
-        );
-        if (is_string($size))
-            $size = $old_size[$size];
-
-        // Общая настройка
-        if (!empty($this->field_col))
-            $size = $this->field_col;
-
         // Подсказка
         if (!empty($help))
             $help = $this->setHelpIcon($help);
 
-        $CODE = '
+        // Несколько блоков
+        if (is_array($title) and is_array($content)) {
+
+            $CODE = '
+                <div class="form-group form-group-sm ' . $class . '">';
+
+            foreach ($content as $k => $content_value) {
+
+                if (!strpos($title[$k], ':') and !empty($title[$k]))
+                    $title[$k].=':';
+
+                $CODE.='<label class="col-sm-' . intval($size[$k][0]) . ' ' . $label . '">' . $title[$k] . $help[$k] . '</label><div class="col-sm-' . intval($size[$k][1]) . '">' . $content_value . '</div>';
+            }
+            $CODE.=' 
+                </div>';
+        }
+        // Один блок
+        else {
+
+            // Поддержка старых размеров
+            $old_size = array(
+                'none' => 1,
+                'left' => 1,
+                'right' => 1
+            );
+
+            if (is_string($size))
+                $size = $old_size[$size];
+
+            // Общая настройка
+            if (!empty($this->field_col))
+                $size = $this->field_col;
+
+            if (!strpos($title, ':') and !empty($title))
+                $title.=':';
+
+            $CODE = '
      <div class="form-group form-group-sm ' . $class . '">
         <label class="col-sm-' . intval($size) . ' ' . $label . '">' . $title . $help . '</label><div class="col-sm-' . (12 - intval($size)) . '">' . $content . '</div>
      </div>';
+        }
+
         return $CODE;
     }
 
@@ -757,8 +782,8 @@ class PHPShopGUI {
                 $add_option.=' data-' . $k . '="' . $v . '" ';
 
         $CODE = '<div class="input-group color" style="width:' . $this->chekSize($size) . '">
-    <input type="text" id="' . $id . '" name="' . $name . '" value="' . $value . '" class="form-control input-sm color-value" ' . $add_option . '>
-    <span class="input-group-addon input-sm"><i></i></span></div>';
+    <input type="text" id="' . $id . '" name="' . $name . '" value="' . $value . '" class="form-control input-sm color-value" ' . $add_option . ' placeholder="#ffffff">
+    <span class="input-group-addon input-sm" title="Выбрать цвет"><i></i></span></div>';
         return $CODE;
     }
 
@@ -929,12 +954,12 @@ class PHPShopGUI {
     function addTab() {
 
         $Arg = func_get_args();
-        foreach ($Arg as $key=>$val) {
+        foreach ($Arg as $key => $val) {
 
             if (!empty($val[2]))
                 $val[1] = '<hr>' . $val[1];
 
-            
+
             if (!empty($val[3]))
                 $this->tab_key_uid = $val[3];
             else
@@ -967,11 +992,11 @@ class PHPShopGUI {
 
 
         $name = $content = null;
-        
-        
+
+
         foreach ($Arg as $key => $val) {
 
-            if($key == $_GET['tab']){
+            if ($key == $_GET['tab']) {
                 $active = 'active in';
             }
             else
@@ -998,11 +1023,13 @@ class PHPShopGUI {
             $this->tab_key++;
         }
 
-        $this->_CODE = '
+        $CODE = '
             <div role="tabpanel">
-               <ul class="nav nav-pills" role="tablist">' . $name . $this->addTabName . '</ul>
+               <ul class="nav ' . $this->nav_style . '" role="tablist">' . $name . $this->addTabName . '</ul>
                <div class="tab-content"><p>' . $content . $this->addTabContent . '</p></div>
             </div>';
+        $this->_CODE = $CODE;
+        return $CODE;
     }
 
     /**
@@ -1130,12 +1157,23 @@ class PHPShopGUI {
      * @param string $collapse свернут или развернут при загрузки
      * @param bool $line показывать разделительную линию
      * @param bool $icons показывать иконку
+     * @param array $opt массим дополнительных параметров [data-x]
      * @return string
      */
-    function setCollapse($title, $content, $collapse = 'in', $line = true, $icons = true) {
+    function setCollapse($title, $content, $collapse = 'in', $line = true, $icons = true, $opt = false) {
         static $collapseID;
 
         $datatoggle = 'data-toggle="collapse"';
+
+        // Параметры
+        $add_option = null;
+        if (!is_array($opt) and !empty($opt))
+            $option['option'] = $opt;
+        else
+            $option = $opt;
+        if (is_array($option))
+            foreach ($option as $k => $v)
+                $add_option.=' data-' . $k . '="' . $v . '" ';
 
         if ($collapse == 'in')
             $icon = 'bottom';
@@ -1150,13 +1188,11 @@ class PHPShopGUI {
             $CODE = '<hr>';
         }
 
-
         if ($icons)
             $icons = '<span class="glyphicon glyphicon-triangle-' . $icon . '"></span>';
 
-
         $CODE.= '<a name="set' . $collapseID . '"></a><div class="collapse-block"><h4 ' . $datatoggle . ' data-target="#collapseExample' . $collapseID . '" aria-expanded="true" aria-controls="collapseExample">' . $title . ' ' . $icons . '</h4>
-            <div class="collapse ' . $collapse . '" id="collapseExample' . $collapseID . '">' . $content . '</div></div>';
+            <div class="collapse ' . $collapse . '" id="collapseExample' . $collapseID . '" '.$add_option.'>' . $content . '</div></div>';
         $collapseID++;
         return $CODE;
     }
@@ -1289,16 +1325,31 @@ class PHPShopGUI {
      * @param string $caption описание
      * @param mixed $checked checked
      * @param string $onchange имя javascript функции по экшену onchange
+     * @param string $class имя класса css
+     * @param array $opt массив дополнительных параметров [data-x]
      * @return string
      */
-    function setRadio($name, $value, $caption, $checked = "checked", $onchange = "return true", $class = false) {
+    function setRadio($name, $value, $caption, $checked = "checked", $onchange = false, $class = false, $opt = false) {
 
         // Автовыделение 
         if ($value == $checked)
             $checked = "checked";
 
+        // Параметры
+        $add_option = null;
+        if (!is_array($opt) and !empty($opt))
+            $option['option'] = $opt;
+        else
+            $option = $opt;
+        if (is_array($option))
+            foreach ($option as $k => $v)
+                $add_option.=' data-' . $k . '="' . $v . '" ';
+
+        if (!empty($onchange))
+            $onchange = 'onchange="' . $onchange . '"';
+
         $CODE = '
-	 <div class="radio-inline ' . $class . '"><label><input type="radio" value="' . $value . '" name="' . $name . '" id="' . $name . '" ' . $checked . ' onchange="' . $onchange . '">' . $caption . '<i class="fa fa-circle-o small"></i></label></div>
+	 <div class="radio-inline ' . $class . '"><label><input type="radio" value="' . $value . '" name="' . $name . '" id="' . $name . '" ' . $checked . ' ' . $onchange . ' ' . $add_option . '>' . $caption . '<i class="fa fa-circle-o small"></i></label></div>
 	 ';
         return $CODE;
     }
@@ -1342,10 +1393,10 @@ class PHPShopGUI {
      * @param string $style имя стиля css
      * @return string
      */
-    function setLink($href, $caption, $target = '_blank', $style = false, $title = false) {
+    function setLink($href, $caption, $target = '_blank', $style = false, $title = false, $class = false) {
         if (empty($title))
             $title = $caption;
-        $CODE = '<a href="' . $href . '" target="' . $target . '" title="' . $title . '" style="' . $style . '">' . $caption . '</a>';
+        $CODE = '<a href="' . $href . '" target="' . $target . '" title="' . $title . '" style="' . $style . '" class="' . $class . '">' . $caption . '</a>';
         return $CODE;
     }
 
@@ -1681,7 +1732,7 @@ class PHPShopInterface extends PHPShopGUI {
      * @param string $class css class
      * @return string
      */
-    function setField($title, $content, $size = 1, $help = false, $class = false, $label = 'control-label') {
+    function setField($title, $content, $size = 1, $help = false, $class = false, $label = 'control-label', $max_size = 12) {
 
         if (!strpos($title, ':') and !empty($title))
             $title.=':';
@@ -1703,10 +1754,17 @@ class PHPShopInterface extends PHPShopGUI {
         if (!empty($help))
             $help = $this->setHelpIcon($help);
 
-        $CODE = '
+        // Несколко 
+        if (is_array($title)) {
+            
+        } else {
+
+            $CODE = '
      <div class="form-group form-group-sm">
-        <label class="col-sm-' . intval($size) . ' ' . $label . ' ' . $class . '">' . $title . $help . '</label><div class="col-sm-' . (12 - intval($size)) . '">' . $content . '</div>
+        <label class="col-sm-' . intval($size) . ' ' . $label . ' ' . $class . '">' . $title . $help . '</label><div class="col-sm-' . ($max_size - intval($size)) . '">' . $content . '</div>
      </div>';
+        }
+
         return $CODE;
     }
 
@@ -1890,10 +1948,17 @@ class PHPShopInterface extends PHPShopGUI {
                         $val['align'] = 'left';
                     }
 
+                    // Color
+                    if (!empty($val['color'])) {
+                        $val['color'] = ';color:' . $val['color'];
+                    }
+                    else
+                        $val['color'] = null;
+
 
                     // editable
                     if (!empty($val['editable'])) {
-                        $row = '<input style="width:100%" data-id="' . $id . '" class="editable input-hidden form-control input-sm" data-edit="' . $val['editable'] . '" value="' . $row . '"><span class="hide">' . $row . '</span>';
+                        $row = '<input style="width:100%' . $val['color'] . '" data-id="' . $id . '" class="editable input-hidden form-control input-sm" data-edit="' . $val['editable'] . '" value="' . $row . '"><span class="hide">' . $row . '</span>';
                     }
 
                     // order

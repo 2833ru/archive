@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="windows-1251"?>
+<module>
+    <version>1.0</version>
+    <name>Сбербанк России</name>
+    <description>Модуль интеграции интернет-магазина с платежным шлюзом Сбербанка РФ</description>
+    <category>payment</category>
+    <status>new</status>
+     <adminmenu>
+        <title>Сбербанк России</title>
+        <capability>true</capability>
+         <podmenu>
+             <podmenu_name>Журнал операций</podmenu_name>
+             <podmenu_action>dir.sberbankrf</podmenu_action>
+         </podmenu>
+    </adminmenu>
+</module>

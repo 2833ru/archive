@@ -31,7 +31,7 @@
     position: fixed;
     -right: 0;
     top: 0;
-    z-index: 1032;
+    z-index: 1034;
     -webkit-box-shadow: -3px 0px 50px -2px rgba(0,0,0,0.14);
     -moz-box-shadow: -3px 0px 50px -2px rgba(0,0,0,0.14);
     box-shadow: -3px 0px 50px -2px rgba(0,0,0,0.14);
@@ -105,4 +105,11 @@
 
 #adminModal .modal-body{
     padding: 0px;
+}
+
+.style-selector-wrapper .nav-pills > li > a {
+    border-radius: 2px;
+}
+.style-selector-wrapper .nav > li > a {
+    padding: 5px 10px;
 }

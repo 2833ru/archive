@@ -1,10 +1,7 @@
 <ol class="breadcrumb hidden-xs">
     @breadCrumbs@
 </ol>
-
-<div class="page-header">
-    <h1>@pageTitle@</h1>
-</div>
+<h1 class="main-heading2">@pageTitle@</h1>
 @catContent@
 <p>@pageContent@</p>
 

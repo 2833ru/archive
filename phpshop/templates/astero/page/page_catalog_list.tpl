@@ -1,8 +1,6 @@
 <ol class="breadcrumb visible-lg">
     @breadCrumbs@
 </ol>
-<div class="page-header">
-    <h2>@pageTitle@</h2>
-</div>
+<h1 class="main-heading2">@pageTitle@</h1>
 @catContent@
 @pageContent@

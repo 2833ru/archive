@@ -215,4 +215,20 @@ INSERT INTO `phpshop_payment_systems` (`id`, `name`, `path`, `enabled`, `num`, `
 (6, 'WebMoney', 'webmoney', '1', 8, '<img src="/UserFiles/Image/Trial/rabbit.png" alt="" align="" border="0"><h3>Благодарим Вас за заказ!</h3><p>Ваш заказ оплачен, в ближайшее время наш менеджер свяжется с Вами.</p>', '', '', '/UserFiles/Image/Payments/webmoney.png'),
 (8, 'Visa, Mastercard, Webmoney, Yandex (Platron)', 'payonlinesystem', '1', 5, '<img src="/UserFiles/Image/Trial/rabbit.png" alt="" align="" border="0"><h3>Благодарим Вас за заказ!</h3><p>Ваш заказ оплачен, в ближайшее время наш менеджер свяжется с Вами.</p>', '', '', '/UserFiles/Image/Payments/platron.png');
 
--- 
+CREATE TABLE IF NOT EXISTS `phpshop_templates_key` (
+  `path` varchar(64) NOT NULL DEFAULT '',
+  `date` int(11) DEFAULT '0',
+  `key` text,
+  `verification` varchar(32) DEFAULT '',
+  PRIMARY KEY (`path`)
+) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
+
+CREATE TABLE IF NOT EXISTS `phpshop_parent_name` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL,
+  `enabled` enum('0','1') NOT NULL DEFAULT '1',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=cp1251;
+
+ALTER TABLE `phpshop_categories` ADD `parent_title` int(11) DEFAULT '0';
+ALTER TABLE `phpshop_order_status` ADD `mail_action` ENUM( "0", "1" ) DEFAULT '1';

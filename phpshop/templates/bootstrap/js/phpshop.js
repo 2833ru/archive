@@ -887,6 +887,140 @@ $(document).ready(function() {
         $(this).prev('h4').find('i').addClass('fa-chevron-down');
          $(this).prev('h4').attr('title','Показать');
     });
+    
+    
+    // добавление в корзину подробное описание
+    $("body").on('click', ".addToCartFull", function() {
+
+        // Подтип
+        if ($('#parentSizeMessage').html()) {
+
+            // Размер
+            if ($('input[name="parentColor"]').val() === undefined && $('input[name="parentSize"]:checked').val() !== undefined) {
+                addToCartList($('input[name="parentSize"]:checked').val(), $('input[name="quant[2]"]').val(), $('input[name="parentSize"]:checked').attr('data-parent'));
+            }
+            // Размер  и цвет
+            else if ($('input[name="parentSize"]:checked').val() > 0 && $('input[name="parentColor"]:checked').val() > 0) {
+
+                var color = $('input[name="parentColor"]:checked').attr('data-color');
+                var size = $('input[name="parentSize"]:checked').attr('data-name');
+                var parent = $('input[name="parentColor"]:checked').attr('data-parent');
+
+                $.ajax({
+                    url: ROOT_PATH + '/phpshop/ajax/option.php',
+                    type: 'post',
+                    data: 'color=' + escape(color) + '&parent=' + parent + '&size=' + escape(size),
+                    dataType: 'json',
+                    success: function(json) {
+                        if (json['id'] > 0) {
+                            if ($('input[name="parentSize"]:checked').val() > 0 && $('input[name="parentColor"]:checked').val() > 0)
+                                addToCartList(json['id'], $('input[name="quant[2]"]').val(), $('input[name="parentColor"]:checked').attr('data-parent'));
+                            else
+                                showAlertMessage($('#parentSizeMessage').html());
+                        }
+                    }
+                });
+            }
+
+            else
+                showAlertMessage($('#parentSizeMessage').html());
+        }
+        // Опции характеристики
+        else if ($('#optionMessage').html()) {
+            var optionCheck = true;
+            $('.optionsDisp select').each(function() {
+                if ($(this).hasClass('req') && $(this).val() == "" )
+                    optionCheck = false;
+            });
+            
+            if(optionCheck)
+            addToCartList($(this).attr('data-uid'), $('input[name="quant[2]"]').val(), $(this).attr('data-uid'), $('#allOptionsSet' + $(this).attr('data-uid')).val());
+            else  showAlertMessage($('#optionMessage').html());
+        }
+        // Обычный товар
+        else {
+            addToCartList($(this).attr('data-uid'), $('input[name="quant[1]"]').val());
+        }
+
+    });
+
+
+    // выбор цвета 
+    $('body').on('change', 'input[name="parentColor"]', function() {
+
+        $('input[name="parentColor"]').each(function() {
+            this.checked = false;
+            $(this).parent('label').removeClass('label_active');
+        });
+
+        this.checked = true;
+        $(this).parent('label').addClass('label_active');
+
+    });
+
+    // выбор размера
+    $('body').on('change', 'input[name="parentSize"]', function() {
+        var id = this.value;
+
+        $('input[name="parentSize"]').each(function() {
+            this.checked = false;
+            $(this).parent('label').removeClass('label_active');
+        });
+
+        this.checked = true;
+        $(this).parent('label').addClass('label_active');
+
+        // Смена цены
+        $('[itemprop="price"]').html($(this).attr('data-price'));
+
+        $('.selectCartParentColor').each(function() {
+            $(this).parent('label').removeClass('label_active');
+            if ($(this).hasClass('select-color-' + id)) {
+                $(this).parent('label').removeClass('not-active');
+                $(this).parent('label').attr('title', $(this).attr('data-color'));
+
+                $(this).val(id);
+            }
+            else {
+                $(this).parent('label').addClass('not-active');
+                $(this).parent('label').attr('title', 'Нет');
+            }
+        });
+    });
+
+
+    // plugin bootstrap minus and plus http://jsfiddle.net/laelitenetwork/puJ6G/
+    $('.btn-number').click(function(e) {
+        e.preventDefault();
+
+        fieldName = $(this).attr('data-field');
+        type = $(this).attr('data-type');
+        var input = $("input[name='" + fieldName + "']");
+        var currentVal = parseInt(input.val());
+        if (!isNaN(currentVal)) {
+            if (type == 'minus') {
+
+                if (currentVal > input.attr('min')) {
+                    input.val(currentVal - 1).change();
+                }
+                if (parseInt(input.val()) == input.attr('min')) {
+                    $(this).attr('disabled', true);
+                }
+
+            } else if (type == 'plus') {
+
+                if (currentVal < input.attr('max')) {
+                    input.val(currentVal + 1).change();
+                }
+                if (parseInt(input.val()) == input.attr('max')) {
+                    $(this).attr('disabled', true);
+                }
+
+            }
+        } else {
+            input.val(0);
+        }
+    });
 });
 
 // reCAPTCHA

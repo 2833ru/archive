@@ -66,9 +66,9 @@ class PHPShopFile {
      * @param string $function имя функции обработчика 
      * @param string $delim разделитель
      */
-    static function readCsv($file, $function, $delim=';') {
+    static function readCsv($file, $function, $delim = ';') {
         $fp = @fopen($file, "r");
-        while (($data = @fgetcsv($fp, 10000,  $delim)) !== FALSE) {
+        while (($data = @fgetcsv($fp, 10000, $delim)) !== FALSE) {
             call_user_func($function, $data);
         }
         fclose($fp);
@@ -111,15 +111,16 @@ class PHPShopFile {
      * @param bool $return функция возвратить первый найденный файл
      * @return mixed
      */
-    static function searchFile($dir, $function,$return = false) {
+    static function searchFile($dir, $function, $return = false) {
         $user_func_result = null;
         if (is_dir($dir))
             if (@$dh = opendir($dir)) {
                 while (($file = readdir($dh)) !== false) {
-                    if($file != '.' and $file != '..'){
-                    $user_func_result.=call_user_func_array($function, array($file));
-					if($return)  return $user_func_result;
-					}
+                    if ($file != '.' and $file != '..') {
+                        $user_func_result.=call_user_func_array($function, array($file));
+                        if ($return)
+                            return $user_func_result;
+                    }
                 }
 
                 return $user_func_result;

@@ -2,7 +2,7 @@
 
 /**
  * Библиотека Отправление почты
- * @version 2.2
+ * @version 2.3
  * @package PHPShopClass
  * @tutorial http://doc.phpshop.ru/PHPShopClass/PHPShopMail.html
  * <code>
@@ -182,11 +182,16 @@ class PHPShopMail {
 
 }
 
+/**
+ *  Библиотека Отправление почты с вложением
+ */
 class PHPShopMailFile extends PHPShopMail {
 
     function __construct($to, $from, $subject, $content, $filename, $file, $option = false) {
         parent::__construct($to, $from, $subject, $content, true, true, $option);
         $this->mail->addAttachment($file, $filename);
+        if(empty($content))
+            $content=$filename;
         $this->sendMailNow($content);
     }
 
