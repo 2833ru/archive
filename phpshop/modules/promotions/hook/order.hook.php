@@ -29,7 +29,7 @@ function order_promotions_hook($obj, $row, $rout) {
 
         $order_action_add = '
         <script>
-        // Promotions PHPShop Module
+        // Promotions
         $(document).ready(function() {
             $(\'' . $html . '\').insertAfter(".img_fix");
         });</script><script src="phpshop/modules/promotions/js/promotions-main.js"></script>';

@@ -1059,6 +1059,7 @@ class PHPShopGUI {
             if (!empty($type_array[2]))
                 $required .= ' data-minlength="' . intval($type_array[2]) . '" ';
         }
+        
 
         // ѕроверка парол€
         if ($type == 'password') {
@@ -1082,7 +1083,7 @@ class PHPShopGUI {
             if (!empty($caption))
                 $CODE .= ' <div class="input-group-addon input-sm">' . __($caption, $locale) . '</div>';
 
-            $CODE .= '<input class="' . $class_array[$type] . ' ' . $class . '" type="' . $type . '" value="' . $value . '"  name="' . $name . '" id="' . $id . '" placeholder="' . $this->__($placeholder, $locale) . '">';
+            $CODE .= '<input class="' . $class_array[$type] . ' ' . $class . '" type="' . $type . '" value="' . $value . '"  name="' . $name . '" id="' . $id . '" placeholder="' . $this->__($placeholder, $locale) . '" ' . $required . '>';
 
             if (!empty($description))
                 $CODE .= '<div class="input-group-addon input-sm">' . $description . '</div>';
@@ -1110,14 +1111,18 @@ class PHPShopGUI {
      * @param string $class им€ класса стил€
      * @param string $placeholder placeholder
      * @param bool $locale locale вкл/выкл
+     * @param bool $required required вкл/выкл
      * @return string
      */
-    function setInputText($caption, $name, $value, $size = false, $description = false, $float = false, $class = false, $placeholder = false, $locale = true) {
+    function setInputText($caption, $name, $value, $size = false, $description = false, $float = false, $class = false, $placeholder = false, $locale = true,$required=false) {
+        
+        if($required)
+            $required = '.required';
 
         // + fix
         $value = str_replace('&#43;', '+', $value);
 
-        return $this->setInput('text', $name, htmlentities($value, ENT_COMPAT, $GLOBALS['PHPShopBase']->codBase), $float, $size, false, $class, false, $caption, $description, $placeholder, $locale);
+        return $this->setInput('text'.$required, $name, htmlentities($value, ENT_COMPAT, $GLOBALS['PHPShopBase']->codBase), $float, $size, false, $class, false, $caption, $description, $placeholder, $locale);
     }
 
     /**

@@ -174,6 +174,7 @@ function actionStart() {
             $company_value[] = array($company['name'], $company['id'], $data['company_id']);
 
     $Tab2 .= $PHPShopGUI->setField("Юридическое лицо", $PHPShopGUI->setSelect('company_id_new', $company_value));
+    $Tab2 .= $PHPShopGUI->setField("Накрутка цены", $PHPShopGUI->setInputText(false, 'option[fee]', $option['fee'], 100, '%'));
     
     $Tab2 = $PHPShopGUI->setCollapse("Дополнительно",$Tab2);
 

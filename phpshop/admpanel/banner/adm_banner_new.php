@@ -98,7 +98,9 @@ function actionStart() {
             $PHPShopGUI->setField("Мобильный", $PHPShopGUI->setCheckbox("mobile_new", 1, "Отображать только на мобильных устройствах", $data['mobile']).$PHPShopGUI->setHelp('По умолчанию, баннер выводится только на PC')) .
             $PHPShopGUI->setField("Тип вывода", $PHPShopGUI->setRadio("type_new", 0, "В колонке", $data['type']) .
                     $PHPShopGUI->setRadio("type_new", 2, "Горизонтальный", $data['type']) .
-                    $PHPShopGUI->setRadio("type_new", 1, "Всплывающее окно", $data['type']));
+                    $PHPShopGUI->setRadio("type_new", 1, "Всплывающее окно", $data['type']).'<br>'.
+                    $PHPShopGUI->setRadio("type_new", 3, "В меню каталога", $data['type'])
+                    );
 
     $Tab2 = $PHPShopGUI->setField("Таргетинг:", $PHPShopGUI->setInput("text", "dir_new", $data['dir']) . $PHPShopGUI->setHelp('/ - главная, /page/page.html - страница. Пример ввода: /, /page/dostavka.html'));
 

@@ -38,4 +38,4 @@
         </div>
     </div>
 </div>
-<a href="#" data-toggle="modal" data-target="#returnCallModal" class=""><i class="fa fa-phone" aria-hidden="true"></i>{ Заказать звонок}</a>
+<a href="#" data-toggle="modal" data-target="#returnCallModal" class=""><i class="fa fa-phone" aria-hidden="true"></i> {Заказать звонок}</a>

@@ -65,6 +65,7 @@ function saferoutewidgetStart() {
     $('#saferoute-close').text(locale.close).addClass('btn-success');
   });
 
+  // https://saferoute.atlassian.net/wiki/spaces/widgets/pages/33039
   widget.on('change', function (data) {
     if(data.delivery) {
       var deliveryCost = data.delivery.totalPrice;

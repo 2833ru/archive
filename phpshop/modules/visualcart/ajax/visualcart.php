@@ -211,7 +211,7 @@ class AddToTemplateVisualCartAjax {
         $GLOBALS['PHPShopOrder'] = new PHPShopOrderFunction();
 
         // Валюта
-        $this->currency = $GLOBALS['PHPShopOrder']->default_valuta_code;
+        $this->currency = $GLOBALS['PHPShopSystem']->getValutaIcon();
 
         PHPShopParser::set('visualcart_pic_width', $this->option['pic_width']);
 

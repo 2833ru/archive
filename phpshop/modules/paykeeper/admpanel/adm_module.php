@@ -11,16 +11,18 @@ function actionBaseUpdate() {
     $new_version = $PHPShopModules->getUpdate($option['version']);
     $PHPShopOrm->clean();
     $action = $PHPShopOrm->update(array('version_new' => $new_version));
-    return $action;
 }
 
 // Функция обновления
 function actionUpdate() {
-    global $PHPShopOrm;
+    global $PHPShopOrm, $PHPShopModules;
+
+    // Настройки витрины
+    $PHPShopModules->updateOption($_GET['id'], $_POST['servers']);
 
     $PHPShopOrm->debug = false;
     $action = $PHPShopOrm->update($_POST);
-    header('Location: ?path=modules&install=check');
+    header('Location: ?path=modules&id=' . $_GET['id']);
     return $action;
 }
 
@@ -33,8 +35,8 @@ function actionStart() {
     $data = $PHPShopOrm->select();
 
     $Tab1 = $PHPShopGUI->setField('Наименование типа оплаты', $PHPShopGUI->setInputText(false, 'title_new', $data['title']));
-    $Tab1 .= $PHPShopGUI->setField('Адрес формы оплаты', $PHPShopGUI->setInputText(false, 'form_url_new', $data['form_url'], 300));
-    $Tab1 .= $PHPShopGUI->setField('Секретное слово', $PHPShopGUI->setInputText(false, 'secret_new', $data['secret'], 300));
+    $Tab1 .= $PHPShopGUI->setField('Адрес формы оплаты', $PHPShopGUI->setInputText(false, 'form_url_new', $data['form_url'], 500));
+    $Tab1 .= $PHPShopGUI->setField('Секретное слово', $PHPShopGUI->setInputText(false, 'secret_new', $data['secret'], 500));
 
     // Доступые статусы заказов
     $PHPShopOrderStatusArray = new PHPShopOrderStatusArray();
@@ -47,7 +49,7 @@ function actionStart() {
 
     // Принудительный учет скидок
     $value_arr = $data['forced_discount_check'] == 1 ? array(array('Вкл', 1, 'selected'), array('Выкл', 2, false)) : array(array('Вкл', 1, false), array('Выкл', 2, 'selected'));
-    $Tab1 .= $PHPShopGUI->setField('Принудительный учет скидок', $PHPShopGUI->setSelect('forced_discount_check_new', $value_arr,300));
+    $Tab1 .= $PHPShopGUI->setField('Принудительный учет скидок', $PHPShopGUI->setSelect('forced_discount_check_new', $value_arr, 300));
 
     // Статус заказа
     //$Tab1.= $PHPShopGUI->setField('Оплата при статусе', $PHPShopGUI->setSelect('status_new', $order_status_value));

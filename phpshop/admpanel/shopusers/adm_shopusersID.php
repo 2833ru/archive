@@ -67,6 +67,9 @@ function actionStart() {
         foreach ($PHPShopUserStatusArray as $user_status)
             $user_status_value[] = array($user_status['name'], $user_status['id'], $data['status']);
 
+    if (empty($data['servers']))
+        $data['servers'] = 1000;
+
     // Содержание закладки 1
     $Tab1 = $PHPShopGUI->setCollapse('Информация', $PHPShopGUI->setField("Имя", $PHPShopGUI->setInput('text.required', "name_new", $data['name'])) .
             $PHPShopGUI->setField("E-mail", $PHPShopGUI->setInput('email.required.6', "login_new", $data['login'])) .
@@ -75,7 +78,8 @@ function actionStart() {
             $PHPShopGUI->setField("Подтверждение пароля", $PHPShopGUI->setInput("password.required.4", "password2_new", base64_decode($data['password']))) .
             $PHPShopGUI->setField("Статус", $PHPShopGUI->setCheckbox("enabled_new", 1, null, $data['enabled']) . '<br>' . $PHPShopGUI->setCheckbox('sendActivationEmail', 1, 'Оповестить пользователя', 0)) .
             $PHPShopGUI->setField("Блокировка диалогов", $PHPShopGUI->setCheckbox("dialog_ban_new", 1, null, $data['dialog_ban'])) .
-            $PHPShopGUI->setField("Статус", $PHPShopGUI->setSelect('status_new', $user_status_value)) .
+            $PHPShopGUI->setField("Статус", $PHPShopGUI->setSelect('status_new', $user_status_value, 300)) .
+            $PHPShopGUI->setField("Витрины", $PHPShopGUI->loadLib('tab_multibase', $data, 'catalog/', 300, false)) .
             $PHPShopGUI->setField("Накопительная скидка", $PHPShopGUI->setInput('text', "cumulative_discount_new", $data['cumulative_discount'], null, 100, false, false, false, '%'))
     );
 
@@ -182,6 +186,8 @@ function actionUpdate() {
                 unset($mass_decode[$k]);
         }
 
+    if ($_POST['servers_new'] == 1000)
+        $_POST['servers_new'] = 0;
 
     $_POST['mail_new'] = $_POST['login_new'];
 

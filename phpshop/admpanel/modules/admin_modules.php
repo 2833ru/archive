@@ -325,7 +325,7 @@ function actionStart() {
 
     $tree = '<table class="table table-hover">
         <tr class="treegrid-all">
-           <td><a href="?path=modules" class="treegrid-parent" data-parent="treegrid-all">' . __('Все модули') . '</a> <span class="label label-primary pull-right">104</span></td>
+           <td><a href="?path=modules" class="treegrid-parent" data-parent="treegrid-all">' . __('Все модули') . '</a> <span class="label label-primary pull-right">105</span></td>
 	</tr>
         <tr class="treegrid-template">
            <td><a href="?path=modules&cat=pro" class="treegrid-parent" data-parent="treegrid-template">' . __('Pro') . '</a> <span class="label label-primary pull-right">12</span></td>
@@ -349,7 +349,7 @@ function actionStart() {
            <td><a href="?path=modules&cat=crm" class="treegrid-parent" data-parent="treegrid-crm">CRM</a> <span class="label label-primary pull-right">6</span></td>
 	</tr>
         <tr class="treegrid-payment">
-           <td><a href="?path=modules&cat=payment" class="treegrid-parent" data-parent="treegrid-payment">' . __('Платежные системы') . '</a> <span class="label label-primary pull-right">25</span></td>
+           <td><a href="?path=modules&cat=payment" class="treegrid-parent" data-parent="treegrid-payment">' . __('Платежные системы') . '</a> <span class="label label-primary pull-right">26</span></td>
 	</tr>
        <tr class="treegrid-credit">
            <td><a href="?path=modules&cat=credit" class="treegrid-parent" data-parent="treegrid-payment">' . __('Кредитование') . '</a> <span class="label label-primary pull-right">3</span></td>

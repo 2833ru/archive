@@ -43,10 +43,9 @@ $PHPShopCoreElement->init('setjs');
 $PHPShopCurrencyElement = new PHPShopCurrencyElement();
 $PHPShopCurrencyElement->init('valutaDisp');
 
-// Авторизация пользователей
-$PHPShopUserElement = new PHPShopUserElement();
-$PHPShopUserElement->init('usersDisp');
-$PHPShopUserElement->init('wishlist');
+// Корзина
+$PHPShopCartElement = new PHPShopCartElement();
+$PHPShopCartElement->init('miniCart');
 
 // Новинки в центр
 $PHPShopProductIndexElements = new PHPShopProductIndexElements();
@@ -86,6 +85,7 @@ $PHPShopSliderElement->init('imageSlider');
 $PHPShopBannerElement = new PHPShopBannerElement();
 $PHPShopBannerElement->init('banersDisp');
 $PHPShopBannerElement->init('banersDispHorizontal');
+$PHPShopBannerElement->init('banersDispMenu');
 
 // Аналитика
 $PHPShopAnalitica = new PHPShopAnalitica();
@@ -103,10 +103,6 @@ $PHPShopTextElement->init('bottomMenu', true);
 $PHPShopShopCatalogElement->init('topcatMenu', true);
 $PHPShopPageCatalogElement->init('topMenu', true);
 
-// Корзина
-$PHPShopCartElement = new PHPShopCartElement();
-$PHPShopCartElement->init('miniCart');
-
 // Фотогалерея
 $PHPShopPhotoElement = new PHPShopPhotoElement();
 $PHPShopPhotoElement->init('getPhotos');
@@ -122,6 +118,11 @@ PHPShopParser::set('forma_captcha', $PHPShopRecaptchaElement->captcha('forma'));
 // Диалоги
 $PHPShopDialogElement = new PHPShopDialogElement();
 $PHPShopDialogElement->dialog();
+
+// Авторизация пользователей
+$PHPShopUserElement = new PHPShopUserElement();
+$PHPShopUserElement->init('wishlist');
+$PHPShopUserElement->init('usersDisp');
 
 // RSS грабер новостей
 new PHPShopRssParser();

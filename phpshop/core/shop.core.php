@@ -3,7 +3,7 @@
 /**
  * Обработчик товаров
  * @author PHPShop Software
- * @version 2.2
+ * @version 2.3
  * @package PHPShopShopCore
  */
 class PHPShopShop extends PHPShopShopCore {
@@ -119,14 +119,21 @@ class PHPShopShop extends PHPShopShopCore {
         $PHPShopOrm->debug = $this->debug;
         $PHPShopOrm->cache_format = array('content', 'description');
         $data = $PHPShopOrm->select(array('*'), array('id' => '=' . intval($this->get('thisCat'))), false, array('limit' => 1));
-        $ParentTest = $data['parent_to'];
+        $ParentTest = (int) $data['parent_to'];
         $this->set('thisCatName', $data['name']);
+        $this->set('parentCatName', $data['name']);
 
         if (!empty($ParentTest)) {
             $this->set('thisCat', $ParentTest);
             $this->set('thisPodCat', $this->PHPShopCategory->getParam('parent_to'));
         }
+        
+        if($this->PHPShopCategory->getParam('parent_to') == 0){
+            $this->set('elementCatalogBackHide','hide');
+        }
+        else  $this->set('elementCatalogBackHide','visible-xs');
 
+ 
         // Перехват модуля
         $this->setHook(__CLASS__, __FUNCTION__, $data);
     }
@@ -430,7 +437,7 @@ class PHPShopShop extends PHPShopShopCore {
         $this->setActiveMenu();
 
         // Навигация хлебных крошек для новых шаблонов
-        $this->navigation($this->category, $row['name']);
+        $this->navigation($this->category,null);
 
         // Мета заголовки
         $this->set_meta(array($row, $this->PHPShopCategory->getArray(), $parent_category_row));
@@ -724,6 +731,8 @@ function CID_Product($category = null, $mode = false) {
     // 404 если каталога не существует или мультибаза
     if (empty($this->category_name) or $this->errorMultibase($this->category) or $this->PHPShopCategory->getParam('skin_enabled') == 1)
         return $this->setError404();
+    
+    $this->set('catalogName',$this->category_name);
 
     // Фильтр сортировки
     $order = $this->query_filter();
@@ -776,6 +785,9 @@ function CID_Product($category = null, $mode = false) {
         else
             $count = 0;
         $this->setPaginator($count, $order['sql']);
+        
+        if(empty($count))
+            $this->set('empty_product_list',true);
 
         if ($this->PHPShopSystem->getSerilizeParam('admoption.filter_cache_enabled') == 1 && $this->PHPShopSystem->getSerilizeParam('admoption.filter_products_count') == 1)
             $this->update_cache('count_products');
@@ -1156,7 +1168,7 @@ function update_cache($type) {
                 $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['categories']);
                 $sort_cache = $PHPShopOrm->select(array('sort_cache', 'sort_cache_created_at'), array('id=' => $this->category));
 
-                if (($sort_cache['sort_cache_created_at'] + $period) > time()) {
+                if ((int)($sort_cache['sort_cache_created_at'] + $period) > time()) {
                     $cache = unserialize($sort_cache['sort_cache']);
                     if ($type == 'filter') {
 

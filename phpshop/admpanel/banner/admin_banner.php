@@ -24,6 +24,9 @@ function actionStart() {
                 case 2:
                     $type="glyphicon-resize-horizontal";
                     break;
+                case 3:
+                    $type="glyphicon-th-list";
+                    break;
             }
 
             $PHPShopInterface->setRow($row['id'], array('name' => $row['name'], 'link' => '?path=banner&id=' . $row['id'], 'align' => 'left'), $row['dir'],array('name'=>'<span class="glyphicon '.$type.'"></span>','align' => 'center'),array('action' => array('edit', '|', 'delete', 'id' => $row['id']), 'align' => 'center'), array('status' => array('enable' => $row['flag'], 'align' => 'right', 'caption' => array('Выкл', 'Вкл'))));

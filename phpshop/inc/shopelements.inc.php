@@ -337,7 +337,7 @@ class PHPShopDialogElement extends PHPShopElements {
 
         if (!empty($result['message']) and ! empty($new)) {
             if (!empty($GLOBALS['chat_ids']) and is_array($GLOBALS['chat_ids']))
-                $PHPShopOrm->update(array('isview_user_new' => 1), array('id' => ' IN (' . implode(',',$GLOBALS['chat_ids']) . ')'));
+                $PHPShopOrm->update(array('isview_user_new' => 1), array('id' => ' IN (' . implode(',', $GLOBALS['chat_ids']) . ')'));
         }
 
         if (!empty($result['message'])) {
@@ -1483,7 +1483,7 @@ class PHPShopShopCatalogElement extends PHPShopProductElements {
                 if (!empty($this->CategoryArray[$k]['icon']))
                     $this->tree_array[$k]['icon'] = $this->CategoryArray[$k]['icon'];
 
-                    $this->tree_array[$k]['vid'] = $this->CategoryArray[$k]['vid'];
+                $this->tree_array[$k]['vid'] = $this->CategoryArray[$k]['vid'];
 
                 if (!empty($this->CategoryArray[$k]['tile']))
                     $this->tree_array[$k]['tile'] = $this->CategoryArray[$k]['tile'];
@@ -1608,7 +1608,7 @@ class PHPShopShopCatalogElement extends PHPShopProductElements {
 /**
  * Элемент корзина покупок
  * @author PHPShop Software
- * @version 1.0
+ * @version 1.1
  * @package PHPShopElements
  */
 class PHPShopCartElement extends PHPShopElements {
@@ -1631,14 +1631,28 @@ class PHPShopCartElement extends PHPShopElements {
      */
     function miniCart() {
 
+        if (!empty($_SESSION['compare']))
+            $compare = $_SESSION['compare'];
+        else
+            $compare = array();
+        $numcompare = 0;
+
+        // Если есть сравнение
+        if (count($compare) > 0) {
+            if (is_array($compare)) {
+                $numcompare = count($compare);
+            }
+            $this->set('compareEnabled', 'block');
+        } else {
+            $numcompare = "0";
+            $this->set('compareEnabled', 'none');
+        }
+
+        // Сравнение
+        $this->set('numcompare', $numcompare);
+
         // Если вывод не в разделах офомления заказа
         if ($this->PHPShopNav->notPath(array('order', 'done')) or ! empty($this->order)) {
-
-            if (!empty($_SESSION['compare']))
-                $compare = $_SESSION['compare'];
-            else
-                $compare = array();
-            $numcompare = 0;
 
             // Если есть товары в корзине
             if ($this->PHPShopCart->getNum() > 0) {
@@ -1649,26 +1663,10 @@ class PHPShopCartElement extends PHPShopElements {
             } else
                 $this->set('orderEnabled', 'none');
 
-            // Если есть сравнение
-            if (count($compare) > 0) {
-                if (is_array($compare)) {
-                    foreach ($compare as $j => $v) {
-                        $numcompare = count($compare);
-                    }
-                }
-                $this->set('compareEnabled', 'block');
-            } else {
-                $numcompare = "0";
-                $this->set('compareEnabled', 'none');
-            }
-
             // Локализация
             $this->set('tovarNow', $this->getValue('lang.cart_tovar_now'));
             $this->set('summaNow', $this->getValue('cart_summa_now'));
             $this->set('orderNow', $this->getValue('cart_order_now'));
-
-            // Сравнение
-            $this->set('numcompare', $numcompare);
 
             // Товаров
             $this->set('num', $this->PHPShopCart->getNum());

@@ -340,9 +340,9 @@ if (!empty($_COOKIE['fullscreen'])) {
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><span class="glyphicon glyphicon-user hidden-xs"></span> <span class="visible-xs"><?php _e('Администратор'); ?> <span class="caret"></span></span><span class="caret  hidden-xs"></span></a>
                                 <ul class="dropdown-menu" role="menu">
                                     <li class="dropdown-header"><?php
-                            _e('Вошел как');
-                            echo ' ' . $_SESSION['logPHPSHOP'];
-                            ?></li>
+                                        _e('Вошел как');
+                                        echo ' ' . $_SESSION['logPHPSHOP'];
+                                        ?></li>
                                     <li class="divider"></li>
                                     <li><a href="?path=users&id=<?php echo $_SESSION['idPHPSHOP']; ?>"><?php _e('Профиль'); ?></a></li>
                                     <li><a href="?path=users"><?php _e('Все администраторы'); ?></a></li>
@@ -485,37 +485,37 @@ if (!empty($_COOKIE['fullscreen'])) {
                                 </span>
                             </div>
                         </form>
-<?php
+                        <?php
 // notification
-$i_notif = 0;
-if (empty($_SESSION['update_check']))
-    if (is_array($notificationList))
-        foreach ($notificationList as $notification) {
-            if ($i_notif < 3) {
-                include_once($_classPath . 'modules/' . $notification . '/admpanel/notification.php');
-                $notification_function = 'notification' . ucfirst($notification);
-                if (function_exists($notification_function)) {
-                    call_user_func($notification_function);
-                }
-            }
-            $i_notif++;
-        }
+                        $i_notif = 0;
+                        if (empty($_SESSION['update_check']))
+                            if (is_array($notificationList))
+                                foreach ($notificationList as $notification) {
+                                    if ($i_notif < 3) {
+                                        include_once($_classPath . 'modules/' . $notification . '/admpanel/notification.php');
+                                        $notification_function = 'notification' . ucfirst($notification);
+                                        if (function_exists($notification_function)) {
+                                            call_user_func($notification_function);
+                                        }
+                                    }
+                                    $i_notif++;
+                                }
 
 // update
-if (!empty($_SESSION['update_check']))
-    echo '<a class="navbar-btn btn btn-sm btn-info navbar-right hidden-xs" href="?path=update" data-toggle="tooltip" data-placement="bottom" title="' . __('Доступно обновление') . '">Update <span class="badge">' . intval($_SESSION['update_check']) . '</span></a>';
+                        if (!empty($_SESSION['update_check']))
+                            echo '<a class="navbar-btn btn btn-sm btn-info navbar-right hidden-xs" href="?path=update" data-toggle="tooltip" data-placement="bottom" title="' . __('Доступно обновление') . '">Update <span class="badge">' . intval($_SESSION['update_check']) . '</span></a>';
 
 
 // dialog
-$dialog = $PHPShopBase->getNumRows('dialog', "where isview='0'");
-if ($dialog > 99)
-    $dialog = 99;
-?>
+                        $dialog = $PHPShopBase->getNumRows('dialog', "where isview='0'");
+                        if ($dialog > 99)
+                            $dialog = 99;
+                        ?>
                         <a class="navbar-btn btn btn-sm btn-primary navbar-right hidden-xs" href="?path=dialog"><?php _e('Диалоги'); ?> <span class="badge" id="dialog-check"><?php echo intval($dialog); ?></span></a><audio id="play-chat" src="images/chat.mp3"></audio>
 
-<?php
-$order = $PHPShopBase->getNumRows('orders', "where statusi='0'");
-?>
+                        <?php
+                        $order = $PHPShopBase->getNumRows('orders', "where statusi='0'");
+                        ?>
 
                         <a class="navbar-btn btn btn-sm btn-warning navbar-right hidden-xs hidden-sm hide" href="?path=order&where[statusi]=0"><?php _e('Заказы'); ?> <span class="badge" id="orders-check"><?php echo $order; ?></span>
                         </a><audio id="play" src="images/message.mp3"></audio>
@@ -526,22 +526,22 @@ $order = $PHPShopBase->getNumRows('orders', "where statusi='0'");
             <div class="clearfix"></div>
             <a id="temp-color" class="hide"></a><a id="temp-color-selected" class="hide"></a>
 
-<?php
-if (file_exists($loader_file)) {
-    if (empty($_REQUEST['id']) and empty($_REQUEST['action'])) {
+            <?php
+            if (file_exists($loader_file)) {
+                if (empty($_REQUEST['id']) and empty($_REQUEST['action'])) {
 
-        if ($PHPShopBase->Rule->CheckedRules($subpath[0], 'view')) {
-            if (function_exists($loader_function))
-                call_user_func($loader_function);
-            else
-                _e('Функция ') . $loader_function . __('() не найдена в файле ') . $loader_file;
-        } else
-            $PHPShopBase->Rule->BadUserFormaWindow();
-    } else
-        echo $interface;
-} else
-    $PHPShopBase->Rule->BadUserFormaWindow();
-?>
+                    if ($PHPShopBase->Rule->CheckedRules($subpath[0], 'view')) {
+                        if (function_exists($loader_function))
+                            call_user_func($loader_function);
+                        else
+                            _e('Функция ') . $loader_function . __('() не найдена в файле ') . $loader_file;
+                    } else
+                        $PHPShopBase->Rule->BadUserFormaWindow();
+                } else
+                    echo $interface;
+            } else
+                $PHPShopBase->Rule->BadUserFormaWindow();
+            ?>
         </div>
 
         <!-- Notification -->
@@ -560,28 +560,28 @@ if (file_exists($loader_file)) {
                     <div class="panel-heading "><span class="glyphicon glyphicon-film text-primary"></span> <b class="text-primary"><?php _e('Урок 1: Создание товара'); ?></b>
                         <a class="btn btn-primary btn-xs pull-right" href="?path=product&return=catalog&action=new&video"><span class="glyphicon glyphicon-play"></span> <?php _e('Старт'); ?></a></div>
                     <div class="panel-body ">
-<?php _e('Обучающий урок по созданию нового товара, заполнения полей и сохранения результата'); ?>.
+                        <?php _e('Обучающий урок по созданию нового товара, заполнения полей и сохранения результата'); ?>.
                     </div>
                 </div>
                 <div class="panel panel-default">
                     <div class="panel-heading"><span class="glyphicon glyphicon-film text-primary"></span> <b class="text-primary"><?php _e('Урок 2: Создание каталога'); ?></b>
                         <a class="btn btn-primary btn-xs pull-right" href="?path=catalog&action=new&video"><span class="glyphicon glyphicon-play"></span> <?php _e('Старт'); ?></a></div>
                     <div class="panel-body ">
-<?php _e('Обучающий урок по созданию нового каталога товара, заполнения полей и сохранения результата'); ?>.
+                        <?php _e('Обучающий урок по созданию нового каталога товара, заполнения полей и сохранения результата'); ?>.
                     </div>
                 </div>
                 <div class="panel panel-default">
                     <div class="panel-heading"><span class="glyphicon glyphicon-film text-primary"></span> <b class="text-primary"><?php _e('Урок 3: Редактор шаблонов'); ?></b>
                         <a class="btn btn-primary btn-xs pull-right" href="?path=tpleditor&name=bootstrap&file=/main/index.tpl&mod=html&video"><span class="glyphicon glyphicon-play"></span> <?php _e('Старт'); ?></a></div>
                     <div class="panel-body">
-<?php _e('Обучающий урок по редактированию шаблона дизайна, описание переменных шаблонизатора, управление редактором кода'); ?>.
+                        <?php _e('Обучающий урок по редактированию шаблона дизайна, описание переменных шаблонизатора, управление редактором кода'); ?>.
                     </div>
                 </div>
                 <div class="panel panel-default">
                     <div class="panel-heading"><span class="glyphicon glyphicon-film text-primary"></span> <b class="text-primary"><?php _e('Урок 4: Настройки'); ?></b><a class="btn btn-primary btn-xs pull-right" href="?path=system#1"><span class="glyphicon glyphicon-play"></span> <?php _e('Старт'); ?></a>
                     </div>
                     <div class="panel-body">
-<?php _e('Выбрать общий шаблон дизайна магазина можно в <a href="?path=system#1">Настройках дизайна</a>. Изменить цветовую тему оформления панели управления можно в  <a href="?path=system#4">Настройках управления</a>'); ?>.
+                        <?php _e('Выбрать общий шаблон дизайна магазина можно в <a href="?path=system#1">Настройках дизайна</a>. Изменить цветовую тему оформления панели управления можно в  <a href="?path=system#4">Настройках управления</a>'); ?>.
                     </div>
                 </div>
                 <div class="checkbox text-muted">
@@ -591,17 +591,17 @@ if (file_exists($loader_file)) {
                 </div>
             </div>
         </div>
-<?php
-if (isset($_GET['video'])) {
-    echo '<script>var video=true;</script>';
-}
+        <?php
+        if (isset($_GET['video'])) {
+            echo '<script>var video=true;</script>';
+        }
 
-if ($_GET['path'] == 'intro' and $presentation_checked == 'checked' and ! PHPShopString::is_mobile())
-    echo '<script>var presentation_start=true;</script>';
+        if ($_GET['path'] == 'intro' and $presentation_checked == 'checked' and ! PHPShopString::is_mobile())
+            echo '<script>var presentation_start=true;</script>';
 
-if (PHPShopString::is_mobile())
-    echo '<script>var is_mobile=true;</script>';
-?>
+        if (PHPShopString::is_mobile())
+            echo '<script>var is_mobile=true;</script>';
+        ?>
 
         <!--/ Presentation -->
 
@@ -617,7 +617,7 @@ if (PHPShopString::is_mobile())
                         </div>
                         <div class="modal-body">
 
-<?php if (!empty($selectModalBody)) echo $selectModalBody; ?>
+                            <?php if (!empty($selectModalBody)) echo $selectModalBody; ?>
 
                         </div>
                         <div class="modal-footer" >
@@ -687,12 +687,12 @@ if (PHPShopString::is_mobile())
         <div class="bar-padding-fix <?php echo $isMobile . $isFrame; ?>"> </div>
         <nav class="navbar navbar-statick navbar-fixed-bottom bar bar-tab visible-xs  <?php echo $isFrame; ?>" role="navigation">
 
-<?php
-if (empty($dialog))
-    $dialog_mobile_check = 'hide';
-else
-    $dialog_mobile_check = null;
-?>
+            <?php
+            if (empty($dialog))
+                $dialog_mobile_check = 'hide';
+            else
+                $dialog_mobile_check = null;
+            ?>
 
             <a class="tab-item <?php echo $menu_active_dialog; ?>" href="?path=dialog">
                 <span class="icon icon-code"></span> <span class="badge badge-positive <?php echo $dialog_mobile_check; ?>" id="dialog-mobile-check"><?php echo $dialog; ?></span>
@@ -717,6 +717,14 @@ else
         </nav>
         <!--/ Fixed mobile bar -->
 
+        <?php if(!empty($_SESSION['is_trial']) and empty($_GET['frame']) and !$PHPShopSystem->ifSerilizeParam('admoption.chat_support')) echo '
+        <!-- Chat -->
+        <link href="./support/chat/jivosite.css" rel="stylesheet">
+        <script src="./support/chat/jivosite.js" type="text/javascript"></script> 
+        <script src="//code-ya.jivosite.com/widget/Ooae7FG9Ol" async></script>
+        <!--/ Chat -->';
+        ?>
+
         <!-- jQuery plugins -->
         <script src="./js/bootstrap.min.js" data-rocketoptimized="false" data-cfasync="false"></script>
         <script src="./js/jquery.dataTables.min.js" data-rocketoptimized="false" data-cfasync="false"></script>
@@ -729,15 +737,14 @@ else
         <script src="./js/bootstrap-toggle.js" data-rocketoptimized="false" data-cfasync="false"></script>
         <!--/ jQuery plugins -->
 
-<?php
+        <?php
 // WEB PUSH
-$PHPShopPush = new PHPShopPush();
-$PHPShopPush->init();
-?>
+        $PHPShopPush = new PHPShopPush();
+        $PHPShopPush->init();
+        ?>
 
     </body>
-</html>
-<?php
+</html><?php
 // Запись файла локализации [off]
 //writeLangFile();
 ?>

@@ -114,7 +114,7 @@ class MoySklad {
 
                     // Журнал
                     if (!empty($result))
-                        $this->log(array('parameters' => $products, 'response' => $update), null, 'Успешное обновление склада товара', 'updateWarehouse', 'success');
+                        $this->log(array('parameters' => $warehouse, 'response' => $update), null, 'Успешное обновление склада товара', 'updateWarehouse', 'success');
                 }
             }
         }

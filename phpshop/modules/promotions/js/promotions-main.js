@@ -44,7 +44,7 @@ function UpdatePromotion(promo) {
                         $("#TotalSumma").html(json['total']);
                         $("#SkiSumma").html(json['discount']);
                         $("#OrderSumma").val(json['totalsummainput']);
-                        $("#SkiSummaAll").html(json['discountall']);
+                        //$("#SkiSummaAll").html(json['discountall']);
 
                         //Бесплатная доставка
                         if (json['freedelivery'] == 0) {

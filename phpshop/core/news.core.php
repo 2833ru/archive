@@ -286,7 +286,7 @@ class PHPShopNews extends PHPShopCore {
         $this->keywords = callAutokeyword($row['kratko']);
 
         // Навигация хлебные крошки
-        $this->navigation(false, $row['zag'], array('name' => __('Новости'), 'url' => '/news/'));
+        $this->navigation(false, null, array('name' => __('Новости'), 'url' => '/news/'));
 
         // Перехват модуля
         $this->setHook(__CLASS__, __FUNCTION__, $row, 'END');

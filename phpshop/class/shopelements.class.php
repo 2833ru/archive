@@ -201,8 +201,8 @@ class PHPShopProductElements extends PHPShopElements {
             $this->max_item = $_SESSION['max_item'];
 
 
-        $limit_start = rand(1, $this->max_item / rand(1, 7));
-        return ' BETWEEN ' . $limit_start . ' and ' . round($limit_start + $limit + $this->max_item / 3);
+        $limit_start = rand(1, (int)$this->max_item / rand(1, 7));
+        return ' BETWEEN ' . $limit_start . ' and ' . round($limit_start + $limit + (int)$this->max_item / 3);
     }
 
     /**

@@ -136,26 +136,26 @@ function actionStart() {
     $tree_select_sm = '<select class="selectpicker show-menu-arrow hidden-edit" data-live-search="true" data-container="body" data-style="btn btn-default btn-sm" name="categories_sm[]"  data-width="100%" multiple>' . $tree_select . '</select>';
 
     // Выбор каталога Google Merchant
-    $catOption =  $PHPShopGUI->setField("Размещение", $tree_select_gm . $PHPShopGUI->setCheckbox("categories_gm_all", 1, "Выбрать все категории?", 0));
+    $catOption =  $PHPShopGUI->setField("Размещение", $tree_select_gm . $PHPShopGUI->setCheckbox("categories_gm_all", 1, "Выбрать все категории?", 0),1,'Пакетное редактирование. Настройка не сохраняется.');
     $catOption .= $PHPShopGUI->setField("Вывод в Google Merchant",$PHPShopGUI->setRadio("enabled_gm_all", 1, "Вкл.", 1).$PHPShopGUI->setRadio("enabled_gm_all", 0, "Выкл.",1));
     
      $Tab1 = $PHPShopGUI->setCollapse('Информация', $Tab1);
      $Tab1 .= $PHPShopGUI->setCollapse('Товары для Google Merchant', $catOption);
      
      // Выбор каталога СДЭК.МАРКЕТ
-    $catOption =  $PHPShopGUI->setField("Размещение", $tree_select_cm . $PHPShopGUI->setCheckbox("categories_cm_all", 1, "Выбрать все категории?", 0));
+    $catOption =  $PHPShopGUI->setField("Размещение", $tree_select_cm . $PHPShopGUI->setCheckbox("categories_cm_all", 1, "Выбрать все категории?", 0),1,'Пакетное редактирование. Настройка не сохраняется.');
     $catOption .= $PHPShopGUI->setField("Вывод в СДЭК.МАРКЕТ",$PHPShopGUI->setRadio("enabled_cm_all", 1, "Вкл.", 1).$PHPShopGUI->setRadio("enabled_cm_all", 0, "Выкл.",1));
     
     $Tab1 .= $PHPShopGUI->setCollapse('Товары для СДЭК.МАРКЕТ', $catOption);
     
     // Выбор каталога AliExpress
-    $catOption =  $PHPShopGUI->setField("Размещение", $tree_select_ae . $PHPShopGUI->setCheckbox("categories_ae_all", 1, "Выбрать все категории?", 0));
+    $catOption =  $PHPShopGUI->setField("Размещение", $tree_select_ae . $PHPShopGUI->setCheckbox("categories_ae_all", 1, "Выбрать все категории?", 0),1,'Пакетное редактирование. Настройка не сохраняется.');
     $catOption .= $PHPShopGUI->setField("Вывод в AliExpress",$PHPShopGUI->setRadio("enabled_ae_all", 1, "Вкл.", 1).$PHPShopGUI->setRadio("enabled_ae_all", 0, "Выкл.",1));
     
     $Tab1 .= $PHPShopGUI->setCollapse('Товары для AliExpress', $catOption);
     
      // Выбор каталога СберМаркет
-    $catOption =  $PHPShopGUI->setField("Размещение", $tree_select_sm . $PHPShopGUI->setCheckbox("categories_sm_all", 1, "Выбрать все категории?", 0));
+    $catOption =  $PHPShopGUI->setField("Размещение", $tree_select_sm . $PHPShopGUI->setCheckbox("categories_sm_all", 1, "Выбрать все категории?", 0),1,'Пакетное редактирование. Настройка не сохраняется.');
     $catOption .= $PHPShopGUI->setField("Вывод в СберМегаМаркет",$PHPShopGUI->setRadio("enabled_sm_all", 1, "Вкл.", 1).$PHPShopGUI->setRadio("enabled_sm_all", 0, "Выкл.",1));
     
     $Tab1 .= $PHPShopGUI->setCollapse('Товары для СберМегаМаркет', $catOption);

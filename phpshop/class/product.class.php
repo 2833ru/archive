@@ -392,7 +392,7 @@ class PHPShopProductFunction {
             $price = $price * $LoadItems['Valuta'][$valuta]['kurs'];
 
         // Наценка
-        $price = ($price + (($price * $LoadItems['System']['percent']) / 100));
+        $price = ($price + (($price * intval($LoadItems['System']['percent'])) / 100));
 
         return number_format($price, $format, '.', '');
     }

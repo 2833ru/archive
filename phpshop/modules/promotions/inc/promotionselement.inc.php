@@ -84,8 +84,8 @@ function promotion_get_discount($row, $with_desc = false) {
     } else {
         $data = $promotionslist;
     }
-    
-    $hidePrice=null;
+
+    $hidePrice = null;
 
     //выведем информацию по скидкам по промокодам на странице товара
     if ($with_desc) {
@@ -250,11 +250,12 @@ function getProductsInPromo($products) {
             }
         }
     } else {
-        foreach ($parents as $parent) {
-            foreach (explode(',', $parent['parent']) as $value) {
-                $prnt[] = $value;
+        if (is_array($parents))
+            foreach ($parents as $parent) {
+                foreach (explode(',', $parent['parent']) as $value) {
+                    $prnt[] = $value;
+                }
             }
-        }
     }
 
     return implode(',', array_merge(explode(',', str_replace(' ', '', $products)), $prnt));

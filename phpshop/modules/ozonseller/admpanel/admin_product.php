@@ -14,8 +14,13 @@ function actionStart() {
 
     $data = $PHPShopOrm->select(array('*'), array('export_ozon' => "='1'"), array('order' => 'datas DESC'), array('limit' => 10000));
     $OzonSeller = new OzonSeller();
+    $import_count = 0;
 
-    $status = ['imported' => '<span class="text-success">'.__('Загружен').'</span>', 'error' => '<span class="text-warning">'.__('Ошибка').'</span>'];
+    $status = [
+        'imported' => '<span class="text-success">' . __('Загружен') . '</span>', 
+        'error' => '<span class="text-warning">' . __('Ошибка') . '</span>',
+        'wait' => '<span class="text-mutted">' . __('В очереди') . '</span>', 
+        ];
     if (is_array($data))
         foreach ($data as $row) {
 
@@ -27,28 +32,29 @@ function actionStart() {
             else
                 $icon = '<img class="media-object" src="./images/no_photo.gif">';
 
-            if($row['export_ozon_task_status'] == 'imported'){
+            if ($row['export_ozon_task_status'] == 'imported') {
                 $info['status'] = $row['export_ozon_task_status'];
-            }
-            else if (!empty($row['export_ozon_task_id'])) {
+            } else if (!empty($row['export_ozon_task_id'])) {
                 $result = $OzonSeller->sendProductsInfo($row);
                 $info = $result['result']['items'][0];
-            } else {
+            } elseif ($import_count < 5) {
                 $products[] = $row;
                 $result = $OzonSeller->sendProducts($products);
                 $task_id = $data['export_ozon_task_id'] = $result['result']['task_id'];
+                $import_count++;
 
                 if (!empty($task_id)) {
                     $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['products']);
-                    $PHPShopOrm->update(['export_ozon_task_id_new' => $task_id], ['id' => '=' . $data['id']]);
+                    $PHPShopOrm->update(['export_ozon_task_id_new' => $task_id,'export_ozon_task_status_new' => 'imported'], ['id' => '=' . $row['id']]);
 
-                    $info['errors'][] = ['description'=>$result['message']];
+                    $info['errors'][] = ['description' => $result['message']];
+                } else {
 
-                } else{
-                    
-                    $info['errors'][] = ['description'=>$result['message']];
+                    $info['errors'][] = ['description' => $result['message']];
                 }
-                
+            }
+            else {
+                $info['status'] = 'wait';
             }
 
 
@@ -56,13 +62,15 @@ function actionStart() {
                 $info['status'] = 'error';
 
             if (is_array($info['errors'])) {
+
+                
                 foreach ($info['errors'] as $k => $er) {
 
                     // Ссылки
-                    if (!empty($er['description']))
+                    if (!empty($er['description'])){
                         $er['description'] = preg_replace("~(http|https|ftp|ftps)://(.*?)(\s|\n|[,.?!](\s|\n)|$)~", '<a href="$1://$2" target="_blank">[ссылка]</a>$3', $er['description']);
                     $error .= ($k + 1) . ' - ' . PHPShopString::utf8_win1251($er['description']) . '<br>';
-                    
+                    }
                 }
             }
             else {

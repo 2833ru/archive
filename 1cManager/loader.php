@@ -121,9 +121,9 @@ switch ($_REQUEST['command']) {
                 if ($row['flat'])
                     $adr_info .= ", квартира: " . $row['flat'];
                 if ($row['delivtime'])
-                    $adr_info .= ", время доставки: " . $row['delivtime'];
+                    $dop_info = "время доставки: " . $row['delivtime']." ";
                 if ($row['dop_info'])
-                    $dop_info =  PHPShopSecurity::CleanOut($row['dop_info']);
+                    $dop_info .=  PHPShopSecurity::CleanOut($row['dop_info']);
 
                 $adres = PHPShopSecurity::CleanOut(str_replace("&quot;", '"', $adr_info . $order['Person']['adr_name']));
                 $oplata = $PHPShopOrder->getOplataMetodName();

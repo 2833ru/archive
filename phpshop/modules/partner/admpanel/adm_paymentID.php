@@ -99,9 +99,9 @@ function actionDelete() {
     return array("success" => $action);
 }
 
-// Вывод формы при старте
-$PHPShopGUI->setAction($_GET['id'], 'actionStart', 'none');
-
 // Обработка событий
 $PHPShopGUI->getAction();
+
+// Вывод формы при старте
+$PHPShopGUI->setAction($_GET['id'], 'actionStart', 'none');
 ?>

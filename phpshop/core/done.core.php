@@ -117,8 +117,8 @@ class PHPShopDone extends PHPShopCore {
         if ($hook)
             return $hook;
 
-        $message = PHPShopText::b(PHPShopText::notice($title, false, '14px')) . PHPShopText::br();
-        $message .= PHPShopText::message($content, false, '12px', 'black');
+        $message = PHPShopText::h4($title, 'text-danger');
+        $message .= PHPShopText::message($content, false, false, false, 'text-muted');
 
         return $message;
     }
@@ -358,7 +358,7 @@ class PHPShopDone extends PHPShopCore {
         $this->set('shop_name', $this->PHPShopSystem->getName());
         $this->set('ouid', $this->ouid);
         $this->set('date', date("d-m-y"));
-        $this->set('adr_name', PHPShopSecurity::CleanStr($_POST['adr_name']));
+        $this->set('adr_name', PHPShopSecurity::TotalClean($_POST['adr_name']));
         $this->set('mail', $_POST['mail']);
 
         // „ат бот
@@ -549,7 +549,7 @@ class PHPShopDone extends PHPShopCore {
         $insert['orders_new'] = $this->order;
         $insert['status_new'] = serialize($this->status);
         $insert['user_new'] = $this->userId;
-        $insert['dop_info_new'] = PHPShopSecurity::CleanStr($_POST['dop_info']);
+        $insert['dop_info_new'] = PHPShopSecurity::TotalClean($_POST['dop_info']);
         $insert['sum_new'] = $this->total;
 
         if (defined('HostID')) {

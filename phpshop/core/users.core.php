@@ -9,7 +9,7 @@ PHPShopObj::loadClass('delivery');
 /**
  * Обработчик кабинета пользователя
  * @author PHPShop Software
- * @version 1.7
+ * @version 1.8
  * @package PHPShopCore
  */
 class PHPShopUsers extends PHPShopCore {
@@ -457,7 +457,7 @@ class PHPShopUsers extends PHPShopCore {
         } else {
 
             // Сообщение об обязательной авторизации
-            $this->set('usersError', __('Требуется авторация пользователя'));
+            //$this->set('usersError', __('Требуется авторация пользователя'));
 
             // Форма регистрации нового пользователя
             $this->action_register();
@@ -475,50 +475,50 @@ class PHPShopUsers extends PHPShopCore {
 
             // формируем массив нового адреса
             if (!empty($_POST['country_new']))
-                $newAdres['country_new'] = PHPShopSecurity::CleanStr(@$_POST['country_new']);
+                $newAdres['country_new'] = PHPShopSecurity::TotalClean($_POST['country_new']);
             if (!empty($_POST['state_new']))
-                $newAdres['state_new'] = PHPShopSecurity::CleanStr(@$_POST['state_new']);
+                $newAdres['state_new'] = PHPShopSecurity::TotalClean($_POST['state_new']);
             if (!empty($_POST['city_new']))
-                $newAdres['city_new'] = PHPShopSecurity::CleanStr(@$_POST['city_new']);
+                $newAdres['city_new'] = PHPShopSecurity::TotalClean($_POST['city_new']);
             if (!empty($_POST['index_new']))
-                $newAdres['index_new'] = PHPShopSecurity::CleanStr(@$_POST['index_new']);
+                $newAdres['index_new'] = PHPShopSecurity::TotalClean($_POST['index_new']);
             if (!empty($_POST['fio_new']))
-                $newAdres['fio_new'] = PHPShopSecurity::CleanStr(@$_POST['fio_new']);
+                $newAdres['fio_new'] = PHPShopSecurity::TotalClean($_POST['fio_new']);
             if (!empty($_POST['tel_new']))
-                $newAdres['tel_new'] = PHPShopSecurity::CleanStr(@$_POST['tel_new']);
+                $newAdres['tel_new'] = PHPShopSecurity::TotalClean($_POST['tel_new']);
             if (!empty($_POST['street_new']))
-                $newAdres['street_new'] = PHPShopSecurity::CleanStr(@$_POST['street_new']);
+                $newAdres['street_new'] = PHPShopSecurity::TotalClean($_POST['street_new']);
             if (!empty($_POST['house_new']))
-                $newAdres['house_new'] = PHPShopSecurity::CleanStr(@$_POST['house_new']);
+                $newAdres['house_new'] = PHPShopSecurity::TotalClean($_POST['house_new']);
             if (!empty($_POST['porch_new']))
-                $newAdres['porch_new'] = PHPShopSecurity::CleanStr(@$_POST['porch_new']);
+                $newAdres['porch_new'] = PHPShopSecurity::TotalClean($_POST['porch_new']);
             if (!empty($_POST['door_phone_new']))
-                $newAdres['door_phone_new'] = PHPShopSecurity::CleanStr(@$_POST['door_phone_new']);
+                $newAdres['door_phone_new'] = PHPShopSecurity::TotalClean($_POST['door_phone_new']);
             if (!empty($_POST['flat_new']))
-                $newAdres['flat_new'] = PHPShopSecurity::CleanStr(@$_POST['flat_new']);
+                $newAdres['flat_new'] = PHPShopSecurity::TotalClean($_POST['flat_new']);
             if (!empty($_POST['delivtime_new']))
-                $newAdres['delivtime_new'] = PHPShopSecurity::CleanStr(@$_POST['delivtime_new']);
+                $newAdres['delivtime_new'] = PHPShopSecurity::TotalClean($_POST['delivtime_new']);
 
             if (!empty($_POST['org_name_new']))
-                $newAdres['org_name_new'] = PHPShopSecurity::CleanStr(@$_POST['org_name_new']);
+                $newAdres['org_name_new'] = PHPShopSecurity::TotalClean($_POST['org_name_new']);
             if (!empty($_POST['org_inn_new']))
-                $newAdres['org_inn_new'] = PHPShopSecurity::CleanStr(@$_POST['org_inn_new']);
+                $newAdres['org_inn_new'] = PHPShopSecurity::TotalClean($_POST['org_inn_new']);
             if (!empty($_POST['org_kpp_new']))
-                $newAdres['org_kpp_new'] = PHPShopSecurity::CleanStr(@$_POST['org_kpp_new']);
+                $newAdres['org_kpp_new'] = PHPShopSecurity::TotalClean($_POST['org_kpp_new']);
             if (!empty($_POST['org_yur_adres_new']))
-                $newAdres['org_yur_adres_new'] = PHPShopSecurity::CleanStr(@$_POST['org_yur_adres_new']);
+                $newAdres['org_yur_adres_new'] = PHPShopSecurity::TotalClean($_POST['org_yur_adres_new']);
             if (!empty($_POST['org_fakt_adres_new']))
-                $newAdres['org_fakt_adres_new'] = PHPShopSecurity::CleanStr(@$_POST['org_fakt_adres_new']);
+                $newAdres['org_fakt_adres_new'] = PHPShopSecurity::TotalClean($_POST['org_fakt_adres_new']);
             if (!empty($_POST['org_ras_new']))
-                $newAdres['org_ras_new'] = PHPShopSecurity::CleanStr(@$_POST['org_ras_new']);
+                $newAdres['org_ras_new'] = PHPShopSecurity::TotalClean($_POST['org_ras_new']);
             if (!empty($_POST['org_bank_new']))
-                $newAdres['org_bank_new'] = PHPShopSecurity::CleanStr(@$_POST['org_bank_new']);
+                $newAdres['org_bank_new'] = PHPShopSecurity::TotalClean($_POST['org_bank_new']);
             if (!empty($_POST['org_kor_new']))
-                $newAdres['org_kor_new'] = PHPShopSecurity::CleanStr(@$_POST['org_kor_new']);
+                $newAdres['org_kor_new'] = PHPShopSecurity::TotalClean($_POST['org_kor_new']);
             if (!empty($_POST['org_bik_new']))
-                $newAdres['org_bik_new'] = PHPShopSecurity::CleanStr(@$_POST['org_bik_new']);
+                $newAdres['org_bik_new'] = PHPShopSecurity::TotalClean($_POST['org_bik_new']);
             if (!empty($_POST['org_city_new']))
-                $newAdres['org_city_new'] = PHPShopSecurity::CleanStr(@$_POST['org_city_new']);
+                $newAdres['org_city_new'] = PHPShopSecurity::TotalClean($_POST['org_city_new']);
 
             if (is_array($newAdres) AND count($newAdres)) {
                 // если прислан ИД используемого адреса, обновляем его

@@ -27,6 +27,7 @@ function tab_map() {
     global $PHPShopGUI, $MapValue;
 
     $map_name = array(
+        'flow' => 5,
         'unit' => 5,
         'lego' => 5,
         'terra' => 4,

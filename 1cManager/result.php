@@ -4,7 +4,7 @@
  * Автономная синхронизация номенклатуры из 1С
  * @package PHPShopExchange
  * @author PHPShop Software
- * @version 3.2
+ * @version 3.3
  */
 // Авторизация
 include_once("login.php");
@@ -471,17 +471,16 @@ class ReadCsv1C extends PHPShopReadCsvNative {
             // Подчиненные товары
             if ($this->ObjSystem->getSerilizeParam("1c_option.update_option") == 1) {
 
-                if (PHPShopProductFunction::true_parent($CsvToArray[0]) and ! PHPShopProductFunction::true_parent($CsvToArray[16])) {
+                if ((PHPShopProductFunction::true_parent($CsvToArray[0]) and !PHPShopProductFunction::true_parent($CsvToArray[16])) or $CsvToArray[16] == 1) {
                     $sql .= "parent_enabled='1', ";
                 } else {
                     $sql .= "parent_enabled='0', ";
                 }
 
-
                 if (strstr($CsvToArray[16], "@")) {
                     $parent_array = explode("@", $CsvToArray[16]);
                     $sql .= "parent='" . $parent_array[0] . "', parent2='" . $parent_array[1] . "',";
-                } else
+                } elseif($CsvToArray[16] != 1)
                     $sql .= "parent='" . $CsvToArray[16] . "', ";
             }
 
@@ -644,11 +643,7 @@ class ReadCsv1C extends PHPShopReadCsvNative {
             if ($this->ObjSystem->getSerilizeParam("1c_option.update_price") == 1 and ! empty($CsvToArray[7]))
                 $sql .= "price='" . $CsvToArray[7] . "', "; // цена 1
 
-
-
-
-                
-// Склад
+            // Склад
             if ($this->ObjSystem->getSerilizeParam("1c_option.update_item") == 1) {
 
                 // Многоскладовость
@@ -675,7 +670,7 @@ class ReadCsv1C extends PHPShopReadCsvNative {
 
             // Подчиненные товары
             if ($this->ObjSystem->getSerilizeParam("1c_option.update_option") == 1) {
-                if (PHPShopProductFunction::true_parent($CsvToArray[0])) {
+                if (PHPShopProductFunction::true_parent($CsvToArray[0]) or $CsvToArray[16] == 1) {
                     $sql .= "parent_enabled='1', ";
                 } else {
                     $sql .= "parent_enabled='0', ";
@@ -684,7 +679,7 @@ class ReadCsv1C extends PHPShopReadCsvNative {
                 if (strstr($CsvToArray[16], "@")) {
                     $parent_array = explode("@", $CsvToArray[16]);
                     $sql .= "parent='" . $parent_array[0] . "', parent2='" . $parent_array[1] . "',";
-                } else
+                } elseif( $CsvToArray[16] != 1)
                     $sql .= "parent='" . $CsvToArray[16] . "', ";
             }
 

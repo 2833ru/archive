@@ -228,8 +228,11 @@ class PHPShopCore {
         }
 
         $this->set('breadcrumbElemTitle', $name);
+        
+        if(empty($name))
+            $lastElemTemplate=null;
 
-        $dis = $home . $dis . '' . ParseTemplateReturn($lastElemTemplate, true, $this->template_debug);
+        $dis = $home . $dis . ParseTemplateReturn($lastElemTemplate, true, $this->template_debug);
 
         $this->set('breadCrumbs', $dis);
 

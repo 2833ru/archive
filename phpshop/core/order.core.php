@@ -100,6 +100,7 @@ class PHPShopOrder extends PHPShopCore {
         $PHPShopAnalitica->init(__FUNCTION__, $_POST);
 
         $this->PHPShopCart->del($_POST['id_delete']);
+
         $this->index();
     }
 
@@ -136,7 +137,7 @@ class PHPShopOrder extends PHPShopCore {
         $this->set('display_cart', $cart);
         $this->set('cart_num', $this->PHPShopCart->getNum());
         $this->set('discount', $PHPShopOrder->ChekDiscount($this->PHPShopCart->getSum(true), $this->PHPShopCart->getArray()));
-        
+
         $sum_cart = $this->PHPShopCart->getSum(true);
         $sum_discount_off = $this->PHPShopCart->getSumNoDiscount(true);
 
@@ -154,9 +155,9 @@ class PHPShopOrder extends PHPShopCore {
         else
             $discount_sum = 0;
 
-        $this->set('discount_sum', number_format($discount_sum * $this->PHPShopSystem->getDefaultValutaKurs(false), $PHPShopOrder->format, '.', ' '));
+        $this->set('discount_sum', number_format($discount_sum * $this->PHPShopSystem->getDefaultValutaKurs(false), $PHPShopOrder->format, '.', ''));
         $this->set('cart_sum', $sum_cart);
-        $this->set('cart_sum_discount_off', number_format($sum_discount_off, $PHPShopOrder->format, '.', ' '));
+        $this->set('cart_sum_discount_off', number_format($sum_discount_off, $PHPShopOrder->format, '.', ''));
         $this->set('cart_weight', $this->PHPShopCart->getWeight());
 
         // Стоимость доставки
@@ -164,7 +165,7 @@ class PHPShopOrder extends PHPShopCore {
         $this->set('delivery_price', PHPShopDelivery::getPriceDefault());
 
         // Итоговая стоимость
-        $this->set('total', number_format($sum_cart + $this->get('delivery_price')-$discount_sum, $PHPShopOrder->format, '.', ' '));
+        $this->set('total', number_format($sum_discount_off + $this->get('delivery_price') - $discount_sum, $PHPShopOrder->format, '.', ' '));
 
         // Перехват модуля
         $this->setHook(__CLASS__, __FUNCTION__, false, 'END');
@@ -228,8 +229,8 @@ document.getElementById('order').style.display = 'none';
     function payment() {
         PHPShopObj::loadClass('payment');
 
-        $where['name']='!=""';
-        $disp=$showYurDataForPaymentClass=null;
+        $where['name'] = '!=""';
+        $disp = $showYurDataForPaymentClass = null;
 
         // Мультибаза
         if (defined("HostID"))
@@ -245,7 +246,7 @@ document.getElementById('order').style.display = 'none';
                 if (!empty($val['enabled']) OR $val['path'] == 'modules') {
                     $this->value[$val['id']] = array($val['name'], $val['id'], false);
                     $this->set('paymentIcon', '');
-                    if(!empty($val['icon'])) {
+                    if (!empty($val['icon'])) {
                         $this->set('paymentIcon', $val['icon']);
                     }
                     $this->set('paymentId', $val['id']);
@@ -393,10 +394,11 @@ document.getElementById('order').style.display = 'none';
      * Функция вынесена в отдельный файл /order.core/import.php
      */
     function import() {
-        
-        if(!empty($_GET['from']))
-            $from=$_GET['from'];
-        else $from=null;
+
+        if (!empty($_GET['from']))
+            $from = $_GET['from'];
+        else
+            $from = null;
 
         $this->doLoadFunction(__CLASS__, __FUNCTION__, $from);
 
@@ -446,6 +448,7 @@ function ordercartforma($val, $option) {
 
 
     PHPShopParser::set('cart_izm', $val['ed_izm']);
+    PHPShopParser::set('cart_weight', $val['weight']);
 
     // Перехват модуля в конце функции
     $PHPShopModules->setHookHandler(__FUNCTION__, __FUNCTION__, array(&$val), $option, 'END');

@@ -72,20 +72,20 @@ function actionStart() {
 
         if (is_array($json_data)) {
 
-            $PHPShopInterface->setRow('Итого и средние', $json_data[totals][0], $json_data[totals][1], $json_data[totals][2], round($json_data[totals][3], 2) . '%', round($json_data[totals][4], 2) . '%', round($json_data[totals][5], 2), round($json_data[totals][6] / 60, 2));
+            $PHPShopInterface->setRow('Итого и средние', $json_data['totals'][0], $json_data['totals'][1], $json_data['totals'][2], round($json_data['totals'][3], 2) . '%', round($json_data['totals'][4], 2) . '%', round($json_data['totals'][5], 2), round($json_data['totals'][6] / 60, 2));
 
 
-            $canvas_data = $json_data = $json_data[data];
+            $canvas_data = $json_data = $json_data['data'];
             $canvas_value = $canvas_label = null;
             foreach ($json_data as $key => $value) {
-                $date = $json_data[$key][dimensions][0][id];
-                $visits = $json_data[$key][metrics][0];
-                $users = $json_data[$key][metrics][1];
-                $pageviews = $json_data[$key][metrics][2];
-                $percentNewVisitors = $json_data[$key][metrics][3];
-                $bounceRate = $json_data[$key][metrics][4];
-                $pageDepth = $json_data[$key][metrics][5];
-                $avgVisitDurationSeconds = $json_data[$key][metrics][6] / 60;
+                $date = $json_data[$key]['dimensions'][0]['id'];
+                $visits = $json_data[$key]['metrics'][0];
+                $users = $json_data[$key]['metrics'][1];
+                $pageviews = $json_data[$key]['metrics'][2];
+                $percentNewVisitors = $json_data[$key]['metrics'][3];
+                $bounceRate = $json_data[$key]['metrics'][4];
+                $pageDepth = $json_data[$key]['metrics'][5];
+                $avgVisitDurationSeconds = $json_data[$key]['metrics'][6] / 60;
 
                 $PHPShopInterface->setRow(date('d.m.Y', strtotime($date)), $visits, $users, $pageviews, round($percentNewVisitors, 2) . '%', round($bounceRate, 2) . '%', round($pageDepth, 2), array('name' => round($avgVisitDurationSeconds, 2), 'align' => 'left'));
             }
@@ -96,8 +96,8 @@ function actionStart() {
                 krsort($canvas_data);
                 foreach ($canvas_data as $value) {
 
-                    $canvas_value.='"' . $value[metrics][0] . '",';
-                    $canvas_label.='"' . date('d.m', strtotime($value[dimensions][0][id])) . '",';
+                    $canvas_value.='"' . $value['metrics'][0] . '",';
+                    $canvas_label.='"' . date('d.m', strtotime($value['dimensions'][0]['id'])) . '",';
                 }
             }
         }

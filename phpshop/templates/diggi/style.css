@@ -294,6 +294,7 @@ hr{
     display: inline-block;
     max-height: 100px;
     max-width: 190px;
+    min-height: 80px;
 }
 .header-contact {
     float: right;

@@ -313,6 +313,8 @@ class PHPShopSearch extends PHPShopShopCore {
      * Генерация пагинатора
      */
     function setPaginator($count = null, $sql = null) {
+        
+        $this->search_order['cat'] = (int)$_REQUEST['cat'];
 
         // проверяем наличие шаблонов пагинации в папке шаблона
         // если отсутствуют, то используем шаблоны из lib

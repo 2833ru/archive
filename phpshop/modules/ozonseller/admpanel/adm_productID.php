@@ -66,7 +66,7 @@ function addOzonsellerProductTab($data) {
         $tab .= $PHPShopGUI->setField('Ошибки', $PHPShopGUI->setText($error,"left", false, false));
 
     $tab .= $PHPShopGUI->setField('Цена OZON', $PHPShopGUI->setInputText(null, 'price_ozon_new', $data['price_ozon'], 150, $valuta_def_name), 2);
-    $tab .= $PHPShopGUI->setField("Штрихкод", $PHPShopGUI->setInputText(null, 'barcode_ozon_new', $data['barcode_ozon'], 300));
+    $tab .= $PHPShopGUI->setField("Штрихкод", $PHPShopGUI->setInputText(null, 'barcode_ozon_new', $data['barcode_ozon']));
 
 
     $PHPShopGUI->addTab(array("OZON", $tab, true));

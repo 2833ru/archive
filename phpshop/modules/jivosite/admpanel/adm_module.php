@@ -14,7 +14,7 @@ function actionUpdate() {
 
     if(isset($_POST['email_new']) && isset($_POST['userPassword_new'])) {
 
-        $path = 'https://admin.jivosite.com/integration/install';
+        $path = 'https://api.jivosite.com/web/integration/install';
 
         $query['email'] = $_POST['email_new'];
         $query['userDisplayName'] = $_POST['display_name_new'];
@@ -40,6 +40,7 @@ function actionUpdate() {
             $responce = curl_exec($curl);
             curl_close($curl);
         }
+
         if ($responce) {
             $_POST['widget_id_new'] = $responce;
         }

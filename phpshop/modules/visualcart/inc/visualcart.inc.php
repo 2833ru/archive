@@ -242,7 +242,7 @@ class AddToTemplateVisualCart extends PHPShopElements {
         $GLOBALS['PHPShopOrder'] = new PHPShopOrderFunction();
 
         // Валюта
-        $this->currency = $GLOBALS['PHPShopOrder']->default_valuta_code;
+        $this->currency = $GLOBALS['PHPShopSystem']->getValutaIcon();
 
         $this->addJS();
 

@@ -6,7 +6,6 @@
     <description>Сквозной подбор товаров по параметрам.</description>
     <category>sale</category>
     <sign>1652697683</sign>
-    <status>New</status>
     <adminmenu>
         <title>Sort Selection</title>
         <capability>true</capability>

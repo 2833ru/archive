@@ -404,14 +404,14 @@ function actionStart() {
 
         if (is_array($json_data)) {
 
-            $canvas_data = $json_data = $json_data[data];
+            $canvas_data = $json_data = $json_data['data'];
             $canvas_value = $canvas_label = null;
             foreach ($json_data as $value) {
-                $date = $value[dimensions][0][id];
-                $visits = $value[metrics][0];
-                $users = $value[metrics][1];
-                $pageviews = $value[metrics][2];
-                $avgVisitDurationSeconds = $value[metrics][6] / 60;
+                $date = $value['dimensions'][0]['id'];
+                $visits = $value['metrics'][0];
+                $users = $value['metrics'][1];
+                $pageviews = $value['metrics'][2];
+                $avgVisitDurationSeconds = $value['metrics'][6] / 60;
 
                 $PHPShopInterface->setRow(array('name' => date('d.m.Y', strtotime($date)), 'align' => 'left'), array('name' => $visits, 'align' => 'center'), array('name' => $users, 'align' => 'center'), array('name' => $pageviews, 'align' => 'center'), array('name' => round($avgVisitDurationSeconds, 2), 'align' => 'right'));
             }
@@ -422,8 +422,8 @@ function actionStart() {
                 krsort($canvas_data);
                 foreach ($canvas_data as $value) {
 
-                    $canvas_value .= '"' . $value[metrics][0] . '",';
-                    $canvas_label .= '"' . date('d.m', strtotime($value[dimensions][0][id])) . '",';
+                    $canvas_value .= '"' . $value['metrics'][0] . '",';
+                    $canvas_label .= '"' . date('d.m', strtotime($value['dimensions'][0]['id'])) . '",';
                 }
             }
 

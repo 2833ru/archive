@@ -15,7 +15,7 @@ $().ready(function () {
         $('.prime').toggleClass('is-visible');
         $('#prime').toggleClass('is-float');
         $('.chat').toggleClass('is-visible');
-        $('.fab').toggleClass('is-visible');
+        $('.fab-chat').toggleClass('is-visible');
     });
 
     // Полный экран чата
@@ -23,7 +23,7 @@ $().ready(function () {
         $('.fullscreen').toggleClass('zmdi-window-maximize');
         $('.fullscreen').toggleClass('zmdi-window-restore');
         $('.chat').toggleClass('chat_fullscreen');
-        $('.fab').toggleClass('is-hide');
+        $('.fab-chat').toggleClass('is-hide');
         $('.header_img').toggleClass('change_img');
         $('.img_container').toggleClass('change_img');
         $('.chat_header').toggleClass('chat_header2');

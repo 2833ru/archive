@@ -136,8 +136,8 @@ class PHPShopCart {
                 $this->_CART[$xid] = $cart;
 
                 // сообщение для вывода во всплывающее окно
-                $this->message = __("Вы успешно добавили") . " <a href='" . $GLOBALS['SysValue']['dir']['dir'] . "/shop/UID_$objID.html'>$name</a> 
-            " . __("в вашу") . " <a href='" . $GLOBALS['SysValue']['dir']['dir'] . "/order/'>" . __("корзину") . "</a>";
+                $this->message = __("Вы успешно добавили") . " <a href='" . $GLOBALS['SysValue']['dir']['dir'] . "/shop/UID_$objID.html' class='alert-link'>$name</a> 
+            " . __("в вашу") . " <a href='" . $GLOBALS['SysValue']['dir']['dir'] . "/order/' class='alert-link'>" . __("корзину") . "</a>";
 
                 $this->log['status'] = true;
             }
@@ -145,7 +145,7 @@ class PHPShopCart {
             else {
 
                 // сообщение для вывода во всплывающее окно
-                $this->message = __("Ошибка добавления") . " <a href='" . $GLOBALS['SysValue']['dir']['dir'] . "/shop/UID_$objID.html'>$name</a> 
+                $this->message = __("Ошибка добавления") . " <a href='" . $GLOBALS['SysValue']['dir']['dir'] . "/shop/UID_$objID.html' class='alert-link'>$name</a> 
             " . __("в вашу") . " " . __("корзину") . ", ".__('товар отсутствует на складе');
 
                 $this->log['status'] = false;

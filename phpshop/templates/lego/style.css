@@ -224,7 +224,7 @@ html {
 
 .logo {
     padding: 10px 0px 10px 0px;
-    margin-right: 27px
+    margin-right: 27px;
 }
 
 .logo a {
@@ -233,7 +233,8 @@ html {
 
 .logo img {
     max-width: 180px;
-    max-height: 90px
+    max-height: 90px;
+    min-height: 80px;    
 }
 
 .header-3 .logo {

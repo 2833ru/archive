@@ -158,7 +158,7 @@ function actionStart() {
       </div>
     ';
     
-    $Tab3 = $PHPShopGUI->setInfo($Info);
+    $Tab3 = $PHPShopGUI->setInfo($Info, '', '95%');
 
     // Содержание закладки 4
     $Tab4 = $PHPShopGUI->setPay(false, false, $data['version'], true);

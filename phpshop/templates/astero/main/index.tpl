@@ -441,7 +441,6 @@
     <!--/ Модальное окно мобильного поиска -->
 
     <!-- Модальное окно returncall-->
-    <!-- Модальное окно returncall-->
     <div class="modal fade bs-example-modal-sm return-call" id="returnCallModal" tabindex="-1" role="dialog"  aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">

@@ -95,12 +95,12 @@ function addOzonsellerTab($data) {
                 else
                     $help = null;
 
-                if (empty($sort_ozon_value['dictionary_id']) and strstr($name, 'Название')) {
+                if (empty($sort_ozon_value['dictionary_id']) and $name == 'Название') {
                     continue;
                     //$sort_ozon_value['description'] = __('Будет заполнено автоматически из имени товара.');
                 }
 
-                $Tab2 .= $PHPShopGUI->setField($name, $PHPShopGUI->setSelect('attribute_ozonseller[' . $sort_ozon_value['id'] . ']', $sort_select_value, '100%') . $PHPShopGUI->setHelp(PHPShopString::utf8_win1251($sort_ozon_value['description']) . '<br>' . $help,false,false),1, null, null,'control-label', false);
+                $Tab2 .= $PHPShopGUI->setField($name, $PHPShopGUI->setSelect('attribute_ozonseller[' . $sort_ozon_value['id'] . ']', $sort_select_value, '100%') . $PHPShopGUI->setHelp(PHPShopString::utf8_win1251($sort_ozon_value['description']) . '<br>' . $help,false,false),1,  $sort_ozon_value['id'], null,'control-label', false);
             }
         } else {
             $Tab2 = $PHPShopGUI->setHelp('Выберите размещение в OZON для сопоставления характеристик и перегрузите страницу');
@@ -153,6 +153,11 @@ function updateOzonseller() {
         $PHPShopSort->debug = false;
         foreach ($_POST['attribute_ozonseller'] as $k => $v) {
             if (!empty($v)) {
+                
+                // Очистка старых значений
+                $PHPShopSort->update(['attribute_ozonseller_new' => null], ['attribute_ozonseller' => '=' . intval($k)]);
+                
+                // Новое значение
                 $PHPShopSort->update(['attribute_ozonseller_new' => $k], ['id' => '=' . intval($v)]);
             }
         }

@@ -208,12 +208,12 @@ function actionStart() {
     $sidebarleft[] = array('id' => 'user-data-1', 'title' => 'Информация о покупателе', 'name' => array('caption' => $data['fio'], 'link' => '?path=shopusers&return=order.' . $data['id'] . '&id=' . $data['user']), 'content' => array(array('caption' => $mail, 'link' => 'mailto:' . $order['Person']['mail']), $data['tel']));
 
     // Адрес доставки
-    $sidebarleft[] = array('id' => 'user-data-2', 'title' => 'Адрес доставки', 'name' => $data['fio'], 'content' => array($data['tel'], $data['street'] . $house . $porch . $flat));
+    $sidebarleft[] = array('id' => 'user-data-2', 'title' => 'Адрес доставки', 'name' => PHPShopSecurity::TotalClean($data['fio']), 'content' => array(PHPShopSecurity::TotalClean($data['tel']), PHPShopSecurity::TotalClean($data['street'] . $house . $porch . $flat)));
 
     // Карта
     if ($PHPShopSystem->ifSerilizeParam('admoption.yandexmap_enabled')) {
         if (strlen($data['street']) > 5) {
-            $map = '<div id="map" class="visible-lg" data-geocode="' . $data['city'] . ', ' . $data['street'] . ' ' . $data['house'] . '" data-title="' . __('Заказ') . ' &#8470;' . $data['uid'] . '"></div><div class="data-row"><a href="http://maps.yandex.ru/?&source=wizgeo&text=' . urlencode(PHPShopString::win_utf8($data['city'] . ', ' . $data['street'] . ' ' . $data['house'])) . '" target="_blank" class="text-muted"><span class="glyphicon glyphicon-map-marker"></span>' . __('Увеличить карту') . '</a></div>';
+            $map = '<div id="map" class="visible-lg" data-geocode="' . PHPShopSecurity::TotalClean($data['city'] . ', ' . $data['street'] . ' ' . $data['house']) . '" data-title="' . __('Заказ') . ' &#8470;' . $data['uid'] . '"></div><div class="data-row"><a href="http://maps.yandex.ru/?&source=wizgeo&text=' . urlencode(PHPShopString::win_utf8(PHPShopSecurity::TotalClean($data['city'] . ', ' . $data['street'] . ' ' . $data['house']))) . '" target="_blank" class="text-muted"><span class="glyphicon glyphicon-map-marker"></span>' . __('Увеличить карту') . '</a></div>';
             $sidebarleft[] = array('title' => 'Адрес доставки на карте', 'content' => array($map));
         }
     }

@@ -49,7 +49,7 @@ function actionStart()
     $Tab1 .= $PHPShopGUI->setField('Промокод в заказе', $PHPShopGUI->setInputText(false, 'promo_new', $data['promo'], 300));
     
     // Форма регистрации
-    $Tab3 = $PHPShopGUI->setPay(null, false, $data['version'], false);
+    $Tab3 = $PHPShopGUI->setPay(null, false, $data['version'], true);
 
     // Инструкция
     $info = '

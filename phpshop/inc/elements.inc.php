@@ -3,7 +3,7 @@
 /**
  * Элемент стандартных системных переменных
  * @author PHPShop Software
- * @version 1.4
+ * @version 1.5
  * @package PHPShopElements
  */
 class PHPShopCoreElement extends PHPShopElements {
@@ -138,6 +138,9 @@ class PHPShopCoreElement extends PHPShopElements {
 
                     if (isset($admoption['google_id']))
                         $this->PHPShopSystem->setSerilizeParam('admoption.google_id', $admoption['google_id']);
+
+                    if (isset($admoption['fee']))
+                        $this->PHPShopSystem->setParam('percent ', (int) $admoption['fee']);
                 }
             }
         } else {
@@ -161,7 +164,7 @@ class PHPShopCoreElement extends PHPShopElements {
 
         // SMS
         if ($this->PHPShopSystem->getSerilizeParam("admoption.sms_login") != 1)
-            $this->set('sms_login_enabled', 'hidden');
+            $this->set('sms_login_enabled', 'hidden d-none');
         else {
             $this->set('sms_login_enabled', 'req');
             $this->set('sms_login_control', 'required=""');
@@ -345,7 +348,6 @@ class PHPShopUserElement extends PHPShopElements {
      */
     function wishlist() {
         if (!empty($_SESSION['UsersId']) and PHPShopSecurity::true_num($_SESSION['UsersId'])) {
-
             $this->set('wishlistCount', $_SESSION['wishlistCount']);
             $dis = $this->parseTemplate('users/wishlist/wishlist_top_enter.tpl');
         } else {
@@ -356,6 +358,7 @@ class PHPShopUserElement extends PHPShopElements {
                 $wishlistCount = 0;
 
             $this->set('wishlistCount', $wishlistCount);
+
             $dis = $this->parseTemplate('users/wishlist/wishlist_top_enter.tpl');
         }
         return $dis;
@@ -1054,7 +1057,10 @@ class PHPShopTextElement extends PHPShopElements {
                 $this->setHook(__CLASS__, __FUNCTION__, $row, 'MIDDLE');
 
                 // Подключаем шаблон
-                $dis .= $this->parseTemplate($this->getValue('templates.top_menu'));
+                if (PHPShopParser::checkFile($this->getValue('templates.bottom_menu')))
+                    $dis .= $this->parseTemplate($this->getValue('templates.bottom_menu'));
+                else
+                    $dis .= $this->parseTemplate($this->getValue('templates.top_menu'));
             }
 
         return $dis;
@@ -1106,7 +1112,7 @@ class PHPShopSkinElement extends PHPShopElements {
 
 
             // Определяем переменные
-            $forma = PHPShopText::div(PHPShopText::form(PHPShopText::select('skin', $value, 150, $float = "none", $caption = false, $onchange = "ChangeSkin()"), 'SkinForm', 'get'), 'left', 'padding:10px');
+            $forma = PHPShopText::div(PHPShopText::form(PHPShopText::select('skin', $value, '100%', $float = "none", $caption = false, $onchange = "ChangeSkin()"), 'SkinForm', 'get'), 'left', 'padding:10px');
             $this->set('leftMenuContent', $forma);
             $this->set('leftMenuName', __("Сменить дизайн"));
 
@@ -1305,10 +1311,11 @@ class PHPShopNewsElement extends PHPShopElements {
                     $this->set('newsIcon', $row['icon']);
 
                     // Перехват модуля
-                    $this->setHook(__CLASS__, __FUNCTION__, $row, 'END');
-
-                    // Подключаем шаблон
-                    $dis .= $this->parseTemplate($this->getValue('templates.news_main_mini'));
+                    $hook = $this->setHook(__CLASS__, __FUNCTION__, $row, 'MIDDLE');
+                    if ($hook)
+                        $dis .= $hook;
+                    else
+                        $dis .= $this->parseTemplate($this->getValue('templates.news_main_mini'));
                 }
             return $dis;
         }
@@ -1417,7 +1424,7 @@ class PHPShopSliderElement extends PHPShopElements {
 /**
  * Элемент баннер
  * @author PHPShop Software
- * @version 2.2
+ * @version 2.3
  * @package PHPShopElements
  */
 class PHPShopBannerElement extends PHPShopElements {
@@ -1425,6 +1432,7 @@ class PHPShopBannerElement extends PHPShopElements {
     var $popup;
     var $horizontal;
     var $vertical;
+    var $menu;
 
     function __construct() {
         $this->debug = false;
@@ -1483,6 +1491,12 @@ class PHPShopBannerElement extends PHPShopElements {
             case 2:
 
                 $this->horizontal = $this->parseTemplate($this->getValue('templates.banner_horizontal_forma'));
+                break;
+            
+            // Баннер в меню
+            case 3:
+
+                $this->menu = $this->parseTemplate($this->getValue('templates.banner_menu_forma'));
                 break;
         }
     }
@@ -1575,6 +1589,14 @@ class PHPShopBannerElement extends PHPShopElements {
      */
     function banersDispHorizontal() {
         return $this->horizontal;
+    }
+    
+    /**
+     * Вывод баннера в меню
+     * @return string
+     */
+    function banersDispMenu() {
+        return $this->menu;
     }
 
     /**
@@ -1677,7 +1699,6 @@ class PHPShopRecaptchaElement extends PHPShopElements {
     public $secret = '6LdhAiYUAAAAAGzO0wlENkavrN49gFhHiHqH9vkv';
     public $public = '6LdhAiYUAAAAAO1uc9b8KfotAyfoInSrWuygbQKC';
     protected $api = 'https://www.google.com/recaptcha/api/siteverify';
-    
     // Общие ключи Hcaptcha         
     public $hsecret = '0xba1b193f433F4656778a3C7a96326CA412769E3D';
     public $hpublic = '6756c855-3f50-4360-a799-4f7b4855c927';
@@ -1698,7 +1719,7 @@ class PHPShopRecaptchaElement extends PHPShopElements {
 
             if (!empty($secret))
                 $this->secret = $secret;
-            
+
             $this->check = $_POST['g-recaptcha-response'];
         }
         // Hcaptcha
@@ -1707,14 +1728,16 @@ class PHPShopRecaptchaElement extends PHPShopElements {
             $public = $this->PHPShopSystem->getSerilizeParam('admoption.hcaptcha_pkey');
             if (!empty($public))
                 $this->public = $public;
-            else $this->public = $this->hpublic;
+            else
+                $this->public = $this->hpublic;
 
             $secret = $this->PHPShopSystem->getSerilizeParam('admoption.hcaptcha_skey');
 
             if (!empty($secret))
                 $this->secret = $secret;
-            else $this->secret = $this->hsecret;
-            
+            else
+                $this->secret = $this->hsecret;
+
             $this->check = $_POST['h-captcha-response'];
             $this->api = $this->hapi;
         }
@@ -1818,12 +1841,10 @@ class PHPShopRecaptchaElement extends PHPShopElements {
         if ($this->PHPShopSystem->ifSerilizeParam('admoption.recaptcha_enabled')) {
             $dis = '<div id="recaptcha_' . $name . '" data-size="' . $size . '" data-key="' . $this->public . '"></div>';
             $this->recaptcha = true;
-        } 
-        else if ($this->PHPShopSystem->ifSerilizeParam('admoption.hcaptcha_enabled')) {
+        } else if ($this->PHPShopSystem->ifSerilizeParam('admoption.hcaptcha_enabled')) {
             $dis = '<div id="hcaptcha_' . $name . '" data-size="' . $size . '" data-key="' . $this->public . '"></div>';
             $this->recaptcha = true;
-        } 
-        else {
+        } else {
             $dis = '<img src="phpshop/lib/captcha/captcha.php" align="left" style="margin-right:10px"> <input type="text" name="key" class="form-control" placeholder="' . __('Код с картинки') . '..." style="width:100px" required="">';
             $this->recaptcha = false;
         }
@@ -1836,7 +1857,11 @@ class PHPShopRecaptchaElement extends PHPShopElements {
      * @return boolen
      */
     public function true(){
-       return $this->recaptcha;
+    return $this->recaptcha;
+
+
     }
+
 }
+
 ?>

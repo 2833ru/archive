@@ -90,10 +90,12 @@ function actionStart() {
     $Tab1 = $PHPShopGUI->setField("Название", $PHPShopGUI->setInput("text", "name_new", $data['name'])) .
             $PHPShopGUI->setField("Статус", $PHPShopGUI->setRadio("flag_new", 1, "Включить", $data['flag']) .
                     $PHPShopGUI->setRadio("flag_new", 0, "Выключить", $data['flag'])) .
-            $PHPShopGUI->setField("Мобильный", $PHPShopGUI->setCheckbox("mobile_new", 1, "Отображать только на мобильных устройствах", $data['mobile']).$PHPShopGUI->setHelp('По умолчанию, баннер выводится только на PC')) .
+            $PHPShopGUI->setField("Мобильный", $PHPShopGUI->setCheckbox("mobile_new", 1, "Отображать только на мобильных устройствах", $data['mobile']) . $PHPShopGUI->setHelp('По умолчанию, баннер выводится только на PC')) .
             $PHPShopGUI->setField("Тип вывода", $PHPShopGUI->setRadio("type_new", 0, "В колонке", $data['type']) .
                     $PHPShopGUI->setRadio("type_new", 2, "Горизонтальный", $data['type']) .
-                    $PHPShopGUI->setRadio("type_new", 1, "Всплывающее окно", $data['type']));
+                    $PHPShopGUI->setRadio("type_new", 1, "Всплывающее окно", $data['type']) . '<br>' .
+                    $PHPShopGUI->setRadio("type_new", 3, "В меню каталога", $data['type'])
+    );
 
     $Tab2 = $PHPShopGUI->setField("Таргетинг:", $PHPShopGUI->setInput("text", "dir_new", $data['dir']) . $PHPShopGUI->setHelp('/ - главная, /page/page.html - страница. Пример ввода: /, /page/dostavka.html'));
 
@@ -177,16 +179,16 @@ function actionStart() {
     $size_value[] = array('Среднее', 1, $data['size']);
     $size_value[] = array('Большое', 2, $data['size']);
 
-    $Tab_tip1 .= $PHPShopGUI->setField("Размер окна", $PHPShopGUI->setSelect('size_new', $size_value, 150,true));
+    $Tab_tip1 .= $PHPShopGUI->setField("Размер окна", $PHPShopGUI->setSelect('size_new', $size_value, 150, true));
 
     // Витрина
     $Tab2 .= $PHPShopGUI->setField("Витрины", $PHPShopGUI->loadLib('tab_multibase', $data, 'catalog/'));
 
     $Tab2_help = $PHPShopGUI->setHelp('Оставьте поля пустыми, если нужен вывод на всех страницах/каталогах, или укажите точную страницу/каталог:');
-    $Tab1 .= $PHPShopGUI->setCollapse("Точечный вывод", $Tab2_help.$Tab2);
-    
+    $Tab1 .= $PHPShopGUI->setCollapse("Точечный вывод", $Tab2_help . $Tab2);
+
     // Содержание 
-    $Tab1 .= $PHPShopGUI->setCollapse("Содержание", '<div>'.$oFCKeditor->AddGUI().'</div>');
+    $Tab1 .= $PHPShopGUI->setCollapse("Содержание", '<div>' . $oFCKeditor->AddGUI() . '</div>');
 
     $Tab1 .= $PHPShopGUI->setCollapse('Всплывающее окно', $Tab_tip1);
 
@@ -288,11 +290,10 @@ function actionUpdate() {
                 if ($v != 'null' and ! strstr($v, ','))
                     $_POST['dop_cat_new'] .= $v . "#";
         }
+
+        // Изображение
+        $_POST['image_new'] = iconAdd('image_new');
     }
-
-
-    // Изображение
-    $_POST['image_new'] = iconAdd('image_new');
 
     // Перехват модуля
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $_POST);

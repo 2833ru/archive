@@ -51,8 +51,8 @@ function actionStart() {
 		</ol>';
 
     $tab1 = $PHPShopGUI->setField('Название магазина', $PHPShopGUI->setInputText(false, 'shopname', $value["shopname"], 500));
-    $tab1.= $PHPShopGUI->setField('Компания', $PHPShopGUI->setInputText(false, 'companyname', $value["companyname"], 500));
-    $tab1.= $PHPShopGUI->setField('URL сайта магазина', $PHPShopGUI->setInputArg(array('type' => 'text', 'name' => 'siteurl', 'value' => $value["siteurl"], 'size' => 500, 'placeholder' => 'http://' . $_SERVER['SERVER_NAME'])));
+    $tab1 .= $PHPShopGUI->setField('Компания', $PHPShopGUI->setInputText(false, 'companyname', $value["companyname"], 500));
+    $tab1 .= $PHPShopGUI->setField('URL сайта магазина', $PHPShopGUI->setInputArg(array('type' => 'text', 'name' => 'siteurl', 'value' => $value["siteurl"], 'size' => 500, 'placeholder' => 'http://' . $_SERVER['SERVER_NAME'])));
 
     $tab1 .= $PHPShopGUI->setField('API URL', $PHPShopGUI->setInputArg(array('type' => 'text', 'name' => 'url', 'value' => $value["url"], 'size' => 500, 'placeholder' => 'https://name.retailcrm.ru/')));
     $tab1 .= $PHPShopGUI->setField('API KEY', $PHPShopGUI->setInputText(false, 'key', $value["key"], 500));
@@ -67,7 +67,7 @@ function actionStart() {
             Tools::logger(array('error' => $e->getMessage()), "connect", 'Ошибка соединения с RetailCRM');
         }
 
-        $deliveryTypes[] = array("", "", false);
+        $deliveryTypes[] = array("Не выбрано", "", false);
         if ($response->isSuccessful()) {
             foreach ($response->deliveryTypes as $code => $params) {
                 $deliveryTypes[] = array(Tools::iconvArray($params["name"], "UTF-8", "WINDOWS-1251"), $params["code"], false);
@@ -78,40 +78,21 @@ function actionStart() {
 
         $deliveryOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['delivery']);
         $delivery = $deliveryOrm->select(array('*'), array('is_folder' => "=''"));
-        $deliveryOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['delivery']);
-        $pdelivery = $deliveryOrm->select(array('*'), array('is_folder' => "=''"));
 
-        $parents = array();
-        foreach ($pdelivery as $parent) {
-            $parents[$parent["id"]]['title'] = $parent["city"];
-            foreach ($delivery as $del) {
-                if ($parent["id"] == $del["PID"]) {
-                    $tmpDeliveryTypes = $deliveryTypes;
-                    if (isset($value["delivery"][$del["id"]])) {
-                        foreach ($tmpDeliveryTypes as $key => $val) {
-                            if ($val[1] == $value["delivery"][$del["id"]]) {
-                                $tmpDeliveryTypes[$key][2] = "selected";
-                                break;
-                            }
+        foreach ($delivery as $del) {
+                $tmpDeliveryTypes = $deliveryTypes;
+                if (isset($value["delivery"][$del["id"]])) {
+                    foreach ($tmpDeliveryTypes as $key => $val) {
+                        if ($val[1] == $value["delivery"][$del["id"]]) {
+                            $tmpDeliveryTypes[$key][2] = "selected";
+                            break;
                         }
                     }
-
-                    $tmp = "";
-                    $tmp .= $PHPShopGUI->setDiv("left", $del["city"] . ":");
-                    $tmp .= $PHPShopGUI->setSelect('delivery[' . $del["id"] . ']', $tmpDeliveryTypes) . "<br>";
-                    $parents[$parent["id"]]["items"] .= $tmp;
                 }
-            }
-            if (!isset($parents[$parent["id"]]["items"]) || count($parents[$parent["id"]]["items"]) < 1) {
-                unset($parents[$parent["id"]]);
-            }
+
+                $field1 .= $PHPShopGUI->setField($del["city"], $PHPShopGUI->setSelect('delivery[' . $del["id"] . ']', $tmpDeliveryTypes));
         }
 
-        foreach ($parents as $delivery) {
-            $field1 .= $PHPShopGUI->setField($delivery["title"], $delivery["items"]);
-        }
-
-        //$tab2 .= $PHPShopGUI->setField('Способы доставки', $field1, "none", 0, true);
         $tab2 .= $PHPShopGUI->setCollapse('Способы доставки', $field1);
 
         // Способы оплаты
@@ -121,7 +102,7 @@ function actionStart() {
             Tools::logger(array('error' => $e->getMessage()), "connect", 'Ошибка соединения с RetailCRM');
         }
 
-        $paymentTypes[] = array("", "", false);
+        $paymentTypes[] = array("Не выбрано", "", false);
         if ($response->isSuccessful()) {
             foreach ($response->paymentTypes as $code => $params) {
                 $paymentTypes[] = array(Tools::iconvArray($params["name"], "UTF-8", "WINDOWS-1251"), $params["code"], false);
@@ -156,7 +137,7 @@ function actionStart() {
             Tools::logger(array('error' => $e->getMessage()), "connect", 'Ошибка соединения с RetailCRM');
         }
 
-        $statuses[] = array("", "", false);
+        $statuses[] = array("Не выбрано", "", false);
         if ($response->isSuccessful()) {
             foreach ($response->statuses as $code => $params) {
                 $statuses[] = array(Tools::iconvArray($params["name"], "UTF-8", "WINDOWS-1251"), $params["code"], false);
@@ -245,8 +226,7 @@ function actionStart() {
     }
 
     // Вывод кнопок сохранить и выход в футер
-    $ContentFooter =
-            $PHPShopGUI->setInput("hidden", "rowID", $data['id']) .
+    $ContentFooter = $PHPShopGUI->setInput("hidden", "rowID", $data['id']) .
             $PHPShopGUI->setInput("submit", "saveID", "Применить", "right", 80, "", "but", "actionUpdate.modules.edit");
 
     $PHPShopGUI->setFooter($ContentFooter);

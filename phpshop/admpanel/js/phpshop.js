@@ -249,7 +249,7 @@ $().ready(function () {
                                 showAlertMessage(locale.save_done);
                                 i++;
                                 //if (chk == i)
-                                    //window.location.reload();
+                                //window.location.reload();
 
                             } else
                                 showAlertMessage(locale.save_false, true);
@@ -315,14 +315,13 @@ $().ready(function () {
 
         // Проверка на переопределение функции
         if (typeof (STATUS_EVENT) == 'undefined') {
-            
+
             var id = $(this).attr('data-id');
 
-            if ($(this).prop('checked') === true){
+            if ($(this).prop('checked') === true) {
                 var val = 1;
                 $(this).closest('.data-row').find('a').removeClass('text-muted');
-            }
-            else{
+            } else {
                 var val = 0;
                 $(this).closest('.data-row').find('a').addClass('text-muted');
             }
@@ -496,8 +495,8 @@ $().ready(function () {
             $(this).attr('href', $('.front').attr('href'));
         } else if ($.cookie('cat') !== 'null' && $.cookie('cat') !== 'undefined') {
             $(this).attr('href', '../../shop/CID_' + $.cookie('cat') + '.html');
-        }
-        else $(this).attr('href','../../');
+        } else
+            $(this).attr('href', '../../');
     });
 
     // Открытие страницы в Action Panel
@@ -531,8 +530,8 @@ $().ready(function () {
                 {"orderable": false, "targets": 0}
             ],
             "fnDrawCallback": function () {
-                    $('.toggle-event').bootstrapToggle();
-                },
+                $('.toggle-event').bootstrapToggle();
+            },
 
         });
 
@@ -605,7 +604,7 @@ $().ready(function () {
     if (parent.window.$('#adminModal') && $.getUrlVar('frame') !== undefined) {
         parent.window.$('.progress-bar').css('width', '90%');
         setTimeout(function () {
-            parent.window.$('.progress').toggleClass('hide');
+            parent.window.$('.progress').hide();
         }, 500);
     }
 
@@ -669,7 +668,7 @@ $().ready(function () {
     }, 30000);
 
     // Сгенерировать пароль
-    $(".password-gen").on('click',function (event) {
+    $(".password-gen").on('click', function (event) {
         event.preventDefault();
         $('input[name=password_new],input[name=password2_new]').val($(this).attr('data-password'));
         $('input:password').attr("type", "text");

@@ -33,9 +33,9 @@ function actionStart() {
 
     // Заказы FBS
     $ordersFbs = $OzonSeller->getOrderListFbs($date_start, $date_end, $_GET['status']);
-    if (is_array($ordersFbs['result'])) {
-        foreach ($ordersFbs['result'] as $k => $order_list)
-            $ordersFbs['result'][$k]['type'] = 'fbs';
+    if (is_array($ordersFbs['result']['postings'])) {
+        foreach ($ordersFbs['result']['postings'] as $k => $order_list)
+            $ordersFbs['result']['postings'][$k]['type'] = 'fbs';
     }
 
     // Отладка FBS
@@ -61,10 +61,10 @@ function actionStart() {
       'products' => [['price' => 5000, 'quantity' => 1]]
       ]; */
 
-    if (is_array($ordersFbs['result']) and is_array($ordersFbo['result']))
-        $orders = array_merge($ordersFbs['result'], $ordersFbo['result']);
-    elseif(is_array($ordersFbs['result']))
-        $orders =$ordersFbs['result'];
+    if (is_array($ordersFbs['result']['postings']) and is_array($ordersFbo['result']))
+        $orders = array_merge($ordersFbs['result']['postings'], $ordersFbo['result']);
+    elseif(is_array($ordersFbs['result']['postings']))
+        $orders =$ordersFbs['result']['postings'];
     else $orders =$ordersFbo['result'];
 
     $total = 0;

@@ -462,6 +462,9 @@ class CommerceMLLoader {
 
                         $parent = $matches[1][0];
 
+						if(empty($parent))
+							$parent = true;
+
                         if (empty($parent_check)) {
 
                             // Поиск подтипов

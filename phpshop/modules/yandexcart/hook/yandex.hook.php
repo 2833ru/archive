@@ -8,39 +8,39 @@ function setProducts_yandexcart_hook($obj, $data) {
     }
 
     // Характеристики
-    if (!empty($obj->vendor) or !empty($obj->param)) {
+    if (!empty($obj->vendor) or ! empty($obj->param)) {
 
         if (is_array($data['val']['vendor_array']))
             foreach ($data['val']['vendor_array'] as $v) {
 
                 // Vendor
                 if ($obj->brand_array[$v[0]] != "") {
-                    $add.='<vendor>' . str_replace('&', '&amp;', $obj->brand_array[$v[0]]) . '</vendor>';
+                    $add .= '<vendor>' . str_replace('&', '&amp;', $obj->brand_array[$v[0]]) . '</vendor>';
                     $vemdorSort = true;
                 }
 
                 // Param
                 if ($obj->param_array[$v[0]]['name'] != "" and $obj->param_array[$v[0]]['yandex_param_unit'] != "")
-                    $add.='<param name="' . str_replace('&', '&amp;', $obj->param_array[$v[0]]['param']) . '" unit="' . $obj->param_array[$v[0]]['yandex_param_unit'] . '">' . str_replace('&', '&amp;', $obj->param_array[$v[0]]['name']) . '</param>';
+                    $add .= '<param name="' . str_replace('&', '&amp;', $obj->param_array[$v[0]]['param']) . '" unit="' . $obj->param_array[$v[0]]['yandex_param_unit'] . '">' . str_replace('&', '&amp;', $obj->param_array[$v[0]]['name']) . '</param>';
                 elseif ($obj->param_array[$v[0]]['param'] != "")
-                    $add.='<param name="' . str_replace('&', '&amp;', $obj->param_array[$v[0]]['param']) . '">' . str_replace('&', '&amp;', $obj->param_array[$v[0]]['name']) . '</param>';
+                    $add .= '<param name="' . str_replace('&', '&amp;', $obj->param_array[$v[0]]['param']) . '">' . str_replace('&', '&amp;', $obj->param_array[$v[0]]['name']) . '</param>';
             }
     }
 
     // Vendor из карточки товара
-    if (empty($vemdorSort) and !empty($data['val']['vendor_name']))
-        $add.='<vendor>' . str_replace('&', '&amp;', $data['val']['vendor_name']) . '</vendor>';
+    if (empty($vemdorSort) and ! empty($data['val']['vendor_name']))
+        $add .= '<vendor>' . str_replace('&', '&amp;', $data['val']['vendor_name']) . '</vendor>';
 
     // Подтип
     if (!empty($data['val']['group_id'])) {
 
         // Размер
         if (!empty($data['val']['size']))
-            $add.='<param name="Размер" unit="RU">' . $data['val']['size'] . '</param>';
+            $add .= '<param name="Размер" unit="RU">' . $data['val']['size'] . '</param>';
 
         // Цвет
         if (!empty($data['val']['color']))
-            $add.='<param name="Цвет">' . $data['val']['color'] . '</param>';
+            $add .= '<param name="Цвет">' . $data['val']['color'] . '</param>';
     }
 
     // Oldprice
@@ -48,16 +48,14 @@ function setProducts_yandexcart_hook($obj, $data) {
         $data['xml'] = str_replace('<price>' . $data['val']['price'] . '</price>', '<price>' . $data['val']['price'] . '</price><oldprice>' . $data['val']['oldprice'] . '</oldprice>', $data['xml']);
 
     // description template
-    if(!empty($obj->yandex_module_options['description_template'])) {
+    if (!empty($obj->yandex_module_options['description_template'])) {
         $orm = new PHPShopOrm($GLOBALS['SysValue']['base']['categories']);
         $obj->yandex_categories = array_column($orm->getList(['id', 'name', 'parent_to'], false, false, ['limit' => 100000]), null, 'id');
 
         $data['xml'] = str_replace(
-            '<description>' . $obj->cleanStr($data['val']['description']) . '</description>',
-            '<description><![CDATA[' . $obj->cleanStr(
-                yandexReplaceDescriptionVariables($obj, $data['val'], $obj->yandex_module_options['description_template'])
-            ) . ']]></description>',
-            $data['xml']
+                '<description>' . $obj->cleanStr($data['val']['description']) . '</description>', '<description><![CDATA[' . $obj->cleanStr(
+                        yandexReplaceDescriptionVariables($obj, $data['val'], $obj->yandex_module_options['description_template'])
+                ) . ']]></description>', $data['xml']
         );
     }
 
@@ -67,29 +65,32 @@ function setProducts_yandexcart_hook($obj, $data) {
     $price = $data['val']['price'];
     $fee = 0;
 
-    // Цена Яндекс.Маркет
-    if(isset($obj->yandex_module_options['model']) && $obj->yandex_module_options['model'] === 'ADV') {
-        if(isset($yandexOptions['price']) && (int) $yandexOptions['price'] > 1 && !empty($data['val']['price' . (int) $yandexOptions['price']])) {
+    // Цена Яндекс.Маркет ADV и FBS
+    if ($obj->yandex_module_options['model'] === 'ADV' || $obj->yandex_module_options['model'] === 'FBS') {
+        if (isset($yandexOptions['price']) && (int) $yandexOptions['price'] > 1 && !empty($data['val']['price' . (int) $yandexOptions['price']])) {
             $price = $data['val']['price' . (int) $yandexOptions['price']];
         }
-        if(isset($yandexOptions['price_fee']) && (float) $yandexOptions['price_fee'] > 0) {
+        if (isset($yandexOptions['price_fee']) && (float) $yandexOptions['price_fee'] > 0) {
             $fee = (float) $yandexOptions['price_fee'];
         }
     }
-
     // Цена Яндекс.Маркет DBS
-    if(isset($_GET['dbs']) || (isset($obj->yandex_module_options['model']) && $obj->yandex_module_options['model'] === 'DBS')) {
-        if(!empty($data['val']['price_yandex_dbs'])) {
+    elseif ($obj->yandex_module_options['model'] === 'DBS') {
+        if (!empty($data['val']['price_yandex_dbs'])) {
             $price = $data['val']['price_yandex_dbs'];
-        } elseif(isset($yandexOptions['price_dbs']) && (int) $yandexOptions['price_dbs'] > 1 && !empty($data['val']['price' . (int) $yandexOptions['price']])) {
+        } elseif (isset($yandexOptions['price_dbs']) && (int) $yandexOptions['price_dbs'] > 1 && !empty($data['val']['price' . (int) $yandexOptions['price']])) {
             $price = $data['val']['price' . (int) $yandexOptions['price_dbs']];
         }
-        if(isset($yandexOptions['price_dbs_fee']) && (float) $yandexOptions['price_dbs_fee'] > 0) {
+        if (isset($yandexOptions['price_dbs_fee']) && (float) $yandexOptions['price_dbs_fee'] > 0) {
             $fee = (float) $yandexOptions['price_dbs_fee'];
         }
     }
-    
-    if($fee > 0) {
+
+    // Наценка руб.
+    $price = $price + (int) $yandexOptions['price_markup'];
+
+    // Наценка %
+    if ($fee > 0) {
         $price = $price + ($price * $fee / 100);
     }
 
@@ -97,9 +98,9 @@ function setProducts_yandexcart_hook($obj, $data) {
 
     // Доставка
     if ($data['val']['delivery'] == 1)
-        $add.='<delivery>true</delivery>';
+        $add .= '<delivery>true</delivery>';
     else
-        $add.='<delivery>false</delivery>';
+        $add .= '<delivery>false</delivery>';
 
     $i = 0;
     $delivery = $GLOBALS['delivery'];
@@ -107,97 +108,97 @@ function setProducts_yandexcart_hook($obj, $data) {
         foreach ($delivery as $row) {
             if ($i < 5) {
                 if ($data['val']['p_enabled'] == 'true')
-                    $list.='<option cost="' . $row['price'] . '" days="' . $row['yandex_day_min'] . '-' . $row['yandex_day'] . '" order-before="' . $row['yandex_order_before'] . '"/>';
+                    $list .= '<option cost="' . $row['price'] . '" days="' . $row['yandex_day_min'] . '-' . $row['yandex_day'] . '" order-before="' . $row['yandex_order_before'] . '"/>';
                 else
-                    $list.='<option cost="' . $row['price'] . '" days=""/>';
-            }
-            else
+                    $list .= '<option cost="' . $row['price'] . '" days=""/>';
+            } else
                 continue;
             $i++;
         }
     }
 
     if (!empty($list))
-        $add.='<delivery-options>' . $list . '</delivery-options>';
+        $add .= '<delivery-options>' . $list . '</delivery-options>';
 
     // Pickup
     if ($data['val']['pickup'] == 1)
-        $add.='<pickup>true</pickup>';
+        $add .= '<pickup>true</pickup>';
     else
-        $add.='<pickup>false</pickup>';
+        $add .= '<pickup>false</pickup>';
 
     // Store
     if ($data['val']['store'] == 1)
-        $add.='<store>true</store>';
+        $add .= '<store>true</store>';
     else
-        $add.='<store>false</store>';
+        $add .= '<store>false</store>';
 
     // Notes
     if (!empty($data['val']['sales_notes']))
-        $add.='<sales_notes>' . $data['val']['sales_notes'] . '</sales_notes>';
+        $add .= '<sales_notes>' . $data['val']['sales_notes'] . '</sales_notes>';
 
     // Гарантия
     if ($data['val']['manufacturer_warranty'] == 1)
-        $add.='<manufacturer_warranty>true</manufacturer_warranty>';
+        $add .= '<manufacturer_warranty>true</manufacturer_warranty>';
 
     // Страна
     if (!empty($data['val']['country_of_origin']))
-        $add.='<country_of_origin>' . $data['val']['country_of_origin'] . '</country_of_origin>';
-    
+        $add .= '<country_of_origin>' . $data['val']['country_of_origin'] . '</country_of_origin>';
+
     // Модель
     if (!empty($data['val']['model']))
-        $add.='<model>' . $data['val']['model'] . '</model>';
-    
+        $add .= '<model>' . $data['val']['model'] . '</model>';
+
     // Штрихкод
     if (!empty($data['val']['barcode']))
-        $add.='<barcode>' . $data['val']['barcode'] . '</barcode>';
+        $add .= '<barcode>' . $data['val']['barcode'] . '</barcode>';
 
     // Adult
     if ($data['val']['adult'] == 1)
-        $add.='<adult>true</adult>';
+        $add .= '<adult>true</adult>';
 
     // min-quantity
     if (!empty($data['val']['yandex_min_quantity']))
-        $add.='<min-quantity>' . $data['val']['yandex_min_quantity'] . '</min-quantity>';
+        $add .= '<min-quantity>' . $data['val']['yandex_min_quantity'] . '</min-quantity>';
 
     // step-quantity
     if (!empty($data['val']['yandex_step_quantity']))
-        $add.='<step-quantity>' . $data['val']['yandex_step_quantity'] . '</step-quantity>';
+        $add .= '<step-quantity>' . $data['val']['yandex_step_quantity'] . '</step-quantity>';
 
     // market-sku
     if (!empty($data['val']['market_sku']))
-        $add.='<market-sku>' . $data['val']['market_sku'] . '</market-sku>';
+        $add .= '<market-sku>' . $data['val']['market_sku'] . '</market-sku>';
 
     // shop-sku, count, cpa
     if ($obj->yandex_module_options['model'] === 'FBS') {
-        $add.='<shop-sku>' . $data['val']['id'] . '</shop-sku>';
-        if((int) $data['val']['cpa'] !== 2) {
-            $add.= '<cpa>' . $data['val']['cpa'] . '</cpa>';
+        $add .= '<shop-sku>' . $data['val']['id'] . '</shop-sku>';
+        if ((int) $data['val']['cpa'] !== 2) {
+            $add .= '<cpa>' . $data['val']['cpa'] . '</cpa>';
         }
     }
-    
-    if($obj->yandex_module_options['model'] === 'FBS' or $obj->yandex_module_options['model'] === 'DBS')
-       $add .= '<count>' . $data['val']['items'] . '</count>';
-    
+
+    if ($obj->yandex_module_options['model'] === 'FBS' or $obj->yandex_module_options['model'] === 'DBS')
+        $add .= '<count>' . $data['val']['items'] . '</count>';
+
 
     // Компания, которая произвела товар
     if (!empty($data['val']['manufacturer']))
-        $add.='<manufacturer>' . $data['val']['manufacturer'] . '</manufacturer>';
+        $add .= '<manufacturer>' . $data['val']['manufacturer'] . '</manufacturer>';
 
     // vendorCode
     if (!empty($data['val']['vendor_code']))
-        $add.='<vendorCode>' . $data['val']['vendor_code'] . '</vendorCode>';
+        $add .= '<vendorCode>' . $data['val']['vendor_code'] . '</vendorCode>';
 
     // condition
-    if ($data['val']['condition'] > 1 and !empty($data['val']['condition_reason'])){
-        
-        if($data['val']['condition'] == 2)
-            $condition='likenew';
-        else $condition='used';
-        
-        $add.='<condition type="'.$condition.'"><reason>'.$data['val']['condition_reason'].'</reason></condition>';
+    if ($data['val']['condition'] > 1 and ! empty($data['val']['condition_reason'])) {
+
+        if ($data['val']['condition'] == 2)
+            $condition = 'likenew';
+        else
+            $condition = 'used';
+
+        $add .= '<condition type="' . $condition . '"><reason>' . $data['val']['condition_reason'] . '</reason></condition>';
     }
-    
+
 
     if (!empty($add))
         $data['xml'] = str_replace('</offer>', $add . '</offer>', $data['xml']);
@@ -262,32 +263,31 @@ function PHPShopYml_yandexcart_hook($obj) {
             exit('Login error!');
 
     // Колонка цен
-    if($options['price']>1)
-        $obj->price = 'price'.$options['price'];
+    if ($options['price'] > 1)
+        $obj->price = 'price' . $options['price'];
 
-    if(isset($obj->yandex_module_options['use_params'])) {
+    if (isset($obj->yandex_module_options['use_params'])) {
         $obj->vendor = (bool) $obj->yandex_module_options['use_params'];
     }
 }
 
-function yandexReplaceDescriptionVariables($obj, $product, $template)
-{
-    if(stripos($template, '@Content@') !== false) {
+function yandexReplaceDescriptionVariables($obj, $product, $template) {
+    if (stripos($template, '@Content@') !== false) {
         $template = str_replace('@Content@', $product['raw_content'], $template);
     }
-    if(stripos($template, '@Description@') !== false) {
+    if (stripos($template, '@Description@') !== false) {
         $template = str_replace('@Description@', $product['raw_description'], $template);
     }
-    if(stripos($template, '@Attributes@') !== false) {
+    if (stripos($template, '@Attributes@') !== false) {
         $template = str_replace('@Attributes@', yandexSortTable($product), $template);
     }
-    if(stripos($template, '@Catalog@') !== false) {
+    if (stripos($template, '@Catalog@') !== false) {
         $template = str_replace('@Catalog@', $obj->yandex_categories[$product['category']]['name'], $template);
     }
-    if(stripos($template, '@Product@') !== false) {
+    if (stripos($template, '@Product@') !== false) {
         $template = str_replace('@Product@', $product['name'], $template);
     }
-    if(stripos($template, '@Subcatalog@') !== false) {
+    if (stripos($template, '@Subcatalog@') !== false) {
         $getPath = function ($categories, $id, $path = []) use(&$getPath) {
             if (!empty($id)) {
                 if (isset($categories[$id])) {
@@ -340,7 +340,7 @@ function yandexSortTable($product) {
             foreach ($product['vendor_array'] as $v) {
                 foreach ($v as $value)
                     if (is_numeric($value))
-                        $sortValue.= (int) $value . ',';
+                        $sortValue .= (int) $value . ',';
             }
 
         if (!empty($sortValue)) {
@@ -360,12 +360,12 @@ function yandexSortTable($product) {
                         if (!empty($value['name'])) {
                             $arr = array();
                             foreach ($arrayVendorValue[$idCategory]['id'] as $valueId) {
-                                $arr[] = $arrayVendorValue[$idCategory]['name'][(int)$valueId];
+                                $arr[] = $arrayVendorValue[$idCategory]['name'][(int) $valueId];
                             }
 
                             $sortValueName = implode(', ', $arr);
 
-                            $dis.=PHPShopText::li($value['name'] . ': ' . $sortValueName, null, '');
+                            $dis .= PHPShopText::li($value['name'] . ': ' . $sortValueName, null, '');
                         }
                     }
                 }

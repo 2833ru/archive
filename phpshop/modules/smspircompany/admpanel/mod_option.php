@@ -1,6 +1,6 @@
 <?php
 
-// Настройки модуля
+// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
 PHPShopObj::loadClass("array");
 
 class PHPShopModule extends PHPShopArray
@@ -63,7 +63,7 @@ class PHPShopModule extends PHPShopArray
     }
 
     /**
-     * Настройки модуля
+     * пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
      */
     function option() {
         $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['smspircompany']['smspircompany_message']);
@@ -210,13 +210,9 @@ class PHPShopModule extends PHPShopArray
      */
     function true_num($phone)
     {
-        $phone = trim(str_replace(array('(', ')', '-', '+', '&#43;'), '', $phone));
-        // Проверка на первую 7 или 8
-        $first_d = substr($phone, 0, 1);
-        if ($first_d != 8 and $first_d != 7)
-            $phone = '7' . $phone;
+        $str = preg_replace("/[^0-9]/", "", $phone);
 
-        return $phone;
+        return $str;
     }
 
     /**
@@ -239,8 +235,8 @@ class PHPShopModule extends PHPShopArray
      */
     function sendSms($phone, $msg, $tpl = null)
     {
-        // XML-документ
-        $href = 'https://'.$this->domen_api.'/xml/'; // адрес сервера
+        // XML-пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+        $href = 'https://'.$this->domen_api.'/xml/'; // пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 
         $msg = mb_convert_encoding($msg, 'utf-8', 'windows-1251');
         $sender = mb_convert_encoding($this->sender, 'utf-8', 'windows-1251');
@@ -264,7 +260,7 @@ class PHPShopModule extends PHPShopArray
 
 
         if ($this->cascade_enabled) {
-            $href = 'https://'.$this->cascade_domen_api.'/xml/message.php'; // адрес сервера
+            $href = 'https://'.$this->cascade_domen_api.'/xml/message.php'; // пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
             $cascade_sender = mb_convert_encoding($this->cascade_sender, 'utf-8', 'windows-1251');
 
             $src  = '<?xml version="1.0" encoding="utf-8"?>';
@@ -351,7 +347,6 @@ class PHPShopModule extends PHPShopArray
         curl_setopt ($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt ($ch, CURLOPT_SSL_VERIFYPEER, 0);
         curl_setopt ($ch, CURLOPT_SSL_VERIFYHOST, 0);
-        curl_setopt ($ch, CURLOPT_CRLF, true);
         curl_setopt ($ch, CURLOPT_POST, true);
         curl_setopt ($ch, CURLOPT_POSTFIELDS, $src);
         curl_setopt ($ch, CURLOPT_URL, $href);
@@ -362,7 +357,7 @@ class PHPShopModule extends PHPShopArray
 
     /**
      * @param $msg
-     * отправка смс администратору
+     * пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
      */
     function sendSmsAdmin($msg, $tpl = null)
     {

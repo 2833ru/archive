@@ -54,7 +54,7 @@ class PHPShopBase {
      * @param bool $error блокировка ошибок PHP
      */
     function __construct($iniPath, $connectdb = true, $error = true) {
-
+        
         // Отладка ядра
         $this->setPHPCoreReporting($error);
 
@@ -178,6 +178,7 @@ class PHPShopBase {
             mysqli_query($link_db, "SET NAMES '" . $this->codBase . "'");
 
         mysqli_query($link_db, "SET SESSION sql_mode=''");
+        mysqli_report(MYSQLI_REPORT_OFF);
 
         if ($connectdb and ! empty($this->mysql_error))
             $this->errorConnect(101, "Нет соединения с базой", $this->mysql_error);

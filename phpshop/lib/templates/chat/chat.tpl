@@ -10,7 +10,7 @@
                 </div>
                 <span id="chat_head">@title_dialog@</span> <br> 
                 <span class="@status_dialog_style@">@status_dialog@</span>
-                <span id="chat_fullscreen_loader" class="chat_fullscreen_loader"><i class="fullscreen zmdi zmdi-window-maximize"></i></span>
+                <span id="chat_fullscreen_loader" class="chat_fullscreen_loader"><i class="zmdi zmdi-window-maximize"></i></span>
 
             </div>
 
@@ -22,7 +22,7 @@
             <textarea id="message" name="message" placeholder="{Ваше сообщение}" class="chat_field chat_message" required @dialogContent@></textarea>
         </div>
     </div>
-    <a id="prime" class="fab" style="background:@color_dialog@;bottom:@margin_button_dialog@px;width:@size_dialog@px;height:@size_dialog@px"><i class="prime zmdi zmdi-comment-outline" style="line-height:@size_dialog@px;font-size:@icon_size_dialog@em;"></i></a>
+    <a id="prime" class="fab-chat" style="background:@color_dialog@;bottom:@margin_button_dialog@px;width:@size_dialog@px;height:@size_dialog@px"><i class="prime zmdi zmdi-comment-outline" style="line-height:@size_dialog@px;font-size:@icon_size_dialog@em;"></i></a>
 </div>
 
 <script src="phpshop/lib/templates/chat/chat.js"></script>

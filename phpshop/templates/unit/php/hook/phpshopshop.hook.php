@@ -372,8 +372,8 @@ function template_image_gallery($obj, $array) {
                 $name_s = $name;
             }
 
-            $bxslider .= '<div><a class href="#"><img src="' . $name . '" title="' . $array['name'] . '" alt="' . $array['name'] . '" /></a></div>';
-            $bxsliderbig .= '<li><a class href=\'#\'><img src=\'' . $name_bigstr . '\' title=\'' . $array['name'] . '\' alt=\'' . $array['name'] . '\'></a></li>';
+            $bxslider .= '<div><a class href="#"><img src="' . $name . '" title="' . $array['name'] . '" alt="' .$productTitle . '" /></a></div>';
+            $bxsliderbig .= '<li><a class href=\'#\'><img src=\'' . $name_bigstr . '\' title=\'' . $productTitle . '\' alt=\'' . $productTitle . '\'></a></li>';
             $bxpager .= '<a data-slide-index=\'' . $i . '\' href=\'\'><img class=\'img-thumbnail\'  src=\'' . $name_s . '\' data-big-image="' . $name . '"></a>';
             $i++;
         }

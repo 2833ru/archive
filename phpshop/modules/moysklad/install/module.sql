@@ -7,13 +7,13 @@ CREATE TABLE IF NOT EXISTS `phpshop_modules_moysklad_system` (
   `pricetype` varchar(64),
   `account` varchar(64),
   `status` int(11),
-  `webhooks` enum('1','2') default '1',
+  `webhooks` enum('1','2') default '2',
   `version` varchar(64),
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
 
 
-INSERT INTO `phpshop_modules_moysklad_system` VALUES (1, '', '', '','','','','1','1.1');
+INSERT INTO `phpshop_modules_moysklad_system` VALUES (1, '', '', '','','','','2','1.1');
 
 DROP TABLE IF EXISTS `phpshop_modules_moysklad_log`;
 CREATE TABLE IF NOT EXISTS `phpshop_modules_moysklad_log` (

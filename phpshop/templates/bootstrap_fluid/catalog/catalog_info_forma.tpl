@@ -1,6 +1,6 @@
-<nav class="visible-xs">
+<nav class="@elementCatalogBackHide@">
   <ul class="pager">
-    <li class="previous"><a href="/shop/CID_@thisCat@.html"><span aria-hidden="true">&larr;</span> @catalogName@</a></li>
+    <li class="previous"><a href="/shop/CID_@thisCat@.html"><span aria-hidden="true">&larr;</span> @parentCatName@</a></li>
   </ul>
 </nav>
 <ol class="breadcrumb hidden-xs" itemscope itemtype="http://schema.org/BreadcrumbList">
@@ -14,8 +14,8 @@
 
 <div class="row">@catalogList@</div>
 
-<nav class="visible-xs">
+<nav class="@elementCatalogBackHide@">
   <ul class="pager">
-    <li class="previous"><a href="/shop/CID_@thisCat@.html"><span aria-hidden="true">&larr;</span> @catalogName@</a></li>
+    <li class="previous"><a href="/shop/CID_@thisCat@.html"><span aria-hidden="true">&larr;</span> @parentCatName@</a></li>
   </ul>
 </nav>

@@ -621,6 +621,7 @@ max-width: 33%;
     display: inline-block;
     max-height: 100px !important;
     max-width: 196px !important;
+    min-height: 80px;
 }
 .page-header {
     border-bottom: none;

@@ -56,7 +56,7 @@ class PHPShopCompare {
 
             $this->_COMPARE[$objID] = $new;
 
-            if (PHPShopParser::checkFile('../../' . $GLOBALS['SysValue']['dir']['templates'] . chr(47) . $_SESSION['skin'] . "/users/compare/compare_add_alert_done.tpl")) {
+            if (PHPShopParser::checkFile('../../' . $GLOBALS['SysValue']['dir']['templates'] . chr(47) . $_SESSION['skin'] . "/users/compare/compare_add_alert_done.tpl",true)) {
                 // сообщение для вывода во всплывающее окно
                 $this->message = PHPShopParser::file('../../' . $GLOBALS['SysValue']['dir']['templates'] . chr(47) . $_SESSION['skin'] . "/users/compare/compare_add_alert_done.tpl", true);
             }
@@ -64,7 +64,7 @@ class PHPShopCompare {
                 $this->message = PHPShopParser::file('../lib/templates/compare/compare_add_alert_done.tpl', true);
         } else {
             // сообщение для вывода во всплывающее окно
-            if (PHPShopParser::checkFile('../../' . $GLOBALS['SysValue']['dir']['templates'] . chr(47) . $_SESSION['skin'] . "/users/compare/compare_add_alert_ready.tpl")) {
+            if (PHPShopParser::checkFile('../../' . $GLOBALS['SysValue']['dir']['templates'] . chr(47) . $_SESSION['skin'] . "/users/compare/compare_add_alert_ready.tpl",true)) {
 
                 $this->message = PHPShopParser::file('../../' . $GLOBALS['SysValue']['dir']['templates'] . chr(47) . $_SESSION['skin'] . "/users/compare/compare_add_alert_ready.tpl", true);
             }

@@ -11,7 +11,7 @@ function actionStart() {
     
     // Выборка
     $data['datas'] = PHPShopDate::get();
-    $data['zag'] = __('Новость за ') . $data['datas'];
+    $data['zag'] = __('Новость за ') . $data['datas'].' '.__('число');
     $data = $PHPShopGUI->valid($data,'kratko','podrob','icon','odnotip','servers');
 
     // datetimepicker

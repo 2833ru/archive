@@ -76,7 +76,7 @@ dbase="mybase";         # имя базы</pre>
         <footer class="footer">
             <div class="container">
                 <p class="text-muted text-center">
-                    Перейти <a href="http://phpshop.ru" target="_blank" title="Разработчик"><span class="glyphicon glyphicon-home"></span>домой</a> или воспользоваться <a href="https://help.phpshop.ru" target="_blank" title="Техническая поддержка"><span class="glyphicon glyphicon-user"></span>технической поддержкой</a>
+                    Перейти <a href="https://www.phpshop.ru" target="_blank" title="Разработчик"><span class="glyphicon glyphicon-home"></span>домой</a> или воспользоваться <a href="https://help.phpshop.ru" target="_blank" title="Техническая поддержка"><span class="glyphicon glyphicon-user"></span>технической поддержкой</a>
                 </p>
             </div>
         </footer>

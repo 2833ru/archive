@@ -69,21 +69,16 @@ function actionValueEdit() {
         $Tab2 = $PHPShopGUI->setField("Meta заголовок:", '
         <textarea class="form-control" style="height:100px;" name="title_value">' . $data['title'] . '</textarea>
             <div class="btn-group" role="group" aria-label="...">
-                <input type="button" value="' . __('Каталог') . '" data-seo="@Catalog@" data-target="title_value" class="seo-button btn btn-default btn-sm">
-                <input type="button" value="' . __('Подкаталог') . '" data-seo="@Podcatalog@" data-target="title_value" class="seo-button btn btn-default btn-sm">
                 <input type="button" value="' . __('Общий') . '" data-seo="@System@" data-target="title_value" class="seo-button btn btn-default btn-sm">
-                <input type="button" value="' . __('Характеристика') . '" data-seo="@sortTitle@" data-target="title_value" class="seo-button btn btn-default btn-sm">
-                <input type="button" value="' . __('Значение') . '" data-seo="@valueTitle@" data-target="title_value" class="seo-button btn btn-default btn-sm">
+                <input type="button" value="' . __('Значение характеристики') . '" data-seo="@valueTitle@" data-target="title_value" class="seo-button btn btn-default btn-sm">
             </div>');
 
         $Tab2 .= $PHPShopGUI->setField("Meta описание:", '
         <textarea class="form-control" style="height:100px" name="meta_description_value">' . $data['meta_description'] . '</textarea>
             <div class="btn-group" role="group" aria-label="...">
-                <input type="button" value="' . __('Каталог') . '" data-seo="@Catalog@" data-target="meta_description_value" class="seo-button btn btn-default btn-sm">
-                <input type="button" value="' . __('Подкаталог') . '" data-seo="@Podcatalog@" data-target="meta_description_value" class="seo-button btn btn-default btn-sm">
+
                 <input type="button" value="' . __('Общий') . '" data-seo="@System@" data-target="meta_description_value" class="seo-button btn btn-default btn-sm">
-                <input type="button" value="' . __('Характеристика') . '" data-seo="@sortTitle@" data-target="meta_description_value" class="seo-button btn btn-default btn-sm">
-                <input type="button" value="' . __('Значение') . '" data-seo="@valueTitle@" data-target="meta_description_value" class="seo-button btn btn-default btn-sm">
+                <input type="button" value="' . __('Значение характеристики') . '" data-seo="@valueTitle@" data-target="meta_description_value" class="seo-button btn btn-default btn-sm">
             </div>');
     }
 

@@ -432,7 +432,7 @@ $(document).ready(function () {
             }
         });
     });
-    mainNavMenuFix();
+    //mainNavMenuFix();
     $(".filter-btn").on('click', function () {
 
         $("#faset-filter").fadeIn();
@@ -1412,8 +1412,8 @@ $(document).ready(function () {
 
 
     //mobile-menu 
-    $('.mobile-menu .dropdown-parent').on('click', function () {
-        $(this).children('ul').slideToggle();
+    $('.mobile-menu .sub-marker').on('click', function () {
+      window.location.href = $(this).attr('href');
     });
 
     $(window).resize(function () {
@@ -1493,35 +1493,6 @@ $('body').on('click', '[data-toggle="modal"]', function () {
     }
 });
 
-// Recaptcha
-if ($("#recaptcha_default").length) {
-    $.getScript("https://www.google.com/recaptcha/api.js?render=explicit")
-            .done(function () {
-                if (typeof grecaptcha !== "undefined") {
-                    grecaptcha.ready(function () {
-
-                        if ($("#recaptcha_default").length)
-                            grecaptcha.render("recaptcha_default", {"sitekey": $("#recaptcha_default").attr('data-key'), "size": $("#recaptcha_default").attr('data-size')});
-
-                    });
-                }
-            });
-}
-
-// Hcaptcha
-if ($("#hcaptcha_default").length) {
-    $.getScript("https://js.hcaptcha.com/1/api.js?render=explicit")
-            .done(function () {
-                if (typeof hcaptcha !== "undefined") {
-                    if ($("#hcaptcha_default").length)
-                        hcaptcha.render("hcaptcha_default", {"sitekey": $("#hcaptcha_default").attr('data-key'), "size": $("#hcaptcha_default").attr('data-size')});
-                }
-            });
-}
-
-
-
-    
      // Закрыть стикер в шапке
     $('.sticker-close').on('click', function (e) {
         e.preventDefault();
@@ -1532,3 +1503,36 @@ if ($("#hcaptcha_default").length) {
         });
     });
 });
+
+
+// Recaptcha
+if ($("#recaptcha_default").length || $("#recaptcha_returncall").length) {
+
+    $.getScript("https://www.google.com/recaptcha/api.js?render=explicit")
+            .done(function () {
+                if (typeof grecaptcha !== "undefined") {
+                    grecaptcha.ready(function () {
+                        if ($("#recaptcha_default").length)
+                            grecaptcha.render("recaptcha_default", {"sitekey": $("#recaptcha_default").attr('data-key'), "size": $("#recaptcha_default").attr('data-size')});
+                        
+                        if ($("#recaptcha_returncall").length)
+                            grecaptcha.render("recaptcha_returncall", {"sitekey": $("#recaptcha_returncall").attr('data-key'), "size": $("#recaptcha_returncall").attr('data-size')});
+
+                    });
+                }
+            });
+}
+
+// Hcaptcha
+if ($("#hcaptcha_default").length || $("#hcaptcha_returncall").length) {
+    $.getScript("https://js.hcaptcha.com/1/api.js?render=explicit")
+            .done(function () {
+                if (typeof hcaptcha !== "undefined") {
+                    if ($("#hcaptcha_default").length)
+                        hcaptcha.render("hcaptcha_default", {"sitekey": $("#hcaptcha_default").attr('data-key'), "size": $("#hcaptcha_default").attr('data-size')});
+                    if ($("#hcaptcha_returncall").length)
+                        hcaptcha.render("hcaptcha_returncall", {"sitekey": $("#hcaptcha_returncall").attr('data-key'), "size": $("#hcaptcha_returncall").attr('data-size')});
+                }
+            });
+}
+

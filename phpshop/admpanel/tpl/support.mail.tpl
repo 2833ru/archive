@@ -99,8 +99,8 @@
                                 <p>В течение 1 месяца для Вас действует <b>льготный годовой тариф на техподдержку</b>, чтобы Вы смогли своевременно получать все обновления и технические консультации в течение целого года: 
                                 </p>
                                 <p>
-	                               PHPShop Enterprise: 8 490 / <b>5 490</b> руб. льготный <br>                                     
-	                               PHPShop Pro: 13 490 / <b>8 490</b> руб. льготный</p>
+	                               PHPShop Enterprise: 9 390 / <b>6 090</b> руб. льготный <br>                                     
+	                               PHPShop Pro: 15 390 / <b>9 390</b> руб. льготный</p>
 	                            
 	                            <p> Для льготного продления, нажмите Продлить поддержку, введите имя домена и нажмите Применить. Станет активным Ваш вариант техподдержки.
                                 <p><table align="center" border="0" cellpadding="0" cellspacing="0" role="presentation">
@@ -111,7 +111,7 @@
 													</tbody>
 												</table></p>
 
-                                <p>Мы развиваем платформу и становимся лучше c Вашей помощью! Все обновления можно посмотреть в <a href="https://phpshop.ru/docs/update.html">Журнале обновлений</a>. </p>
+                                <p>Мы развиваем платформу и становимся лучше c Вашей помощью! Все обновления можно посмотреть в <a href="https://www.phpshop.ru/docs/update.html">Журнале обновлений</a>. </p>
 
 
 <table align="center" border="0" cellpadding="0" cellspacing="0" role="presentation">
@@ -148,21 +148,11 @@
                 </p>
             </address>
             
-            <table align="center" cellpadding="0" cellspacing="0"  style="table-layout: fixed; vertical-align: top; border-spacing: 0; border-collapse: collapse; mso-table-tspace: 0; mso-table-rspace: 0; mso-table-bspace: 0; mso-table-lspace: 0;" valign="top">
-							<tbody>
-								<tr align="center" style="vertical-align: top; display: inline-block; text-align: center;" valign="top">
-									<td style="word-break: break-word; vertical-align: top; padding-bottom: 0; padding-right: 10px; padding-left: 10px;" valign="top"><a href="https://www.facebook.com/shopsoft" target="_blank"><img alt="Facebook" height="32" src="https://www.phpshop.ru/phpshop/templates/phpshop.ru/images/social03.png" style="text-decoration: none; -ms-interpolation-mode: bicubic; height: auto; border: 0; display: block;" title="Facebook" width="32" /></a></td>
-									<td style="word-break: break-word; vertical-align: top; padding-bottom: 0; padding-right: 10px; padding-left: 10px;" valign="top"><a href="http://twitter.com/PHPShopCMS" target="_blank"><img alt="Twitter" height="32" src="https://www.phpshop.ru/phpshop/templates/phpshop.ru/images/social04.png" style="text-decoration: none; -ms-interpolation-mode: bicubic; height: auto; border: 0; display: block;" title="Twitter" width="32" /></a></td>
-									<td style="word-break: break-word; vertical-align: top; padding-bottom: 0; padding-right: 10px; padding-left: 10px;" valign="top"><a href="https://www.instagram.com/phpshop_software/" target="_blank"><img alt="Instagram" height="32" src="https://www.phpshop.ru/phpshop/templates/phpshop.ru/images/social01.png" style="text-decoration: none; -ms-interpolation-mode: bicubic; height: auto; border: 0; display: block;" title="Instagram" width="32" /></a></td>
-									<td style="word-break: break-word; vertical-align: top; padding-bottom: 0; padding-right: 10px; padding-left: 10px;" valign="top"><a href="http://www.youtube.com/user/phpshopsoftware#p/u" target="_blank"><img alt="YouTube" height="32" src="https://www.phpshop.ru/phpshop/templates/phpshop.ru/images/social02.png" style="text-decoration: none; -ms-interpolation-mode: bicubic; height: auto; border: 0; display: block;" title="YouTube" width="32" /></a></td>
-								</tr>
-                                
-							</tbody>
-						</table>
+            
 <table border="0" cellpadding="0" cellspacing="0" style="border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 100%;">
 				<tbody>
 					<tr>
-						<td style="vertical-align: top; padding-bottom: 10px; padding-top: 50px; font-size: 10px; color: #999999; text-align: center;"><span class="apple-link" style="color: #999999; font-size: 12px; text-align: center;">Copyright&nbsp; &copy; PHPShop Software&trade; 2004-2021. Все права защищены.<br />
+						<td style="vertical-align: top; padding-bottom: 10px; padding-top: 50px; font-size: 10px; color: #999999; text-align: center;"><span class="apple-link" style="color: #999999; font-size: 12px; text-align: center;">Copyright&nbsp; &copy; PHPShop Software&trade; 2004-2022. Все права защищены.<br />
 						Вы получили это письмо, потому что указали адрес электронной почты на сайте phpshop.ru.</span></td>
 					</tr>
 					<tr>

@@ -1,24 +1,24 @@
 <style>
-@media(max-width:767px){
-.filter-panel{display:flex!important}
-.filter-panel.hide{display:none!important}
-.mobile-search.visible-xs{display:none!important}
-.mobile-search.visible-xs.visible{display:flex!important}
-.head-block {
-    min-height: 101px;
-}
-}
-@media(min-width:767px){.head-block {
-    min-height: 130px;
-}
-}
+    @media(max-width:767px){
+        .filter-panel{display:flex!important}
+        .filter-panel.hide{display:none!important}
+        .mobile-search.visible-xs{display:none!important}
+        .mobile-search.visible-xs.visible{display:flex!important}
+        .head-block {
+            min-height: 101px;
+        }
+    }
+    @media(min-width:767px){.head-block {
+                                min-height: 130px;
+                            }
+    }
 </style>
 
 @ProductCatalogContent@
 
 <!-- Виртуальный каталог -->
 <div class="virtual-catalog">
-@vendorCatDisp@
+    @vendorCatDisp@
 </div>
 <!--/ Виртуальный каталог -->
 
@@ -53,9 +53,10 @@
                 </label>
             </div>
         </div>
-<div class="col-sm-2 hidden-xs hidden-md hidden-lg"> <span class="filter-btn"><span class="icons icons-filter"></span>{Фильтры}</span></div>
+        <div class="col-sm-2 hidden-xs hidden-md hidden-lg"> <span class="filter-btn"><span class="icons icons-filter"></span>{Фильтры}</span>
+        </div>
     </div> 
-    <a ></a>
+    <a name="sort"></a>
     <form method="post" action="/shop/CID_@productId@@nameLat@.html" name="sort" id="sorttable" class="hide">
         <table><tr>@vendorDisp@<td>@vendorSelectDisp@</td></tr></table>
     </form>                      
@@ -93,7 +94,7 @@
                     ajax: true,
                     json: true
                 },
-                success: function(data)
+                success: function (data)
                 {
                     // Анимация загрузки
                     $('#ajaxInProgress').removeClass('progress-scroll');
@@ -107,7 +108,7 @@
                     setEqualHeight(".thumbnail .description");
 
                     // lazyLoad
-                    setTimeout(function() {
+                    setTimeout(function () {
                         $(window).lazyLoadXT();
                     }, 50);
 
@@ -115,7 +116,7 @@
 
                     Waypoint.refreshAll();
                 },
-                error: function() {
+                error: function () {
                     $('#ajaxInProgress').removeClass('progress-scroll');
                 }
             });
@@ -127,11 +128,11 @@
         $(".pagination").hide();
     }
 
-    $(document).ready(function() {
+    $(document).ready(function () {
 
         var inview = new Waypoint.Inview({
             element: $('.product-scroll-init'),
-            enter: function(direction) {
+            enter: function (direction) {
                 if (AJAX_SCROLL)
                     scroll_loader();
             }
@@ -144,7 +145,7 @@
             min: new Number('@price_min@'),
             max: new Number('@price_max@'),
             values: [new Number('@price_min@'), new Number('@price_max@')],
-            slide: function(event, ui) {
+            slide: function (event, ui) {
                 $("input[name=min]").val(ui.values[ 0 ]);
                 $("input[name=max]").val(ui.values[ 1 ]);
             }

@@ -59,7 +59,7 @@ function actionUpdateCategory() {
     global $PHPShopModules;
 
     $OzonSeller = new OzonSeller();
-    $getTree = $OzonSeller->getTree();
+    $getTree = $OzonSeller->getTree(['category_id'=>0]);
     $tree_array = $getTree['result'];
 
     $PHPShopOrm = new PHPShopOrm($PHPShopModules->getParam("base.ozonseller.ozonseller_categories"));
@@ -91,7 +91,7 @@ function actionStart() {
 
     // Выборка
     $data = $PHPShopOrm->select();
-
+    
     // Статус
     $status[] = [__('Новый заказ'), 0, $data['status']];
     $statusArray = (new PHPShopOrm('phpshop_order_status'))->getList(['id', 'name']);
@@ -112,6 +112,7 @@ function actionStart() {
     $Tab1 .= $PHPShopGUI->setField('Client id', $PHPShopGUI->setInputText(false, 'client_id_new', $data['client_id'], '100%'));
     $Tab1 .= $PHPShopGUI->setField('API key', $PHPShopGUI->setInputText(false, 'token_new', $data['token'], '100%'));
     $Tab1 .= $PHPShopGUI->setField('Статус нового заказа', $PHPShopGUI->setSelect('status_new', $order_status_value, '100%'));
+    $Tab1 .= $PHPShopGUI->setField('Ключ обновления', $PHPShopGUI->setRadio("type_new", 1, "ID товара", $data['type']) . $PHPShopGUI->setRadio("type_new", 2, "Артикул товара", $data['type']));
     
     $PHPShopOrmCat = new PHPShopOrm($PHPShopModules->getParam("base.ozonseller.ozonseller_categories"));
     $category = $PHPShopOrmCat->select(['COUNT(`id`) as num']);
@@ -158,7 +159,7 @@ function actionStart() {
         $status_pre='+';
     }
     
-    $Tab3= $PHPShopGUI->setCollapse('Настройка цен',
+    $Tab3= $PHPShopGUI->setCollapse('Цены',
         $PHPShopGUI->setField('Колонка цен OZON', $PHPShopGUI->setSelect('price_new', $PHPShopGUI->setSelectValue($data['price'], 5), 100)) .
         $PHPShopGUI->setField('Наценка', $PHPShopGUI->setInputText($status_pre, 'fee_new', $data['fee'], 100, '%')).
         $PHPShopGUI->setField('Действие', $PHPShopGUI->setRadio("fee_type_new", 1, "Понижение", $data['fee_type']) . $PHPShopGUI->setRadio("fee_type_new", 2, "Повышение", $data['fee_type'])).

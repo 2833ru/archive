@@ -146,9 +146,13 @@ class PHPShopSelection extends PHPShopShopCore {
         if (empty($row['title']))
             $this->title = __('Бренд') . " - " . $row['name'] . " - " . $this->PHPShopSystem->getParam('title');
         else
-            $this->title = $row['title'];
+            $this->title = str_replace(['@System@', '@valueTitle@'], [$this->PHPShopSystem->getParam('title'), $row['name']],$row['title']);
+        
+        if (empty($row['meta_description']))
+            $this->description = $row['name'] . ', ' . $this->PHPShopSystem->getParam('descrip');
+        else
+            $this->description = str_replace(['@System@', '@valueTitle@'], [$this->PHPShopSystem->getParam('descrip'), $row['name']],$row['meta_description']);
 
-        $this->description = $row['name'].', '.$this->PHPShopSystem->getParam('descrip');
         $this->keywords = $row['name'];
 
         // Перехват модуля

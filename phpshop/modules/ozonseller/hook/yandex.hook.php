@@ -1,13 +1,14 @@
 <?php
 
 function setCategories_ozonseller_hook($obj, $data) {
-    return true;
+    if (!empty($_GET['marketplace']) and $_GET['marketplace'] == 'ozon')
+        return true;
 }
 
 function setProducts_ozonseller_hook($obj, $data) {
     $add = $list = $vemdorSort = null;
 
-    if (!empty($_GET['marketplace'] == 'ozon')) {
+    if (!empty($_GET['marketplace']) and $_GET['marketplace'] == 'ozon') {
 
         // price columns
         $price = $data['val']['price'];
@@ -29,11 +30,15 @@ function setProducts_ozonseller_hook($obj, $data) {
             } else {
                 $price = $price + ($price * $fee / 100);
             }
-
         }
 
         $data['xml'] = str_replace('<price>' . $data['val']['price'] . '</price>', '<price>' . $price . '</price>', $data['xml']);
-        $add .= '<outlets><outlet instock="' . $data['val']['items'] . '" warehouse_name="'.$obj->ozon_options['warehouse'].'"></outlet></outlets>';
+        $add .= '<outlets><outlet instock="' . $data['val']['items'] . '" warehouse_name="' . $obj->ozon_options['warehouse'] . '"></outlet></outlets>';
+        
+        // Ключ обновления артикул
+        if($obj->ozon_options['type'] == 2){
+            $data['xml'] = str_replace('<offer id="'.$data['val']['id'].'"', '<offer id="'.$data['val']['uid'].'"' , $data['xml']);
+        }
 
         if (!empty($add))
             $data['xml'] = str_replace('</offer>', $add . '</offer>', $data['xml']);
@@ -44,7 +49,7 @@ function setProducts_ozonseller_hook($obj, $data) {
 
 function PHPShopYml_ozonseller_hook($obj) {
 
-    if ($_GET['marketplace'] == 'ozon') {
+    if (!empty($_GET['marketplace']) and $_GET['marketplace'] == 'ozon') {
         $_GET['utf'] = true;
 
         // Настройки модуля

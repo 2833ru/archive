@@ -60,7 +60,7 @@ function user_message($obj) {
         $telegram_enabled =null;
         $telegram_path = 'https://telegram.me/' . $bot . '?start=' . $_SESSION['UsersBot'];
     } else{
-        $telegram_enabled='hidden';
+        $telegram_enabled='hidden d-none';
         $telegram_path = null;
     }
 
@@ -69,7 +69,7 @@ function user_message($obj) {
         $vk_path= 'https://vk.me/' . $bot . '?ref=' . $_SESSION['UsersBot'];
         $vk_enabled = null;
     } else{
-        $vk_enabled= 'hidden';
+        $vk_enabled= 'hidden d-none';
         $vk_path=null;
     }
 

@@ -25,31 +25,31 @@ function tab_userdata($data, $order) {
 
     // Данные покупателя
     $disp1 = $user .
-            $PHPShopGUI->setField("Телефон", $PHPShopGUI->setInputText('', 'tel_new', $data['tel'])) .
-            $PHPShopGUI->setField("E-mail", $PHPShopGUI->setInputText('', 'person[mail]', $order['Person']['mail'])).
-            $PHPShopGUI->setField("Страна", $PHPShopGUI->setInputText('', 'country_new', $data['country'])) .
-            $PHPShopGUI->setField("Регион", $PHPShopGUI->setInputText('', 'state_new', $data['state'])) .
-            $PHPShopGUI->setField("Город", $PHPShopGUI->setInputText('', 'city_new', $data['city'])) .
-            $PHPShopGUI->setField("Индекс", $PHPShopGUI->setInputText('', 'index_new', $data['index'])) .
-            $PHPShopGUI->setField("Улица", $PHPShopGUI->setInputText('', 'street_new', $data['street'] . $order['Person']['adr_name'])) .
-            $PHPShopGUI->setField("Дом", $PHPShopGUI->setInputText('', 'house_new', $data['house'])) .
-            $PHPShopGUI->setField("Подъезд", $PHPShopGUI->setInputText('', 'porch_new', $data['porch'])) .
-            $PHPShopGUI->setField("Домофон", $PHPShopGUI->setInputText('', 'door_phone_new', $data['door_phone'])) .
-            $PHPShopGUI->setField("Квартира", $PHPShopGUI->setInputText('', 'flat_new', $data['flat']));
+            $PHPShopGUI->setField("Телефон", $PHPShopGUI->setInputText('', 'tel_new', PHPShopSecurity::TotalClean($data['tel']))) .
+            $PHPShopGUI->setField("E-mail", $PHPShopGUI->setInputText('', 'person[mail]', PHPShopSecurity::TotalClean($order['Person']['mail']))).
+            $PHPShopGUI->setField("Страна", $PHPShopGUI->setInputText('', 'country_new', PHPShopSecurity::TotalClean($data['country']))) .
+            $PHPShopGUI->setField("Регион", $PHPShopGUI->setInputText('', 'state_new', PHPShopSecurity::TotalClean($data['state']))) .
+            $PHPShopGUI->setField("Город", $PHPShopGUI->setInputText('', 'city_new', PHPShopSecurity::TotalClean($data['city']))) .
+            $PHPShopGUI->setField("Индекс", $PHPShopGUI->setInputText('', 'index_new', PHPShopSecurity::TotalClean($data['index']))) .
+            $PHPShopGUI->setField("Улица", $PHPShopGUI->setInputText('', 'street_new', PHPShopSecurity::TotalClean($data['street'] . $order['Person']['adr_name']))) .
+            $PHPShopGUI->setField("Дом", $PHPShopGUI->setInputText('', 'house_new', PHPShopSecurity::TotalClean($data['house']))) .
+            $PHPShopGUI->setField("Подъезд", $PHPShopGUI->setInputText('', 'porch_new', PHPShopSecurity::TotalClean($data['porch']))) .
+            $PHPShopGUI->setField("Домофон", $PHPShopGUI->setInputText('', 'door_phone_new', PHPShopSecurity::TotalClean($data['door_phone']))) .
+            $PHPShopGUI->setField("Квартира", $PHPShopGUI->setInputText('', 'flat_new', PHPShopSecurity::TotalClean($data['flat'])));
 
     // Юр. данные покупателя
-    $disp2 = $PHPShopGUI->setField("Компания", $PHPShopGUI->setInputText('', 'org_name_new', $data['org_name'] . $order['Person']['org_name'])) .
-            $PHPShopGUI->setField("ИНН", $PHPShopGUI->setInputText('', 'org_inn_new', $data['org_inn'])) .
-            $PHPShopGUI->setField("КПП", $PHPShopGUI->setInputText('', 'org_kpp_new', $data['org_kpp'])) .
-            $PHPShopGUI->setField("Юр. адрес", $PHPShopGUI->setInputText('', 'org_yur_adres_new', $data['org_yur_adres'])) .
-            $PHPShopGUI->setField("Адрес", $PHPShopGUI->setInputText('', 'org_fakt_adres_new', $data['org_fakt_adres'])) .
-            $PHPShopGUI->setField("Р/С", $PHPShopGUI->setInputText('', 'org_ras_new', $data['org_ras'])) .
-            $PHPShopGUI->setField("Банк", $PHPShopGUI->setInputText('', 'org_bank_new', $data['org_bank'])) .
-            $PHPShopGUI->setField("К/С", $PHPShopGUI->setInputText('', 'org_kor_new', $data['org_kor'])) .
-            $PHPShopGUI->setField("БИК", $PHPShopGUI->setInputText('', 'org_bik_new', $data['org_bik'])) .
-            $PHPShopGUI->setField("Город", $PHPShopGUI->setInputText('', 'org_city_new', $data['org_city'])).
-            $PHPShopGUI->setField("Время", $PHPShopGUI->setInputText('', 'delivtime_new', $data['delivtime'])).
-            $PHPShopGUI->setField("Tracking", $PHPShopGUI->setInputText('', 'tracking_new', $data['tracking']));
+    $disp2 = $PHPShopGUI->setField("Компания", $PHPShopGUI->setInputText('', 'org_name_new', PHPShopSecurity::TotalClean($data['org_name'] . $order['Person']['org_name']))) .
+            $PHPShopGUI->setField("ИНН", $PHPShopGUI->setInputText('', 'org_inn_new', PHPShopSecurity::TotalClean($data['org_inn']))) .
+            $PHPShopGUI->setField("КПП", $PHPShopGUI->setInputText('', 'org_kpp_new', PHPShopSecurity::TotalClean($data['org_kpp']))) .
+            $PHPShopGUI->setField("Юр. адрес", $PHPShopGUI->setInputText('', 'org_yur_adres_new', PHPShopSecurity::TotalClean($data['org_yur_adres']))) .
+            $PHPShopGUI->setField("Адрес", $PHPShopGUI->setInputText('', 'org_fakt_adres_new', PHPShopSecurity::TotalClean($data['org_fakt_adres']))) .
+            $PHPShopGUI->setField("Р/С", $PHPShopGUI->setInputText('', 'org_ras_new', PHPShopSecurity::TotalClean($data['org_ras']))) .
+            $PHPShopGUI->setField("Банк", $PHPShopGUI->setInputText('', 'org_bank_new', PHPShopSecurity::TotalClean($data['org_bank']))) .
+            $PHPShopGUI->setField("К/С", $PHPShopGUI->setInputText('', 'org_kor_new', PHPShopSecurity::TotalClean($data['org_kor']))) .
+            $PHPShopGUI->setField("БИК", $PHPShopGUI->setInputText('', 'org_bik_new', PHPShopSecurity::TotalClean($data['org_bik']))) .
+            $PHPShopGUI->setField("Город", $PHPShopGUI->setInputText('', 'org_city_new', PHPShopSecurity::TotalClean($data['org_city']))).
+            $PHPShopGUI->setField("Время", $PHPShopGUI->setInputText('', 'delivtime_new', PHPShopSecurity::TotalClean($data['delivtime']))).
+            $PHPShopGUI->setField("Tracking", $PHPShopGUI->setInputText('', 'tracking_new', PHPShopSecurity::TotalClean($data['tracking'])));
 
     return $help.$PHPShopGUI->setGrid(array($disp1, 6), array($disp2, 6));
 }

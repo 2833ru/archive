@@ -159,14 +159,17 @@ class PHPShopBrand extends PHPShopShopCore {
                 case 1:
                     $this->set('fSetAactive', 'active');
                     $this->set('fSetAchecked', 'checked="checked"');
+                    $this->set('fSetAselected', 'selected');
                     break;
                 case 2:
                     $this->set('fSetBactive', 'active');
                     $this->set('fSetBchecked', 'checked="checked"');
+                    $this->set('fSetBselected', 'selected');
                     break;
                 default:
                     $this->set('fSetCactive', 'active');
                     $this->set('fSetCchecked', 'checked="checked"');
+                    $this->set('fSetCselected', 'selected');
             }
 
         // Мультибаза
@@ -193,7 +196,8 @@ class PHPShopBrand extends PHPShopShopCore {
             return $this->setError404();
         }
 
-        $vendor = $PHPShopOrm->select(array("*"), array('sort_seo_name' => "='" . PHPShopSecurity::TotalClean($seo_name[0]) . "'"));
+        $vendor = $PHPShopOrm->getOne(array("*"), array('sort_seo_name' => "='" . PHPShopSecurity::TotalClean($seo_name[0]) . "'"));
+
 
         // Нет данных, 404 ошибка
         if (!is_array($vendor))
@@ -226,11 +230,11 @@ class PHPShopBrand extends PHPShopShopCore {
         $this->PHPShopOrm->clean();
 
         // Пагинатор
-        $count = count($this->dataArray);
+        if (is_array($this->dataArray))
+            $count = count($this->dataArray);
 
         if ($count)
             $this->setPaginator($count, $order);
-
 
         // Добавляем в дизайн ячейки с товарами
         $grid = $this->product_grid($this->dataArray, $this->cell);
@@ -268,21 +272,24 @@ class PHPShopBrand extends PHPShopShopCore {
         // Название
         $this->set('sortName', $brandTitle);
 
+
         // Заголовок
         if (empty($vendor['title']))
             $this->title = __('Бренд') . " - " . $brandTitle . " - " . $this->PHPShopSystem->getParam('title');
-        else
-            $this->title = $vendor['title'];
+        else {
+            $this->title = str_replace(['@System@', '@valueTitle@'], [$this->PHPShopSystem->getParam('title'), $brandTitle], $vendor['title']);
+        }
 
         if (empty($vendor['meta_description']))
             $this->description = $brandTitle . ', ' . $this->PHPShopSystem->getParam('descrip');
         else
-            $this->description = $vendor['meta_description'];
+            $this->description = str_replace(['@System@', '@valueTitle@'], [$this->PHPShopSystem->getParam('descrip'), $brandTitle], $vendor['meta_description']);
+
 
         $this->keywords = $brandTitle;
 
         // Навигация хлебные крошки
-        $this->navigation(0, $brandTitle,['url'=>'./','name'=>__('Бренды')]);
+        $this->navigation(0, $brandTitle, ['url' => './', 'name' => __('Бренды')]);
 
         $this->parseTemplate($this->getValue('templates.product_selection_list'));
     }

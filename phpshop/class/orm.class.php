@@ -3,7 +3,7 @@
 /**
  * Библиотека запросов к БД на основе объектов типа доступа
  * @author PHPShop Software
- * @version 1.9
+ * @version 2.0
  * @package PHPShopClass
  */
 class PHPShopOrm {
@@ -353,7 +353,7 @@ class PHPShopOrm {
 
         foreach ($_KEY as $key => $v)
             if (isset($value[$key . $prefix])) {
-                $this->_SQL .= "`" . $key . "`='" . @addslashes($value[$key . $prefix]) . "',";
+                $this->_SQL .= "`" . $key . "`='" . addslashes((string)$value[$key . $prefix]) . "',";
             }
         $this->_SQL = substr($this->_SQL, 0, strlen($this->_SQL) - 1);
 

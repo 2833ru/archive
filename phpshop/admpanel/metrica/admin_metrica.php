@@ -119,11 +119,11 @@ function actionStart() {
         $canvas_value = $canvas_label = null;
         if (is_array($json_data)) {
 
-            foreach ($json_data[data] as $value) {
+            foreach ($json_data['data'] as $value) {
 
-                $date = $value[dimensions][0][name];
-                $visits = $value[metrics][0];
-                $users = $value[metrics][1];
+                $date = $value['dimensions'][0]['name'];
+                $visits = $value['metrics'][0];
+                $users = $value['metrics'][1];
 
                 // График
                 $canvas_value.='"' . $visits . '",';
@@ -138,7 +138,7 @@ function actionStart() {
           <div class="panel panel-default">
              <div class="panel-heading"><span class="glyphicon glyphicon-star"></span> ' . __('Визиты') . '</div>
                 <div class="panel-body text-right panel-intro">
-                 <a data-toggle="tooltip" data-placement="top" href="?path=metrica.traffic&date_start=' . $_GET['date_start'] . '&date_end=' . $_GET['date_end'] . '&group_date=' . $_GET['group_date'] . '" title="' . __('Показать больше') . '">' . $json_data[totals][0] . '</a>
+                 <a data-toggle="tooltip" data-placement="top" href="?path=metrica.traffic&date_start=' . $_GET['date_start'] . '&date_end=' . $_GET['date_end'] . '&group_date=' . $_GET['group_date'] . '" title="' . __('Показать больше') . '">' . $json_data['totals'][0] . '</a>
                </div>
           </div>
        </div>
@@ -146,7 +146,7 @@ function actionStart() {
           <div class="panel panel-default">
              <div class="panel-heading"><span class="glyphicon glyphicon-user"></span> ' . __('Посетители') . '</div>
                 <div class="panel-body text-right panel-intro">
-                 <a data-toggle="tooltip" data-placement="top" href="?path=metrica.traffic&date_start=' . $_GET['date_start'] . '&date_end=' . $_GET['date_end'] . '&group_date=' . $_GET['group_date'] . '" title="' . __('Показать больше') . '">' . $json_data[totals][1] . '</a>
+                 <a data-toggle="tooltip" data-placement="top" href="?path=metrica.traffic&date_start=' . $_GET['date_start'] . '&date_end=' . $_GET['date_end'] . '&group_date=' . $_GET['group_date'] . '" title="' . __('Показать больше') . '">' . $json_data['totals'][1] . '</a>
                </div>
           </div>
        </div>
@@ -154,7 +154,7 @@ function actionStart() {
           <div class="panel panel-default">
              <div class="panel-heading"><span class="glyphicon glyphicon-eye-open"></span> ' . __('Просмотры') . '</div>
                 <div class="panel-body text-right panel-intro">
-                 <a data-toggle="tooltip" data-placement="top" href="?path=metrica.traffic&date_start=' . $_GET['date_start'] . '&date_end=' . $_GET['date_end'] . '&group_date=' . $_GET['group_date'] . '" title="' . __('Показать больше') . '">' . $json_data[totals][2] . '</a>
+                 <a data-toggle="tooltip" data-placement="top" href="?path=metrica.traffic&date_start=' . $_GET['date_start'] . '&date_end=' . $_GET['date_end'] . '&group_date=' . $_GET['group_date'] . '" title="' . __('Показать больше') . '">' . $json_data['totals'][2] . '</a>
                </div>
           </div>
        </div>
@@ -162,7 +162,7 @@ function actionStart() {
           <div class="panel panel-default">
              <div class="panel-heading"><span class="glyphicon glyphicon-bell"></span> ' . __('Новые') . '<span class="pull-right text-muted">%</span></div>
                 <div class="panel-body text-right panel-intro">
-                 <a data-toggle="tooltip" data-placement="top" href="?path=metrica.traffic&date_start=' . $_GET['date_start'] . '&date_end=' . $_GET['date_end'] . '&group_date=' . $_GET['group_date'] . '" title="' . __('Показать больше') . '">' . round($json_data[totals][3], 2) . '</a>
+                 <a data-toggle="tooltip" data-placement="top" href="?path=metrica.traffic&date_start=' . $_GET['date_start'] . '&date_end=' . $_GET['date_end'] . '&group_date=' . $_GET['group_date'] . '" title="' . __('Показать больше') . '">' . round($json_data['totals'][3], 2) . '</a>
                </div>
           </div>
        </div>
@@ -170,7 +170,7 @@ function actionStart() {
           <div class="panel panel-default">
              <div class="panel-heading"><span class="glyphicon glyphicon-thumbs-down"></span> ' . __('Отказы') . '<span class="pull-right text-muted">%</span></div>
                 <div class="panel-body text-right panel-intro">
-                 <a data-toggle="tooltip" data-placement="top" href="?path=metrica.traffic&date_start=' . $_GET['date_start'] . '&date_end=' . $_GET['date_end'] . '&group_date=' . $_GET['group_date'] . '" title="' . __('Показать больше') . '">' . round($json_data[totals][4], 2) . '</a>
+                 <a data-toggle="tooltip" data-placement="top" href="?path=metrica.traffic&date_start=' . $_GET['date_start'] . '&date_end=' . $_GET['date_end'] . '&group_date=' . $_GET['group_date'] . '" title="' . __('Показать больше') . '">' . round($json_data['totals'][4], 2) . '</a>
                </div>
           </div>
        </div>
@@ -178,7 +178,7 @@ function actionStart() {
           <div class="panel panel-default">
              <div class="panel-heading"><span class="glyphicon glyphicon-hourglass"></span> ' . __('Время') . '<span class="pull-right text-muted">'.__('мин').'</span></div>
                 <div class="panel-body text-right panel-intro">
-                 <a data-toggle="tooltip" data-placement="top" href="?path=metrica.traffic&date_start=' . $_GET['date_start'] . '&date_end=' . $_GET['date_end'] . '&group_date=' . $_GET['group_date'] . '" title="' . __('Показать больше') . '">' . round($json_data[totals][5], 2) . '</a>
+                 <a data-toggle="tooltip" data-placement="top" href="?path=metrica.traffic&date_start=' . $_GET['date_start'] . '&date_end=' . $_GET['date_end'] . '&group_date=' . $_GET['group_date'] . '" title="' . __('Показать больше') . '">' . round($json_data['totals'][5], 2) . '</a>
                </div>
           </div>
        </div>
@@ -247,14 +247,14 @@ function actionStart() {
         $n = 0;
         if (is_array($json_data)) {
 
-            $json_data = $json_data[data];
+            $json_data = $json_data['data'];
 
             foreach ($json_data as $key => $value) {
 
-                $name = PHPShopString::utf8_win1251($json_data[$key][dimensions][4][name]);
-                $favicon = $json_data[$key][dimensions][4][favicon];
-                $visits = $json_data[$key][metrics][0];
-                $users = $json_data[$key][metrics][1];
+                $name = PHPShopString::utf8_win1251($json_data[$key]['dimensions'][4]['name']);
+                $favicon = $json_data[$key]['dimensions'][4]['favicon'];
+                $visits = $json_data[$key]['metrics'][0];
+                $users = $json_data[$key]['metrics'][1];
                 $icon = '<img src="//favicon.yandex.net/favicon/' . $favicon . '/" style="padding-right:5px;width:21px" />';
 
                 if (!empty($name) and $n < 7) {
@@ -315,14 +315,14 @@ function actionStart() {
 
             if (is_array($json_data)) {
                 $n = 0;
-                $canvas_data = $json_data = $json_data[data];
+                $canvas_data = $json_data = $json_data['data'];
                 $canvas_value = $canvas_label = null;
                 foreach ($json_data as $value) {
-                    $date = $value[dimensions][0][id];
-                    $visits = $value[metrics][0];
-                    $users = $value[metrics][1];
-                    $pageviews = $value[metrics][2];
-                    $avgVisitDurationSeconds = $value[metrics][6] / 60;
+                    $date = $value['dimensions'][0]['id'];
+                    $visits = $value['metrics'][0];
+                    $users = $value['metrics'][1];
+                    $pageviews = $value['metrics'][2];
+                    $avgVisitDurationSeconds = $value['metrics'][6] / 60;
 
                     if (!empty($name) and $n < 6) {
                         $PHPShopInterface->setRow(array('name' => date('d.m.Y', strtotime($date)), 'align' => 'left'), array('name' => $visits, 'align' => 'center'), array('name' => $users, 'align' => 'center'), array('name' => $pageviews, 'align' => 'center'), array('name' => round($avgVisitDurationSeconds, 2), 'align' => 'right'));
@@ -336,8 +336,8 @@ function actionStart() {
                     krsort($canvas_data);
                     foreach ($canvas_data as $value) {
 
-                        $canvas_value.='"' . $value[metrics][0] . '",';
-                        $canvas_label.='"' . date('d.m', strtotime($value[dimensions][0][id])) . '",';
+                        $canvas_value.='"' . $value['metrics'][0] . '",';
+                        $canvas_label.='"' . date('d.m', strtotime($value['dimensions'][0]['id'])) . '",';
                     }
                 }
 
@@ -418,12 +418,12 @@ function actionStart() {
         $PHPShopInterface->setCaption(array("Реферер", "40%"), array("Визиты", "10%", array('align' => 'right')));
 
         $n = 0;
-        if (is_array($json_data[data])) {
-            foreach ($json_data[data] as $value) {
+        if (is_array($json_data['data'])) {
+            foreach ($json_data['data'] as $value) {
 
-                $name = PHPShopString::utf8_win1251($value[dimensions][1][name]);
-                $visits = $value[metrics][0];
-                $icon = '<img src="//favicon.yandex.net/favicon/' . $value[dimensions][1][favicon] . '/" style="width:21px;padding-right:5px" />';
+                $name = PHPShopString::utf8_win1251($value['dimensions'][1]['name']);
+                $visits = $value['metrics'][0];
+                $icon = '<img src="//favicon.yandex.net/favicon/' . $value['dimensions'][1]['favicon'] . '/" style="width:21px;padding-right:5px" />';
 
                 if (strstr($name, '.'))
                     $name = '<a target="_blank" href="http://' . $name . '">' . $name . '</a>';
@@ -434,7 +434,7 @@ function actionStart() {
                 }
             }
         }
-        if (count($json_data[data]) == 0)
+        if (count($json_data['data']) == 0)
             $PHPShopInterface->setRow('Нет данных..', array('name' => '?', 'align' => 'right'));
 
         $PHPShopGUI->_CODE.='
@@ -479,13 +479,13 @@ function actionStart() {
         $PHPShopInterface->setCaption(array("Поисковая фраза, Поисковая система", "40%"), array("Визиты", "10%", array('align' => 'right')));
 
         $n = 0;
-        if (is_array($json_data[data])) {
-            foreach ($json_data[data] as $value) {
+        if (is_array($json_data['data'])) {
+            foreach ($json_data['data'] as $value) {
 
-                $name = PHPShopString::utf8_win1251($value[dimensions][0][name]);
-                $name_1 = PHPShopString::utf8_win1251($value[dimensions][1][name]);
-                $visits = $value[metrics][0];
-                $icon = '<img src="//favicon.yandex.net/favicon/' . $value[dimensions][1][favicon] . '/" style="width:21px;padding-right:5px" />';
+                $name = PHPShopString::utf8_win1251($value['dimensions'][0]['name']);
+                $name_1 = PHPShopString::utf8_win1251($value['dimensions'][1]['name']);
+                $visits = $value['metrics'][0];
+                $icon = '<img src="//favicon.yandex.net/favicon/' . $value['dimensions'][1]['favicon'] . '/" style="width:21px;padding-right:5px" />';
 
                 if ($name_1 == 'Яндекс')
                     $name = '<a target="_blank" href="https://yandex.ru/search/?text=' . $name . '">' . PHPShopSecurity::TotalClean($name) . '</a>';
@@ -498,7 +498,7 @@ function actionStart() {
                 }
             }
         }
-        if (count($json_data[data]) == 0)
+        if (count($json_data['data']) == 0)
             $PHPShopInterface->setRow(__('Нет данных..'), array('name' => '?', 'align' => 'right'));
 
         $PHPShopGUI->_CODE.='

@@ -12,7 +12,7 @@ function addOptionKVKPromo($data) {
 }
 
 function updateOptionKVKPromo($data) {
-    if (empty($_POST['kvk_enabled_new'])) {
+    if (empty($_POST['ajax']) and empty($_POST['kvk_enabled_new'])) {
         $_POST['kvk_enabled_new'] = 0;
     }
 }

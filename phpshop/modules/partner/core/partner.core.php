@@ -93,6 +93,7 @@ class PHPShopPartner extends PHPShopCore {
             $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['partner']['partner_payment']);
             $PHPShopOrm->debug = false;
             $data = $PHPShopOrm->select(array('*'), array('partner_id' => "='" . $_SESSION['partnerId'] . "'"), array('order' => 'id desc'), array('limit' => 300));
+            $stop_money = false;
             if (is_array($data))
                 foreach ($data as $row) {
                     $sum = number_format($row['sum'], "2", ".", "");
@@ -103,18 +104,25 @@ class PHPShopPartner extends PHPShopCore {
 
                     if (!empty($row['enabled']))
                         $row['enabled'] = __('Выполнен');
-                    else
+                    else {
                         $row['enabled'] = __('В обработке');
+                        $stop_money = "Заявка на выплату ".$sum." ".$this->PHPShopSystem->getDefaultValutaCode()." успешно заказана ".PHPShopDate::dataV($row['date']);
+                    }
 
                     $PHPShopInterface->setRow(PHPShopDate::dataV($row['date']), $sum, $row['enabled']);
                 }
             $Tab1 = $PHPShopInterface->frontCompile();
 
             // Форма заявки
-            $Tab2 = $PHPShopInterface->setInputText('Сумма', 'get_money_new', $_SESSION['partnerTotal'], 200, $this->PHPShopSystem->getDefaultValutaCode());
-            $Tab2 .= $PHPShopInterface->setLine('<br>');
-            $Tab2 .= $PHPShopInterface->setInput('submit', 'addmoney_user', 'Подать заявку');
-            $Tab2 = $PHPShopInterface->frontSetForm($Tab2);
+            if (!$stop_money) {
+                $Tab2 = $PHPShopInterface->setInputText('Сумма', 'get_money_new', $_SESSION['partnerTotal'], 200, $this->PHPShopSystem->getDefaultValutaCode());
+                $Tab2 .= $PHPShopInterface->setLine('<br>');
+                $Tab2 .= $PHPShopInterface->setInput('submit', 'addmoney_user', 'Подать заявку');
+                $Tab2 = $PHPShopInterface->frontSetForm($Tab2);
+            }
+            else {
+                $Tab2 = $PHPShopInterface->setInfo($stop_money);
+            }
 
 
             /**
@@ -200,11 +208,11 @@ class PHPShopPartner extends PHPShopCore {
             // Форма закладок навигации
             $PHPShopFrontGUI = new PHPShopFrontInterface();
             $TabName = explode("|", $GLOBALS['SysValue']['lang']['partner_menu']);
-            
-            if (!empty($stat)){
+
+            if (!empty($stat)) {
                 $Tab5 = $PHPShopTableRating->frontCompile('table table-striped');
-            }
-            else $TabName[4] = null;
+            } else
+                $TabName[4] = null;
 
             $Forma = $PHPShopFrontGUI->getContent($PHPShopFrontGUI->setTab(array($TabName[0], $Tab4, true), array($TabName[1], $Tab3, true), array($TabName[2], $Tab1, true), array($TabName[3], $Tab2, true), array($TabName[4], $Tab5, true)));
 

@@ -167,7 +167,7 @@ if ($GLOBALS['SysValue']['template_theme']['user'] == 'true' or ! empty($GLOBALS
     if (!empty($_SESSION['logPHPSHOP']))
         $admin_help = __('Вы можете управлять содержанием текущей страницы');
     else
-        $admin_help = __('Для управления текущей страницей требуется') . ' <a href="//' . $_SERVER['SERVER_NAME'] . $GLOBALS['SysValue']['dir']['dir'] . 'phpshop/admpanel/" target="_blank"><span class="glyphicon glyphicon-user"></span> ' . __('авторизироваться') . '</a>';
+        $admin_help = __('Для управления текущей страницей требуется') . ' <a href="//' . $_SERVER['SERVER_NAME'] . $GLOBALS['SysValue']['dir']['dir'] . 'phpshop/admpanel/" target="_blank"><span class="glyphicon glyphicon-user"></span> ' . __('авторизоваться') . '</a>';
 
     $collapse_menu = '<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
   <div class="panel panel-default">

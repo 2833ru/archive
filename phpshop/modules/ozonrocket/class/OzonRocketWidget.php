@@ -132,9 +132,9 @@ class OzonRocketWidget {
                 'packageNumber' => (string) $number,
                 'dimensions' => [
                     'weight' => (int) $this->options['weight'],
-                    'length' => (int) $this->options['length'],
-                    'width' => (int) $this->options['width'],
-                    'height' => (int) $this->options['height']
+                    'length' => (int) $this->options['length']*10,
+                    'width' => (int) $this->options['width']*10,
+                    'height' => (int) $this->options['height']*10
             ]];
         }
         // Отдельная упаковка

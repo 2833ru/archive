@@ -91,7 +91,14 @@ function _tpl($file) {
         'product_odnotip_product_parent_one_color.tpl' => 'Форма подчиненного товара параметр 2',
         'product_odnotip_product_parent_one_value.tpl' => 'Форма значения подчиненного товара',
         'preview_sort_one.tpl' => 'Вид характеристики в превью',
-        'preview_sorts.tpl' => 'Форма блока характеристик в превью'
+        'preview_sorts.tpl' => 'Форма блока характеристик в превью',
+        'bottom_menu.tpl' => 'Меню в подвале',
+        'top_catalog_forma.tpl' => 'Форма верхнего каталога товаров A',
+        'top_catalog_forma_3.tpl' => 'Форма верхнего каталога товаров B',
+        'top_podcatalog_forma.tpl' => 'Форма верхнего подкаталога товаров',
+        'catalog_top_menu.tpl' => 'Форма каталога товаров в главном меню',
+        'banner_menu_forma.tpl' => 'Баннер в меню каталгов'
+        
     );
 
     if ($_GET['option'] != 'pro' && !empty($TemplateHelper[$file]))
@@ -165,6 +172,11 @@ function actionStart() {
         $info = PHPShopSecurity::getExt($file);
         if (file_exists($file) and in_array($info, array('tpl', 'css'))) {
             $content = str_replace('textarea', 'txtarea', @file_get_contents($file));
+
+            // Кодировка
+            if ($GLOBALS['PHPShopBase']->codBase == 'utf-8')
+                $content = PHPShopString::win_utf8($content, true);
+
             $ace = true;
 
             $PHPShopGUI->action_button['Размер'] = array(
@@ -267,9 +279,9 @@ function actionStart() {
 
     // Стоп лист
     if (empty($_GET['option']) or $_GET['option'] == 'lite')
-        $stop_array = array('css', 'icon', 'php', 'js', 'fonts', 'images', 'icon', 'modules', 'index.html', 'style.css', 'font', 'brands', 'breadcrumbs', 'calendar', 'clients', 'comment', 'error', 'forma', 'gbook', 'links', 'map', 'opros', 'order', 'paginator', 'price', 'print', 'search', 'slider', 'selection', 'users', 'pricemail', 'editor');
+        $stop_array = array('css', 'icon', 'php', 'js', 'fonts', 'images', 'icon', 'modules', 'index.html', 'style.css', 'font', 'brands', 'breadcrumbs', 'calendar', 'clients', 'comment', 'error', 'forma', 'gbook', 'links', 'map', 'opros', 'order', 'paginator', 'price', 'print', 'search', 'slider', 'selection', 'users', 'pricemail', 'editor','assets','svg');
     else
-        $stop_array = array('css', 'icon', 'php', 'js', 'fonts', 'images', 'icon', 'modules', 'index.html', 'style.css', 'font');
+        $stop_array = array('css', 'icon', 'php', 'js', 'fonts', 'images', 'icon', 'modules', 'index.html', 'style.css', 'font','assets','svg');
 
 
 
@@ -386,6 +398,11 @@ function actionSave() {
     $info = PHPShopSecurity::getExt($file);
     if (file_exists($file) and in_array($info, array('tpl', 'css'))) {
         PHPShopFile::chmod($file);
+
+        // Кодировка
+        if ($GLOBALS['PHPShopBase']->codBase == 'utf-8')
+            $_POST['editor_src'] = PHPShopString::utf8_win1251($_POST['editor_src'], true);
+
         if (PHPShopFile::write($file, $content = str_replace(array('txtarea', '&#43;'), array('textarea', '+'), $_POST['editor_src'])))
             $action = true;
         else
@@ -438,7 +455,7 @@ function actionLoad() {
 
                     unlink($zip);
                     $archive->close();
-                    
+
                     // Выключаем таймер
                     $time = explode(' ', microtime());
                     $seconds = ($time[1] + $time[0] - $start_time);

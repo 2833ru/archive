@@ -34,17 +34,18 @@ class AddToTemplateReturnCallElement extends PHPShopElements {
 
         $PHPShopRecaptchaElement = new PHPShopRecaptchaElement();
 
-        $forma = PHPShopParser::file($GLOBALS['SysValue']['templates']['returncall']['returncall_forma'], true, false, true);
-        $this->set('leftMenuContent', $forma);
         $this->set('leftMenuName', $this->option['title']);
+        $this->set('returnCallName', $this->option['title']);
 
         // Подключаем шаблон
         if (empty($this->option['windows'])) {
-            $dis = $this->parseTemplate($this->getValue('templates.left_menu'));
 
             if ($this->option['captcha_enabled'] == 1) {
                 $this->set('returncall_captcha', $PHPShopRecaptchaElement->captcha('returncall', 'compact'));
             }
+
+            $this->set('leftMenuContent', PHPShopParser::file($GLOBALS['SysValue']['templates']['returncall']['returncall_forma'], true, false, true));
+            $dis = $this->parseTemplate($this->getValue('templates.left_menu'));
         } else {
 
             if ($this->option['captcha_enabled'] == 1) {
@@ -58,8 +59,8 @@ class AddToTemplateReturnCallElement extends PHPShopElements {
                 $dis = $this->parseTemplate($this->getValue('templates.left_menu'));
             }
         }
-
-
+        
+        
         // Назначаем переменную шаблона
         switch ($this->option['enabled']) {
 

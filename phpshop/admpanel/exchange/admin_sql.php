@@ -169,6 +169,12 @@ function actionStart() {
     unset($baseArray['phpshop_modules_key']);
     unset($baseArray['phpshop_payment_systems']);
     unset($baseArray['phpshop_exchanges']);
+    unset($baseArray['phpshop_banners']);
+    unset($baseArray['phpshop_parent_name']);
+    unset($baseArray['phpshop_delivery']);
+    unset($baseArray['phpshop_order_status']);
+    unset($baseArray['phpshop_payment_systems']);
+    unset($baseArray['phpshop_page']);
 
 
     $TRUNCATE = null;

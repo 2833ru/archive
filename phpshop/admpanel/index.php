@@ -1,8 +1,8 @@
 <?php
 
 // PHP Version Warning
-if(floatval(phpversion()) < 5.6){
-   exit("PHP ".phpversion()." не поддерживается. Требуется PHP 5.6 или выше.");
+if (floatval(phpversion()) < 5.6) {
+    exit("PHP " . phpversion() . " не поддерживается. Требуется PHP 5.6 или выше.");
 }
 
 session_start();
@@ -246,6 +246,7 @@ function actionStart() {
     if (getenv("COMSPEC"))
         $_SESSION['mod_pro'] = true;
 
+
     // Ознакомительный режим
     if (is_array($License)) {
         if ($License['License']['Expires'] != 'Never' and $License['License']['Expires'] < time()) {
@@ -257,6 +258,11 @@ function actionStart() {
         } elseif (strstr($License['License']['HardwareLocked'], '-') and getenv('SERVER_NAME') != $License['License']['DomenLocked']) {
             //header('Location: //' . $License['License']['DomenLocked'] . '/phpshop/admpanel/admin.php');
         }
+    }
+
+    // Trial
+    if ($License['License']['Expires'] != 'Never' or getenv("COMSPEC")) {
+        $_SESSION['is_trial'] = true;
     }
 
     if (!empty($_SESSION['logPHPSHOP']) and empty($_SESSION['return'])) {

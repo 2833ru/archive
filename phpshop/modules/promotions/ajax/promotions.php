@@ -298,34 +298,34 @@ if ($_REQUEST['promocode'] != '*') {
                                     unset($_SESSION['cart'][$is]['discount_tip']);
                                     unset($_SESSION['cart'][$is]['id_sys']);
                                 }
-                                $messageinfo = '<b style="color:#137e15;">Поздравляем с приобретением!</b><br> Промо код указан верно! Ваша скидка ' . $data['discount'] . ' ' . $tip_disc . $info_cat_d . $info_prod_d;
+                                $messageinfo = '<b>Поздравляем с приобретением!</b><br> Промо код указан верно! Ваша скидка ' . $data['discount'] . ' ' . $tip_disc . $info_cat_d . $info_prod_d;
                             } else {
                                 $totalsumma = $_REQUEST['sum'];
                                 $totalsummainput = $_REQUEST['sum'];
                             }
                         else:
-                            $messageinfo = '<b style="color:#7e7a13;">Не применена!</b><br> Промо код указан верно.<br> Но сумма заказа должна быть от ' . $data['sum_order'] . ' ' . $currency;
+                            $messageinfo = '<b>Не применена!</b><br> Промо код указан верно.<br> Но сумма заказа должна быть от ' . $data['sum_order'] . ' ' . $currency;
                             $status = '0'; //скидка не применена
                             $_SESSION['totalsumma'] = '0';
                         endif;
                     else:
-                        $messageinfo = '<b style="color:#7e7a13;">Не применена!</b><br> Промо код указан верно.<br> Но ни один из товаров в вашей корзине не участвует в акции';
+                        $messageinfo = '<b>Не применена!</b><br> Промо код указан верно.<br> Но ни один из товаров в вашей корзине не участвует в акции';
                         $status = '0'; //скидка не применена
                         $_SESSION['totalsumma'] = '0';
                     endif;
                 } else { //если дата не сошлась
-                    $messageinfo = '<b style="color:#7e7a13;">Не применена!</b><br> Промо код указан верно.<br> Но срок действия акции закончен';
+                    $messageinfo = '<b>Не применена!</b><br> Промо код указан верно.<br> Но срок действия акции закончен';
                     $status = '0'; //скидка не применена
                     $_SESSION['totalsumma'] = '0';
                 }
             }
         else:
-            $messageinfo = '<b style="color:#7e7a13;">Ошибка!</b><br> Скидка для промокода не установлена, свяжитесь с нами для подробной информации!';
+            $messageinfo = '<b>Ошибка!</b><br> Скидка для промокода не установлена, свяжитесь с нами для подробной информации!';
             $status = '0'; //не применена скидка
             $_SESSION['totalsumma'] = '0';
         endif;
     else:
-        $messageinfo = '<b style="color:#7e7a13;">Ошибка!</b><br> Данного промо-кода в базе данных не обнаружено!';
+        $messageinfo = '<b>Ошибка!</b><br> Данного промо-кода в базе данных не обнаружено!';
         $status = '0'; //не применена скидка
     endif;
 
@@ -346,13 +346,13 @@ if ($_REQUEST['promocode'] != '*') {
     unset($_SESSION['discpromo']);
 
     // Чистка скидки при перезагрузке страницы
-    if(is_array($_SESSION['cart']))
-        foreach($_SESSION['cart'] as $k=>$cart){
+    if (is_array($_SESSION['cart']))
+        foreach ($_SESSION['cart'] as $k => $cart) {
             unset($_SESSION['cart'][$k]['promo_sum']);
             unset($_SESSION['cart'][$k]['promo_code']);
             unset($_SESSION['cart'][$k]['discount_tip_sum']);
             unset($_SESSION['cart'][$k]['promo_percent']);
-            if(!isset($_SESSION['cart'][$k]['promotion_discount']) && !isset($_SESSION['cart'][$k]['order_discount_disabled'])) {
+            if (!isset($_SESSION['cart'][$k]['promotion_discount']) && !isset($_SESSION['cart'][$k]['order_discount_disabled'])) {
                 unset($_SESSION['cart'][$k]['promo_price']);
             }
         }
@@ -364,11 +364,11 @@ $promoSum = 0;
 foreach ($PHPShopCart->getArray() as $product) {
     // Сумма
     if (!empty($product['promo_sum'])) {
-        $promoSum+=$product['num'] * number_format($product['price'] - $product['promo_sum'] / $product['num'], $PHPShopOrder->format, '.', '');
+        $promoSum += $product['num'] * number_format($product['price'] - $product['promo_sum'] / $product['num'], $PHPShopOrder->format, '.', '');
     }
     // Процент от суммы
     else if (!empty($product['promo_percent'])) {
-        $promoSum+=$product['num'] * number_format($product['price'] - ($product['price'] * $product['promo_percent'] / 100), $PHPShopOrder->format, '.', '');
+        $promoSum += $product['num'] * number_format($product['price'] - ($product['price'] * $product['promo_percent'] / 100), $PHPShopOrder->format, '.', '');
     }
 }
 // Итого товары по акции
@@ -377,11 +377,21 @@ $total = $promoSum;
 // Итого товары без акции, применяем скидку статуса пользователя\суммы заказа
 $total += (float) $PHPShopOrder->returnSumma($PHPShopCart->getSumWithoutPromo(true), $PHPShopOrder->ChekDiscount($totalsumma), '', (float) $delivery);
 
+// Округление
+$totalsummainput = number_format($totalsummainput, $PHPShopSystem->format, '.', '');
+
+// Процент
+if (strstr($discountAll, '%')) {
+    $discount = ($data['discount'] * $_REQUEST['sum'] / 100);
+    $discount = "-".number_format($discount, $PHPShopSystem->format, '.', '');
+}
+else $discount = $data['discount'];
+
 // Результат
 $_RESULT = array(
     'delivery' => $delivery,
     'total' => number_format($total, $PHPShopSystem->format, '.', ' '),
-    'discount' => $data['discount'],
+    'discount' => $discount,
     'discountall' => $discountAll,
     'mes' => $messageinfo,
     'action' => $action,

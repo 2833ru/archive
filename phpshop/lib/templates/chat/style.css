@@ -10,7 +10,7 @@
 
 }
 
-.fab {
+.fab-chat {
     display: block;
     width: 56px;
     height: 56px;
@@ -28,7 +28,7 @@
     background: #42a5f5;
 }
 
-.fab > i {
+.fab-chat > i {
     font-size: 2em;
     line-height: 55px;
     -webkit-transition: all .2s ease-out;
@@ -36,7 +36,11 @@
     transition: all .2s ease-in-out;
 }
 
-.fab:not(:last-child) {
+.fab-chat:hover {
+    color:var(--primary);
+}
+
+.fab-chat:not(:last-child) {
     width: 0;
     height: 0;
     margin: 20px auto 0;
@@ -45,12 +49,12 @@
     line-height: 40px;
 }
 
-.fab:not(:last-child) > i {
+.fab-chat:not(:last-child) > i {
     font-size: 1.4em;
     line-height: 40px;
 }
 
-.fab:not(:last-child).is-visible {
+.fab-chat:not(:last-child).is-visible {
     width: 40px;
     height: 40px;
     margin: 15px auto 10;
@@ -58,34 +62,34 @@
     visibility: visible;
 }
 
-.fab:nth-last-child(1) {
+.fab-chat:nth-last-child(1) {
     -webkit-transition-delay: 25ms;
     transition-delay: 25ms;
 }
 
-.fab:not(:last-child):nth-last-child(2) {
+.fab-chat:not(:last-child):nth-last-child(2) {
     -webkit-transition-delay: 20ms;
     transition-delay: 20ms;
 }
 
-.fab:not(:last-child):nth-last-child(3) {
+.fab-chat:not(:last-child):nth-last-child(3) {
     -webkit-transition-delay: 40ms;
     transition-delay: 40ms;
 }
 
-.fab:not(:last-child):nth-last-child(4) {
+.fab-chat:not(:last-child):nth-last-child(4) {
     -webkit-transition-delay: 60ms;
     transition-delay: 60ms;
 }
 
-.fab:not(:last-child):nth-last-child(5) {
+.fab-chat:not(:last-child):nth-last-child(5) {
     -webkit-transition-delay: 80ms;
     transition-delay: 80ms;
 }
 
-.fab(:last-child):active,
-.fab(:last-child):focus,
-.fab(:last-child):hover {
+.fab-chat(:last-child):active,
+.fab-chat(:last-child):focus,
+.fab-chat(:last-child):hover {
     box-shadow: 0 0 6px rgba(0, 0, 0, .16), 0 6px 12px rgba(0, 0, 0, .32);
 }
 /*Chatbox*/
@@ -510,6 +514,7 @@
     font-size: 12px !important;
     line-height: 20px;
     font-weight: 500;
+    height: auto;
 }
 .message_form textarea{
     margin: 5px 0 5px 0;
@@ -560,15 +565,15 @@ strong.chat_time {
 
 /*Chatbox scrollbar*/
 
-::-webkit-scrollbar {
+#chat_converse::-webkit-scrollbar {
     width: 6px;
 }
 
-::-webkit-scrollbar-track {
+#chat_converse::-webkit-scrollbar-track {
     border-radius: 0;
 }
 
-::-webkit-scrollbar-thumb {
+#chat_converse::-webkit-scrollbar-thumb {
     margin: 2px;
     border-radius: 10px;
     background: rgba(0, 0, 0, 0.2);

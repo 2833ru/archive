@@ -80,4 +80,5 @@ var locale = {
     charset: "windows-1251",
     confirm_create_order: "¬ы действительно хотите создать заказ?",
     confirm_change_price: "The new price differs by more than 20%. Are you sure?",
+    help: "Help"
 };

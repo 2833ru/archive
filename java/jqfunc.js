@@ -147,7 +147,6 @@ function showAlertMessage(message, danger) {
     var messageBox = '.success-notification';
     var innerBox = '#notification .notification-alert';
 
-    //если нет элемента для всплывающих сообщий, выводим обычным alert
     if ($(messageBox).length > 0) {
         $(innerBox).html(' ');
         $(innerBox).html(message);
@@ -156,8 +155,7 @@ function showAlertMessage(message, danger) {
         setTimeout(function () {
             $(messageBox).delay(500).fadeOut(1000);
         }, 5000);
-    } else
-        alert(message);
+    }
 }
 
 // проверка валидности email

@@ -107,8 +107,6 @@ function actionStart() {
         foreach ($json_data as $value) {
 
             $name = $value['dimensions'][0]['name'] . ' &rarr; ' . $value['dimensions'][2]['name'];
-            //$visits = $value[metrics][1];
-            //$users = $value[metrics][0];
             $cart = $value['metrics'][2];
             $order = $value['metrics'][3];
 

@@ -99,7 +99,9 @@ class PHPShopSeoPro {
      */
     function getCID() {
         $getNav = $this->getNav();
-        $array_true = array_flip($this->memory);
+
+        if (is_array($this->memory))
+            $array_true = array_flip($this->memory);
 
         if (!empty($array_true[$getNav['file']]))
             return str_replace($this->cat_pre, '', $array_true[$getNav['file']]);

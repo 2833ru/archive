@@ -289,7 +289,7 @@ class PHPShopPrice extends PHPShopShopCore {
 
     function checkXLS() {
         if (!is_file('UserFiles/Files/price.xls')) {
-            $this->set('onlinePrice','hide');
+            $this->set('onlinePrice','hide d-none');
         }
         else $this->set('onlinePrice','price-page-list');
     }

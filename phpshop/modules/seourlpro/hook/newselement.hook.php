@@ -3,69 +3,40 @@
 /**
  * Добавление SEO ссылки к новостям на главной
  */
-function index_newselement_seourl_hook($obj, $dt, $rout) {
-
+function index_newselement_seourl_hook($obj, $row, $rout) {
 
     if ($rout == 'START') {
+
+        // Настройки модуля
+        $obj->seourl_option = $GLOBALS['PHPShopSeoPro']->getSettings();
+    }
+
+    if ($rout == 'MIDDLE') {
         $dis = null;
+        
+        if ($obj->seourl_option["seo_news_enabled"] != 2)
+            return false;
 
-        // Выполнение только на главной странице
-        if ($obj->disp_only_index) {
-            if ($obj->PHPShopNav->index())
-                $view = true;
-            else
-                $view = false;
-        }
-        else
-            $view = true;
+        if (is_array($row)) {
+            
+            // Определяем переменные
+            $obj->set('newsId', $row['id']);
+            $obj->set('newsZag', $row['zag']);
+            $obj->set('newsData', $row['datas']);
+            $obj->set('newsKratko', $row['kratko']);
+            $obj->set('newsIcon', $row['icon']);
 
-        if (!empty($view)) {
+            // Подключаем шаблон
+            $dis .= $obj->parseTemplate($obj->getValue('templates.news_main_mini'));
+            if (!empty($row["news_seo_name"]))
+                $dis = str_replace("news/ID_" . $row['id'] . ".html", "news/" . $row['news_seo_name'] . ".html", $dis);
+            else {
+                $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['news']);
+                $seoURL = $GLOBALS['PHPShopSeoPro']->setLatin($row['zag']);
+                $PHPShopOrm->update(array("news_seo_name_new" => "$seoURL"), array("id=" => $row["id"]));
 
-            // Настройки модуля
-            $seourl_option = $GLOBALS['PHPShopSeoPro']->getSettings();
-
-            if ($seourl_option["seo_news_enabled"] != 2)
-                return false;
-
-        $where['datau'] = '<' . time();
-
-        // Мультибаза
-        if (defined("HostID"))
-            $where['servers'] = " REGEXP 'i" . HostID . "i'";
-        elseif (defined("HostMain"))
-            $where['datau'].= ' and (servers ="" or servers REGEXP "i1000i")';
-
-
-            $result = $obj->PHPShopOrm->select(array('*'), $where, array('order' => 'id DESC'), array("limit" => $obj->limit));
-
-            // Проверка на еденичню запись
-            if ($obj->limit > 1)
-                $data = $result;
-            else
-                $data[] = $result;
-
-            if (is_array($data))
-                foreach ($data as $row) {
-
-                    // Определяем переменные
-                    $obj->set('newsId', $row['id']);
-                    $obj->set('newsZag', $row['zag']);
-                    $obj->set('newsData', $row['datas']);
-                    $obj->set('newsKratko', $row['kratko']);
-                    $obj->set('newsIcon', $row['icon']);
-
-                    // Подключаем шаблон
-                    $dis.=$obj->parseTemplate($obj->getValue('templates.news_main_mini'));
-                    if (!empty($row["news_seo_name"]))
-                        $dis = str_replace("news/ID_" . $row['id'] . ".html", "news/" . $row['news_seo_name'] . ".html", $dis);
-                    else {
-                        $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['news']);
-                        $seoURL = $GLOBALS['PHPShopSeoPro']->setLatin($row['zag']);
-                        $PHPShopOrm->update(array("news_seo_name_new" => "$seoURL"), array("id=" => $row["id"]));
-
-                        $dis = str_replace("news/ID_" . $row['id'] . ".html", "news/" . PHPShopString::toLatin($row['zag']) . ".html", $dis);
-                    }
-                }
+                $dis = str_replace("news/ID_" . $row['id'] . ".html", "news/" . PHPShopString::toLatin($row['zag']) . ".html", $dis);
+            }
 
             return $dis;
         }

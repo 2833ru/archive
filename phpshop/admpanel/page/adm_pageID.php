@@ -116,12 +116,13 @@ function actionStart() {
 
     $SelectValue[] = array('Вывод в каталоге', 1, $data['enabled']);
     $SelectValue[] = array('Заблокировать', 0, $data['enabled']);
+    
+    $Tab_description = $PHPShopGUI->setCollapse('Заголовок', $PHPShopGUI->setInput("text", "name_new", $data['name']));
 
     // Содержание закладки 1
     $Tab_info = $PHPShopGUI->setField("Каталог", $tree_select) .
-            $PHPShopGUI->setField("Заголовок", $PHPShopGUI->setInput("text", "name_new", $data['name'])) .
             $PHPShopGUI->setField("Сортировка", $PHPShopGUI->setInputText("№", "num_new", $data['num'], 150)) .
-            $PHPShopGUI->setField("URL Ссылка", $PHPShopGUI->setInputText('/page/', "link_new", $data['link'], '100%', '.html')) .
+            $PHPShopGUI->setField("URL Ссылка", $PHPShopGUI->setInputText('/page/', "link_new", $data['link'], '100%', '.html',false, false, 'my-link', false,true)) .
             $PHPShopGUI->setField("Опции вывода:", $PHPShopGUI->setSelect("enabled_new", $SelectValue, 300, true)
     );
 
@@ -174,11 +175,11 @@ function actionStart() {
     // Вывод формы закладки
     if (!empty($data['category']) and $data['category'] != 2000 and $data['category'] != 1000) {
         $Tab_content = $PHPShopGUI->setCollapse("Анонс", $oFCKeditor2->AddGUI());
-        $Tab_description = $PHPShopGUI->setCollapse("Содержание", $oFCKeditor->AddGUI());
+        $Tab_description .= $PHPShopGUI->setCollapse("Содержание", $oFCKeditor->AddGUI());
         $PHPShopGUI->setTab(array("Основное", $Tab_content . $Tab_info . $Tab_seo . $Tab_description . $Tab_dop . $Tab_sec, true, false, true));
     } else {
 
-        $Tab_description = $PHPShopGUI->setCollapse("Содержание", $oFCKeditor->AddGUI());
+        $Tab_description .= $PHPShopGUI->setCollapse("Содержание", $oFCKeditor->AddGUI());
 
         if ($data['category'] == 2000)
             $grid = false;
@@ -235,6 +236,9 @@ function actionUpdate() {
         }
         $_POST['odnotip_new'] = implode(',', $odnotip);
     }
+    
+    if(empty($_POST['link_new']))
+        $_POST['link_new']='page'.$_POST['rowID'];
 
     // Перехват модуля
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $_POST);

@@ -7,10 +7,10 @@
     </div>
     <div class="row">
         <div class="col-md-7 col-sm-7">
-	        <span class="sale-icon-content">
+            <span class="sale-icon-content">
                 @specIcon@
                 @newtipIcon@
-				@giftIcon@
+                @giftIcon@
                 @hitIcon@
                 @promotionsIcon@
             </span>
@@ -31,10 +31,10 @@
                         <span class="priceService" itemprop="price" content="@productSchemaPrice@">@productPrice@</span> 
                         <span itemprop="priceCurrency" class="rubznak" content="RUB">@productValutaName@</span>  <span class=" price-old">@productPriceOld@</span>
                     </h2>          
-</div> 
-					@ComStartNotice@
-<div class="outStock">@productOutStock@</div>
-@ComEndNotice@
+                </div> 
+                @ComStartNotice@
+                <div class="outStock">@productOutStock@</div>
+                @ComEndNotice@
                 <div class="pull-right">@oneclick@</div>
                 <p><br></p>
                 <div>
@@ -46,9 +46,9 @@
                 <div class="hidden-xs rating" >
                     @rateUid@
                 </div>
-<br>
-                 @promotionInfo@
-              
+                <br>
+                @promotionInfo@
+
                 @saferouteCart@
                 @productservices_list@
             </div>
@@ -73,26 +73,26 @@
                         </span>    
                     </div>
                 </div>
-               @ComStartNotice@
-               <div class="col-xs-5">
+                @ComStartNotice@
+                <div class="col-xs-5">
                     <a class="btn btn-primary" href="/users/notice.html?productId=@productUid@" title="@productNotice@">{Уведомить}</a>
                 </div>
                 @ComEndNotice@ 
-                
+
             </div>
-			 <a class="btn btn-default" href="/pricemail/UID_@productUid@.html">@productBestPrice@</a>
-<div class="clearfix"></div>
-<div style="padding-top:10px">
-                    <button class="btn btn-info addToCompareList " data-uid="@productUid@">{Сравнить}</button>
-                    <button class="btn btn-default addToWishList" data-uid="@productUid@">{Отложить}</button>
-</div>               
-                
-                
-<br>
-<div class="option-block">
-                    @sticker_size@ @sticker_shipping@
-                    <a class="btn btn-default" href="/forma/">{Задать вопрос по продукту}</a>
-                </div>
+            <a class="btn btn-default" href="/pricemail/UID_@productUid@.html">@productBestPrice@</a>
+            <div class="clearfix"></div>
+            <div style="padding-top:10px">
+                <button class="btn btn-info addToCompareList " data-uid="@productUid@">{Сравнить}</button>
+                <button class="btn btn-default addToWishList" data-uid="@productUid@">{Отложить}</button>
+            </div>               
+
+
+            <br>
+            <div class="option-block">
+                @sticker_size@ @sticker_shipping@
+                <a class="btn btn-default" href="/forma/">{Задать вопрос по продукту}</a>
+            </div>
 
 
 
@@ -127,7 +127,7 @@
 
 
                     <button class="btn btn-info pull-right" onclick="$('#addComment').slideToggle();
-                            $(this).hide();"><span class="glyphicon glyphicon-plus-sign"></span> {Новый комментарий}</button>
+                                    $(this).hide();"><span class="glyphicon glyphicon-plus-sign"></span> {Новый комментарий}</button>
 
                     <div id='addComment' class="well well-sm" style='display:none;margin-top:30px;'>
 
@@ -160,7 +160,7 @@
                 <div role="tabpanel" class="tab-pane hidden-xs" id="files">@productFiles@</div>
                 <div role="tabpanel" class="tab-pane hidden-xs" id="pages">@pagetemaDisp@</div>
             </div>
-			  @productsgroup_list@
+            @productsgroup_list@
 
         </div>
     </div>

@@ -45,7 +45,7 @@ if (PHPShopSecurity::true_num($_SESSION['UsersId'])) {
     $data = $PHPShopOrm->select(array('wishlist'), array('id' => "=" . intval($UsersId)), false, array("limit" => "1"));
     $wishlist = unserialize($data['wishlist']);
     $wishlist[$product_id] = intval($_REQUEST['parent_id']);
-    $count = count($wishlist);
+    $count = $_SESSION['wishlistCount'] = count($wishlist);
     $wishlist = serialize($wishlist);
     $PHPShopOrm->update(array("wishlist" => $wishlist), array('id' => "=" . intval($UsersId)), '');
 } else {

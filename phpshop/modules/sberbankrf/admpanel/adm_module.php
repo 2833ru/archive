@@ -3,6 +3,17 @@ PHPShopObj::loadClass('order');
 
 // SQL
 $PHPShopOrm = new PHPShopOrm("phpshop_modules_sberbankrf_system");
+
+// Обновление версии модуля
+function actionBaseUpdate() {
+    global $PHPShopModules, $PHPShopOrm;
+    $PHPShopOrm->clean();
+    $option = $PHPShopOrm->select();
+    $new_version = $PHPShopModules->getUpdate($option['version']);
+    $PHPShopOrm->clean();
+    $PHPShopOrm->update(array('version_new' => $new_version));
+}
+
 // Функция обновления
 function actionUpdate() {
     global $PHPShopOrm,$PHPShopModules;

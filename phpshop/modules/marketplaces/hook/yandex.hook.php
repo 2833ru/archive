@@ -16,26 +16,39 @@ function setProducts_marketplaces_hook($obj, $data) {
             foreach ($data['val']['vendor_array'] as $v) {
                 // Vendor
                 if ($obj->brand_array[$v[0]] != "") {
-                    $add.='<vendor>' . str_replace('&', '&amp;', $obj->brand_array[$v[0]]) . '</vendor>';
+                    $add .= '<vendor>' . str_replace('&', '&amp;', $obj->brand_array[$v[0]]) . '</vendor>';
                     $vemdorSort = true;
                 }
             }
     }
 
     // Vendor из карточки товара
-    if (empty($vemdorSort) and !empty($data['val']['vendor_name']))
-        $add.='<vendor>' . str_replace('&', '&amp;', $data['val']['vendor_name']) . '</vendor>';
+    if (empty($vemdorSort) and ! empty($data['val']['vendor_name']))
+        $add .= '<vendor>' . str_replace('&', '&amp;', $data['val']['vendor_name']) . '</vendor>';
 
     // Подтип
     if (!empty($data['val']['group_id'])) {
 
-        // Размер
-        if (!empty($data['val']['size']))
-            $add.='<param name="Размер" unit="RU">' . $data['val']['size'] . '</param>';
+        if (Marketplaces::isAliexpress()) {
 
-        // Цвет
-        if (!empty($data['val']['color']))
-            $add.='<param name="Цвет">' . $data['val']['color'] . '</param>';
+            // Размер
+            if (!empty($data['val']['size']))
+                $add .= '<size>' . $data['val']['size'] . '</size>';
+
+            // Цвет
+            if (!empty($data['val']['color']))
+                $add .= '<cus_skucolor>' . $data['val']['color'] . '</cus_skucolor>';
+            
+        } else {
+
+            // Размер
+            if (!empty($data['val']['size']))
+                $add .= '<param name="Размер" unit="RU">' . $data['val']['size'] . '</param>';
+
+            // Цвет
+            if (!empty($data['val']['color']))
+                $add .= '<param name="Цвет">' . $data['val']['color'] . '</param>';
+        }
     }
 
     // Oldprice
@@ -43,16 +56,14 @@ function setProducts_marketplaces_hook($obj, $data) {
         $data['xml'] = str_replace('<price>' . $data['val']['price'] . '</price>', '<price>' . $data['val']['price'] . '</price><oldprice>' . $data['val']['oldprice'] . '</oldprice>', $data['xml']);
 
     // description template
-    if(!empty($obj->marketplaces_options['description_template'])) {
+    if (!empty($obj->marketplaces_options['description_template'])) {
         $orm = new PHPShopOrm($GLOBALS['SysValue']['base']['categories']);
         $obj->marketplaces_categories = array_column($orm->getList(['id', 'name', 'parent_to'], false, false, ['limit' => 100000]), null, 'id');
 
         $data['xml'] = str_replace(
-            '<description>' . $data['val']['description'] . '</description>',
-            '<description><![CDATA[' .
+                '<description>' . $data['val']['description'] . '</description>', '<description><![CDATA[' .
                 marketplacesReplaceDescriptionVariables($obj, $data['val'], $obj->marketplaces_options['description_template'])
-             . ']]></description>',
-            $data['xml']
+                . ']]></description>', $data['xml']
         );
     }
 
@@ -63,49 +74,49 @@ function setProducts_marketplaces_hook($obj, $data) {
     $fee = 0;
 
     // Цена Сбермаркет
-    if(Marketplaces::isSbermarket()) {
-        if(!empty($data['val']['price_sbermarket'])) {
+    if (Marketplaces::isSbermarket()) {
+        if (!empty($data['val']['price_sbermarket'])) {
             $price = $data['val']['price_sbermarket'];
-        } elseif(isset($options['price_sbermarket']) && (int) $options['price_sbermarket'] > 1 && !empty($data['val']['price' . (int) $options['price_sbermarket']])) {
+        } elseif (isset($options['price_sbermarket']) && (int) $options['price_sbermarket'] > 1 && !empty($data['val']['price' . (int) $options['price_sbermarket']])) {
             $price = $data['val']['price' . (int) $options['price_sbermarket']];
         }
-        if(isset($options['price_sbermarket_fee']) && (float) $options['price_sbermarket_fee'] > 0) {
+        if (isset($options['price_sbermarket_fee']) && (float) $options['price_sbermarket_fee'] > 0) {
             $fee = (float) $options['price_sbermarket_fee'];
         }
     }
 
     // Цена СДЭК.МАРКЕТ
-    if(Marketplaces::isCdek()) {
-        if(!empty($data['val']['price_cdek'])) {
+    if (Marketplaces::isCdek()) {
+        if (!empty($data['val']['price_cdek'])) {
             $price = $data['val']['price_cdek'];
-        } elseif(isset($options['price_cdek']) && (int) $options['price_cdek'] > 1 && !empty($data['val']['price' . (int) $options['price_cdek']])) {
+        } elseif (isset($options['price_cdek']) && (int) $options['price_cdek'] > 1 && !empty($data['val']['price' . (int) $options['price_cdek']])) {
             $price = $data['val']['price' . (int) $options['price_cdek']];
         }
-        if(isset($options['price_cdek_fee']) && (float) $options['price_cdek_fee'] > 0) {
+        if (isset($options['price_cdek_fee']) && (float) $options['price_cdek_fee'] > 0) {
             $fee = (float) $options['price_cdek_fee'];
         }
     }
 
     // Цена AliExpress
-    if(Marketplaces::isAliexpress()) {
-        if(!empty($data['val']['price_aliexpress'])) {
+    if (Marketplaces::isAliexpress()) {
+        if (!empty($data['val']['price_aliexpress'])) {
             $price = $data['val']['price_aliexpress'];
-        } elseif(isset($options['price_ali']) && (int) $options['price_ali'] > 1 && !empty($data['val']['price' . (int) $options['price_ali']])) {
+        } elseif (isset($options['price_ali']) && (int) $options['price_ali'] > 1 && !empty($data['val']['price' . (int) $options['price_ali']])) {
             $price = $data['val']['price' . (int) $options['price_ali']];
         }
-        if(isset($options['price_ali_fee']) && (float) $options['price_ali_fee'] > 0) {
+        if (isset($options['price_ali_fee']) && (float) $options['price_ali_fee'] > 0) {
             $fee = (float) $options['price_ali_fee'];
         }
 
         if (!empty($data['val']['length']))
-            $add.='<length>' . $data['val']['length'] . '</length>';
+            $add .= '<length>' . $data['val']['length'] . '</length>';
         if (!empty($data['val']['width']))
-            $add.='<width>' . $data['val']['width'] . '</width>';
+            $add .= '<width>' . $data['val']['width'] . '</width>';
         if (!empty($data['val']['height']))
-            $add.='<height>' . $data['val']['height'] . '</height>';
+            $add .= '<height>' . $data['val']['height'] . '</height>';
     }
 
-    if($fee > 0) {
+    if ($fee > 0) {
         $price = $price + ($price * $fee / 100);
     }
 
@@ -113,73 +124,74 @@ function setProducts_marketplaces_hook($obj, $data) {
 
     // Доставка
     if ($data['val']['delivery'] == 1)
-        $add.='<delivery>true</delivery>';
+        $add .= '<delivery>true</delivery>';
     else
-        $add.='<delivery>false</delivery>';
+        $add .= '<delivery>false</delivery>';
 
     if (!empty($list))
-        $add.='<delivery-options>' . $list . '</delivery-options>';
+        $add .= '<delivery-options>' . $list . '</delivery-options>';
 
     // Pickup
     if ($data['val']['pickup'] == 1)
-        $add.='<pickup>true</pickup>';
+        $add .= '<pickup>true</pickup>';
     else
-        $add.='<pickup>false</pickup>';
+        $add .= '<pickup>false</pickup>';
 
     // Store
     if ($data['val']['store'] == 1)
-        $add.='<store>true</store>';
+        $add .= '<store>true</store>';
     else
-        $add.='<store>false</store>';
+        $add .= '<store>false</store>';
 
     // Notes
     if (!empty($data['val']['sales_notes']))
-        $add.='<sales_notes>' . $data['val']['sales_notes'] . '</sales_notes>';
+        $add .= '<sales_notes>' . $data['val']['sales_notes'] . '</sales_notes>';
 
     // Гарантия
     if ($data['val']['manufacturer_warranty'] == 1)
-        $add.='<manufacturer_warranty>true</manufacturer_warranty>';
+        $add .= '<manufacturer_warranty>true</manufacturer_warranty>';
 
     // Страна
     if (!empty($data['val']['country_of_origin']))
-        $add.='<country_of_origin>' . $data['val']['country_of_origin'] . '</country_of_origin>';
-    
+        $add .= '<country_of_origin>' . $data['val']['country_of_origin'] . '</country_of_origin>';
+
     // Модель
     if (!empty($data['val']['model']))
-        $add.='<model>' . $data['val']['model'] . '</model>';
-    
+        $add .= '<model>' . $data['val']['model'] . '</model>';
+
     // Штрихкод
     if (!empty($data['val']['barcode']))
-        $add.='<barcode>' . $data['val']['barcode'] . '</barcode>';
+        $add .= '<barcode>' . $data['val']['barcode'] . '</barcode>';
 
     // Adult
     if ($data['val']['adult'] == 1)
-        $add.='<adult>true</adult>';
+        $add .= '<adult>true</adult>';
 
     // min-quantity
     if (!empty($data['val']['yandex_min_quantity']))
-        $add.='<min-quantity>' . $data['val']['yandex_min_quantity'] . '</min-quantity>';
+        $add .= '<min-quantity>' . $data['val']['yandex_min_quantity'] . '</min-quantity>';
 
     // step-quantity
     if (!empty($data['val']['yandex_step_quantity']))
-        $add.='<step-quantity>' . $data['val']['yandex_step_quantity'] . '</step-quantity>';
+        $add .= '<step-quantity>' . $data['val']['yandex_step_quantity'] . '</step-quantity>';
 
     // Компания, которая произвела товар
     if (!empty($data['val']['manufacturer']))
-        $add.='<manufacturer>' . $data['val']['manufacturer'] . '</manufacturer>';
+        $add .= '<manufacturer>' . $data['val']['manufacturer'] . '</manufacturer>';
 
     // vendorCode
     if (!empty($data['val']['vendor_code']))
-        $add.='<vendorCode>' . $data['val']['vendor_code'] . '</vendorCode>';
+        $add .= '<vendorCode>' . $data['val']['vendor_code'] . '</vendorCode>';
 
     // condition
-    if ($data['val']['condition'] > 1 and !empty($data['val']['condition_reason'])){
-        
-        if($data['val']['condition'] == 2)
-            $condition='likenew';
-        else $condition='used';
-        
-        $add.='<condition type="'.$condition.'"><reason>'.$data['val']['condition_reason'].'</reason></condition>';
+    if ($data['val']['condition'] > 1 and ! empty($data['val']['condition_reason'])) {
+
+        if ($data['val']['condition'] == 2)
+            $condition = 'likenew';
+        else
+            $condition = 'used';
+
+        $add .= '<condition type="' . $condition . '"><reason>' . $data['val']['condition_reason'] . '</reason></condition>';
     }
 
     if (Marketplaces::isCdek()) {
@@ -197,7 +209,7 @@ function setProducts_marketplaces_hook($obj, $data) {
 
     if (Marketplaces::isAliexpress()) {
         $add .= '<quantity>' . $data['val']['items'] . '</quantity>';
-        if(!empty($data['val']['uid'])) {
+        if (!empty($data['val']['uid'])) {
             $add .= '<sku_code>' . $data['val']['uid'] . '</sku_code>';
         }
     }
@@ -242,29 +254,28 @@ function PHPShopYml_marketplaces_hook($obj) {
         if ($_GET['pas'] != $obj->marketplaces_options['password'])
             exit('Login error!');
 
-    if(isset($obj->marketplaces_options['use_params'])) {
+    if (isset($obj->marketplaces_options['use_params'])) {
         $obj->vendor = (bool) $obj->marketplaces_options['use_params'];
     }
 }
 
-function marketplacesReplaceDescriptionVariables($obj, $product, $template)
-{
-    if(stripos($template, '@Content@') !== false) {
+function marketplacesReplaceDescriptionVariables($obj, $product, $template) {
+    if (stripos($template, '@Content@') !== false) {
         $template = str_replace('@Content@', $product['raw_content'], $template);
     }
-    if(stripos($template, '@Description@') !== false) {
+    if (stripos($template, '@Description@') !== false) {
         $template = str_replace('@Description@', $product['raw_description'], $template);
     }
-    if(stripos($template, '@Attributes@') !== false) {
+    if (stripos($template, '@Attributes@') !== false) {
         $template = str_replace('@Attributes@', marketplacesSortTable($product), $template);
     }
-    if(stripos($template, '@Catalog@') !== false) {
+    if (stripos($template, '@Catalog@') !== false) {
         $template = str_replace('@Catalog@', $obj->marketplaces_categories[$product['category']]['name'], $template);
     }
-    if(stripos($template, '@Product@') !== false) {
+    if (stripos($template, '@Product@') !== false) {
         $template = str_replace('@Product@', $product['name'], $template);
     }
-    if(stripos($template, '@Subcatalog@') !== false) {
+    if (stripos($template, '@Subcatalog@') !== false) {
         $getPath = function ($categories, $id, $path = []) use(&$getPath) {
             if (!empty($id)) {
                 if (isset($categories[$id])) {
@@ -317,7 +328,7 @@ function marketplacesSortTable($product) {
             foreach ($product['vendor_array'] as $v) {
                 foreach ($v as $value)
                     if (is_numeric($value))
-                        $sortValue.= (int) $value . ',';
+                        $sortValue .= (int) $value . ',';
             }
 
         if (!empty($sortValue)) {
@@ -337,12 +348,12 @@ function marketplacesSortTable($product) {
                         if (!empty($value['name'])) {
                             $arr = array();
                             foreach ($arrayVendorValue[$idCategory]['id'] as $valueId) {
-                                $arr[] = $arrayVendorValue[$idCategory]['name'][(int)$valueId];
+                                $arr[] = $arrayVendorValue[$idCategory]['name'][(int) $valueId];
                             }
 
                             $sortValueName = implode(', ', $arr);
 
-                            $dis.=PHPShopText::li($value['name'] . ': ' . $sortValueName, null, '');
+                            $dis .= PHPShopText::li($value['name'] . ': ' . $sortValueName, null, '');
                         }
                     }
                 }

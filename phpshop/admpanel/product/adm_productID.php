@@ -1023,14 +1023,13 @@ function actionOptionEdit() {
             $valuta_area .= $PHPShopGUI->setRadio('baseinputvaluta_new', $val['id'], $val['name'], $check, false, false, false, false);
         }
 
-    // Сортировка и вывод
-    $Tab1 .= $PHPShopGUI->setField(array('Старая цена', 'Вывод'), array($PHPShopGUI->setInputText(null, 'price_n_new', $data['price_n'], 150, $valuta_def_name), $PHPShopGUI->setCheckbox('enabled_new', 1, 'Вывод в товаре', $data['enabled'])), array(array(2, 4), array(2, 4)));
-
-    // Цены
+    // Цена
     $Tab1 .= $PHPShopGUI->setField(array('Цена 1', 'Цена 2'), array($PHPShopGUI->setInputText(null, 'price_new', $data['price'], 150, $valuta_def_name), $PHPShopGUI->setInputText(null, 'price2_new', $data['price2'], 150, $valuta_def_name)), array(array(2, 4), array(2, 4)));
+    
+    // Вывод
+    $Tab1 .= $PHPShopGUI->setField(array('Вывод','Валюта'), array($PHPShopGUI->setCheckbox('enabled_new', 1, 'Вывод в товаре', $data['enabled']),$valuta_area), array(array(2, 4), array(2, 4)));
 
-    // Валюта
-    $Tab1 .= $PHPShopGUI->setField('Валюта', $valuta_area);
+
     $Tab1 .= $PHPShopGUI->setInputArg(array('name' => 'rowID', 'type' => 'hidden', 'value' => $_REQUEST['id']));
     $Tab1 .= $PHPShopGUI->setInputArg(array('name' => 'parentID', 'type' => 'hidden', 'value' => $_REQUEST['parentID']));
 
@@ -1048,7 +1047,14 @@ function actionOptionEdit() {
     $Tab_info_size .= $PHPShopGUI->setField('Единица измерения', $PHPShopGUI->setInputText(false, 'ed_izm_new', $ed_izm, 150));
     $Tab2 = $PHPShopGUI->setCollapse('Габариты', $Tab_info_size);
 
-    $PHPShopGUI->setTab(array("Основное", $Tab1, true), array("Дополнительно", $Tab2, true));
+    $Tab_price .= $PHPShopGUI->setField('Цена 3', $PHPShopGUI->setInputText(null, 'price3_new', $data['price3'], 150, $valuta_def_name), 2);
+    $Tab_price .= $PHPShopGUI->setField('Цена 4', $PHPShopGUI->setInputText(null, 'price4_new', $data['price4'], 150, $valuta_def_name), 2);
+    $Tab_price .= $PHPShopGUI->setField('Цена 5', $PHPShopGUI->setInputText(null, 'price5_new', $data['price5'], 150, $valuta_def_name), 2);
+    $Tab_price .= $PHPShopGUI->setField('Старая цена', $PHPShopGUI->setInputText(null, 'price_n_new', $data['price_n'], 150, $valuta_def_name));
+    $Tab_price .= $PHPShopGUI->setField('Закупочная цена', $PHPShopGUI->setInputText(null, 'price_purch_new', $data['price_purch'], 150, $valuta_def_name));
+    $Tab2 .= $PHPShopGUI->setCollapse('Цены', $Tab_price);
+
+    $PHPShopGUI->setTab(array("Основное", $Tab1, true), array("Дополнительно", $Tab2));
 
     writeLangFile();
     exit($PHPShopGUI->_CODE . '<p class="clearfix"> </p>');

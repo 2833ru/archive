@@ -108,10 +108,10 @@ function actionStart() {
         if(is_array($json_data))
         foreach ($json_data as $key => $value) {
 
-            $name = $json_data[$key][dimensions][4][name];
-            $favicon = $json_data[$key][dimensions][4][favicon];
-            $visits = $json_data[$key][metrics][0];
-            $users = $json_data[$key][metrics][1];
+            $name = $json_data[$key]['dimensions'][4]['name'];
+            $favicon = $json_data[$key]['dimensions'][4]['favicon'];
+            $visits = $json_data[$key]['metrics'][0];
+            $users = $json_data[$key]['metrics'][1];
             $icon = '<img src="//favicon.yandex.net/favicon/' . $favicon . '/" style="padding-right:5px;width:21px" />';
 
             $PHPShopInterface->setRow(array('name' => $icon . PHPShopString::utf8_win1251($name), 'link' => $name, 'target' => '_blank'), array('name' => $visits, 'align' => 'center'), array('name' => $users, 'align' => 'center'));

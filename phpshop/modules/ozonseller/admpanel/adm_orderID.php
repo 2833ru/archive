@@ -19,17 +19,17 @@ function actionStart() {
 
     $PHPShopGUI->field_col = 4;
 
-    if(!empty($order_info['result']['order_id']))
-    $PHPShopGUI->action_button['Загрузить заказ'] = array(
-        'name' => 'Загрузить заказ',
-        'locale' => true,
-        'action' => 'saveID',
-        'class' => 'btn  btn-default btn-sm navbar-btn' . $GLOBALS['isFrame'],
-        'type' => 'submit',
-        'icon' => 'glyphicon glyphicon-save'
-    );
+    if (!empty($order_info['result']['order_id']))
+        $PHPShopGUI->action_button['Загрузить заказ'] = array(
+            'name' => 'Загрузить заказ',
+            'locale' => true,
+            'action' => 'saveID',
+            'class' => 'btn  btn-default btn-sm navbar-btn' . $GLOBALS['isFrame'],
+            'type' => 'submit',
+            'icon' => 'glyphicon glyphicon-save'
+        );
 
-    
+
     $PHPShopGUI->setActionPanel(__('Заказ') . ' &#8470;' . $_GET['id'], false, array('Загрузить заказ'));
 
     // Знак рубля
@@ -50,7 +50,7 @@ function actionStart() {
     $Tab1 .= $PHPShopGUI->setField("Статус", $PHPShopGUI->setText($OzonSeller->getStatus($order_info['result']['status'])));
     $Tab1 .= $PHPShopGUI->setField("Дата поступления", $PHPShopGUI->setText($order_info['result']['in_process_at']));
     $Tab1 .= $PHPShopGUI->setField("Дата доставки", $PHPShopGUI->setText($order_info['result']['shipment_date']));
-    $Tab1 .= $PHPShopGUI->setField("Доставка", $PHPShopGUI->setText(PHPShopString::utf8_win1251($order_info['result']['delivery_method']['name']),"left", false, false));
+    $Tab1 .= $PHPShopGUI->setField("Доставка", $PHPShopGUI->setText(PHPShopString::utf8_win1251($order_info['result']['delivery_method']['name']), "left", false, false));
 
     $Tab1 = $PHPShopGUI->setCollapse('Данные', $Tab1);
     $Tab3 = $PHPShopGUI->setCollapse('JSON данные', $Tab3);
@@ -58,11 +58,17 @@ function actionStart() {
     $PHPShopInterface->checkbox_action = false;
     $PHPShopInterface->setCaption(array("Наименование", "50%"), array("Цена", "15%"), array("Кол-во", "10%"), array("Сумма", "15%", array('align' => 'right')));
 
+    // Ключ обновления
+    if ($OzonSeller->type == 2)
+        $ozon_type = 'uid';
+    else
+        $ozon_type = 'id';
+
     $data = $order_info['result']['products'];
     if (is_array($data))
         foreach ($data as $row) {
 
-            $product = new PHPShopProduct($row['offer_id']);
+            $product = new PHPShopProduct($row['offer_id'], $ozon_type);
 
             if (!empty($product->getValue('pic_small')))
                 $icon = '<img src="' . $product->getValue('pic_small') . '" onerror="this.onerror = null;this.src = \'./images/no_photo.gif\'" class="media-object">';
@@ -118,11 +124,17 @@ function actionSave() {
     $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['orders']);
     $qty = $sum = $weight = 0;
 
+    // Ключ обновления
+    if ($OzonSeller->type == 2)
+        $ozon_type = 'uid';
+    else
+        $ozon_type = 'id';
+
     $data = $order_info['result']['products'];
     if (is_array($data))
         foreach ($data as $row) {
 
-            $product = new PHPShopProduct($row['offer_id']);
+            $product = new PHPShopProduct($row['offer_id'],$ozon_type);
             $order['Cart']['cart'][$row['offer_id']]['id'] = $product->getParam('id');
             $order['Cart']['cart'][$row['offer_id']]['uid'] = $product->getParam("uid");
             $order['Cart']['cart'][$row['offer_id']]['name'] = $product->getName();

@@ -248,9 +248,9 @@ function actionReplies() {
         $PHPShopUser = new PHPShopUser($_POST['user_id']);
         $title = __('Новый ответ в диалоге') . ' - ' . $PHPShopSystem->getName();
         $PHPShopMail = new PHPShopMail($PHPShopUser->getLogin(), $PHPShopSystem->getEmail(), $title, '', true, true);
-        $text = PHPShopString::utf8_win1251('<b>' . __('Администрация') . '</b>: ' . $_POST['message']) . ' ' . preg_replace("~(http|https|ftp|ftps)://(.*?)(\s|\n|[,.?!](\s|\n)|$)~", '<a href="$1://$2" target="_blank">$1://$2</a>$3', $file) . '<div><br>' . __('Если у Вас есть вопрос, задайте его нам в') . ' <a href="' . $bot->protocol . $_SERVER['SERVER_NAME'] . "/" . $GLOBALS['SysValue']['dir']['dir'] . 'users/message.html" target="_blank">' . __('Личном кабинете') . '</a></div> ';
+        $text = PHPShopString::utf8_win1251('<b>' . __('Администрация') . '</b>: ' . $_POST['message']) . ' ' . preg_replace("~(http|https|ftp|ftps)://(.*?)(\s|\n|[,.?!](\s|\n)|$)~", '<a href="$1://$2" target="_blank">$1://$2</a>$3', $file) . '<div><br>' . __('Если у Вас есть вопрос, задайте его нам в') . ' <a href="' . $bot->protocol . $_SERVER['SERVER_NAME']  . $GLOBALS['SysValue']['dir']['dir'] . '/users/message.html" target="_blank">' . __('Личном кабинете') . '</a></div> ';
         PHPShopParser::set('content', $text);
-        PHPShopParser::set('logo', $_SERVER['SERVER_NAME'] . "/" . $GLOBALS['SysValue']['dir']['dir'] . $PHPShopSystem->getParam('logo'));
+        PHPShopParser::set('logo', $_SERVER['SERVER_NAME']  . $GLOBALS['SysValue']['dir']['dir'] .$PHPShopSystem->getParam('logo'));
         $content = PHPShopParser::file('tpl/sendmail.mail.tpl', true, false);
         $PHPShopMail->sendMailNow($content);
     }

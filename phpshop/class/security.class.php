@@ -3,7 +3,7 @@
 /**
  * Библиотека проверки безопасности
  * @author PHPShop Software
- * @version 1.5
+ * @version 1.6
  * @package PHPShopClass
  * @subpackage Helper
  */

@@ -10,7 +10,7 @@
     @media(max-width:767px){.breadcrumb{display:none!important}}
 </style>
 <div class="main-product airSticky_stop-block" itemscope itemtype="http://schema.org/Product">
-    <meta itemprop="image" content="@productImg@">
+    <meta itemprop="image" content="@productImgBigFoto@">
     <div itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating">
         <meta itemprop="ratingValue" content="@productRatingValue@">
         <meta itemprop="ratingCount" content="@productRatingCount@">
@@ -331,6 +331,7 @@
         </div>
     </div>
 </div>
+
 <div class="modal fade new-modal" id="bestPriceModal" tabindex="-1" role="dialog" aria-labelledby="{Пожаловаться на цену}" aria-hidden="true">
     <div class="modal-dialog small-modal" role="document">
         <div class="modal-content">

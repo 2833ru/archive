@@ -81,4 +81,5 @@ var locale = {
     charset: "windows-1252",
     confirm_create_order: "Ви дійсно хочете виконати операцію?",
     confirm_change_price: "Нова ціна відрізняється більше ніж на 20%. Ви впевнені?",
+    help: "Помощь"
 };

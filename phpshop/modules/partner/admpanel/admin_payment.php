@@ -5,8 +5,8 @@ $TitlePage = "Партнеры -> Заявки на вывод средств";
 function actionStart() {
     global $PHPShopInterface, $PHPShopSystem, $PHPShopModules;
 
-    $PHPShopInterface->checkbox_action = false;
-    $PHPShopInterface->setCaption(array("Логин", "30%"), array("Дата", "20%"), array("Сумма (" . $PHPShopSystem->getDefaultValutaCode() . ')', "20%"), array("", "10%"), array("Статус", "10%", array('align' => 'right')));
+    //$PHPShopInterface->checkbox_action = false;
+    $PHPShopInterface->setCaption(array("", "1%"),array("Логин", "30%"), array("Дата", "20%"), array("Сумма (" . $PHPShopSystem->getDefaultValutaCode() . ')', "20%"), array("", "10%"), array("Статус", "10%", array('align' => 'right')));
 
     // SQL
     $PHPShopOrm = new PHPShopOrm();
@@ -20,7 +20,7 @@ function actionStart() {
         else
             $row['enabled'] = __('Новая заявка');
 
-        $PHPShopInterface->setRow(array('name' => $row['login'], 'link' => '?path=modules.dir.partner.payment&id=' . $row['id']), PHPShopDate::dataV($row['date'], true), $sum, array('action' => array('edit', '|', 'delete', 'id' => $row['id']), 'align' => 'center'), $row['enabled']);
+        $PHPShopInterface->setRow($row['id'],array('name' => $row['login'], 'link' => '?path=modules.dir.partner.payment&id=' . $row['id']), PHPShopDate::dataV($row['date'], true), $sum, array('action' => array('edit', '|', 'delete', 'id' => $row['id']), 'align' => 'center'), $row['enabled']);
     }
 
     $PHPShopInterface->Compile();

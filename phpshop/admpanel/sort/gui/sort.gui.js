@@ -1,4 +1,3 @@
-
 $().ready(function() {
     
     // Блокировка
@@ -170,7 +169,7 @@ $().ready(function() {
         data.push({name: 'num_value', value: num});
         data.push({name: 'category_value', value: $('#footer input[name=rowID]').val()});
         $.ajax({
-            mimeType: 'text/html; charset='+locale.charset, // ! Need set mimeType only when run from local file
+            mimeType: 'text/html; charset='+locale.charset,
             url: '?path=sort.value&action=new',
             type: 'post',
             data: data,

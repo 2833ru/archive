@@ -84,11 +84,11 @@ function checkSeoUrlProName($data){
     $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['categories']);
     $PHPShopOrm->sql='select id,name,cat_seo_name from '.$GLOBALS['SysValue']['base']['categories'].' where (name="'.addslashes($data['name_new']).'" or cat_seo_name="'.$data['cat_seo_name_new'].'") and id!='.$_POST['rowID'].' limit 1';
     $result = $PHPShopOrm->select();
-    
-    if($result[0]['cat_seo_name'] == $data['cat_seo_name_new'])
+
+    if($result[0]['cat_seo_name'] == $data['cat_seo_name'])
         $update=true;
     
-    if(empty($data['cat_seo_name_new']) and $result[0]['name'] == $data['name_new'])
+    if(empty($data['cat_seo_name']) and $result[0]['name'] == $data['name'])
         $update=true;
         
     if($update){

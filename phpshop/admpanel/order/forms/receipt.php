@@ -43,6 +43,7 @@ if (is_array($order['Cart']['cart']))
         $dis.="<tr class=tablerow>
 		<td class=tablerow>" . $n . "</td>
 		<td class=tablerow>" . $val['name'] . "</td>
+                <td align=right class=tablerow>" . $val['uid'] . "</td>
 		<td align=right class=tablerow nowrap>" . $PHPShopOrder->returnSumma($val['price'], 0) . "</td>
 		<td align=right class=tablerow>" . $val['num'] . "</td>
 		<td class=tableright>" . $PHPShopOrder->returnSumma($val['price'] * $val['num'], 0) . "</td>
@@ -78,7 +79,8 @@ $deliveryPrice = $PHPShopDelivery->getPrice($sum, $weight);
 $dis.="<tr class=tablerow>
 		<td class=tablerow>" . $n . "</td>
 		<td class=tablerow>".__('Доставка')." - " . $PHPShopDelivery->getCity() . "</td>
-        <td align=right class=tablerow nowrap>" . DoZero($deliveryPrice) . "</td>
+                <td class=tablerow></td>
+                <td align=right class=tablerow nowrap>" . DoZero($deliveryPrice) . "</td>
 		<td align=right class=tablerow>1</td>
 		<td class=tableright>" . DoZero($deliveryPrice) . "</td>
 	</tr>";
@@ -153,21 +155,22 @@ $LoadBanc = unserialize($LoadItems['System']['bank']);
         <table width=99% cellpadding=2 cellspacing=0 align=center>
             <tr class=tablerow>
                 <td class=tablerow>&#8470;</td>
-                <td width=50% class=tablerow><? _e("Наименование") ?></td>
+                <td width=35% class=tablerow><? _e("Наименование") ?></td>
+                <td width=15% class=tablerow><? _e("Артикул") ?></td>
                 <td class=tablerow><? _e("Цена") ?></td>
                 <td class=tablerow><? _e("Количество") ?></td>
                 <td class=tableright><? _e("Стоимость") ?> (<?php echo $PHPShopOrder->default_valuta_code; ?>)</td>
             </tr>
             <?php
-            echo @$dis;
+            echo $dis;
             $my_total = $row['sum'];
             $my_nds = number_format($my_total * $LoadItems['System']['nds'] / (100 + $LoadItems['System']['nds']), "2", ".", "");
             ?>
             <tr>
-                <td colspan=5 align=right style="border-top: 1px solid #000000;border-left: 1px solid #000000;border-right: 1px solid #000000;"><? _e("Скидка") ?>: <?php echo $discount ?></td>
+                <td colspan=6 align=right style="border-top: 1px solid #000000;border-left: 1px solid #000000;border-right: 1px solid #000000;"><? _e("Скидка") ?>: <?php echo $discount ?></td>
             </tr>
             <tr>
-                <td colspan=5 align=right style="border-top: 1px solid #000000;border-left: 1px solid #000000;border-right: 1px solid #000000;"><? _e("Итого") ?>:
+                <td colspan=6 align=right style="border-top: 1px solid #000000;border-left: 1px solid #000000;border-right: 1px solid #000000;"><? _e("Итого") ?>:
                     <?php
                     echo $my_total." ";
                     if ($LoadItems['System']['nds_enabled']) {
@@ -178,7 +181,7 @@ $LoadBanc = unserialize($LoadItems['System']['bank']);
                 </td>
             </tr>
 
-            <tr><td colspan=6 style="border: 0px; border-top: 1px solid #000000;">&nbsp;</td></tr>
+            <tr><td colspan=7 style="border: 0px; border-top: 1px solid #000000;">&nbsp;</td></tr>
         </table>
         <p><b><?php echo __("Всего наименований")." ".($num + 1)." ".__("на сумму")." ". $row['sum']. " " . $PHPShopOrder->default_valuta_code; ?>
                 <br />

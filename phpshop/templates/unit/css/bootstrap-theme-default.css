@@ -5880,9 +5880,6 @@ a.thumbnail.active {
     color: inherit;
 }
 
-.alert .alert-link {
-    font-weight: bold;
-}
 
 .alert>p,
 .alert>ul {
@@ -5914,10 +5911,6 @@ a.thumbnail.active {
 
 .alert-success hr {
     border-top-color: #c9e2b3;
-}
-
-.alert-success .alert-link {
-    color: #2b542c;
 }
 
 .alert-info {

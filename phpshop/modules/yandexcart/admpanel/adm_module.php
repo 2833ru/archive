@@ -53,7 +53,7 @@ function treegenerator($array, $i, $curent, $dop_cat_array) {
 }
 
 function actionStart() {
-    global $PHPShopGUI, $PHPShopOrm, $TitlePage, $select_name;
+    global $PHPShopGUI, $PHPShopOrm, $TitlePage, $select_name,$PHPShopSystem;
 
     $PHPShopGUI->field_col = 5;
     PHPShopObj::loadClass("order");
@@ -182,7 +182,7 @@ function actionStart() {
     $tree_select = '<select class="selectpicker show-menu-arrow hidden-edit" data-live-search="true" data-container="body"  data-style="btn btn-default btn-sm" name="categories[]"  data-width="100%" multiple>' . $tree_select . '</select>';
 
     // Выбор каталога
-    $catOption =  $PHPShopGUI->setField("Размещение", $tree_select . $PHPShopGUI->setCheckbox("categories_all", 1, "Выбрать все категории?", 0));
+    $catOption =  $PHPShopGUI->setField("Размещение", $tree_select . $PHPShopGUI->setCheckbox("categories_all", 1, "Выбрать все категории?", 0),1,'Пакетное редактирование. Настройка не сохраняется.');
     $catOption .= $PHPShopGUI->setField("Вывод в Яндекс.Маркете",$PHPShopGUI->setRadio("enabled_all", 1, "Вкл.", 1).$PHPShopGUI->setRadio("enabled_all", 0, "Выкл.",1));
     
     $Tab1 .= $PHPShopGUI->setField('Шаблон генерации описания', '<div id="yandexDescriptionShablon">
@@ -205,11 +205,12 @@ function actionStart() {
     $Tab1 .= $PHPShopGUI->setCollapse('Товары', $catOption);
 
     $priceOption = $PHPShopGUI->setField('Колонка цен Яндекс.Маркет', $PHPShopGUI->setSelect('options[price]', $PHPShopGUI->setSelectValue($options['price'], 5), 100)) .
-            $PHPShopGUI->setField('Наценка', $PHPShopGUI->setInputText(null, 'options[price_fee]', $options['price_fee'], 100, '%'));
+            $PHPShopGUI->setField('Наценка', $PHPShopGUI->setInputText(null, 'options[price_fee]', $options['price_fee'], 100, '%')).
+            $PHPShopGUI->setField(null, $PHPShopGUI->setInputText(null, 'options[price_markup]', $options['price_markup'], 100, $PHPShopSystem->getDefaultValutaCode()));
 
     if ($data['model'] === 'DBS')
         $priceOption .= $PHPShopGUI->setField('Колонка цен Яндекс.Маркет DBS', $PHPShopGUI->setSelect('options[price_dbs]', $PHPShopGUI->setSelectValue($options['price_dbs'], 5), 100)) .
-                $PHPShopGUI->setField('Наценка', $PHPShopGUI->setInputText(null, 'options[price_dbs_fee]', $options['price_dbs_fee'], 100, '%'));
+                $PHPShopGUI->setField('Наценка DBS', $PHPShopGUI->setInputText(null, 'options[price_dbs_fee]', $options['price_dbs_fee'], 100, '%'));
 
 
     $Tab1 .= $PHPShopGUI->setCollapse('Настройка цен', $priceOption);

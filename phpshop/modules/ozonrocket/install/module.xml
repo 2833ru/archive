@@ -5,7 +5,6 @@
     <description>Виджет расчета доставки OZON Rocket</description>
     <category>delivery</category>
     <sign>1649154724</sign>
-    <status>Hit</status>
     <faqlink>https://docs.phpshop.ru/moduli/dostavka/ozon-rocket</faqlink>
     <adminmenu>
         <title>OZON Rocket</title>

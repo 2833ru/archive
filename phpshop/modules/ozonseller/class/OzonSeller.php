@@ -3,20 +3,19 @@
 /**
  * Библиотека работы с Ozon Seller API
  * @author PHPShop Software
- * @version 1.1
+ * @version 1.4
  * @package PHPShopModules
  * @todo https://docs.ozon.ru/api/seller/#tag/Environment
  */
 class OzonSeller {
 
-    const GET_TREE = '/v1/categories/tree';
     const GET_PARENT_TREE = '/v2/category/tree';
     const GET_TREE_ATTRIBUTE = '/v3/category/attribute';
     const GET_ATTRIBUTE_VALUES = '/v2/category/attribute/values';
     const API_URL = 'https://api-seller.ozon.ru';
     const IMPORT_PRODUCT = '/v2/product/import';
     const IMPORT_PRODUCT_INFO = '/v1/product/import/info';
-    const GET_FBS_ORDER_LIST = '/v2/posting/fbs/list';
+    const GET_FBS_ORDER_LIST = '/v3/posting/fbs/list';
     const GET_FBS_ORDER = '/v3/posting/fbs/get';
     const GET_FBO_ORDER_LIST = '/v2/posting/fbo/list';
     const GET_FBO_ORDER = '/v2/posting/fbo/get';
@@ -38,6 +37,8 @@ class OzonSeller {
         $this->status = $this->options['status'];
         $this->fee_type = $this->options['fee_type'];
         $this->fee = $this->options['fee'];
+        $this->price = $this->options['price'];
+        $this->type = $this->options['type'];
 
         $this->status_list = [
             'acceptance_in_progress' => 'идёт приёмка',
@@ -248,29 +249,29 @@ class OzonSeller {
 
                 // Название товара
                 $list[] = [
-                    'id' =>4180,
-                    'values' => [0=>['value'=>PHPShopString::win_utf8($product['name'])]],
+                    'id' => 4180,
+                    'values' => [0 => ['value' => PHPShopString::win_utf8($product['name'])]],
                 ];
-                
+
                 // Описание
                 $list[] = [
-                    'id' =>4191,
-                    'values' => [0=>['value'=>PHPShopString::win_utf8(strip_tags($product['description'],'<br><ul><li>'))]],
+                    'id' => 4191,
+                    'values' => [0 => ['value' => PHPShopString::win_utf8(strip_tags($product['content'], '<br><ul><li>'))]],
                 ];
 
                 if (is_array($arrayVendor))
                     foreach ($arrayVendor as $idCategory => $value) {
 
                         /*
-                        if (strstr($value['name'], 'Название')) {
-                            $values[] = [
-                                'value' => PHPShopString::win_utf8($product['name']),
-                            ];
-                        }*/
+                          if (strstr($value['name'], 'Название')) {
+                          $values[] = [
+                          'value' => PHPShopString::win_utf8($product['name']),
+                          ];
+                          } */
 
                         if (!empty($arrayVendorValue[$idCategory]['name'])) {
                             if (!empty($value['name'])) {
-                                
+
                                 $values = [];
 
                                 $arr = [];
@@ -317,7 +318,7 @@ class OzonSeller {
         $log['params'] = $params;
         $log['result'] = $result;
 
-        $this->log($log, $attribute_id, self::GET_ATTRIBUTE_VALUES);
+        //$this->log($log, $attribute_id, self::GET_ATTRIBUTE_VALUES);
 
         if (is_array($result['result'])) {
             foreach ($result['result'] as $val) {
@@ -349,11 +350,20 @@ class OzonSeller {
         return $result;
     }
 
-    public function getImages($id) {
+    public function getImages($id, $pic_main) {
 
-        $images = [];
         $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['foto']);
-        $data = $PHPShopOrm->select(['*'], ['parent' => '=' . (int) $id], ['order' => 'num'], ['limit' => 15]);
+        $data = $PHPShopOrm->select(['*'], ['parent' => '=' . (int) $id, 'name' => '!="' . $pic_main . '"'], ['order' => 'num'], ['limit' => 15]);
+
+        // Главное изображение
+        $pic_main_b = str_replace(".", "_big.", $pic_main);
+        if (!$this->image_save_source or ! file_exists($_SERVER['DOCUMENT_ROOT'] . $pic_main_b))
+            $pic_main_b = $pic_main;
+
+        if (!strstr($pic_main_b, 'https'))
+            $pic_main_b = 'https://' . $_SERVER['SERVER_NAME'] . $pic_main_b;
+
+        $images[] = $pic_main_b;
 
         if (is_array($data)) {
             foreach ($data as $row) {
@@ -397,19 +407,25 @@ class OzonSeller {
                     }
                 }
 
+                // Ключ обновления артикул
+                if ($this->type == 2) {
+                    $offer_id = $prod['uid'];
+                }
+                else $offer_id = $prod['id'];
+
                 $params['items'][] = [
                     "attributes" => $this->getAttributes($prod)['attributes'],
-                    "barcode" => $prod['barcode_ozon'],
+                    "barcode" => (string) $prod['barcode_ozon'],
                     "category_id" => $this->getAttributes($prod)['category'],
                     "color_image" => "",
                     "complex_attributes" => [],
                     "depth" => $prod['length'],
                     "dimension_unit" => "cm",
                     "height" => $prod['height'],
-                    "images" => $this->getImages($prod['id']),
+                    "images" => $this->getImages($prod['id'], $prod['pic_big']),
                     "images360" => [],
                     "name" => PHPShopString::win_utf8($prod['name']),
-                    "offer_id" => $prod['id'],
+                    "offer_id" => $offer_id,
                     "old_price" => $prod['price_n'],
                     "pdf_list" => [],
                     "premium_price" => "",
@@ -426,7 +442,6 @@ class OzonSeller {
 
             // Лог JSON
             //$this->log_json(json_encode($params), 0, 'sendProducts');
-            
             // Журнал
             $log['params'] = $params;
             $log['result'] = $result;
@@ -441,10 +456,7 @@ class OzonSeller {
      * Получение категорий
      */
     public function getTree($params = []) {
-        if (!empty($params))
-            $method = self::GET_PARENT_TREE;
-        else
-            $method = self::GET_TREE;
+        $method = self::GET_PARENT_TREE;
         return $this->request($method, $params);
     }
 
@@ -459,7 +471,7 @@ class OzonSeller {
         $log['params'] = $params;
         $log['result'] = $result;
 
-        $this->log($log, null, self::GET_TREE_ATTRIBUTE);
+        //$this->log($log, null, self::GET_TREE_ATTRIBUTE);
 
         return $result;
     }

@@ -10,11 +10,12 @@ function actionStart() {
 
     // Начальные данные
     $data['enabled'] = 1;
+    
 
     $data = $PHPShopGUI->valid($data, 'status', 'name', 'login', 'tel', 'dialog_ban', 'cumulative_discount', 'data_adres');
 
     // Размер названия поля
-    $PHPShopGUI->field_col = 3;
+    $PHPShopGUI->field_col = 4;
     $PHPShopGUI->setActionPanel($TitlePage, false, array('Сохранить и закрыть', 'Создать и редактировать'));
     $PHPShopGUI->addJSFiles('./js/validator.js');
 
@@ -27,16 +28,20 @@ function actionStart() {
             $user_status_value[] = array($user_status['name'], $user_status['id'], $data['status']);
 
     $pasgen = substr(md5(date("U")), 0, 8);
-    
+
+    if (empty($data['servers']))
+        $data['servers'] = 1000;
+
     // Содержание закладки 1
     $Tab1 = $PHPShopGUI->setCollapse('Информация', $PHPShopGUI->setField("Имя", $PHPShopGUI->setInput('text.required', "name_new", $data['name'])) .
             $PHPShopGUI->setField("E-mail", $PHPShopGUI->setInput('email.required.6', "login_new", $data['login'])) .
             $PHPShopGUI->setField("Телефон", $PHPShopGUI->setInput('tel', "tel_new", $data['tel'])) .
             $PHPShopGUI->setField("Пароль", $PHPShopGUI->setInput("password.required.6", "password_new", '', null, false, false, false, false, false, '<a href="#" class="password-gen" data-password="u' . $pasgen . '" data-text="' . __('Сгенерирован пароль: ') . '"  data-toggle="tooltip" data-placement="top" title="' . __('Сгенерировать пароль') . '"><span class="glyphicon glyphicon-cog"></span></a>')) .
             $PHPShopGUI->setField("Подтверждение пароля", $PHPShopGUI->setInput("password.required.4", "password2_new", null)) .
-            $PHPShopGUI->setField("Статус",$PHPShopGUI->setCheckbox("enabled_new", 1, null, $data['enabled']). '<br>' . $PHPShopGUI->setCheckbox('sendActivationEmail', 1, 'Оповестить пользователя', 0)) .
+            $PHPShopGUI->setField("Статус", $PHPShopGUI->setCheckbox("enabled_new", 1, null, $data['enabled']) . '<br>' . $PHPShopGUI->setCheckbox('sendActivationEmail', 1, 'Оповестить пользователя', 0)) .
             $PHPShopGUI->setField("Блокировка диалогов", $PHPShopGUI->setCheckbox("dialog_ban_new", 1, null, $data['dialog_ban'])) .
-            $PHPShopGUI->setField("Статус", $PHPShopGUI->setSelect('status_new', $user_status_value)) .
+            $PHPShopGUI->setField("Статус", $PHPShopGUI->setSelect('status_new', $user_status_value,300)) .
+            $PHPShopGUI->setField("Витрины", $PHPShopGUI->loadLib('tab_multibase', $data, 'catalog/', 300, false)) .
             $PHPShopGUI->setField("Накопительная скидка", $PHPShopGUI->setInput('text', "cumulative_discount_new", $data['cumulative_discount'], null, 100, false, false, false, '%'))
     );
 
@@ -47,7 +52,7 @@ function actionStart() {
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $data);
 
     // Вывод формы закладки
-    $PHPShopGUI->setTab(array("Основное", $Tab1, true,false,true), array("Доставка и реквизиты", $Tab2, true));
+    $PHPShopGUI->setTab(array("Основное", $Tab1, true, false, true), array("Доставка и реквизиты", $Tab2, true));
 
     // Вывод кнопок сохранить и выход в футер
     $ContentFooter = $PHPShopGUI->setInput("submit", "saveID", "ОК", "right", 70, "", "but", "actionInsert.shopusers.create");
@@ -84,6 +89,9 @@ function actionInsert() {
 
     if (is_array($_POST['data_adres_new']))
         $_POST['data_adres_new'] = serialize($_POST['data_adres_new']);
+
+    if ($_POST['servers_new'] == 1000)
+        $_POST['servers_new'] = 0;
 
 
     // Оповещение пользователя
