@@ -1,12 +1,10 @@
-<?
-/*
-+-------------------------------------+
-|  PHPShop 3.0 Enterprise             |
-|  Модуль Success Payment Url         |
-+-------------------------------------+
-*/
-
-
+<?php
+/**
+ * Форматирование имени заказа
+ * @package PHPShopCoreDepricated
+ * @param int $uid номер заказа
+ * @return string 
+ */
 function UpdateNumOrder($uid) {
     $last_num = substr($uid, -2);
     $total=strlen($uid);
@@ -14,22 +12,31 @@ function UpdateNumOrder($uid) {
     return $ferst_num."-".$last_num;
 }
 
-
-// Заводим статус обработанного заказа
+/**
+ * Запись статуса заказа 101
+ * @package PHPShopCoreDepricated
+ * @return int 
+ */
 function CheckStatusReady() {
     global $SysValue;
     $sql="select id from ".$SysValue['base']['table_name32']." where id=101 limit 1";
     $result=mysql_query($sql);
     $num=@mysql_numrows(@$result);
 
-// Запись нового статуса
+    // Запись нового статуса
     if($num==0)
         mysql_query("INSERT INTO ".$SysValue['base']['table_name32']." VALUES (101, 'Оплачено платежными системами', '#ccff00','')");
 
     return 101;
 }
 
-// Изменяем статус заказа на оплаченный
+/**
+ * Изменение статуса оплаченного заказа
+ * @package PHPShopCoreDepricated
+ * @param int $inv_id номер заказа
+ * @param float $out_summ сумма заказа
+ * @param int $order_metod  способ оплаты
+ */
 function Success($inv_id,$out_summ,$order_metod) {
     global $SysValue;
     
@@ -57,7 +64,8 @@ if(@$dh = opendir($path)) {
     closedir($dh);
 }
 
-if (strtoupper(@$my_crc) != strtoupper(@$crc)) {
+// Сравнение подписи платежа
+if (strtoupper($my_crc) != strtoupper($crc)) {
     $SysValue['other']['orderNum']=TotalClean($inv_id,4);
     $SysValue['other']['mycrc']=$my_crc;
     $SysValue['other']['crc']=$crc;
@@ -68,39 +76,35 @@ else {
     $orderId=$inv_id;
     $inv_id=UpdateNumOrder($inv_id);
 
-// Приверяем сущ. заказа
+    // Приверяем сущ. заказа
     $sql="select uid from ".$SysValue['base']['table_name1']." where uid='$inv_id'";
     $result=mysql_query($sql);
     $num=mysql_num_rows($result);
     $row=mysql_fetch_array($result);
     $uid=$row['uid'];
 
+    // Заказ есть в БД
     if($num>0) {
 
-// берем описания из базы
+        // берем описания из базы
         $sql="select message,message_header from ".$SysValue['base']['table_name48']." where  path='$order_metod' and enabled='1'";
         $result=mysql_query(@$sql);
         $row = mysql_fetch_array(@$result);
-
         $message=$row['message'];
         $message_header=$row['message_header'];
-
         $SysValue['other']['numOrder']=$uid;
 
+        // Перевод статуса заказа в оплачено
+        if($success_function==true) Success($orderId,$out_summ,$order_metod);
 
-// Перевод статуса заказа в оплачено
-        if($success_function==true)
-            Success($orderId,$out_summ,$order_metod);
-
-
-        $SysValue['other']['mesageText']= "<FONT style=\"font-size:14px;color:red\">
-<B>".$message_header."</B></FONT><BR>".$message;
-
+        // Сообщение пользователю об успешном платеже
+        $SysValue['other']['mesageText']= "<FONT style=\"font-size:14px;color:red\"><B>".$message_header."</B></FONT><BR>".$message;
         $SysValue['other']['orderMesage']=ParseTemplateReturn($SysValue['templates']['order_forma_mesage']);
         $SysValue['other']['DispShop']=ParseTemplateReturn($SysValue['templates']['order_forma_mesage_main']);
 
-// Очищаем корзину
-        session_unregister('cart');
+        // Очищаем корзину
+        $_SESSION['cart']=null;
+        unset($_SESSION['cart']);
     }
     else {
         $SysValue['other']['DispShop']= ParseTemplateReturn("error/error_payment.tpl");
@@ -108,5 +112,5 @@ else {
 }
 
 // Подключаем шаблон 
-@ParseTemplate($SysValue['templates']['shop']);
+ParseTemplate($SysValue['templates']['shop']);
 ?>

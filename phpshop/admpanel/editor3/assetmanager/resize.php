@@ -394,7 +394,7 @@ else {
 $Admoption=unserialize($GetSystems['admoption']);
 
 $mycF=$_POST["selCurrFolder"];
-$mycReturn=ereg_replace($DOCUMENT_ROOT,"",$_POST["selCurrFolder"]);
+$mycReturn=ereg_replace($_SERVER['DOCUMENT_ROOT'],"",$_POST["selCurrFolder"]);
 
 // Генерим имя
 $myRName=substr(abs(crc32(uniqid($_REQUEST['id']))),0,5);

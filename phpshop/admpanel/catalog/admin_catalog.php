@@ -179,19 +179,19 @@ function CategoryID($categoryID)// выборка каталогов и вывод в правое поле
 
         @$dis.="
 	<tr class=row3 id=\"r".$id."\">
-	  <td align=center   align=\"left\"  id=Nws class=Nws  onmouseover=\"show_on('r".$id."')\" onmouseout=\"show_out('r".$id."')\" onclick=\"miniWin('../product/adm_productID.php?productID=$id',650,630)\">
+	  <td align=center   align=\"left\"  id=Nws class=Nws  onmouseover=\"show_on('r".$id."')\" onmouseout=\"show_out('r".$id."')\" onclick=\"miniWin('../product/adm_productID.php?productID=$id',700,650)\">
                 $checked
 	  </td>
-	  <td width=\"55\"  align=\"center\"  id=Nws class=Nws onmouseover=\"show_on('r".$id."')\" onmouseout=\"show_out('r".$id."')\" onclick=\"miniWin('../product/adm_productID.php?productID=$id',650,630)\">
+	  <td width=\"55\"  align=\"center\"  id=Nws class=Nws onmouseover=\"show_on('r".$id."')\" onmouseout=\"show_out('r".$id."')\" onclick=\"miniWin('../product/adm_productID.php?productID=$id',700,650)\">
                 $id
 	  </td>
-	  <td width=\"500\"   id=Nws class=Nws onmouseover=\"show_on('r".$id."');DoUpdateProductDisp(".$id.");\" onmouseout=\"show_out('r".$id."')\" onclick=\"miniWin('../product/adm_productID.php?productID=$id',650,630)\"> 
-	  &nbsp;$name  
+	  <td width=\"500\"   id=Nws class=Nws onmouseover=\"show_on('r".$id."');DoUpdateProductDisp(".$id.");\" onmouseout=\"show_out('r".$id."')\" onclick=\"miniWin('../product/adm_productID.php?productID=$id',700,650)\">
+	  &nbsp;$name
 	  </td>
-	  <td width=\"100\"   id=Nws class=Nws onmouseover=\"show_on('r".$id."')\" onmouseout=\"show_out('r".$id."')\" onclick=\"miniWin('../product/adm_productID.php?productID=$id',650,630)\"> 
+	  <td width=\"100\"   id=Nws class=Nws onmouseover=\"show_on('r".$id."')\" onmouseout=\"show_out('r".$id."')\" onclick=\"miniWin('../product/adm_productID.php?productID=$id',700,650)\">
 	  &nbsp;".$items ." ".$ed_izm."
 	  </td>
-	  <td width=\"100\"   id=Nws class=Nws onmouseover=\"show_on('r".$id."')\" onmouseout=\"show_out('r".$id."')\" onclick=\"miniWin('../product/adm_productID.php?productID=$id',650,630)\"> 
+	  <td width=\"100\"   id=Nws class=Nws onmouseover=\"show_on('r".$id."')\" onmouseout=\"show_out('r".$id."')\" onclick=\"miniWin('../product/adm_productID.php?productID=$id',700,650)\">
 	  &nbsp;".($price*1).$viso."
 	  </td>
 	  <td align=center>
@@ -321,17 +321,17 @@ function CategorySearch($words) //поиск
         $uid=$row['uid'];
         @$dis.="
 	<tr class=row3 bgcolor=ffffff   id=\"r".$id."\" >
-	  <td align=center width=\"93\"  align=\"left\"  id=Nws class=Nws onmouseover=\"show_on('r".$id."')\" onmouseout=\"show_out('r".$id."')\" onclick=\"miniWin('../product/adm_productID.php?productID=$id',650,630)\">
+	  <td align=center width=\"93\"  align=\"left\"  id=Nws class=Nws onmouseover=\"show_on('r".$id."')\" onmouseout=\"show_out('r".$id."')\" onclick=\"miniWin('../product/adm_productID.php?productID=$id',700,630)\">
 <A id='ID$id'></A>
                 $checked
 	  </td>
-	  <td width=\"55\"  align=\"center\"  id=Nws class=Nws onmouseover=\"show_on('r".$id."')\" onmouseout=\"show_out('r".$id."')\" onclick=\"miniWin('../product/adm_productID.php?productID=$id',650,630)\">
+	  <td width=\"55\"  align=\"center\"  id=Nws class=Nws onmouseover=\"show_on('r".$id."')\" onmouseout=\"show_out('r".$id."')\" onclick=\"miniWin('../product/adm_productID.php?productID=$id',700,630)\">
                 $id
 	  </td>
-	  <td width=\"540\"   id=Nws class=Nws onmouseover=\"show_on('r".$id."')\" onmouseout=\"show_out('r".$id."')\" onclick=\"miniWin('../product/adm_productID.php?productID=$id',650,630)\"> 
-	  &nbsp;$name
+	  <td width=\"540\"   id=Nws class=Nws onmouseover=\"show_on('r".$id."')\" onmouseout=\"show_out('r".$id."')\" onclick=\"miniWin('../product/adm_productID.php?productID=$id',700,630)\">
+	  &nbsp; $name
 	  </td>
-	  <td width=\"100\"   id=Nws class=Nws onmouseover=\"show_on('r".$id."')\" onmouseout=\"show_out('r".$id."')\" onclick=\"miniWin('../product/adm_productID.php?productID=$id',650,630)\"> 
+	  <td width=\"100\"   id=Nws class=Nws onmouseover=\"show_on('r".$id."')\" onmouseout=\"show_out('r".$id."')\" onclick=\"miniWin('../product/adm_productID.php?productID=$id',700,630)\">
 	  &nbsp;$price
 	  </td>
 	  <td >

@@ -27,7 +27,6 @@ if($i>20)$razmer="height:600;";
 	return "
 	
 <div id=interfacesWin name=interfacesWin align=\"left\" style=\"width:100%;".@$razmer.";overflow:auto\"> 
-<form name=\"form_flag\">
 <table width=\"50%\"  cellpadding=\"0\" cellspacing=\"0\" style=\"border: 1px;
 	border-style: inset;\">
 <tr>
@@ -42,7 +41,6 @@ if($i>20)$razmer="height:600;";
 	".$display."
 
     </table>
-	</form>
 	</td>
 </tr>
     </table>

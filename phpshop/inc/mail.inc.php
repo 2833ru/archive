@@ -1,87 +1,32 @@
-<?
-function true_parent($str){
-    return preg_match("/^[a-zA-Z0-9]{8}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{12}$/",$str);
-}
-
-
-function true_email($email) {
-    if(strlen($email)>100) return FALSE;
-    return preg_match("/^([a-z0-9_\.-]+@[a-z0-9_\.\-]+\.[a-z0-9_-]{2,6})$/i",$email);
-}
-
-function true_login($login) {
-    return preg_match("/^[a-zA-Z0-9_\.]{2,20}$/",$login);
-}
-
-function true_passw($passw) {
-    return preg_match("/^[a-zA-Z0-9_]{4,20}$/",$passw);
-}
-
-function true_num($num) {
-    return preg_match("/^[0-9]{1,10}$/",$num);
-}
-
-function TotalClean($str,$flag)// чистка 
-/*
-  1 - проверяет корзину;
-  2 - преобразует все в код html;
-  3 - проверяет мыло;
-  4 - проверяет ввод с формы
-  5 - прверяет цифры
-*/ {
-    if($flag==1)// корзина
-    {
-        if (!ereg ("([0-9])", $str)) {
-            $str="0";
-        }
-        return abs($str);
-    }
-    elseif($flag==2)// убирает бяки
-    {
-        return htmlspecialchars(stripslashes($str));
-    }
-    elseif($flag==3)// обработка строки на бяки в мыле
-    {
-        //проверка почты
-        if(!preg_match("/^([a-z0-9_\.-]+@[a-z0-9_\.\-]+\.[a-z0-9_-]{2,6})$/i",$str)) {
-            $str="";
-        }
-        return $str;
-    }
-    elseif($flag==4)// обработка строки на бяки
-    {
-        if (preg_match("/[^(\w)|(\x7F-\xFF)|(\s)]/",$str)) {
-            $str="";
-        }
-        return  htmlspecialchars(stripslashes($str));
-    }
-    elseif($flag==5)// проверка вводимых цифр
-    {
-        if (preg_match("/[^(0-9)|(\-)|(\.]/",$str)) {
-            $str="0";
-        }
-        return $str;
-    }
-}
-
+<?php
+/**
+ * Вывод типа оплаты
+ * @package PHPShopDepricated
+ * @param int $tip ИД оплаты
+ * @return string
+ */
 function OplataMetod($tip) {
     $GetPathOrdermetod=GetPathOrdermetod($tip);
     return $GetPathOrdermetod['name'];
 }
 
+// Проверка заполнения данных
+if(PHPShopSecurity::true_param($_POST['send_to_order'],$_POST['mail'],$_POST['name_person'],$_POST['tel_name'],$_POST['adr_name'])) {
 
+    $cart=$_SESSION['cart'];
+    $disCart=null;
+    $sum=null;
+    $num=null;
 
-
-if(@$send_to_order and @$mail and @$name_person and @$tel_name and @$adr_name) {
-// Список товоров в корзине
-    if(is_array(@$cart))
+    // Список товоров в корзине
+    if(is_array($cart))
         foreach($cart as $j=>$i) {
-            @$disCart.=$cart[$j]['uid']."  ".$cart[$j]['name']." (".$cart[$j]['num']." шт. * ".ReturnSummaNal($cart[$j]['price'],0).") -- ".ReturnSummaNal($cart[$j]['price']*$cart[$j]['num'],0)." ".GetValutaOrder()."
+            $disCart.=$cart[$j]['uid']."  ".$cart[$j]['name']." (".$cart[$j]['num']." шт. * ".ReturnSummaNal($cart[$j]['price'],0).") -- ".ReturnSummaNal($cart[$j]['price']*$cart[$j]['num'],0)." ".GetValutaOrder()."
 ";
-            @$sum+=$cart[$j]['price']*$cart[$j]['num'];
-            @$num+=$cart[$j]['num'];
+            $sum+=$cart[$j]['price']*$cart[$j]['num'];
+            $num+=$cart[$j]['num'];
 
-//Определение и суммирование веса
+            // Определение и суммирование веса
             $goodid=$cart[$j]['id'];
             $goodnum=$cart[$j]['num'];
             $wsql='select weight from '.$SysValue['base']['table_name2'].' where id=\''.$goodid.'\'';
@@ -94,16 +39,16 @@ if(@$send_to_order and @$mail and @$name_person and @$tel_name and @$adr_name) {
             $weight+=$cweight;
         }
 
-//Обнуляем вес товаров, если хотя бы один товар был без веса
+    // Обнуляем вес товаров, если хотя бы один товар был без веса
     if ($zeroweight) {
         $weight=0;
     }
 
 
-    @$sum=number_format($sum,"2",".","");
+    $sum=number_format($sum,"2",".","");
     $ChekDiscount=ChekDiscount($sum);
     $GetDeliveryPrice=GetDeliveryPrice($_POST['d'],$sum,$weight);
-    @$disCart.="
+    $disCart.="
 -------------------------------------------------------
 Итого -- ".ReturnSummaNal($sum,0)." ".GetValutaOrder()."
 Скидка -- ".$ChekDiscount[0]."%
@@ -113,45 +58,45 @@ if(@$send_to_order and @$mail and @$name_person and @$tel_name and @$adr_name) {
 
     $content="Доброго времени!
 --------------------------------------------------------
-Спасибо за покупку в нашем интернет-магазине '".$LoadItems['System']['name']."'
+Спасибо за покупку в нашем интернет-магазине '".$PHPShopSystem->getName()."'
 Наши менеджеры свяжутся с вами по координатам, 
 оставленным в форме заказа.
 
 
-Подробности заказа № ".@$ouid." от ".date("d-m-y")."
+Подробности заказа № ".$_POST['ouid']." от ".date("d-m-y")."
 --------------------------------------------------------
-Контактное лицо: ".@$name_person;
+Контактное лицо: ".$_POST['name_person'];
 
-    if($org_name!="") {
+    if(!empty($_POST['org_name'])) {
         $content.="
-Компания: ".@$org_name."
-ИНН: ".@$org_inn."
-КПП: ".@$org_kpp;
+Компания: ".$_POST['org_name']."
+ИНН: ".$_POST['org_inn']."
+КПП: ".$_POST['org_kpp'];
     }
 
     $content.="
-Телефон: ".$tel_code."-".@$tel_name."
-Адрес и доп. инф: ".@$adr_name."
-Желаемое время доставки: ".$dos_ot." - ".$dos_do."
-Грузополучатель: ".GetDeliveryBase($dostavka_metod,'city')."
-E-mail: ".@$mail."
-Тип оплаты: ".OplataMetod($order_metod)."
+Телефон: ".$_POST['tel_code']."-".$_POST['tel_name']."
+Адрес и доп. инф: ".$_POST['adr_name']."
+Желаемое время доставки: ".$_POST['dos_ot']." - ".$_POST['dos_do']."
+Грузополучатель: ".GetDeliveryBase($_POST['dostavka_metod'],'city')."
+E-mail: ".$_POST['mail']."
+Тип оплаты: ".OplataMetod($_POST['order_metod'])."
 
 Заказанные товары
 --------------------------------------------------------
 ".$disCart;
-    if(!isset($_SESSION['UsersId']))
+    if(empty($_SESSION['UsersId']))
         $content.="
 
 Вы всегда можете проверить статус заказа, загрузить файлы, распечатать платежные 
-документы он-лайн по ссылке http://".$SERVER_NAME.$SysValue['dir']['dir']."/clients/?mail=".@$mail."&order=".@$ouid."
-E-mail: ".@$mail."
-№ Заказа: ".@$ouid."";
+документы он-лайн по ссылке http://".$_SERVER['SERVER_NAME'].$SysValue['dir']['dir']."/clients/?mail=".$_POST['mail']."&order=".$_POST['ouid']."
+E-mail: ".$_POST['mail']."
+№ Заказа: ".$_POST['ouid'];
     else
         $content.="
 
 Вы всегда можете проверить статус заказа, загрузить файлы, распечатать платежные 
-документы он-лайн через 'Личный кабинет' или по ссылке http://".$SERVER_NAME.$SysValue['dir']['dir']."/users/";
+документы он-лайн через 'Личный кабинет' или по ссылке http://".$_SERVER['SERVER_NAME'].$SysValue['dir']['dir']."/users/";
 
     $content.="
 
@@ -159,14 +104,14 @@ E-mail: ".@$mail."
 С уважением,
 Компания ".$LoadItems['System']['company']."
 ".$LoadItems['System']['adminmail2']."
-http://".$SERVER_NAME.$SysValue['dir']['dir'];
+http://".$_SERVER['SERVER_NAME'].$SysValue['dir']['dir'];
 
     $codepage  = "windows-1251";
     $header  = "MIME-Version: 1.0\n";
     $header .= "From:   <".$LoadItems['System']['adminmail2'].">\n";
     $header .= "Content-Type: text/plain; charset=$codepage\n";
     $header .= "X-Mailer: PHP/";
-    $zag=$LoadItems['System']['name']." - Ваш заказ ".@$ouid."/".date("d-m-y")." успешно оформлен";
+    $zag=$LoadItems['System']['name']." - Ваш заказ ".$_POST['ouid']."/".date("d-m-y")." успешно оформлен";
 
     $content_adm="
 Доброго времени!
@@ -174,84 +119,81 @@ http://".$SERVER_NAME.$SysValue['dir']['dir'];
 
 Поступил заказ с интернет-магазина '".$LoadItems['System']['name']."'
 Для редактирования состояния заказа перейдите в панель
-администрирования магазина http://$SERVER_NAME".$SysValue['dir']['dir']."/phpshop/admpanel/
+администрирования магазина http://".$_SERVER['SERVER_NAME'].$SysValue['dir']['dir']."/phpshop/admpanel/
 
 Заказанные товары
 ---------------------------------------------------------
 ".$disCart."
 
-Подробности заказа № ".@$ouid."/".date("d-m-y")."
+Подробности заказа № ".$_POST['ouid']."/".date("d-m-y")."
 ---------------------------------------------------------
-Контактное лицо: ".@$name_person;
+Контактное лицо: ".$_POST['name_person'];
 
-    if($org_name!="") {
+    if(!empty($_POST['org_name'])) {
         $content_adm.="
-Компания: ".@$org_name."
-ИНН: ".@$org_inn."
-КПП: ".@$org_kpp;
+Компания: ".$_POST['org_name']."
+ИНН: ".$_POST['org_inn']."
+КПП: ".$_POST['org_kpp'];
     }
 
     $content_adm.="
-Телефон: ".@$tel_code."-".@$tel_name."
-Адрес и доп. инф: ".@$adr_name."
-Желаемое время доставки: ".$dos_ot." - ".$dos_do."
-Грузополучатель: ".GetDeliveryBase($dostavka_metod,'city')."
-E-mail: ".@$mail."
-Тип оплаты: ".OplataMetod($order_metod)."
+Телефон: ".$_POST['tel_code']."-".$_POST['tel_name']."
+Адрес и доп. инф: ".$_POST['adr_name']."
+Желаемое время доставки: ".$_POST['dos_ot']." - ".$_POST['dos_do']."
+Грузополучатель: ".GetDeliveryBase($_POST['dostavka_metod'],'city')."
+E-mail: ".$_POST['mail']."
+Тип оплаты: ".OplataMetod($_POST['order_metod'])."
 Дата/время: ".date("d-m-y H:i a")."
-IP:".$REMOTE_ADDR."
-REF: ".base64_decode(@$_COOKIE['ps_partner'])." 
+IP:".$_SERVER['REMOTE_ADDR']."
+REF: ".base64_decode($_COOKIE['ps_partner'])." 
 ---------------------------------------------------------
 
 
 Powered & Developed by www.PHPShop.ru
 ".$SysValue['license']['product_name'];
 
-
     $codepage  = "windows-1251";
     $header_adm  = "MIME-Version: 1.0\n";
     $header_adm .= "From:   <".$LoadItems['System']['adminmail2'].">\n";
     $header_adm .= "Content-Type: text/plain; charset=$codepage\n";
     $header_adm .= "X-Mailer: PHP/";
-    $zag_adm=$LoadItems['System']['name']." - Поступил заказ №".@$ouid."/".date("d-m-y");
-
+    $zag_adm=$LoadItems['System']['name']." - Поступил заказ №".$_POST['ouid']."/".date("d-m-y");
     $datas=date("U");
 
-
-// Новая запись в базу массива
-    $OrderWrite = new OrderWrite(@$cart,$_REQUEST,$LoadItems,$SysValue,$ChekDiscount[0],$_SESSION['UsersId'],
-            $GetDeliveryPrice);
+    // Создаем массив заказа
+    $OrderWrite = new OrderWrite($ChekDiscount[0],$GetDeliveryPrice);
     $Content = $OrderWrite->MAS;
-    $NumInCart = $OrderWrite->NUM; // Кол-во товаров в корзине
+
+    // Кол-во товаров в корзине
+    $NumInCart = $OrderWrite->NUM; 
 
     if($NumInCart>0) {
 
-// Шлем майло
+        // Отсылаем почту
         $Option=unserialize($LoadItems['System']['admoption']);
         mail($LoadItems['System']['adminmail2'],$zag_adm, $content_adm, $header_adm);
         mail($mail,$zag,$content,$header);
 
-// Отсылаем SMS
+        // Отсылаем SMS
         if($Option['sms_enabled'] == 1) {
             $sum = GetPriceOrder($ChekDiscount[1])+$GetDeliveryPrice;
             $msg="Поступил заказ N$id на сумму $sum ".GetValutaOrder();
             $phone=$SysValue['sms']['phone'];
+
+            include_once($SysValue['file']['sms']);
             SendSMS($msg,$phone);
         }
 
-
+        // Статус заказа
         $Status=array(
                 "maneger"=>"",
                 "time"=>""
         );
 
-
-
+        // Запись заказа в БД
         $sql="INSERT INTO ".$SysValue['base']['table_name1']."
-   VALUES ('','$datas','$ouid','$Content','".serialize($Status)."','".$_SESSION['UsersId']."','','0')";
+   VALUES ('','$datas','".$_POST['ouid']."','$Content','".serialize($Status)."','".$_SESSION['UsersId']."','','0')";
         $result=mysql_query($sql);
-//session_unregister('cart');
-
     }
 }
 ?>

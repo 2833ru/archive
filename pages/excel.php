@@ -1,5 +1,9 @@
 <?php
-// Генерации ссылки из Excel по артикулу
+
+/**
+ * Генерации ссылки из Excel по артикулу
+ * @package PHPShopCoreDepricated
+ */
 
 if(!empty($_GET['UID'])) {
     $product_uid=base64_decode($_GET['UID']);

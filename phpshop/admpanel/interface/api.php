@@ -11,7 +11,7 @@ $var1 = @$_REQUEST['var1'];
 $var2 = @$_REQUEST['var2'];
 $var3 = @$_REQUEST['var3'];
 $var4 = @$_REQUEST['var4'];
-$xid = @$_REQUEST['tit'];
+$tit = @$_REQUEST['tit'];
 
 
 require("../connect.php");
@@ -1279,7 +1279,8 @@ switch($p) {
             $_classPath='../../';
 
             if(empty($var1)) $loader_file="../$p/admin_$p.php";
-              else $loader_file="../../modules/$var1/admpanel/admin_$var1.php";
+              elseif(!empty($var3)) $loader_file="../../modules/$var1/admpanel/admin_$var3.php";
+              else $loader_file="../../modules/$var1/admpanel/admin_$var1.php";      
               
             $loader_function = 'actionStart';
 
@@ -1287,8 +1288,11 @@ switch($p) {
                 include("../../class/obj.class.php");
 
                 // Поддержка модулей CMS Free
+                
+                if(!empty($var2)){
                 parse_str(base64_decode($var2),$strArray);
                 foreach($strArray as $key=>$var) $_REQUEST[$key]=$var;
+                }
                 
 
                 require_once($loader_file);

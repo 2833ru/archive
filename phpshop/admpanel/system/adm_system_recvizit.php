@@ -9,11 +9,12 @@ $GetSystems=GetSystems();
 $option=unserialize($GetSystems['admoption']);
 $Lang=$option['lang'];
 require("../language/".$Lang."/language.php");
+if(CheckedRules($UserStatus["option"],1) == 0) die ("Недостаточно прав!");
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 <head>
-	<title>Реквизиты</title>
+  <title>Реквизиты</title>
 <META http-equiv=Content-Type content="text/html; charset=windows-1251">
 <LINK href="../css/texts.css" type=text/css rel=stylesheet>
 <script language="JavaScript1.2" src="../java/javaMG.js" type="text/javascript"></script>
@@ -25,15 +26,15 @@ DoResize(<? echo $GetSystems['width_icon']?>,500,500);
 <body bottommargin="0"  topmargin="0" leftmargin="0" rightmargin="0" onload="DoCheckLang(location.pathname,<?=$SysValue['lang']['lang_enabled']?>);preloader(0)">
 <table id="loader">
 <tr>
-	<td valign="middle" align="center">
-		<div id="loadmes" onclick="preloader(0)">
+  <td valign="middle" align="center">
+    <div id="loadmes" onclick="preloader(0)">
 <table width="100%" height="100%">
 <tr>
-	<td id="loadimg"></td>
-	<td ><b><?=$SysValue['Lang']['System']['loading']?></b><br><?=$SysValue['Lang']['System']['loading2']?></td>
+  <td id="loadimg"></td>
+  <td ><b><?=$SysValue['Lang']['System']['loading']?></b><br><?=$SysValue['Lang']['System']['loading2']?></td>
 </tr>
 </table>
-		</div>
+    </div>
 </td>
 </tr>
 </table>
@@ -44,21 +45,21 @@ $sql="select * from $table_name3";
 $result=mysql_query($sql);
 $row = mysql_fetch_array($result);
 $name=$row['name'];
-	$company=stripslashes($row['company']);
-	$tel=$row['tel'];
-	$adminmail2=$row['adminmail2'];
-	$bank=$row['bank'];
-	$LoadBanc=unserialize($bank);
+  $company=stripslashes($row['company']);
+  $tel=$row['tel'];
+  $adminmail2=$row['adminmail2'];
+  $bank=$row['bank'];
+  $LoadBanc=unserialize($bank);
 echo"
 <table cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" height=\"50\" id=\"title\">
 <tr bgcolor=\"#ffffff\">
-	<td style=\"padding:10\">
-	<b><span name=txtLang id=txtLang>Настройка Реквизитов Фирмы</span></b><br>
-	&nbsp;&nbsp;&nbsp;<span name=txtLang id=txtLang>Реквизиты учитываются при выставлении счета</span>.
-	</td>
-	<td align=\"right\">
-	<img src=\"../img/i_mailbox_med[1].gif\" border=\"0\" hspace=\"10\">
-	</td>
+  <td style=\"padding:10\">
+  <b><span name=txtLang id=txtLang>Настройка Реквизитов Фирмы</span></b><br>
+  &nbsp;&nbsp;&nbsp;<span name=txtLang id=txtLang>Реквизиты учитываются при выставлении счета</span>.
+  </td>
+  <td align=\"right\">
+  <img src=\"../img/i_mailbox_med[1].gif\" border=\"0\" hspace=\"10\">
+  </td>
 </tr>
 </table>
 <br>
@@ -66,120 +67,120 @@ echo"
 <tr valign=\"top\">
 <form action=\"$PHP_SELF\" method=\"post\" name=\"system_forma\">
 <tr class=adm2>
-	  <td align=right>
-	 <span name=txtLang id=txtLang> Название магазина</span>:
-	  </td>
-	  <td align=left>
-	  <input type=text name=name_new size=60 value=\"$name\" title=\"$name\">
-	  </td>
-	</tr>
-	<tr class=adm2>
-	  <td align=right>
-	  <span name=txtLang id=txtLang>Владелец</span>:
-	  </td>
-	  <td align=left>
-	  <input type=text name=company_new size=60 value=\"$company\" title=\"$company\">
-	  </td>
-	</tr>
-	<tr class=adm2>
-	  <td align=right>
-	 <span name=txtLang id=txtLang> Телефоны</span>:
-	  </td>
-	  <td align=left>
-	  <input type=text name=tel_new size=60 value=\"$tel\">
-	  </td>
-	</tr>
-	<tr class=adm2>
-	  <td align=right>
-	 <span name=txtLang id=txtLang> Почта для заказов<br>через запятую</span>:
-	  </td>
-	  <td align=left>
-	   <input type=text name=adminmail2_new size=60 value=\"$adminmail2\">
-	  </td>
-	</tr>
+    <td align=right>
+   <span name=txtLang id=txtLang> Название магазина</span>:
+    </td>
+    <td align=left>
+    <input type=text name=name_new size=60 value=\"$name\" title=\"$name\">
+    </td>
+  </tr>
+  <tr class=adm2>
+    <td align=right>
+    <span name=txtLang id=txtLang>Владелец</span>:
+    </td>
+    <td align=left>
+    <input type=text name=company_new size=60 value=\"$company\" title=\"$company\">
+    </td>
+  </tr>
+  <tr class=adm2>
+    <td align=right>
+   <span name=txtLang id=txtLang> Телефоны</span>:
+    </td>
+    <td align=left>
+    <input type=text name=tel_new size=60 value=\"$tel\">
+    </td>
+  </tr>
+  <tr class=adm2>
+    <td align=right>
+   <span name=txtLang id=txtLang> Почта для заказов<br>через запятую</span>:
+    </td>
+    <td align=left>
+     <input type=text name=adminmail2_new size=60 value=\"$adminmail2\">
+    </td>
+  </tr>
 <tr class=adm2>
-	  <td align=right>
-	  <span name=txtLang id=txtLang>Наименование организации</span>:
-	  </td>
-	  <td align=left>
-	  <input type=text name=org_name size=60 value=\"".$LoadBanc['org_name']."\">
-	  </td>
-	</tr>
-	<tr class=adm2>
-	  <td align=right>
-	 <span name=txtLang id=txtLang> Юридический адрес</span>:
-	  </td>
-	  <td align=left>
-	  <input type=text name=org_ur_adres size=60 value=\"".$LoadBanc['org_ur_adres']."\">
-	  </td>
-	</tr>
-	<tr class=adm2>
-	  <td align=right>
-	  <span name=txtLang id=txtLang>Физический адрес</span>:
-	  </td>
-	  <td align=left>
-	  <input type=text name=org_adres size=60 value=\"".$LoadBanc['org_adres']."\">
-	  </td>
-	</tr>
+    <td align=right>
+    <span name=txtLang id=txtLang>Наименование организации</span>:
+    </td>
+    <td align=left>
+    <input type=text name=org_name size=60 value=\"".$LoadBanc['org_name']."\">
+    </td>
+  </tr>
+  <tr class=adm2>
+    <td align=right>
+   <span name=txtLang id=txtLang> Юридический адрес</span>:
+    </td>
+    <td align=left>
+    <input type=text name=org_ur_adres size=60 value=\"".$LoadBanc['org_ur_adres']."\">
+    </td>
+  </tr>
+  <tr class=adm2>
+    <td align=right>
+    <span name=txtLang id=txtLang>Физический адрес</span>:
+    </td>
+    <td align=left>
+    <input type=text name=org_adres size=60 value=\"".$LoadBanc['org_adres']."\">
+    </td>
+  </tr>
 <tr class=adm2>
-	  <td align=right>
-	  <span name=txtLang id=txtLang>ИНН</span>:
-	  </td>
-	  <td align=left>
-	  <input type=text name=org_inn size=60 value=\"".$LoadBanc['org_inn']."\" >
-	  </td>
-	</tr>
-	<tr class=adm2>
-	  <td align=right>
-	 <span name=txtLang id=txtLang> КПП</span>:
-	  </td>
-	  <td align=left>
-	  <input type=text name=org_kpp size=60 value=\"".$LoadBanc['org_kpp']."\">
-	  </td>
-	</tr>
-	<tr class=adm2>
-	  <td align=right>
-	 <span name=txtLang id=txtLang> № Счета организации</span>:
-	  </td>
-	  <td align=left>
-	  <input type=text name=org_schet size=60 value=\"".$LoadBanc['org_schet']."\">
-	  </td>
-	</tr>
-	<tr class=adm2>
-	  <td align=right>
-	 <span name=txtLang id=txtLang> Наименование банка</span>:
-	  </td>
-	  <td align=left>
-	  <input type=text name=org_bank size=60 value=\"".$LoadBanc['org_bank']."\">
-	  </td>
-	</tr>
-	<tr class=adm2>
-	  <td align=right>
-	  <span name=txtLang id=txtLang>БИК</span>:
-	  </td>
-	  <td align=left>
-	<input type=text name=org_bic size=60 value=\"".$LoadBanc['org_bic']."\">
-	  </td>
-	</tr>
-	<tr class=adm2>
-	  <td align=right>
-	  <span name=txtLang id=txtLang>№ Счета банка</span>:
-	  </td>
-	  <td align=left>
-	  <input type=text name=org_bank_schet size=60 value=\"".$LoadBanc['org_bank_schet']."\">
-	  </td>
-	</tr>
+    <td align=right>
+    <span name=txtLang id=txtLang>ИНН</span>:
+    </td>
+    <td align=left>
+    <input type=text name=org_inn size=60 value=\"".$LoadBanc['org_inn']."\" >
+    </td>
+  </tr>
+  <tr class=adm2>
+    <td align=right>
+   <span name=txtLang id=txtLang> КПП</span>:
+    </td>
+    <td align=left>
+    <input type=text name=org_kpp size=60 value=\"".$LoadBanc['org_kpp']."\">
+    </td>
+  </tr>
+  <tr class=adm2>
+    <td align=right>
+   <span name=txtLang id=txtLang> № Счета организации</span>:
+    </td>
+    <td align=left>
+    <input type=text name=org_schet size=60 value=\"".$LoadBanc['org_schet']."\">
+    </td>
+  </tr>
+  <tr class=adm2>
+    <td align=right>
+   <span name=txtLang id=txtLang> Наименование банка</span>:
+    </td>
+    <td align=left>
+    <input type=text name=org_bank size=60 value=\"".$LoadBanc['org_bank']."\">
+    </td>
+  </tr>
+  <tr class=adm2>
+    <td align=right>
+    <span name=txtLang id=txtLang>БИК</span>:
+    </td>
+    <td align=left>
+  <input type=text name=org_bic size=60 value=\"".$LoadBanc['org_bic']."\">
+    </td>
+  </tr>
+  <tr class=adm2>
+    <td align=right>
+    <span name=txtLang id=txtLang>№ Счета банка</span>:
+    </td>
+    <td align=left>
+    <input type=text name=org_bank_schet size=60 value=\"".$LoadBanc['org_bank_schet']."\">
+    </td>
+  </tr>
 </table>
 <hr>
 <table cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" height=\"50\" >
 <tr>
      <td align=\"left\" style=\"padding:10\">
     <BUTTON class=\"help\" onclick=\"helpWinParent('recvizit')\">Справка</BUTTON>
-	</td>
-	<td align=\"right\" style=\"padding:10\">
+  </td>
+  <td align=\"right\" style=\"padding:10\">
 <input type=submit value=ОК class=but name=optionsSAVE>
-	<input type=submit name=btnLang value=Отмена class=but onClick=\"return onCancel();\">
-	</td>
+  <input type=submit name=btnLang value=Отмена class=but onClick=\"return onCancel();\">
+  </td>
 </tr>
 </form>
 </table>
@@ -212,10 +213,10 @@ bank ='".$LoadBancSer."'";
 $result=mysql_query($sql)or @die("".mysql_error()."");
 $UpdateWrite=UpdateWrite();// Обновляем LastModified
 echo"
-	 <script>
-	 CL();
-	 </script>
-	   ";
+   <script>
+   CL();
+   </script>
+     ";
    }else $UserChek->BadUserFormaWindow();
    } 
 ?>

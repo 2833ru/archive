@@ -1,10 +1,10 @@
-<?
-/*
-+-------------------------------------+
-|  PHPShop Order Agent                |
-|  Модуль XML                         |
-+-------------------------------------+
-*/
+<?php
+/**
+ * Синхронизация с PHPShop Order Agent
+ * @package PHPShopExchange
+ * @author PHPShop Software
+ * @version 1.8
+ */
 
 $_classPath="../phpshop/";
 include($_classPath."class/obj.class.php");
@@ -14,172 +14,134 @@ PHPShopObj::loadClass("array");
 PHPShopObj::loadClass("product");
 PHPShopObj::loadClass("valuta");
 PHPShopObj::loadClass("system");
+PHPShopObj::loadClass("security");
 
-
+// Подключение к БД
 $PHPShopBase = new PHPShopBase("../phpshop/inc/config.ini");
-
 
 // Проверка пользователя
 require("lib/user.lib.php");
 
-
 // Заказы
-function OrdersArray($p1,$p2,$words,$list)
-{
+function OrdersArray($p1,$p2,$words,$list) {
 
-$words = MyStripSlashes(base64_decode($words));
+    $words = MyStripSlashes(base64_decode($words));
 
-if(empty($p1)) $p1=date("U")-86400;
- else $p1=PHPShopDate::GetUnicTime($p1)-86400;
-if(empty($p2)) $p2=date("U");
- else $p2=PHPShopDate::GetUnicTime($p2)+86400;
+    if(empty($p1)) $p1=date("U")-86400;
+    else $p1=PHPShopDate::GetUnicTime($p1)-86400;
+    if(empty($p2)) $p2=date("U");
+    else $p2=PHPShopDate::GetUnicTime($p2)+86400;
 
- 
-if($list == "all" or !$list) $sort="";
-  elseif($list == "new") $sort="and statusi=0";
-       else $sort="and statusi=".$list;
-	   
-	   
-if(!empty($words)){
-if(is_int($words)) $sql="select * from ".$GLOBALS['SysValue']['base']['table_name1']." where uid=".$words;
-else $sql="select * from ".$GLOBALS['SysValue']['base']['table_name1']." where orders REGEXP '".$words."'";
-}
-  else {
-$sql="select * from ".$GLOBALS['SysValue']['base']['table_name1']." where datas<'$p2' and datas>'$p1' $sort order by id desc";
-}
-$result=mysql_query($sql) or die("ERROR:".mysql_error()."");
-$i=mysql_num_rows($result);
-while($row = mysql_fetch_array($result)){
-$id=$row['id'];
-$datas=$row['datas'];
-$uid=$row['uid'];
-$order=unserialize($row['orders']);
-$status=unserialize($row['status']);
 
-if(empty($row['statusi'])) $statusi=0;
-  else $statusi=$row['statusi'];
-  
-if(empty($status['time'])) $time="-";
-  else $time=$status['time'];
-  
-$array=array(
-    "id"=>$id,
-    "cart"=>$order['Cart'],
-	"order"=>$order['Person'],
-	"time"=>$time,
-	"statusi"=>$statusi
-	);
-$i--;
-$OrdersArray[$id]=$array;
-}
-return $OrdersArray;
+    if($list == "all" or !$list) $sort="";
+    elseif($list == "new") $sort="and statusi=0";
+    else $sort="and statusi=".$list;
+
+
+    if(!empty($words)) {
+        if(is_int($words)) $sql="select * from ".$GLOBALS['SysValue']['base']['table_name1']." where uid=".$words;
+        else $sql="select * from ".$GLOBALS['SysValue']['base']['table_name1']." where orders REGEXP '".$words."'";
+    }
+    else {
+        $sql="select * from ".$GLOBALS['SysValue']['base']['table_name1']." where datas<'$p2' and datas>'$p1' $sort order by id desc";
+    }
+    $result=mysql_query($sql) or die("ERROR:".mysql_error()."");
+    $i=mysql_num_rows($result);
+    while($row = mysql_fetch_array($result)) {
+        $id=$row['id'];
+        $datas=$row['datas'];
+        $uid=$row['uid'];
+        $order=unserialize($row['orders']);
+        $status=unserialize($row['status']);
+
+        if(empty($row['statusi'])) $statusi=0;
+        else $statusi=$row['statusi'];
+
+        if(empty($status['time'])) $time="-";
+        else $time=$status['time'];
+
+        $array=array(
+                "id"=>$id,
+                "cart"=>$order['Cart'],
+                "order"=>$order['Person'],
+                "time"=>$time,
+                "statusi"=>$statusi
+        );
+        $i--;
+        $OrdersArray[$id]=$array;
+    }
+    return $OrdersArray;
 }
 
 
 // перекодировка unicode UTF-8 -> win1251 
-function MyStripSlashes($s){ 
-$out=""; 
-$c1=""; 
-$byte2=false; 
-for ($c=0;$c<strlen($s);$c++){ 
-$i=ord($s[$c]); 
-if ($i<=127) $out.=$s[$c]; 
-if ($byte2){ 
-$new_c2=($c1&3)*64+($i&63); 
-$new_c1=($c1>>2)&5; 
-$new_i=$new_c1*256+$new_c2; 
-if ($new_i==1025){ 
-$out_i=168; 
-}else{ 
-if ($new_i==1105){ 
-$out_i=184; 
-}else { 
-$out_i=$new_i-848; 
+function MyStripSlashes($s) {
+    $out="";
+    $c1="";
+    $byte2=false;
+    for ($c=0;$c<strlen($s);$c++) {
+        $i=ord($s[$c]);
+        if ($i<=127) $out.=$s[$c];
+        if ($byte2) {
+            $new_c2=($c1&3)*64+($i&63);
+            $new_c1=($c1>>2)&5;
+            $new_i=$new_c1*256+$new_c2;
+            if ($new_i==1025) {
+                $out_i=168;
+            }else {
+                if ($new_i==1105) {
+                    $out_i=184;
+                }else {
+                    $out_i=$new_i-848;
+                }
+            }
+            $out.=chr($out_i);
+            $byte2=false;
+        }
+        if (($i>>5)==6) {
+            $c1=$i;
+            $byte2=true;
+        }
+    }
+    return str_replace("\"","*",$out);
 } 
-} 
-$out.=chr($out_i); 
-$byte2=false; 
-} 
-if (($i>>5)==6) { 
-$c1=$i; 
-$byte2=true; 
-} 
-} 
-return str_replace("\"","*",$out); 
-} 
-
-
-
-function OrderUpdateXml(){
-$sql="select * from ".$GLOBALS['SysValue']['base']['table_name1']." where id='".$_POST['id']."'";
-$result=mysql_query($sql);
-$row = mysql_fetch_array($result);
-$status=unserialize($row['status']);
-$order=unserialize($row['orders']);
-
-// Время изменения
-$Status=array(
-"maneger"=>MyStripSlashes($_POST['manager']),
-"time"=>date("d-m-y H:i a")
-);
-
-
-$order['Person']['name_person']=MyStripSlashes($_POST['name_person']);
-$order['Person']['adr_name']=MyStripSlashes($_POST['adr_name']);
-$order['Person']['dos_ot']=MyStripSlashes($_POST['dos_ot']);
-$order['Person']['dos_do']=MyStripSlashes($_POST['dos_do']);
-$order['Person']['tel_code']=MyStripSlashes($_POST['tel_code']);
-$order['Person']['tel_name']=MyStripSlashes($_POST['tel_name']);
-$order['Person']['org_name']=MyStripSlashes($_POST['org_name']);
-$order['Person']['order_metod']=MyStripSlashes($_POST['metod_id']);
-
-$sql="UPDATE ".$GLOBALS['SysValue']['base']['table_name1']."
-SET 
-orders='".serialize($order)."',
-status='".serialize($Status)."',
-statusi='".$_POST['statusi']."'
-where id='".$_POST['id']."'";
-$result=mysql_query($sql);
-}
-
 
 // Вывод доставки
-function GetDelivery($deliveryID,$name){
-$sql="select * from ".$GLOBALS['SysValue']['base']['table_name30']." where id='$deliveryID'";
-$result=mysql_query($sql);
-$row = mysql_fetch_array($result);
-return $row[$name];
+function GetDelivery($deliveryID,$name) {
+    $sql="select * from ".$GLOBALS['SysValue']['base']['table_name30']." where id='$deliveryID'";
+    $result=mysql_query($sql);
+    $row = mysql_fetch_array($result);
+    return $row[$name];
 }
 
 // Статус заказа
-function GetOrderStatusArray(){
-$sql="select * from ".$GLOBALS['SysValue']['base']['table_name32'];
-$result=mysql_query($sql);
-while(@$row = mysql_fetch_array(@$result))
-    {
-	$array=array(
-	"id"=>$row['id'],
-	"name"=>$row['name'],
-	"color"=>$row['color'],
-	"sklad"=>$row['sklad_action']
-	);
-	$Status[$row['id']]=$array;
-	}
-return @$Status;
+function GetOrderStatusArray() {
+    $sql="select * from ".$GLOBALS['SysValue']['base']['table_name32'];
+    $result=mysql_query($sql);
+    while(@$row = mysql_fetch_array(@$result)) {
+        $array=array(
+                "id"=>$row['id'],
+                "name"=>$row['name'],
+                "color"=>$row['color'],
+                "sklad"=>$row['sklad_action']
+        );
+        $Status[$row['id']]=$array;
+    }
+    return $Status;
 }
 
 // Тип оплаты
-function GetOplataMetodArray(){
-$sql="select * from ".$GLOBALS['SysValue']['base']['table_name48']." where enabled='1' order by num";
-$result=mysql_query($sql);
-while($row = mysql_fetch_array($result)){
-     $array=array(
-	 "id"=>$row['id'],
-	 "name"=>$row['name']
-	 );
-	 $Status[$row['id']]=$array;
-	 }
-return @$Status;
+function GetOplataMetodArray() {
+    $sql="select * from ".$GLOBALS['SysValue']['base']['table_name48']." where enabled='1' order by num";
+    $result=mysql_query($sql);
+    while($row = mysql_fetch_array($result)) {
+        $array=array(
+                "id"=>$row['id'],
+                "name"=>$row['name']
+        );
+        $Status[$row['id']]=$array;
+    }
+    return $Status;
 }
 
 $GetOrderStatusArray=GetOrderStatusArray();
@@ -188,93 +150,171 @@ $GetOrderStatusArray[0]['color']="C0D2EC";
 $GetOrderStatusArray[0]['id']=0;
 $GetOplataMetodArray=GetOplataMetodArray();
 
-function Clean($s){
-$a = htmlspecialchars($s,ENT_QUOTES);
-return $a;
+// Форматирование строки
+function Clean($s) {
+    $a = htmlspecialchars($s,ENT_QUOTES);
+    return $a;
 }
 
+/**
+ * Обновление данных по заказу
+ */
+function OrderUpdateXml() {
+    global $GetOrderStatusArray;
+
+    $sql="select * from ".$GLOBALS['SysValue']['base']['table_name1']." where id='".$_REQUEST['id']."'";
+    $result=mysql_query($sql);
+    $row = mysql_fetch_array($result);
+    $status=unserialize($row['status']);
+    $order=unserialize($row['orders']);
+    $old_status=$row['statusi'];
+
+    // Время изменения
+    $Status=array(
+            "maneger"=>MyStripSlashes($_REQUEST['manager']),
+            "time"=>date("d-m-y H:i a")
+    );
+
+    $order['Person']['name_person']=MyStripSlashes($_REQUEST['name_person']);
+    $order['Person']['adr_name']=MyStripSlashes($_REQUEST['adr_name']);
+    $order['Person']['dos_ot']=MyStripSlashes($_REQUEST['dos_ot']);
+    $order['Person']['dos_do']=MyStripSlashes($_REQUEST['dos_do']);
+    $order['Person']['tel_code']=MyStripSlashes($_REQUEST['tel_code']);
+    $order['Person']['tel_name']=MyStripSlashes($_REQUEST['tel_name']);
+    $order['Person']['org_name']=MyStripSlashes($_REQUEST['org_name']);
+    $order['Person']['order_metod']=MyStripSlashes($_REQUEST['metod_id']);
+
+    // Корзина
+    $cart=$order['Cart']['cart'];
+
+    // Если новый статус Аннулирован, а был статус не Новый заказ, то мы не списываем, а добавляем обратно
+    if ($old_status != 0 &&  $_REQUEST['statusi'] == 0) {
+        if(is_array($cart))
+            foreach($cart as $val) {
+                $sql="select items from ".$GLOBALS['SysValue']['base']['table_name2']." where id='".$val['id']."'";
+                $result=mysql_query($sql);
+                $row = mysql_fetch_array($result);
+                $items=$row['items'];
+                $items_update=$items+$val['num'];
+                $sklad_update = "";
+                if ($items_update > 0)
+                    $sklad_update = " ,sklad='0' ";
+                $sql="UPDATE ".$GLOBALS['SysValue']['base']['table_name2']."
+				SET
+				items='$items_update' ".$sklad_update."
+				where id='".$val['id']."'";
+                $result=mysql_query($sql);
+            }
+    }
+    // Списываем со склада
+    else if($GetOrderStatusArray[$_REQUEST['statusi']]['sklad'] == 1) {
+        if(is_array($cart))
+            foreach($cart as $val) {
+                $sql="select items from ".$GLOBALS['SysValue']['base']['table_name2']." where id='".$val['id']."'";
+                $result=mysql_query($sql);
+                $row = mysql_fetch_array($result);
+                $items=$row['items'];
+                $items_update=$items-$val['num'];
+                $sklad_update = "";
+                if ($items_update == 0)
+                    $sklad_update = " ,sklad='1' ";
+                $sql="UPDATE ".$GLOBALS['SysValue']['base']['table_name2']."
+         SET
+         items='$items_update' ".$sklad_update."
+         where id='".$val['id']."'";
+                $result=mysql_query($sql);
+            }
+    }
+
+    // Обновляем данные по заказу
+    $sql="UPDATE ".$GLOBALS['SysValue']['base']['table_name1']."
+SET
+orders='".serialize($order)."',
+status='".serialize($Status)."',
+statusi='".$_REQUEST['statusi']."'
+where id='".$_REQUEST['id']."'";
+    $result=mysql_query($sql);
+}
 
 
 // Данные по заказу
-function OrdersReturn($id){
-$sql="select * from ".$GLOBALS['SysValue']['base']['table_name1']." where id=$id";
-$result=mysql_query($sql) or die("ERROR:".mysql_error()."");
-$row = mysql_fetch_array($result);
-$id=$row['id'];
-$datas=$row['datas'];
-$uid=$row['uid'];
-$order=unserialize($row['orders']);
-$status=unserialize($row['status']);
+function OrdersReturn($id) {
+    $sql="select * from ".$GLOBALS['SysValue']['base']['table_name1']." where id=$id";
+    $result=mysql_query($sql) or die("ERROR:".mysql_error()."");
+    $row = mysql_fetch_array($result);
+    $id=$row['id'];
+    $datas=$row['datas'];
+    $uid=$row['uid'];
+    $order=unserialize($row['orders']);
+    $status=unserialize($row['status']);
 
-if(empty($row['statusi'])) $statusi=0;
-  else $statusi=$row['statusi'];
-  
-if(empty($status['time'])) $time="-";
-  else $time=$status['time'];
-  
-$array=array(
-    "id"=>$id,
-    "cart"=>$order['Cart'],
-	"order"=>$order['Person'],
-	"time"=>$time,
-	"datas"=>$datas,
-	"dos_ot"=>Clean($status['dos_ot']),
-	"dos_do"=>Clean($status['dos_do']),
-	"manager"=>Clean($status['maneger']),
-	"statusi"=>$statusi
-	);
-	
-return $array;
+    if(empty($row['statusi'])) $statusi=0;
+    else $statusi=$row['statusi'];
+
+    if(empty($status['time'])) $time="-";
+    else $time=$status['time'];
+
+    $array=array(
+            "id"=>$id,
+            "cart"=>$order['Cart'],
+            "order"=>$order['Person'],
+            "time"=>$time,
+            "datas"=>$datas,
+            "dos_ot"=>Clean($status['dos_ot']),
+            "dos_do"=>Clean($status['dos_do']),
+            "manager"=>Clean($status['maneger']),
+            "statusi"=>$statusi
+    );
+    return $array;
 }
-
 
 // Пролучаем тип оплаты
-function OplataMetod($id){
-$order_metod = Clean($id);
-$sql="select name from ".$GLOBALS['SysValue']['base']['table_name48']." where id=".$order_metod;
-$result=mysql_query($sql);
-$row = mysql_fetch_array($result);
-return $row['name'];
+function OplataMetod($id) {
+    $order_metod = Clean($id);
+    $sql="select name from ".$GLOBALS['SysValue']['base']['table_name48']." where id=".$order_metod;
+    $result=mysql_query($sql);
+    $row = mysql_fetch_array($result);
+    return $row['name'];
 }
-
 
 // Изображение товара
-function ReturnPic($id){
-$sql="select pic_big from ".$GLOBALS['SysValue']['base']['table_name2']." where id=$id";
-$result=mysql_query($sql);
-$row = mysql_fetch_array($result);
-$pic_big=$row['pic_big'];
-if(empty($pic_big)) $pic_big="none";
-return $pic_big;
+function ReturnPic($id) {
+    $sql="select pic_big from ".$GLOBALS['SysValue']['base']['table_name2']." where id=$id";
+    $result=mysql_query($sql);
+    $row = mysql_fetch_array($result);
+    $pic_big=$row['pic_big'];
+    if(empty($pic_big)) $pic_big="none";
+    return $pic_big;
 }
 
-function ReturnSumma($sum,$id,$disc){
-$PHPShopProduct = new PHPShopProduct($id);
-$getValutaID = $PHPShopProduct->getValutaID();
+function ReturnSumma($sum,$id,$disc) {
+    $PHPShopProduct = new PHPShopProduct($id);
+    $getValutaID = $PHPShopProduct->getValutaID();
 
-if(empty($getValutaID )){
-		$System = new PHPShopSystem();
-	    $getValutaID=$System->getDefaultValutaId();
-	 }
+    if(empty($getValutaID )) {
+        $System = new PHPShopSystem();
+        $getValutaID=$System->getDefaultValutaId();
+    }
 
-$PHPShopValuta= new PHPShopValuta($getValutaID);
-$kurs=$PHPShopValuta->getKurs();
-$sum*=$kurs;
-$sum=$sum-($sum*$disc/100);
-return number_format($sum,"2",".","");
+    $PHPShopValuta= new PHPShopValuta($getValutaID);
+    $kurs=$PHPShopValuta->getKurs();
+    $sum*=$kurs;
+    $sum=$sum-($sum*$disc/100);
+    return number_format($sum,"2",".","");
 }
 
+// Обработка комманд
+switch ($_REQUEST['command']) {
 
-switch ($command){
-case ("loadListOrder"):
-//error_reporting(0);
-$OrdersArray=OrdersArray($p1,$p2,$words,$list);
-$XML='<?xml version="1.0" encoding="windows-1251"?>
+    case ("loadListOrder"):
+    //error_reporting(0);
+        $OrdersArray=OrdersArray($_REQUEST['p1'],$_REQUEST['p2'],$_REQUEST['words'],$_REQUEST['list']);
+        $XML='<?xml version="1.0" encoding="windows-1251"?>
 <orderdb>';
 
-if(is_array($OrdersArray))
-foreach ($OrdersArray as $val){
-$XML.='<order>
+        if(is_array($OrdersArray))
+            foreach ($OrdersArray as $val) {
+                $XML.='<order>
 	      <data>'.PHPShopDate::dataV($val['order']['data']).'</data>
 		  <datas>'.$val['order']['data'].'</datas>
 		  <uid>'.$val['order']['ouid'].'</uid>
@@ -291,52 +331,52 @@ $XML.='<order>
 		  <summa>'.ReturnSumma($val['cart']['sum'],$val['id'],$val['order']['discount']).'</summa>
 		  <num>'.$val['cart']['num'].'</num>
 		  <kurs>'.$val['cart']['kurs'].'</kurs>';
-$XML.='</order>
+                $XML.='</order>
 ';
-}
-$XML.='</orderdb>';
-echo $XML;
-break;
+            }
+        $XML.='</orderdb>';
+        echo $XML;
+        break;
 
+    // Количество новых заказов
+    case("loadNumNew"):
+        $sql="select id from ".$GLOBALS['SysValue']['base']['table_name1']." where statusi=0";
+        $result=mysql_query($sql);
+        $num=mysql_numrows($result);
+        if($num==0) echo "";
+        else echo $num;
+        break;
 
-case("loadNumNew"):
-$sql="select id from ".$GLOBALS['SysValue']['base']['table_name1']." where statusi=0";
-$result=mysql_query($sql);
-$num=mysql_numrows($result);
-if($num==0) echo "";
-  else echo $num;
-break;
+    // Данные по заказу
+    case ("loadIdOrder"):
+    //error_reporting(0);
+        $XMLS=null;
+        $XMLM=null;
 
-// Данные по заказу
-case ("loadIdOrder"):
-//error_reporting(0);
-if(!empty($id)){
-$OrdersReturn=OrdersReturn($id);
-$XML='<?xml version="1.0" encoding="windows-1251"?>
+        if(!empty($_REQUEST['id'])) {
+            $OrdersReturn=OrdersReturn($_REQUEST['id']);
+            $XML='<?xml version="1.0" encoding="windows-1251"?>
 <orderdb>';
 
-
-if(is_array($GetOrderStatusArray))
-foreach ($GetOrderStatusArray as $status)
- $XMLS.='
+            if(is_array($GetOrderStatusArray))
+                foreach ($GetOrderStatusArray as $status)
+                    $XMLS.='
   <status>
     <sid>'.$status['id'].'</sid>
 	<sname>'.$status['name'].'</sname>
  </status>
  ';
 
- 
-if(is_array($GetOplataMetodArray))
-foreach ($GetOplataMetodArray as $metod)
- @$XMLM.='
+            if(is_array($GetOplataMetodArray))
+                foreach ($GetOplataMetodArray as $metod)
+                    $XMLM.='
   <pay>
     <pid>'.$metod['id'].'</pid>
 	<pname>'.$metod['name'].'</pname>
  </pay>
  ';
- 
- 
-$XML.='<order>
+            // Данные по заказу
+            $XML.='<order>
 	      <data>'.PHPShopDate::dataV($OrdersReturn['order']['data']).'</data>
           <datas>'.$OrdersReturn['datas'].'</datas>
 		  <uid>'.$OrdersReturn['order']['ouid'].'</uid>
@@ -367,11 +407,10 @@ $XML.='<order>
 		  <productlist>
 		  ';
 
-
-
-if(is_array($OrdersReturn['cart']['cart']))
-foreach ($OrdersReturn['cart']['cart'] as $vals)
-  $XML.='
+            // Содержание корзины
+            if(is_array($OrdersReturn['cart']['cart']))
+                foreach ($OrdersReturn['cart']['cart'] as $vals)
+                    $XML.='
   <product>
     <id>'.$vals['id'].'</id>
 	<art>#'.$vals['uid'].'</art>
@@ -381,22 +420,23 @@ foreach ($OrdersReturn['cart']['cart'] as $vals)
 	<num>'.$vals['num'].'</num>
  </product>
  ';
-$XML.='
+            $XML.='
 </productlist>
 </orderdb>';
-echo $XML;
-}
-break;
+            echo $XML;
+        }
+        break;
 
+    // Описание товара из корзины
+    case("loadIdOrderProduct"):
 
-case("loadIdOrderProduct"):
-if(!empty($id)){
-$OrdersReturn=OrdersReturn($id);
-$XML='<?xml version="1.0" encoding="windows-1251"?>
+        if(!empty($_REQUEST['id'])) {
+            $OrdersReturn=OrdersReturn($_REQUEST['id']);
+            $XML='<?xml version="1.0" encoding="windows-1251"?>
 <orderdb>';
-if(is_array($OrdersReturn['cart']['cart']))
-foreach ($OrdersReturn['cart']['cart'] as $vals)
-$XML.='
+            if(is_array($OrdersReturn['cart']['cart']))
+                foreach ($OrdersReturn['cart']['cart'] as $vals)
+                    $XML.='
 <product>
     <id>'.$vals['id'].'</id>
 	<art>'.$vals['uid'].'</art>
@@ -405,16 +445,14 @@ $XML.='
 	<price>'.ReturnSumma($vals['price'],$vals['id'],$OrdersReturn['order']['discount']).'</price>
 	<num>'.$vals['num'].'</num>
 </product>';
-echo $XML.'</orderdb>';
+            echo $XML.'</orderdb>';
+        }
+        break;
+
+    // Обновление данных заказа
+    case("orderUpdate"):
+        OrderUpdateXml();
+        break;
 }
-break;
 
-
-case("orderUpdate"):
-OrderUpdateXml();
-break;
-
-
-
-}
 ?>

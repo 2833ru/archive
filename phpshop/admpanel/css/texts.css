@@ -67,18 +67,8 @@ a.phpshop{
    font-size:15px;
 }
 
-* HTML a.phpshop{ /* Только для браузера IE */
-   text-decoration:none;
-   font-weight: bolder;
-   padding-right:20;
-   color:#0A246A;
-   font-size:15px;
-}
 
-#phpshop{
-width:100%;
-filter:progid:DXImageTransform.Microsoft.dropshadow(OffX=1, OffY=1, Color='white', Positive='true');
-}
+
 
 a.none{
    text-decoration: none;

@@ -1,10 +1,10 @@
-<?
-/*
-+-------------------------------------+
-|  PHPShop Order Agent                |
-|  Модуль Формы заказа                |
-+-------------------------------------+
-*/
+<?php
+/**
+ * Печатная форма бланка заказа для Order Agent
+ * @package PHPShopExchange
+ * @author PHPShop Software
+ * @version 1.1
+ */
 
 $_classPath="../../../phpshop/";
 include($_classPath."class/obj.class.php");

@@ -43,6 +43,7 @@ class PHPShopPrice extends PHPShopBaseXml {
         $this->option['price4']="Цена 5";
         $this->option['price5']="Цена 7";
         $this->option['pict']=true;
+        $this->option['paginator_off']=false;
         parent::PHPShopBaseXml();
     }
     

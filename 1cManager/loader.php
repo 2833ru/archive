@@ -1,20 +1,21 @@
-<?
-/*
-+-------------------------------------+
-|  PHPShop Enterprise Pro 1C          |
-|  Модуль Автономной Выгрузки         |
-+-------------------------------------+
-*/
+<?php
+/**
+ * Автономная синхронизация заказов с 1С
+ * @package PHPShopExchange
+ * @author PHPShop Software
+ * @version 1.5
+ */
 
-include("login.php");
-include("mailer.php");
+// Функции авторизации
+include_once("login.php");
 
+// Функции работы с почтой
+include_once("mailer.php");
 
 function ReturnSumma($sum,$disc) {
     $sum=$sum-($sum*$disc/100);
     return $sum;
 }
-
 
 // Заводим статус обработанного заказа
 function CheckStatusReady() {
@@ -23,15 +24,16 @@ function CheckStatusReady() {
     @$result=mysql_query(@$sql);
     $num=mysql_numrows($result);
 
-// Запись нового статуса
+    // Запись нового статуса
     if(empty($num))
         mysql_query("INSERT INTO ".$GLOBALS['SysValue']['base']['table_name32']." VALUES (100, 'Передано в бухгалтерию', '#ffff33','')");
-
 
     return 100;
 }
 
-
+/**
+ * Обработка комманд [check_f | update_f | check | new | update | list | optimize]
+ */
 switch($_GET['command']) {
 
     // Оптимизация базы перед загрузкой склада
@@ -54,6 +56,7 @@ switch($_GET['command']) {
         @$result=mysql_query(@$sql);
         while(@$row = mysql_fetch_array(@$result)) {
 
+            $csv=null;
             $csv1="Начало личных данных\n";
             $csv2="Начало заказанных товаров\n";
             $csv3="Начало данных доставки\n";
@@ -82,7 +85,7 @@ switch($_GET['command']) {
 
             $csv1.="$id;$uid;$datas;$mail;$name $discountStr;$conpany;$tel;$oplata;$sum;$discount;$inn;$adres;\n";
 
-            if(@is_array($order['Cart']['cart']))
+            if(is_array($order['Cart']['cart']))
                 foreach($order['Cart']['cart'] as $val) {
                     $id=$val['id'];
                     $uid=$val['uid'];
@@ -98,9 +101,9 @@ switch($_GET['command']) {
             $PHPShopDelivery = new PHPShopDelivery($order['Person']['dostavka_metod']);
             $csv3.=$PHPShopDelivery->getCity().";".$PHPShopDelivery->getPrice($sum,$weight).";".$valuta."\n";
 
-            @$csv.=$csv1.$csv2.$csv3;
+            $csv.=$csv1.$csv2.$csv3;
         }
-        echo @$csv;
+        echo $csv;
         } else exit('Ошибка проверки параметров блока list');
         break;
 
@@ -129,7 +132,7 @@ switch($_GET['command']) {
     // кол-во новых заказов
     // command=new&date1=123456&date2=24255
     case("new"):
-        $sql="select id from ".$GLOBALS['SysValue']['base']['table_name1']." where seller!='1' and datas<'$date2' and datas>'$date1'";
+        $sql="select id from ".$GLOBALS['SysValue']['base']['table_name1']." where seller!='1' and datas<'$_GET[date2]' and datas>'$_GET[date1]'";
         @$result=mysql_query(@$sql);
         $new_order=mysql_numrows($result);
         echo $new_order;
@@ -138,11 +141,12 @@ switch($_GET['command']) {
     // Проверка для Счет-фактур
     // command=check&date1=123456&date2=24255
     case("check"):
-        $sql="select * from ".$GLOBALS['SysValue']['base']['table_name9']." where datas<'$date2' and datas>'$date1'";
+        $csv=null;
+        $sql="select * from ".$GLOBALS['SysValue']['base']['table_name9']." where datas<'$_GET[date2]' and datas>'$_GET[date1]'";
         @$result=mysql_query(@$sql);
         while($row = mysql_fetch_array($result)) {
             $cid=$row['cid'];
-            @$csv.="$cid;";
+            $csv.="$cid;";
         }
         echo $csv;
         break;
@@ -152,9 +156,10 @@ switch($_GET['command']) {
     case("update_f"):
         $sql="UPDATE ".$GLOBALS['SysValue']['base']['table_name9']."
      SET
-	 datas_f=$date 
-     where cid='$cid'";
-        @$result=mysql_query(@$sql) or die("error");
+	 datas_f=$_GET[date] 
+     where cid='$_GET[cid]'";
+        $result=mysql_query($sql) or die("error");
+        
         // Шлем сообщение пользователю
         SendMailUser($id,"invoice");
         break;
@@ -162,7 +167,7 @@ switch($_GET['command']) {
     // Проверка загрузки Счет-фактур
     // command=check_f&cid=123
     case("check_f"):
-        $sql="select datas_f from ".$GLOBALS['SysValue']['base']['table_name9']." where cid='$cid' limit 1";
+        $sql="select datas_f from ".$GLOBALS['SysValue']['base']['table_name9']." where cid='$_GET[cid]' limit 1";
         @$result=mysql_query(@$sql);
         $row = mysql_fetch_array($result);
         $datas_f=$row['datas_f'];
@@ -171,6 +176,5 @@ switch($_GET['command']) {
 
     default: echo "Нет комманды<br>
 	 loader.php?command=[check_f | update_f | check | new | update | list | optimize]";
-
 }
 ?>

@@ -1,20 +1,19 @@
-<?
-/*
-+-------------------------------------+
-|  PHPShop Enterprise                 |
-|  Файл Оформление Заказа             |
-+-------------------------------------+
-*/
+<?php
+/**
+ * Оформление заказа
+ * @package PHPShopCoreDepricated
+ */
 
-// Создаем корзину
-function Chek($stroka)// проверка вводимых цифр
-{
-    if (!ereg ("([0-9])", $stroka)) $stroka="0";
-    return abs($stroka);
-}
+// Функции доставки
+include_once($SysValue['file']['delivery']);
 
-function Chek2($stroka)// проверка вводимых цифр
-{
+/**
+ * Форматирование стоимости в заказе
+ * @package PHPShopDepricated
+ * @param int $stroka сумма
+ * @return float
+ */
+function Chek2($stroka) {
     global $LoadItems;
     $formatPrice = unserialize($LoadItems['System']['admoption']);
     $format=$formatPrice['price_znak'];
@@ -22,56 +21,83 @@ function Chek2($stroka)// проверка вводимых цифр
     return number_format(abs($stroka),$format,"."," ");
 }
 
-
 // Очистка корзины
-if(@$SysValue['nav']['query']['cart']=="clean") {
-    session_unregister('cart');
-    unset($cart);
+if($SysValue['nav']['query']['cart']=="clean") {
+    $_SESSION['cart']=false;
+    unset($_SESSION['cart']);
 }
 
-
+/**
+ * Вывод количества товаров в корзине
+ * @package PHPShopDepricated
+ * @param array $cart
+ * @return int
+ */
 function ReturnNum($cart) {
-    while (list($key, $value) = @each($cart)) @$num+=$cart[$key]['num'];
-    return @$num;
-}
-
-if(isset($id_edit))// редактирование кол-ва
-{
-    $cart[$id_edit]['num']=abs($num_new);
-    session_register('cart');
-}
-if(isset($id_delet))// удаление товара
-{
-    unset($cart[@$id_delet]);
-    session_register('cart');
-}
-if(@$cart[@$id_edit]['num']=="0")// удаление товара с нулевым кол-ом
-{
-    unset($cart[$id_edit]);
-    session_register('cart');
+    $num=0;
+    if(is_array($cart))
+        while (list($key, $value) = each($cart)) $num+=$cart[$key]['num'];
+    return $num;
 }
 
 
+// Корзина
+PHPShopObj::loadClass('cart');
+$PHPShopCart = new PHPShopCart();
+
+
+// Редактирование кол-ва
+if(isset($_POST['id_edit'])) {
+    $PHPShopCart->edit($_POST['id_edit'],$_POST['num_new']);
+    //$_SESSION['cart'][$id_edit]['num']=abs($num_new);
+}
+
+// Удаление товара
+if(isset($_POST['id_delet'])) {
+    $PHPShopCart->del($_POST['id_delet']);
+    //unset($_SESSION['cart'][$_POST['id_delet']]);
+}
+
+// Удаление товара с нулевым кол-ом
+if($_SESSION['cart'][$_POST['id_delet']]['num']=="0") {
+    unset($_SESSION['cart'][$_POST['id_delet']]);
+}
+
+// Настройки
 $option=unserialize($LoadItems['System']['admoption']);
 
-
+/**
+ * Вывод данных по товару по артикулу
+ * @package PHPShopDepricated
+ * @param string $uid артикул товара
+ * @return array
+ */
 function getExcelInfoUid($uid) {
     global $SysValue;
+
     $sql="select * from ".$SysValue['base']['table_name2']." where uid=\"$uid\" limit 1";
     $result=mysql_query($sql);
+
     return @mysql_fetch_array($result);
 }
 
-
+/**
+ * Вывод данных по товару по ИД
+ * @package PHPShopDepricated
+ * @param int $id ИД товара
+ * @return array
+ */
 function getExcelInfoId($id) {
     global $SysValue;
+
     $sql="select * from ".$SysValue['base']['table_name2']." where id=$id limit 1";
     $result=mysql_query($sql);
+
     return @mysql_fetch_array($result);
 }
 
 
-switch($_REQUEST['from']) {
+switch($_GET['from']) {
 
     // Поддержка корзины из Shop2CD
     case "html":
@@ -102,7 +128,7 @@ switch($_REQUEST['from']) {
     // Поддержка корзины из Excel OnLine Price
     case "onlineprice":
 
-        $excel_cart=base64_decode($c);
+        $excel_cart=base64_decode($_GET['c']);
         parse_str($excel_cart,$order_array);
         if(is_array($order_array['c'])) {
             foreach ($order_array['c'] as $k=>$num) {
@@ -133,7 +159,7 @@ switch($_REQUEST['from']) {
 
     // Поддержка корзины из Excel 1C Price
     case "":
-        $excel_cart=base64_decode($c);
+        $excel_cart=base64_decode($_GET['c']);
         parse_str($excel_cart,$order_array);
         if(is_array($order_array['c'])) {
             foreach ($order_array['c'] as $k=>$num) {
@@ -160,16 +186,17 @@ switch($_REQUEST['from']) {
             $cart=$_SESSION['cart'];
         }
         break;
-
-
-
 }
 
+$cart=$_SESSION['cart'];
 
-
-
-if(count(@$cart)>0)// вывод корзины
-{
+// вывод корзины
+if(count($_SESSION['cart'])>0) {
+    $display_cart=null;
+    $weight=0;
+    $sum=0;
+    $sumOrder=0;
+    $num=0;
     if(is_array($cart))
         foreach($cart as $j=>$v) {
             $price_now=ReturnSummaNal($cart[$j]['price']*$cart[$j]['num'],0);
@@ -178,7 +205,7 @@ if(count(@$cart)>0)// вывод корзины
             //$CatId=$LoadItems['Product'][$cart[$j]['id']]['category'];
             //$Catname=$LoadItems['Podcatalog'][$CatId]['name'];
 
-            @$display_cart.='
+            $display_cart.='
 <form name="forma_cart" method="post" action="'.$SysValue['dir']['dir'].'/order/">
 <tr>
 	<td>
@@ -208,11 +235,9 @@ if(count(@$cart)>0)// вывод корзины
 	</td>
 	<td align=right class=red>'.$price_now.' '.GetValutaOrder().'</td>
 	</td>
-</tr>
+</tr>';
 
- ';
-
-            //Определение и суммирование веса
+            // Определение и суммирование веса
             $goodid=$cart[$j]['id'];
             $goodnum=$cart[$j]['num'];
             $wsql='select weight from '.$SysValue['base']['table_name2'].' where id=\''.$goodid.'\'';
@@ -222,15 +247,15 @@ if(count(@$cart)>0)// вывод корзины
             if (!$cweight) {
                 $zeroweight=1;
             } //Один из товаров имеет нулевой вес!
-            @$weight+=$cweight;
+            $weight+=$cweight;
 
-            @$sum+=$price_now;
-            @$sumOrder+=$priceOrder;
-            @$sum=number_format($sum,"2",".","");
-            @$num+=$cart[$j]['num'];
+            $sum+=$price_now;
+            $sumOrder+=$priceOrder;
+            $sum=number_format($sum,"2",".","");
+            $num+=$cart[$j]['num'];
         }
 
-    //Обнуляем вес товаров, если хотя бы один товар был без веса
+    // Обнуляем вес товаров, если хотя бы один товар был без веса
     if ($zeroweight) {
         $weight=0;
         $we=' &ndash; Не указан';
@@ -238,11 +263,11 @@ if(count(@$cart)>0)// вывод корзины
         $we='&nbsp;гр.';
     }
 
-    if(count(@$cart)>0) {
+    if(count($cart)>0) {
         $ChekDiscount=ChekDiscount($sumOrder);
-//$GetDeliveryPrice=$weight;
+        //$GetDeliveryPrice=$weight;
         $GetDeliveryPrice=GetDeliveryPrice("",$sum,$weight);
-        @$display='
+        $display='
 <table border=0 width=99% cellpadding=0 cellspacing=3 class=style1>
 <tr>
 	<td ><strong>Наименование</strong></td>
@@ -255,8 +280,7 @@ if(count(@$cart)>0)// вывод корзины
 	<img src="images/shop/break.gif" alt="" width="100%" height="1" border="0">
 	</td>
 </tr>
-'.@$display_cart.'
-
+'.$display_cart.'
 <tr>
 	<td colspan="4">
 	<img src="images/shop/break.gif" alt="" width="100%" height="1" border="0">
@@ -307,42 +331,40 @@ if(count(@$cart)>0)// вывод корзины
 	<b><span id="TotalSumma">'.(ReturnSummaOrder($sum,$ChekDiscount[0])+$GetDeliveryPrice).'</span></b> '.GetValutaOrder().'</td>
 </tr>
 </table>
-<input type="hidden" id="OrderSumma" name="OrderSumma"  value="'.ReturnSummaOrder($sum,$ChekDiscount[0]).'">
-';
-        @$display.="
+<input type="hidden" id="OrderSumma" name="OrderSumma"  value="'.ReturnSummaOrder($sum,$ChekDiscount[0]).'">';
+        $display.="
 <script>
 if(window.document.getElementById('num')){
-window.document.getElementById('num').innerHTML='".ReturnNum(@$cart)."';
-window.document.getElementById('sum').innerHTML='".Chek2(@$sum)."';
+window.document.getElementById('num').innerHTML='".ReturnNum($cart)."';
+window.document.getElementById('sum').innerHTML='".Chek2($sum)."';
 }
-</script>
-";
+</script>";
     }
 
-
-    // Убераем приглашение регистрации
+    // Прячим приглашение регистрации
     if(isset($_SESSION['UsersId'])) {
         $SysValue['other']['ComStartReg']="<!--";
         $SysValue['other']['ComEndReg']="-->";
     }
 
-
-
-    // Номер заказа
+    // Рассчитываем номер заказа
     $sql="select uid from ".$SysValue['base']['table_name1']." order by id desc LIMIT 0, 1";
     $result=mysql_query($sql);
     $row=mysql_fetch_array($result);
     $last=$row['uid'];
     $all_num=explode("-",$last);
     $ferst_num=$all_num[0];
+
     if($ferst_num<100) $ferst_num=100;
     $order_num = $ferst_num + 1;
-    $order_num=$order_num."-".substr(abs(crc32(uniqid($sid))),0,2);
+
+    // Номер заказа
+    $order_num=$order_num."-".substr(abs(crc32(uniqid(session_id()))),0,2);
 
     if(isset($_SESSION['UsersId'])) {
         $GetUsersInfo=GetUsersInfo($_SESSION['UsersId']);
-        
-        // Определяем переменные
+
+        // Определяем переменые
         $SysValue['other']['UserMail']= $GetUsersInfo['mail'];
         $SysValue['other']['UserName']= $GetUsersInfo['name'];
         $SysValue['other']['UserTel']= $GetUsersInfo['tel'];
@@ -369,33 +391,25 @@ $SysValue['other']['UserInn']= $_COOKIE['UserInn'];
     $SysValue['other']['orderWeight']= ReturnNum($cart);
     $SysValue['other']['catalogCat']= "Оформление заказа";
     $SysValue['other']['catalogCategory']= "Данные";
-    $SysValue['other']['orderContentCart']=@$display;
+    $SysValue['other']['orderContentCart']=$display;
     $SysValue['other']['orderDate']=date("d-m-y");
     $SysValue['other']['orderDelivery']=GetDelivery(@$_GET['d']);
     $SysValue['other']['orderOplata']=GetOplataMetod();
-    $SysValue['other']['deliveryId']= @$_GET['d'];
+    $SysValue['other']['deliveryId']= $_GET['d'];
 
-
-// Если корзина больше суммы мимального заказа
+    // Если корзина больше суммы мимального заказа
     if($option['cart_minimum'] < $sum) {
 
-// Подключаем шаблон
+        // Подключаем шаблон
         $SysValue['other']['orderContent']=ParseTemplateReturn($SysValue['templates']['main_order_forma']);
 
     }else {
 
-        // Определяем переменные
-        $SysValue['other']['orderContent']="<FONT style=\"font-size:14px;color:red\">
-<B>".$SysValue['lang']['cart_minimum']." ".$option['cart_minimum']." </B></FONT><BR>".$SysValue['lang']['bad_order_mesage_2']."
-";
-
-
+        // Сообщение о минимальном заказе
+        $SysValue['other']['orderContent']="<FONT style=\"font-size:14px;color:red\"><B>".$SysValue['lang']['cart_minimum']." ".$option['cart_minimum']." </B></FONT><BR>".$SysValue['lang']['bad_order_mesage_2'];
     }
     $SysValue['other']['DispShop']=ParseTemplateReturn($SysValue['templates']['main_order_list']);
-
-
 }
-
 else {
     // Определяем переменые
     $SysValue['other']['mesageText']= "<FONT style=\"font-size:14px;color:red\">
@@ -404,16 +418,16 @@ else {
 document.getElementById('num').innerHTML = '--';
 document.getElementById('sum').innerHTML = '';
 document.getElementById('order').style.display = 'none';
-</script>
-";
+</script>";
 
-    // Подключаем шаблон
+    // Подключаем шаблон формы заказа
     $SysValue['other']['orderMesage']=ParseTemplateReturn($SysValue['templates']['order_forma_mesage']);
-// Определяем переменые
+
+    // Определяем переменые
     $SysValue['other']['DispShop']=ParseTemplateReturn($SysValue['templates']['order_forma_mesage_main']);
 
 }
 
 // Подключаем шаблон 
-@ParseTemplate($SysValue['templates']['shop']);
+ParseTemplate($SysValue['templates']['shop']);
 ?>

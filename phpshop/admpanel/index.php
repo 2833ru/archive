@@ -2,13 +2,12 @@
 require("connect.php");
 
 // Secure Fix 6.0
-function RequestSearch($search){
-global $PHP_SELF;
-$pathinfo=pathinfo($PHP_SELF);
-$f=$pathinfo['basename'];
-if($f != "adm_sql.php" and $f != "adm_sql_file.php" and $f != "action.php"){
-$com=array("union","select","insert","update","delete");
-$mes='
+function RequestSearch($search) {
+    $pathinfo=pathinfo($_SERVER['PHP_SELF']);
+    $f=$pathinfo['basename'];
+    if($f != "adm_sql.php" and $f != "adm_sql_file.php" and $f != "action.php") {
+        $com=array("union","select","insert","update","delete");
+        $mes='
 <html>
 <head>
 	<title>Secure Fix 6.0</title>
@@ -34,12 +33,12 @@ $mes='
 	
 	
 
-<h4 style="color:red">Внимание!!!</h4><br>Работа скрипта '.$PHP_SELF.' прервана из-за использования внутренней команды';
-$mes2="<br>Удалите все вхождения этой команды в водимой информации.";
-foreach($com as $v)
-      if(@preg_match("/".$v."/i", $search)){
-	   $search=eregi_replace($v,"!!!$v!!!",$search);
-	   exit($mes." ".strtoupper($v).$mes2."<br><br><br><textarea style='width: 100%;height:50%'>".substr($search, 0, 11)."</textarea><p>Команда к тексте выделена знаками !!! с обеих сторон</p>
+<h4 style="color:red">Внимание!!!</h4><br>Работа скрипта '.$_SERVER['PHP_SELF'].' прервана из-за использования внутренней команды';
+        $mes2="<br>Удалите все вхождения этой команды в водимой информации.";
+        foreach($com as $v)
+            if(@preg_match("/".$v."/i", $search)) {
+                $search=eregi_replace($v,"!!!$v!!!",$search);
+                exit($mes." ".strtoupper($v).$mes2."<br><br><br><textarea style='width: 100%;height:50%'>".substr($search, 0, 11)."</textarea><p>Команда к тексте выделена знаками !!! с обеих сторон</p>
 <hr>
 <div align=right>
 <input type=button value=Вернуться onclick=\"history.back(1)\">
@@ -49,26 +48,28 @@ foreach($com as $v)
 </tr>
 </table>
 ");
-	   }}
+        }
+    }
+
 }
 
+// Проверка безопасности
 foreach($_REQUEST as $val) RequestSearch($val);
-
 
 // Отключаем ошибки
 error_reporting(0);
 @mysql_connect ("$host", "$user_db", "$pass_db")or @die("Невозможно подсоединиться к базе");
 mysql_select_db("$dbase")or @die("Невозможно подсоединиться к базе");
+$SendMailStatus=null;
 
-function CheckBlackList($n){
-global $SysValue;
-$sql="select * from ".$SysValue['base']['table_name22']." where ip='$n'";
-$result=mysql_query($sql);
-$num=mysql_num_rows($result);
-return $num;
+
+function CheckBlackList($n) {
+    global $SysValue;
+    $sql="select * from ".$SysValue['base']['table_name22']." where ip='$n'";
+    $result=mysql_query($sql);
+    $num=mysql_num_rows($result);
+    return $num;
 }
-
-
 
 // Языки
 $GetSystems=GetSystems();
@@ -77,72 +78,72 @@ $Lang=$option['lang'];
 require("./language/".$Lang."/language.php");
 
 
-if(@$do=="out"){
-session_destroy();
-setcookie("PHPSESSID", "", (time()-1000), "/phpshop/admpanel/", $SERVER_NAME, 0);
+if($_GET['do']=="out") {
+    session_destroy();
+    setcookie("PHPSESSID", "", (time()-1000), "/phpshop/admpanel/", $_SERVER['SERVER_NAME'], 0);
 }
 
 // Проверка Прокси
 if($SysValue['geoip']['geoip'] == "true")
-if($_SERVER["SERVER_ADDR"] != "127.0.0.1"){
-include("geoip/geoip.inc");
+    if($_SERVER["SERVER_ADDR"] != "127.0.0.1") {
+        include("geoip/geoip.inc");
 
-$FlagProxy=1;
-$gi = geoip_open("geoip/GeoIP.dat",GEOIP_STANDARD);
-$PROXY=geoip_country_code_by_addr($gi, $REMOTE_ADDR);
-$MyPROXY=explode(",",$SysValue['geoip']['geoip_zone']);
+        $FlagProxy=1;
+        $gi = geoip_open("geoip/GeoIP.dat",GEOIP_STANDARD);
+        $PROXY=geoip_country_code_by_addr($gi, $_SERVER['REMOTE_ADDR']);
+        $MyPROXY=explode(",",$SysValue['geoip']['geoip_zone']);
 
-foreach($MyPROXY as $value)
-       if($PROXY == $value) $FlagProxy=0;
+        foreach($MyPROXY as $value)
+            if($PROXY == $value) $FlagProxy=0;
 
-$MyList=CheckBlackList($REMOTE_ADDR);
-if($MyList > 0) $FlagProxy=1;
-}
+        $MyList=CheckBlackList($_SERVER['REMOTE_ADDR']);
+        if($MyList > 0) $FlagProxy=1;
+    }
 
 if($FlagProxy == 1) {
-header("Location: /?status=lock&ip=$REMOTE_ADDR&proxy=$PROXY");
-exit("Заблокировано для ".$REMOTE_ADDR);
+    header("Location: /?status=lock&ip=".$_SERVER['REMOTE_ADDR']."&proxy=$PROXY");
+    exit("Заблокировано для ".$_SERVER['REMOTE_ADDR']);
 }
 
 
-if(isset($pas_to_mail))
- {
-$log=htmlspecialchars(addslashes($log));
-$sql="select password,mail from $table_name19 where login='$log'";
-$result=mysql_query($sql);
-while($row = mysql_fetch_array($result)){
-$OLDpassword=$row['password'];
-$OLDmail=$row['mail'];
-}
-  if($OLDmail!=""){
-$content="
+if(isset($_POST['pas_to_mail'])) {
+    $log=htmlspecialchars(addslashes($_POST['log']));
+    $sql="select password,mail from $table_name19 where login='".$log."'";
+    $result=mysql_query($sql);
+    while($row = mysql_fetch_array($result)) {
+        $OLDpassword=$row['password'];
+        $OLDmail=$row['mail'];
+    }
+    if(!empty($OLDmail)) {
+        $content="
 Доброго времени!
 ---------------
 
 Уважаемый $log, вы запросили выслать на ваш адрес пароль для доступа 
-к панели администрирования PHPShop на сайте ".$SERVER_NAME."
+к панели администрирования PHPShop на сайте ".$_SERVER['SERVER_NAME']."
 
 Ваши данные
 ---------------
 Пользователь: $log
 Пароль: ".base64_decode($OLDpassword)."
 Дата: ".date("d-m-y H:s a")."
-IP отправителя:".$REMOTE_ADDR."
+IP отправителя:".$_SERVER['REMOTE_ADDR']."
 
 ---------------
 С уважением,
 Компания PHPSHOP
 http://www.phpshop.ru";
 
-$codepage  = "windows-1251";              
-$header  = "MIME-Version: 1.0\n";
-$header .= "From: \"admin@".eregi_replace("www.","",$SERVER_NAME)."\" <\"MAIL PHPSHOP\">\n";
-$header .= "Content-Type: text/plain; charset=$codepage\n";
-$header .= "X-Mailer: PHP/";
-$zag="Доступ к панели администрирования PHPSHOP";
-mail($OLDmail,$zag,$content,$header);
-$SendMailStatus="
- <br><br>
+        $codepage  = "windows-1251";
+        $header  = "MIME-Version: 1.0\n";
+        $header .= "From: \"robot@".eregi_replace("www.","",$_SERVER['SERVER_NAME'])."\" <\"MAIL PHPSHOP\">\n";
+        $header .= "Content-Type: text/plain; charset=$codepage\n";
+        $header .= "X-Mailer: PHP/";
+        $zag="Доступ к панели администрирования PHPSHOP";
+
+        // Сообщение администратору
+        mail($OLDmail,$zag,$content,$header);
+        $SendMailStatus="<br><br>
 <table style=\"border: 1px;border-style:inset;\" >
 <tr>
 	<td>
@@ -150,41 +151,40 @@ $SendMailStatus="
 	ваш пароль был успешно отослан по адресу ".$OLDmail."</font>
 	</td>
 </tr>
-</table>
-";
+</table>";
+    }
 }
- }
 
-elseif(isset($send_avtor))
-{
-$sql="select * from $table_name19 where enabled='1'";
-$result=mysql_query($sql);
-$pas=base64_encode($_POST['pas']);
-while (@$row = mysql_fetch_array($result)){
-	if($row['login']==$log and $row['password']==$pas)
-	  {
-	   $logPHPSHOP=$log;
-	   $pasPHPSHOP=$pas;
-	   $idPHPSHOP=$row['id'];
-	   session_start();
-	   session_register('logPHPSHOP');
-	   session_register('pasPHPSHOP');
-	   session_register('idPHPSHOP');
-	   
-// Пишим в журнал
-$sql="INSERT INTO ".$SysValue['base']['table_name10']."
-VALUES ('','$logPHPSHOP','".date("U")."','0','$REMOTE_ADDR')";
-$result=mysql_query($sql);
+elseif(isset($_POST['send_avtor'])) {
+    $sql="select * from $table_name19 where enabled='1'";
+    $result=mysql_query($sql);
+    $pas=base64_encode($_POST['pas']);
+    while (@$row = mysql_fetch_array($result)) {
+        if($row['login']==$_POST['log'] and $row['password']==$pas) {
+            $logPHPSHOP=$log;
+            $pasPHPSHOP=$pas;
+            $idPHPSHOP=$row['id'];
+            session_start();
+            
+            // Административная сессия
+            $_SESSION['logPHPSHOP']=$logPHPSHOP;
+            $_SESSION['pasPHPSHOP']=$pasPHPSHOP;
+            $_SESSION['idPHPSHOP']=$idPHPSHOP;
 
-	   if($_POST['pas_to_cookies'] == 1){
-	   setcookie("mylog", $_POST['log'], time()+60*60*24*30, "/phpshop/admpanel/", $SERVER_NAME, 0);
-       setcookie("mypas", base64_encode($_POST['pas']), time()+60*60*24*30, "/phpshop/admpanel/", $SERVER_NAME, 0);
-       
-	   }
-	   if(isset($log) and isset($pas))
-	   $_id=session_id();
-	    setcookie("win_e", $_POST['win_e'], time()+60*60*24*30, "/phpshop/admpanel/", $SERVER_NAME, 0);
-       $_Path='
+            // Запись в журнал авторизации
+            $sql="INSERT INTO ".$SysValue['base']['table_name10']."
+VALUES ('','$logPHPSHOP','".date("U")."','0','".$_SERVER['REMOTE_ADDR']."')";
+            $result=mysql_query($sql);
+
+            if($_POST['pas_to_cookies'] == 1) {
+                setcookie("mylog", $_POST['log'], time()+60*60*24*30, "/phpshop/admpanel/", $_SERVER['SERVER_NAME'], 0);
+                setcookie("mypas", base64_encode($_POST['pas']), time()+60*60*24*30, "/phpshop/admpanel/", $_SERVER['SERVER_NAME'], 0);
+
+            }
+            if(isset($_POST['log']) and isset($pas))
+                $_id=session_id();
+            setcookie("win_e", $_POST['win_e'], time()+60*60*24*30, "/phpshop/admpanel/", $_SERVER['SERVER_NAME'], 0);
+            $_Path='
 function WO(){
 var URL = "admin.php";
 var win_e='.$_POST['win_e'].'-0;
@@ -197,97 +197,94 @@ else{ window.location.replace(URL);}
 }
 tmr = setTimeout("WO();",100);
 ';
-	   //header("Location: admin.php");
-	  }
-	  }
-	  if(!@$logPHPSHOP){
-	  // Пишим в журнал
-$sql="INSERT INTO ".$SysValue['base']['table_name10']."
-VALUES ('','".htmlspecialchars(addslashes($log."@".base64_decode($pas)))."','".date("d-m-y H:s a")."','1','$REMOTE_ADDR')";
-$result=mysql_query($sql);
-}
-	}
-	
-	
-	// Выбор языка
-function GetLang($skin){
-global $SysValue;
-$dir="./language";
-if (is_dir($dir)) {
-    if ($dh = opendir($dir)) {
-        while (($file = readdir($dh)) !== false) {
-		
-		    if($skin == $file)
-			$sel="selected";
-			  else $sel="";
-		
-		    if($file!="." and $file!=".." and $file!="index.html")
-            @$name.= "<option value=\"$file\" $sel>".ucfirst($file)."</option>";
         }
-        closedir($dh);
+    }
+    if(empty($logPHPSHOP)) {
+
+        // Запись в журнал авторизации
+        $sql="INSERT INTO ".$SysValue['base']['table_name10']."
+VALUES ('','".htmlspecialchars(addslashes($_POST['log']."@".base64_decode($_POST['pas'])))."','".date("d-m-y H:s a")."','1','".$_SERVER['REMOTE_ADDR']."')";
+        $result=mysql_query($sql);
     }
 }
-$disp="
-<select name=\"LangIn\" onchange=\"ReloadLang(this.value)\">
-".@$name."
-</select>
-";
-return @$disp;
+
+// Выбор языка
+function GetLang($skin) {
+    global $SysValue;
+
+    $name=null;
+    $dir="./language";
+    if (is_dir($dir)) {
+        if (@$dh = @opendir($dir)) {
+            while (($file = readdir($dh)) !== false) {
+
+                if($skin == $file)
+                    $sel="selected";
+                else $sel="";
+
+                if($file!="." and $file!=".." and $file!="index.html")
+                    $name.= "<option value=\"$file\" $sel>".ucfirst($file)."</option>";
+            }
+            closedir($dh);
+        }
+    }
+    $disp="<select name=\"LangIn\" onchange=\"ReloadLang(this.value)\">".$name."</select>";
+    return $disp;
 }
+
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
-
 <html>
-<head>
-<title><?=$SysValue['Lang']['Title']['index']." -> ".$ProductName?></title>
-<META http-equiv=Content-Type content="text/html; charset=windows-1251">
-<META name="ROBOTS" content="NONE">
-<META name="copyright" content="<?=$RegTo?>">
-<META name="engine-copyright" content="PHPSHOP.RU, <?=$ProductName;?>">
-<LINK href="css/texts.css" type="text/css" rel="stylesheet">
-<script type="text/javascript" language="JavaScript" src="language/<?=$Lang?>/language_interface.js"></script>
-<script language="JavaScript">
+    <head>
+        <title><?=$SysValue['Lang']['Title']['index']." -> ".$ProductName?></title>
+        <META http-equiv=Content-Type content="text/html; charset=windows-1251">
+        <META name="ROBOTS" content="NONE">
+        <META name="copyright" content="<?=$RegTo?>">
+        <META name="engine-copyright" content="PHPSHOP.RU, <?=$ProductName;?>">
+        <LINK href="css/texts.css" type="text/css" rel="stylesheet">
+        <script type="text/javascript" language="JavaScript" src="language/<?=$Lang?>/language_interface.js"></script>
+        <script language="JavaScript">
 <?=@$_Path;?>
 
-function ReloadLang(my_lang){
-location.replace("./?lang="+my_lang)
-}
+            function ReloadLang(my_lang){
+                location.replace("./?lang="+my_lang)
+            }
 
-function CookiesFlash(){
-if(confirm("Внимание!\nВы действительно хотите удалить идентификационные\nданные (Cookies) с этого компьютера?")){
-SetCookie('mylog', '', -1000);
-SetCookie('mypas', '', -1000);
-document.getElementById("log").value='';
-document.getElementById("pas").value='';
-document.getElementById("cookiesflash").checked=false;
-}else document.getElementById("cookiesflash").checked=false;
-}
+            function CookiesFlash(){
+                if(confirm("Внимание!\nВы действительно хотите удалить идентификационные\nданные (Cookies) с этого компьютера?")){
+                    SetCookie('mylog', '', -1000);
+                    SetCookie('mypas', '', -1000);
+                    document.getElementById("log").value='';
+                    document.getElementById("pas").value='';
+                    document.getElementById("cookiesflash").checked=false;
+                }else document.getElementById("cookiesflash").checked=false;
+            }
 
-function SetCookie(name, value, days){
-var today = new Date();
-expires = new Date(today.getTime() + days*24*60*60*1000);
-document.cookie = name + "=" + escape(value) +"; expires=" + expires.toGMTString();
-}
+            function SetCookie(name, value, days){
+                var today = new Date();
+                expires = new Date(today.getTime() + days*24*60*60*1000);
+                document.cookie = name + "=" + escape(value) +"; expires=" + expires.toGMTString();
+            }
 
-function GetCookie(cookieName){
-var cookieValue = '';
-	var posName = document.cookie.indexOf(escape(cookieName) + '=');
-	if (posName != -1) {
-		var posValue = posName + (escape(cookieName) + '=').length;
-		var endPos = document.cookie.indexOf(';', posValue);
-		if (endPos != -1) cookieValue = unescape(document.cookie.substring(posValue, endPos));
-		else cookieValue = unescape(document.cookie.substring(posValue));
-	}
-return cookieValue;
-}
+            function GetCookie(cookieName){
+                var cookieValue = '';
+                var posName = document.cookie.indexOf(escape(cookieName) + '=');
+                if (posName != -1) {
+                    var posValue = posName + (escape(cookieName) + '=').length;
+                    var endPos = document.cookie.indexOf(';', posValue);
+                    if (endPos != -1) cookieValue = unescape(document.cookie.substring(posValue, endPos));
+                    else cookieValue = unescape(document.cookie.substring(posValue));
+                }
+                return cookieValue;
+            }
 
-window.status="Powered & Developed by PHPShop.ru";
-</script>
-</head>
-<!-- ENDscript -->
-<body onload="DoCheckInterfaceLang('index',1)">
+            window.status="Powered & Developed by PHPShop.ru";
+        </script>
+    </head>
+    <!-- ENDscript -->
+    <body>
 <?
-echo"
+        echo"
 <table width=\"100%\" height=\"100%\">
 <tr>
 	<td valign=\"middle\">
@@ -336,17 +333,16 @@ echo"
 </tr>
 <tr>
  <td colspan=1 style=\"padding:5\">";
- if(!$_COOKIE['win_e'])
- echo "<input type=checkbox name=win_e value=1 ><span name=txtLang id=txtLang>Открыть в текущем окне</span><br>";
- else  echo "<input type=checkbox name=win_e value=1 checked><span name=txtLang id=txtLang>Открыть в текущем окне</span><br>";
- if(!$_COOKIE['mylog'] and !$_COOKIE['mypas'])
- echo "<input type=checkbox name=pas_to_cookies value=1><span name=txtLangs id=txtLangs>Запомнить логин и пароль</span>.<br>";
- else echo"<input type=checkbox  id=\"cookiesflash\" onclick=\"CookiesFlash()\"><span name=txtLang2 id=txtLang2>Не запоминать логин и пароль</span>.<br>";
- echo"<input type=checkbox name=pas_to_mail value=1><span name=txtLang id=txtLang>Выслать пароль на E-mail пользователя</span>.
+        if(!$_COOKIE['win_e'])
+            echo "<input type=checkbox name=win_e value=1 ><span name=txtLang id=txtLang>Открыть в текущем окне</span><br>";
+        else  echo "<input type=checkbox name=win_e value=1 checked><span name=txtLang id=txtLang>Открыть в текущем окне</span><br>";
+        if(!$_COOKIE['mylog'] and !$_COOKIE['mypas'])
+            echo "<input type=checkbox name=pas_to_cookies value=1><span name=txtLangs id=txtLangs>Запомнить логин и пароль</span>.<br>";
+        else echo"<input type=checkbox  id=\"cookiesflash\" onclick=\"CookiesFlash()\"><span name=txtLang2 id=txtLang2>Не запоминать логин и пароль</span>.<br>";
+        echo"<input type=checkbox name=pas_to_mail value=1><span name=txtLang id=txtLang>Выслать пароль на E-mail пользователя</span>.
  ".$SendMailStatus."
  </td>
  <td valign=top>
-
 
  </td>
 </tr>
@@ -355,9 +351,7 @@ echo"
 </form>
 </td>
 </tr>
-</table>
-";
-?>
-</body>
+</table>";
+        ?>
+    </body>
 </html>
-

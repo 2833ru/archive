@@ -320,7 +320,7 @@ tabPane.addTabPage( document.getElementById( \"intro-page\" ) );
 <table cellpadding=\"2\" cellspacing=\"0\" border=\"0\">
 <tr valign=\"top\">
     <td>
-	<FIELDSET  style=\"width: 200; height: 6em;\">
+	<FIELDSET>
 	<LEGEND ><span name=txtLang id=txtLang><u>С</u>остояние заказа</span></LEGEND>
 	<div style=\"padding:10\" align=\"left\">
 	<form method=\"post\">

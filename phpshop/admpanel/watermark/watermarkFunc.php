@@ -1,7 +1,5 @@
 <?php
-
-
-
+error_reporting(0);
 function newWatermarkPng( $sourceImageObject, $watermarkImageObject, $alphaChanel = 100,  $mergeLevel = 100, $mergeFlag = 0, $positionX = 0, $positionY = 0, $positionFlag = 0, $sm = 0, $copyFlag = 0  ) {
         	
 // вычисляем коэффициент альфа канала    	

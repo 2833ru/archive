@@ -61,7 +61,7 @@ $row = mysql_fetch_array($result);
 	$status=unserialize($row['status']);
 
 	$xid = base64_decode(base64_decode($xid));
-	echo $xid;
+
 echo "
 
 <form method=\"post\" id=\"product_edit\">

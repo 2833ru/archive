@@ -84,7 +84,7 @@ class PHPShopSecurity {
      * @return bool
      */
     function true_num($num) {
-        return preg_match("/^[0-9]{1,15}$/",$num);
+        return preg_match("/^[0-9]{1,20}$/",$num);
     }
 
     /**
@@ -150,4 +150,28 @@ class PHPShopSecurity {
 
 }
 
+// Поддержка API 2.X
+function true_parent($str) {
+    return preg_match("/^[a-zA-Z0-9]{8}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{12}$/",$str);
+}
+
+function true_email($email) {
+    return PHPShopSecurity::true_email($email);
+}
+
+function true_login($login) {
+    return preg_match("/^[a-zA-Z0-9_\.]{2,20}$/",$login);
+}
+
+function true_passw($passw) {
+    return preg_match("/^[a-zA-Z0-9_]{4,20}$/",$passw);
+}
+
+function true_num($num) {
+    return preg_match("/^[0-9]{1,10}$/",$num);
+}
+
+function TotalClean($str,$flag){
+    return PHPShopSecurity::TotalClean($str,$flag);
+}
 ?>

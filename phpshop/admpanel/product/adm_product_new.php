@@ -654,7 +654,7 @@ tabPane2.addTabPage( document.getElementById( "image2" ) );
 
 </div>
 <div class="tab-page" id="description" style="height:450px">
-<h2 class="tab"><span name=txtLang id=txtLang>Краткое описание</span></h2>
+<h2 class="tab"><span name=txtLang id=txtLang>Описание</span></h2>
 
 <script type="text/javascript">
 tabPane.addTabPage( document.getElementById( "description" ) );
@@ -1708,7 +1708,7 @@ $yml_bid_array_new=array(
 
 
 $sql="INSERT INTO $table_name2
-VALUES ('$productID','$category_new','".CleanStr(trim($name_new))."','".addslashes($EditorContent)."','".addslashes($EditorContent2)."','$priceOne','$priceBox','$numBox','1','$enabled_new','$uid_new','$spec_new','$odnotip_new','$vendor','".serialize($vendor_new)."','$yml_new','$num_new','','$title_new','$title_enabled_new','".date("U")."','$page','".$_SESSION['idPHPSHOP']."','$descrip_new','$descrip_enabled_new','$title_shablon_new','$descrip_shablon_new','$keywords_new','$keywords_enabled_new','$keywords_shablon_new','$pic_small_new','$pic_big_new','".serialize($yml_bid_array_new)."','$parent_enabled_new','$parent_new','$items_new','$weight_new','$price2','$price3','$price4','$price5','".serialize($filenum)."','$baseinputvaluta_new','$edizm_new','$dop_cat_new')";
+VALUES ('','$category_new','".CleanStr(trim($name_new))."','".addslashes($EditorContent)."','".addslashes($EditorContent2)."','$priceOne','$priceBox','$numBox','1','$enabled_new','$uid_new','$spec_new','$odnotip_new','$vendor','".serialize($vendor_new)."','$yml_new','$num_new','','$title_new','$title_enabled_new','".date("U")."','$page','".$_SESSION['idPHPSHOP']."','$descrip_new','$descrip_enabled_new','$title_shablon_new','$descrip_shablon_new','$keywords_new','$keywords_enabled_new','$keywords_shablon_new','$pic_small_new','$pic_big_new','".serialize($yml_bid_array_new)."','$parent_enabled_new','$parent_new','$items_new','$weight_new','$price2','$price3','$price4','$price5','".serialize($filenum)."','$baseinputvaluta_new','$edizm_new','$dop_cat_new')";
 $result=mysql_query($sql) or die("".mysql_error()."");
 
 if($reload=="true")

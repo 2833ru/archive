@@ -1,64 +1,60 @@
-<?
+<?php
+/**
+ * Вывод уведомлений в личном кабинете пользователя
+ * @package PHPShopCoreDepricated
+ * @param int $UsersId ИД пользователя
+ * @return string
+ */
+function UsersNoticeList($UsersId) {
+    global $SysValue,$LoadItems;
 
-function UsersNoticeList($UsersId){
-global $SysValue,$LoadItems,$noticeId;
-$n = CleanSearch($n);
+    $noticeId = $SysValue['nav']['query']['noticeId'];
+    $n = CleanSearch($n);
+    $dis=null;
 
+    // Удаляем
+    if(isset($noticeId)) {
+        $noticeId = CleanSearch($noticeId);
+        $sql="delete from ".$SysValue['base']['table_name34']." where id=$noticeId";
+        @$result=mysql_query(@$sql);
+        header("Location: /users/notice.html");
+    }
 
-// Удаляем
-if(isset($noticeId)){
-$noticeId = CleanSearch($noticeId);
-$sql="delete from ".$SysValue['base']['table_name34']." where id=$noticeId";
-@$result=mysql_query(@$sql);
-header("Location: /users/notice.html");
-}
+    $sql="select * from ".$SysValue['base']['table_name34']." where user_id='$UsersId' order by datas desc";
+    $result=mysql_query($sql);
+    while(@$row = mysql_fetch_array(@$result)) {
+        $id=$row['id'];
+        $datas_start=$row['datas_start'];
+        $datas=$row['datas'];
+        $user_id=$row['user_id'];
+        $product_id=$row['product_id'];
+        $enabled=$row['enabled'];
+        $LoadItems['Product'][$product_id]=ReturnProductData($product_id,0);
 
-
-$sql="select * from ".$SysValue['base']['table_name34']." where user_id='$UsersId' order by datas desc";
-$result=mysql_query($sql);
-while(@$row = mysql_fetch_array(@$result))
-    {
-	$id=$row['id'];
-	$datas_start=$row['datas_start'];
-    $datas=$row['datas'];
-	$user_id=$row['user_id'];
-    $product_id=$row['product_id'];
-	$enabled=$row['enabled'];
-    $LoadItems['Product'][$product_id]=ReturnProductData($product_id,0);
-	
-	
-	if($enabled == 0)
-@$dis.='
-<tr>
+        if(empty($enabled))
+            $dis.='<tr>
 	<td id=allspecwhite>
 	<a href="/shop/UID_'.$product_id.'.html" class="b" title="'.$LoadItems['Product'][$product_id]['name'].'"><img src="images/shop/icon-setup.gif" alt="" width="16" height="16" border="0" align="absmiddle" hspace="5">'.$LoadItems['Product'][$product_id]['name'].'</a>
 	</td>
 	<td id=allspecwhite>
-	'.dataV($datas_start).' - '.dataV($datas).'
+	'.PHPShopDate::dataV($datas_start).' - '.PHPShopDate::dataV($datas).'
 	</td>
 	<td id=allspecwhite>
 	<img src="images/shop/icon-deactivate.gif" alt=""  border="0" align="absmiddle"><a href="javascript:void(0);" onclick="NoticeDel('.$id.')">удалить</a>
-	</td>
-</tr>
-';
- else 
-@$dis_arhiv.='
-<tr>
+	</td></tr>';
+        else
+            $dis_arhiv.='<tr>
 	<td id=allspecwhite>
 	<a href="/shop/UID_'.$product_id.'.html" class="b" title="'.$LoadItems['Product'][$product_id]['name'].'"><img src="images/shop/icon-setup.gif" alt="" width="16" height="16" border="0" align="absmiddle" hspace="5">'.$LoadItems['Product'][$product_id]['name'].'</a>
 	</td>
 	<td id=allspecwhite>
-	'.dataV($datas_start).' - '.dataV($datas).'
+	'.PHPShopDate::dataV($datas_start).' - '.PHPShopDate::dataV($datas).'
 	</td>
 	<td id=allspecwhite>
 	<img src="images/shop/icon-activate.gif" alt=""  border="0" align="absmiddle">выполнено
-	</td>
-</tr>
-';
-
-}
-$disp='
-<DIV id=allspec><IMG height=16 alt="" hspace=5 src="images/shop/date.gif" width=16 align=absMiddle border=0><B>Текущие заявки</B> </DIV>
+	</td></tr>';
+    }
+    $disp='<DIV id=allspec><IMG height=16 alt="" hspace=5 src="images/shop/date.gif" width=16 align=absMiddle border=0><B>Текущие заявки</B> </DIV>
 <table  id=allspecwhite cellpadding=3>
 <tr>
 	<td id=allspec>
@@ -87,48 +83,50 @@ $disp='
 	<b>Статус</b>
 	</td>
 </tr>
-'.$dis_arhiv.'
-</table>
+'.$dis_arhiv.'</table>';
 
-';
-return $disp;
+    return $disp;
 }
 
+/**
+ * Вывод уведомлений
+ * @package PHPShopCoreDepricated
+ * @param int $UsersId ИД пользователя
+ * @param int  $productId ИД товара
+ * @return string
+ */
+function UsersNotice($UsersId,$productId) {
+    global $SysValue,$LoadItems;
 
-function UsersNotice($UsersId,$productId){
-global $SysValue,$_POST,$LoadItems,$REMOTE_ADDR,$SERVER_NAME;
+    // Ресайз
+    $Options=unserialize($LoadItems['System']['admoption']);
 
-// Ресайз
-$Options=unserialize($LoadItems['System']['admoption']);
+    $sql="select * from ".$SysValue['base']['table_name27']." where id='$UsersId' LIMIT 0, 1";
+    $result=mysql_query($sql);
+    $row = mysql_fetch_array($result);
+    $id=$row['id'];
+    $login=$row['login'];
+    $password=$row['password'];
+    $status=$row['status'];
+    $mail=$row['mail'];
+    $name=$row['name'];
+    $company=$row['company'];
+    $inn=$row['inn'];
+    $tel=$row['tel'];
+    $adres=$row['adres'];
+    $LoadItems['Product'][$productId]=ReturnProductData($productId,0);
 
-$sql="select * from ".$SysValue['base']['table_name27']." where id='$UsersId' LIMIT 0, 1";
-$result=mysql_query($sql);
-$row = mysql_fetch_array($result);
-      $id=$row['id'];
-      $login=$row['login'];
-	  $password=$row['password'];
-	  $status=$row['status'];
-	  $mail=$row['mail'];
-	  $name=$row['name'];
-	  $company=$row['company'];
-	  $inn=$row['inn'];
-	  $tel=$row['tel'];
-	  $adres=$row['adres'];
-	  $LoadItems['Product'][$productId]=ReturnProductData($productId,0);
-	  
-// Шлем мыло менеджеру
-if(@$_POST['notice']){
-$codepage  = "windows-1251";     
-$header_adm  = "MIME-Version: 1.0\n";
-$header_adm .= "From:   <".$mail.">\n";
-$header_adm .= "Content-Type: text/plain; charset=$codepage\n";
-$header_adm .= "X-Mailer: PHP/";
-$zag_adm=$LoadItems['System']['name']." - Поступила заявка на уведомление о товаре ".$LoadItems['Product'][$_POST['id']]['name'];
+    if(!empty($_POST['notice'])) {
+        $codepage  = "windows-1251";
+        $header_adm  = "MIME-Version: 1.0\n";
+        $header_adm .= "From:   <".$mail.">\n";
+        $header_adm .= "Content-Type: text/plain; charset=$codepage\n";
+        $header_adm .= "X-Mailer: PHP/";
+        $zag_adm=$LoadItems['System']['name']." - Поступила заявка на уведомление о товаре ".$LoadItems['Product'][$_POST['id']]['name'];
 
-$active=date("U")+($_POST['date']*60*60*24*30);
+        $active=date("U")+($_POST['date']*60*60*24*30);
 
-$content_adm="
-Доброго времени!
+        $content_adm="Доброго времени!
 --------------------------------------------------------
 
 Поступила заявка на уведомление о товаре с интернет-магазина '".$LoadItems['System']['name']."'
@@ -136,9 +134,9 @@ $content_adm="
 
 Товар: ".$LoadItems['Product'][$_POST['id']]['name']."
 АРТ: ".$LoadItems['Product'][$_POST['id']]['uid']."
-Линк: http://".$SERVER_NAME."/shop/UID_".$_POST['id'].".html
+Линк: http://".$_SERVER['SERVER_NAME']."/shop/UID_".$_POST['id'].".html
 Дата поступления: ".date("d-m-y H:i a")."
-Активность заявки до: ".dataV($active)."
+Активность заявки до: ".PHPShopDate::dataV($active)."
 
 Пользователь: $name
 Компания: $company
@@ -148,45 +146,35 @@ E-mail: $mail
 
 ".TotalClean($_POST['message'],2)."
 
-IP:".$REMOTE_ADDR."
+IP:".$_SERVER['REMOTE_ADDR']."
 ---------------------------------------------------------
 
 
 Powered & Developed by www.PHPShop.ru
 ".$SysValue['license']['product_name'];
-mail($LoadItems['System']['adminmail2'],$zag_adm, $content_adm, $header_adm);
 
-// Проверка сущ записей
-$sql="select id from ".$SysValue['base']['table_name34']." where user_id='$UsersId' and product_id='".$_POST['id']."' and enabled='0'  LIMIT 0, 1";
-$result=mysql_query($sql);
-$num=mysql_numrows($result);
+        // Высыдаем сообщение администратору
+        mail($LoadItems['System']['adminmail2'],$zag_adm, $content_adm, $header_adm);
 
-if($num == 0){
+        // Проверка сущ записей
+        $sql="select id from ".$SysValue['base']['table_name34']." where user_id='$UsersId' and product_id='".$_POST['id']."' and enabled='0'  LIMIT 0, 1";
+        $result=mysql_query($sql);
+        $num=mysql_numrows($result);
 
-// Пишем в базу
-$sql="INSERT INTO ".$SysValue['base']['table_name34']."
-   VALUES ('','$UsersId','".$_POST['id']."','".date("U")."','$active','0')";
-   $result=mysql_query($sql);
-   header("Location: /users/notice.html");
-   $statusMail='
-<div id=allspecwhite>
-<img src="images/shop/comment.gif" alt="" width="16" height="16" border="0" hspace="5" align="absmiddle"><font color="#008000"><b>Заявка менеджеру отправлена</b></font></div>
-';
- }
- else 
-  $statusMail='
-<div id=allspecwhite>
-<img src="images/shop/comment.gif" alt="" width="16" height="16" border="0" hspace="5" align="absmiddle"><font color="red"><b>Заявка для данного товара уже имеется в базе, удалите предыдущую заявку из базы для создания новой.</b></font></div>
-';
+        if(empty($num)) {
 
-
-}
-
-
-$disp='
-<p><br></p>
-
-<div id=allspec>
+            // Запись в БД
+            $sql="INSERT INTO ".$SysValue['base']['table_name34']." VALUES ('','$UsersId','".$_POST['id']."','".date("U")."','$active','0')";
+            $result=mysql_query($sql);
+            header("Location: /users/notice.html");
+            $statusMail='<div id=allspecwhite>
+<img src="images/shop/comment.gif" alt="" width="16" height="16" border="0" hspace="5" align="absmiddle"><font color="#008000"><b>Заявка менеджеру отправлена</b></font></div>';
+        }
+        else
+            $statusMail='<div id=allspecwhite>
+<img src="images/shop/comment.gif" alt="" width="16" height="16" border="0" hspace="5" align="absmiddle"><font color="red"><b>Заявка для данного товара уже имеется в базе, удалите предыдущую заявку из базы для создания новой.</b></font></div>';
+    }
+    $disp='<p><br></p><div id=allspec>
 <img src="images/shop/icon_info.gif" alt="" width="16" height="16" border="0" hspace="5" align="absmiddle"><b>Уведомить при появлении товара в продаже</b> 
 </div>
 <p>
@@ -222,7 +210,7 @@ $disp='
   <form method="post" name="forma_message">
   Дополнительная информация:<br>
   <textarea style="width:100%;height:100px;" name="message" id="message"></textarea>
-  '.@$statusMail.'<br>
+  '.$statusMail.'<br>
   <div style="float: right"><img src="images/shop/date.gif" alt="" width="16" height="16" border="0" align="absmiddle" hspace="3">Не позднее: <select name="date">
 			<option value="1" SELECTED>1 месяца</option>
 			<option value="2">2 месяцев</option>
@@ -236,11 +224,8 @@ $disp='
   </form>
   </td>
 </tr>
-</table>
-
-</p>
-<p><br></p>
-';
-return $disp;
+</table></p><p><br></p>';
+    
+    return $disp;
 }
 ?>

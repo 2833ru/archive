@@ -98,7 +98,7 @@ if(mysql_num_rows($result) > 0){
 	$row = mysql_fetch_array($result);
 
 	//запрещаем копирование config.ini
-	if($row[name] != "config.ini"){
+	if("/$row[dir]/$row[name]" != "/phpshop/inc/config.ini"){
 	@chmod("../../../../".$row['dir'],0777);
 	if (!ftp_chdir($ftp_stream,$ftp_folder."/update/".$row['dir'])){
 		$GLOBALS['_RESULT']['stat'] = "<span style=\"color:red\">upload_modul_error:7 - некорректная папка $row[dir] на сервере<br>Ошибка карты обновления, обратитесь в техподдержку.</span><br><br>";

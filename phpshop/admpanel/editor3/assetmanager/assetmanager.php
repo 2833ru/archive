@@ -13,6 +13,7 @@ $table_name19=$SysValue['base']['table_name19'];
 mysql_select_db("$dbase")or @die("Невозможно подсоединиться к базе");
 
 require("../../enter_to_admin.php");
+require("../../connect.php");
 include("settings.php");
 
 
@@ -283,10 +284,10 @@ function writeFileSelections()
 					$nIndex=$nIndex+1;
 					$bFileFound=true;
 					
-					$sCurrent_virtual=ereg_replace($sBaseRoot0,"",$sCurrent);
-					if($sBaseRoot1!="")$sCurrent_virtual=ereg_replace($sBaseRoot1,"",$sCurrent_virtual);
-					if($sBaseRoot2!="")$sCurrent_virtual=ereg_replace($sBaseRoot2,"",$sCurrent_virtual);
-					if($sBaseRoot3!="")$sCurrent_virtual=ereg_replace($sBaseRoot3,"",$sCurrent_virtual);
+					$sCurrent_virtual=@ereg_replace($sBaseRoot0,"",$sCurrent);
+					if($sBaseRoot1!="")$sCurrent_virtual=@ereg_replace($sBaseRoot1,"",$sCurrent_virtual);
+					if($sBaseRoot2!="")$sCurrent_virtual=@ereg_replace($sBaseRoot2,"",$sCurrent_virtual);
+					if($sBaseRoot3!="")$sCurrent_virtual=@ereg_replace($sBaseRoot3,"",$sCurrent_virtual);
 					
 					if($sColor=="#f5f5f5")
 						$sColor = "";

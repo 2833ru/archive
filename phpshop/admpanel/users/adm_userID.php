@@ -150,7 +150,7 @@ tabPane.addTabPage( document.getElementById( "intro-page" ) );
   <FIELDSET>
 <LEGEND><span name=txtLang id=txtLang><u>C</u>татус</span></LEGEND>
 <div style="padding:10">
-<input type="radio" name="enabled_new" value="1" <?=@$fl?>><span name=txtLang id=txtLang>Активbровать</span>&nbsp;&nbsp;&nbsp;
+<input type="radio" name="enabled_new" value="1" <?=@$fl?>><span name=txtLang id=txtLang>Активировать</span>&nbsp;&nbsp;&nbsp;
 <input type="radio" name="enabled_new" value="0" <?=@$fl2?>><font color="#FF0000"><span name=txtLang id=txtLang>Деактивировать</span></font>
 </div>
 </FIELDSET>

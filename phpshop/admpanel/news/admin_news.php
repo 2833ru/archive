@@ -29,13 +29,13 @@ while ($row = mysql_fetch_array($result))
 		}
 	@$display.="
 	<tr id=\"r".$id."\" class=row>
-	<td align=\"center\" id=Nws class=Nws onmouseover=\"show_on('r".$id."')\" onmouseout=\"show_out('r".$id."')\" onclick=\"miniWin('news/adm_newsID.php?id=$id',650,650)\">
+	<td align=\"center\" id=Nws class=Nws onmouseover=\"show_on('r".$id."')\" onmouseout=\"show_out('r".$id."')\" onclick=\"miniWin('news/adm_newsID.php?id=$id',670,650)\">
 	$data
 	</td>
-	<td  id=Nws class=Nws onmouseover=\"show_on('r".$id."')\" onmouseout=\"show_out('r".$id."')\" onclick=\"miniWin('news/adm_newsID.php?id=$id',650,650)\">
+	<td  id=Nws class=Nws onmouseover=\"show_on('r".$id."')\" onmouseout=\"show_out('r".$id."')\" onclick=\"miniWin('news/adm_newsID.php?id=$id',670,650)\">
 	$zag
 	</td>
-	<td  id=Nws class=Nws onmouseover=\"show_on('r".$id."')\" onmouseout=\"show_out('r".$id."')\" onclick=\"miniWin('news/adm_newsID.php?id=$id',650,650)\">
+	<td  id=Nws class=Nws onmouseover=\"show_on('r".$id."')\" onmouseout=\"show_out('r".$id."')\" onclick=\"miniWin('news/adm_newsID.php?id=$id',670,650)\">
 	".substr($kratko,0,150)."...
 	</td>
 	<td><input type=checkbox name='c".$id."' value=\"$id\"></td>

@@ -1,23 +1,15 @@
-<?
-/*
-+-------------------------------------+
-|  Имя: PHPShopSort                   |
-|  Разработчик: PHPShop Software      |
-|  Использование: Enterprise          |
-|  Назначение: База характеристик     |
-|  Версия: 1.0                        |
-|  Тип: Extends class                 |
-|  Зависимости: нет                   |
-|  Вызов: Object                      |
-+-------------------------------------+
-*/
-
+<?php
 
 if (!defined("OBJENABLED")){
 require_once(dirname(__FILE__)."/array.class.php");
 }
 
-
+/**
+ * Массив с характеристиками товаров
+ * @author PHPShop Software
+ * @version 1.0
+ * @package PHPShopArray
+ */
 class PHPShopSortArray extends PHPShopArray{
 	 
 	 function PHPShopSortArray(){
@@ -26,6 +18,12 @@ class PHPShopSortArray extends PHPShopArray{
 	 }
 }
 
+/**
+ * Массив с характеристиками категорий товаров
+ * @author PHPShop Software
+ * @version 1.0
+ * @package PHPShopArray
+ */
 class PHPShopSortCategoryArray extends PHPShopArray{
 	 
 	 function PHPShopSortCategoryArray(){

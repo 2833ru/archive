@@ -677,7 +677,7 @@ echo ('
 <tr>
     <td align=left >
 	<FIELDSET id=fldLayout >
-<LEGEND id=lgdLayout><span name=txtLang id=txtLang><u>Н</u>аименование товара</span> #<b>'.$id.'</b>: </LEGEND>
+<LEGEND id=lgdLayout><span name=txtLang id=txtLang><u>Н</u>аименование товара</span> <b>ID:'.$id.'</b>: </LEGEND>
 <div style="padding:10">
 <input type=text name=name_new class=full value="'.$name.'">
 </div>
@@ -951,7 +951,7 @@ tabPane2.addTabPage( document.getElementById( "image2" ) );
 
 </div>
 <div class="tab-page" id="description" style="height:450px">
-<h2 class="tab"><span name=txtLang id=txtLang>Краткое описание</span></h2>
+<h2 class="tab"><span name=txtLang id=txtLang>Описание</span></h2>
 
 <script type="text/javascript">
 tabPane.addTabPage( document.getElementById( "description" ) );

@@ -1,4 +1,4 @@
-<?
+<?php
 // Снимаем ограничения на выполнение
 if($SysValue['my']['time_limit_enabled']=="true") {
     $is_safe_mode = @ini_get('safe_mode') == '1' ? 1 : 0;
@@ -82,8 +82,15 @@ class UserChek {
 
 session_start();
 @mysql_query("SET NAMES 'cp1251'");
-$UserChek = new UserChek(@$_SESSION['logPHPSHOP'],@$_SESSION['pasPHPSHOP'],$GLOBALS['SysValue']['base']['table_name19'],$GLOBALS['SysValue']['dir']['dir']);
+
+
+$UserChek = new UserChek($_SESSION['logPHPSHOP'],$_SESSION['pasPHPSHOP'],$GLOBALS['SysValue']['base']['table_name19'],$GLOBALS['SysValue']['dir']['dir']);
 $UserStatus = $UserChek->statusPHPSHOP;
+
+// Поддержка прав модулей.
+if(@$_classPath == "../../../" and CheckedRules($UserStatus["option"],1) == 1)
+    $UserChek->statusPHPSHOP=0;
+ 
 
 // Проверка прав
 function CheckedRules($a,$b) {
@@ -93,8 +100,7 @@ function CheckedRules($a,$b) {
 
 // Secure Fix 6.5
 function RequestSearch($search) {
-    global $PHP_SELF;
-    $pathinfo=pathinfo($PHP_SELF);
+    $pathinfo=pathinfo($_SERVER['PHP_SELF']);
     $f=$pathinfo['basename'];
     if($f != "adm_sql.php" and $f != "adm_sql_file.php" and $f != "action.php" and $f !=  "adm_upload.php" ) {
         $com=array("union");
@@ -124,7 +130,7 @@ function RequestSearch($search) {
 	
 	
 
-<h4 style="color:red">Внимание!!!</h4><br>Работа скрипта '.$PHP_SELF.' прервана из-за использования внутренней команды';
+<h4 style="color:red">Внимание!!!</h4><br>Работа скрипта '.$_SERVER['PHP_SELF'].' прервана из-за использования внутренней команды';
         $mes2="<br>Удалите все вхождения этой команды в водимой информации.";
         foreach($com as $v)
             if(@preg_match("/".$v."/i", $search)) {
@@ -139,7 +145,7 @@ function RequestSearch($search) {
 </tr>
 </table>
 ");
-        }
+            }
     }
 
 }

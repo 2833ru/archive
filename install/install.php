@@ -1,7 +1,11 @@
 <?
 error_reporting(0);
-// Парсируем установочный файл
-$SysValue=parse_ini_file("../phpshop/inc/config.ini",1);
+$_classPath="../phpshop/";
+include($_classPath."class/obj.class.php");
+PHPShopObj::loadClass("base");
+PHPShopObj::loadClass("mail");
+
+$PHPShopBase = new PHPShopBase($_classPath."inc/config.ini");
 ?>
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
@@ -9,7 +13,7 @@ $SysValue=parse_ini_file("../phpshop/inc/config.ini",1);
 <title><?= $SysValue['license']['product_name']?> -> Установка</title>
 <META http-equiv=Content-Type content="text/html; charset=windows-1251">
 <META name="ROBOTS" content="NONE">
-<LINK href="<?=$SysValue['dir']['dir']?>/phpshop/admpanel/css/texts.css" type=text/css rel=stylesheet>
+<LINK href="./rewritemodtest/texts.css" type=text/css rel=stylesheet>
 <style>
     BODY, li, a, div {
         FONT-SIZE: 12px;
@@ -28,7 +32,7 @@ $SysValue=parse_ini_file("../phpshop/inc/config.ini",1);
         COLOR: #0066cc;
     }
     a:hover{
-        COLOR: CC6600;
+        COLOR: #CC6600;
     }
 </style>
 <script>
@@ -51,7 +55,9 @@ $SysValue=parse_ini_file("../phpshop/inc/config.ini",1);
     }
 
     function InstallOk(){
-        if(window.opener) window.opener.location.replace("../");
+        try{
+            window.opener.location.replace("../");
+        }catch(e){window.location.replace("../");}
         window.close();
     }
 
@@ -120,8 +126,8 @@ $SysValue=parse_ini_file("../phpshop/inc/config.ini",1);
     <table cellpadding="0" cellspacing="0" width="100%" height="50" id="title">
         <tr bgcolor="#ffffff">
             <td style="padding:10">
-                <b>Установка интернет-магазина <?= $SysValue['license']['product_name']." (сборка ". $SysValue['upload']['version'].")"?></b><br>
-                &nbsp;&nbsp;&nbsp;Настройка интернет-магазина
+                <b>Установка  <?= $SysValue['license']['product_name']?></b><br>
+                &nbsp;&nbsp;&nbsp;Настройка параметров и лицензионное соглашение
             </td>
             <td align="right">
                 <img src="<?=$SysValue['dir']['dir']?>/phpshop/admpanel/img/i_server_info_med[1].gif" border="0" hspace="10">
@@ -132,98 +138,84 @@ $SysValue=parse_ini_file("../phpshop/inc/config.ini",1);
     <?
 
 
-// Подключаем модули
-    include("../".$SysValue['file']['error']);            // Модуль ошибок
-
 // Выбор файла
     function GetFile() {
         $dir="./";
-        if ($dh = opendir($dir)) {
+        if (@$dh = opendir($dir)) {
             while (($file = readdir($dh)) !== false) {
                 $fstat = explode(".",$file);
                 if($fstat[1] == "sql")
-                    @$disp=$file;
+                    $disp=$file;
             }
             closedir($dh);
         }
-        return @$disp;
+        return $disp;
     }
 
 // Устанавливаем базу
-    if(@$install == 3) {
+    if($_POST['install'] == 3) {
 
-
-// Подключаем базу MySQL
-        @mysql_connect ($SysValue['connect']['host'], $SysValue['connect']['user_db'],  $SysValue['connect']['pass_db']);
-        mysql_select_db($SysValue['connect']['dbase']);
-        @mysql_query("SET NAMES 'cp1251'");
 
 
 //Отправка почты
         if($_POST['pas_send'] == 1 and !empty($_POST['pas_send'])) {
 
-            $codepage  = "windows-1251";
-            $header  = "MIME-Version: 1.0\n";
-            $header .= "From:   <no_reply@phpshop.ru>\n";
-            $header .= "Content-Type: text/plain; charset=$codepage\n";
-            $header .= "X-Mailer: PHP/";
-            $zag="PHPShop: данные установки на сервер ".$SERVER_NAME;
+            $zag="PHPShop: данные установки на сервер ".$_SERVER['SERVER_NAME'];
             $content="
 Доброго времени!
 ---------------------------------------------------------
 
-".$SysValue['license']['product_name']." упешно установлен на сервер ".$SERVER_NAME."
+".$SysValue['license']['product_name']." упешно установлен на сервер ".$_SERVER['SERVER_NAME']."
 
-Административная панель доступна по адресу:  http://$SERVER_NAME".$SysValue['dir']['dir']."/phpshop/admpanel/
-или нажатием клавиши CTRL + F12
+Административная панель доступна по адресу:  http://".$_SERVER['SERVER_NAME']."/phpshop/admpanel/
+или нажатием клавиши Ctrl + F12
+
 Логин: ".$_POST['user']."
 Пароль: ".$_POST['password']."
 
 ---------------------------------------------------------
 Powered & Developed by www.PHPShop.ru
 ".$SysValue['license']['product_name'];
-            mail($mail,$zag,$content,$header);
+
+            $PHPShopMail = &new PHPShopMail($_POST['mail'],'no_reply@phpshop.ru',$zag,$content);
 
         }
 
-
-
-//$fileBase=GetFile();
-        @$fp = fopen($fileBase, "r");
-
-
+        @$fp = fopen(GetFile(), "r");
 
         if ($fp) {
             stream_set_write_buffer($fp, 0);
             $fstat = fstat($fp);
             $CsvContent=fread($fp,$fstat['size']);
-            $CsvContent=eregi_replace("phpshop_",$prefix,$CsvContent);
-            $CsvContent=eregi_replace("support@phpshop.ru",$_POST['mail'],$CsvContent);
+            $CsvContent=eregi_replace("phpshop_",$_POST['prefix'],$CsvContent);
             fclose($fp);
         }
+
         $IdsArray2=split(";\n",$CsvContent);
+        if (count ($IdsArray2)<5) {
+            $IdsArray2=split(";\r\n",$CsvContent);
+        } //Баг, если делалась база под виндой надо бить через \r\n
         array_pop($IdsArray2);
         while (list($key, $val) = each($IdsArray2))
             $result=mysql_query($val);
+        $result=mysql_query("INSERT INTO ".$_POST['prefix']."users VALUES (1, 0x613a32343a7b733a353a2267626f6f6b223b733a353a22312d312d31223b733a343a226e657773223b733a353a22312d312d31223b733a373a2276697369746f72223b733a373a22312d312d312d31223b733a353a227573657273223b733a373a22312d312d312d31223b733a393a2273686f707573657273223b733a353a22312d312d31223b733a383a226361745f70726f64223b733a31313a22312d312d312d312d312d31223b733a363a22737461747331223b733a353a22312d312d31223b733a353a227275706179223b733a353a22302d302d30223b733a31313a226e6577735f777269746572223b733a353a22312d312d31223b733a393a22706167655f73697465223b733a353a22312d312d31223b733a393a22706167655f6d656e75223b733a353a22312d312d31223b733a353a2262616e6572223b733a353a22312d312d31223b733a353a226c696e6b73223b733a353a22312d312d31223b733a333a22637376223b733a353a22312d312d31223b733a353a226f70726f73223b733a353a22312d312d31223b733a363a22726174696e67223b733a353a22312d312d31223b733a333a2273716c223b733a353a22302d312d31223b733a363a226f7074696f6e223b733a333a22302d31223b733a383a22646973636f756e74223b733a353a22312d312d31223b733a363a2276616c757461223b733a353a22312d312d31223b733a383a2264656c6976657279223b733a353a22312d312d31223b733a373a2273657276657273223b733a353a22312d312d31223b733a31303a227273736368616e656c73223b733a353a22312d312d31223b733a363a2275706c6f6164223b693a313b7d, '".$_POST['user']."', '".base64_encode($_POST['password'])."', '".$_POST['mail']."', '1', '', '', '1', '', '1');");
 
-
-        $result=mysql_query("INSERT INTO ".$prefix."users VALUES (1, 0x613a32343a7b733a353a2267626f6f6b223b733a353a22312d312d31223b733a343a226e657773223b733a353a22312d312d31223b733a373a2276697369746f72223b733a373a22312d312d312d31223b733a353a227573657273223b733a373a22312d312d312d31223b733a393a2273686f707573657273223b733a353a22312d312d31223b733a383a226361745f70726f64223b733a31313a22312d312d312d312d312d31223b733a363a22737461747331223b733a353a22312d312d31223b733a353a227275706179223b733a353a22302d302d30223b733a31313a226e6577735f777269746572223b733a353a22312d312d31223b733a393a22706167655f73697465223b733a353a22312d312d31223b733a393a22706167655f6d656e75223b733a353a22312d312d31223b733a353a2262616e6572223b733a353a22312d312d31223b733a353a226c696e6b73223b733a353a22312d312d31223b733a333a22637376223b733a353a22312d312d31223b733a353a226f70726f73223b733a353a22312d312d31223b733a363a22726174696e67223b733a353a22312d312d31223b733a333a2273716c223b733a353a22302d312d31223b733a363a226f7074696f6e223b733a333a22302d31223b733a383a22646973636f756e74223b733a353a22312d312d31223b733a363a2276616c757461223b733a353a22312d312d31223b733a383a2264656c6976657279223b733a353a22312d312d31223b733a373a2273657276657273223b733a353a22312d312d31223b733a31303a227273736368616e656c73223b733a353a22312d312d31223b733a363a2275706c6f6164223b693a313b7d, '".$user."', '".base64_encode($password)."', '".$mail."', '1', '', '', '1', '', '1');");
-        if(@$result) {
+        if($result) {
             $copy="
 Данные доступа к PHPShop
 ------------------------
-Административная панель доступна по адресу: http://$SERVER_NAME".$SysValue['dir']['dir']."/phpshop/admpanel/ или нажатием клавиши F12
+Административная панель доступна по адресу: http://".$_SERVER['SERVER_NAME']."/phpshop/admpanel/ или нажатием клавиши Ctrl + F12
 Логин: ".$_POST['user']."
 Пароль: ".$_POST['password']."
 ";
-            $disp= "<h4>Базы установлены полностью. Магазин готов к запуску.</h4>
+            $disp= "<h4>Базы установлены полностью. Сайт готов к запуску.</h4>
 <FIELDSET id=fldLayout>
 <DIV style=\"margin:10px;padding: 10px;background-color: #FFFFFF;\" >
-Административная панель доступна по адресу:  <a href=\"http://$SERVER_NAME".$SysValue['dir']['dir']."/phpshop/admpanel/\" target=\"_blank\">http://$SERVER_NAME".$SysValue['dir']['dir']."/phpshop/admpanel/</a><br>
-или нажатием клавиши F12<br><br>
+Административная панель доступна по адресу:  <a href=\"http://".$_SERVER['SERVER_NAME']."/phpshop/admpanel/\" target=\"_blank\">http://".$_SERVER['SERVER_NAME']."/phpshop/admpanel/</a><br>
+или нажатием клавиши Ctrl + F12<br><br>
 Логин: <strong>".$_POST['user']."</strong><br>
 Пароль: <strong>".$_POST['password']."</strong><br><br>
-<textarea id=\"adm_option\" style=\"width: 0px; height: 1px\">$copy</textarea>
+<textarea id=\"adm_option\" style=\"width:0px;height:0px;display:none;\">$copy</textarea>
 <INPUT  type=button value=\"Скопировать в буфер обмена\" onclick=\"copyToClipboard()\"> 
 </DIV>
 </FIELDSET>
@@ -248,7 +240,7 @@ document.onkeydown = getKey;
                                 <TR class=adm vAlign=top align=middle>
                                     <TD align=left>
                                         <FIELDSET >
-                                            <div align="center" style="padding:10">
+                                            <div align="center" style="padding:10;">
                                                     <?=@$disp?>
                                             </div>
                                         </FIELDSET>
@@ -269,7 +261,7 @@ document.onkeydown = getKey;
     <?
 }
 
-elseif(@$install==2) {
+elseif($_POST['install']==2) {
     ?>
 <div style="padding:5">
     <FIELDSET>
@@ -299,7 +291,7 @@ elseif(@$install==2) {
                 </tr>
         </table>
         <br>
-        <input type="hidden" name="fileBase" value="<?= GetFile()?>">
+
     </FIELDSET>
     <br>
     <FIELDSET>
@@ -348,7 +340,7 @@ elseif(@$install==2) {
 
     <?
 }
-elseif(@$install==1) {
+elseif($_POST['install']==1) {
 
     while (list($val) = each($SysValue['base']))
         @$bases.=$SysValue['base'][$val].", ";
@@ -362,6 +354,8 @@ elseif(@$install==1) {
             <TD align=left width="100%">
                 <FIELDSET><LEGEND id=lgdLayout><u>Л</u>ицензионное соглашение</LEGEND>
                     <DIV style="PADDING-RIGHT: 10px; PADDING-LEFT: 10px; PADDING-BOTTOM: 10px; PADDING-TOP: 10px">
+
+
                         <textarea style="width:99%;height:300">
 ЛИЦЕНЗИОННОЕ СОГЛАШЕНИЕ НА ИСПОЛЬЗОВАНИЕ ПРОГРАММНОГО ПРОДУКТА «PHPSHOP»
 
@@ -449,6 +443,7 @@ E-mail отдела продаж: sales@phpshop.ru
 E-mail администрации: mail@phpshop.ru
                         </textarea>
 
+
                 </FIELDSET> </TD>
         </TR>
 </TABLE><br>
@@ -473,12 +468,6 @@ else {
 
     $AllError=0;
 
-// Глобалсы
-    if(ini_get('register_globals') == 1) $register_globals="............<img src=\"rewritemodtest/icon-activate.gif\" border=0 align=absmiddle> <b class='ok'>Ok</b>";
-    else {
-        $register_globals="............<img src=\"rewritemodtest/errormessage.gif\"  border=0 align=absmiddle> <b class='error'>Error</b>";
-        $AllError=1;
-    }
 
 // Апач
     if(eregi('Apache', $_SERVER['SERVER_SOFTWARE'])) $API="............<img src=\"rewritemodtest/icon-activate.gif\" border=0 align=absmiddle> <b class='ok'>Ok</b>";
@@ -496,10 +485,6 @@ else {
     }
 
 
-// Версия MySQL
-    @mysql_connect ($SysValue['connect']['host'], $SysValue['connect']['user_db'],  $SysValue['connect']['pass_db']);
-    @mysql_select_db($SysValue['connect']['dbase']);
-    @mysql_query("SET NAMES 'cp1251'");
 
     if(@mysql_get_server_info()) {
         $mysqlversion=substr(@mysql_get_server_info(),0,1);
@@ -511,24 +496,13 @@ else {
     }else $mysql="...............?";
 
 // Rewrite
-    $path_parts = pathinfo($PHP_SELF);
+    $path_parts = pathinfo($_SERVER['PHP_SELF']);
     $filename =  "http://".$_SERVER['SERVER_NAME'].$path_parts['dirname']."/rewritemodtest/test.html";
     if (@fopen($filename,"r")) $rewrite="............<img src=\"rewritemodtest/icon-activate.gif\" border=0 align=absmiddle> <b class='ok'>Ok</b>";
     else {
         $rewrite="............<img src=\"rewritemodtest/errormessage.gif\"  border=0 align=absmiddle> <b class='error'>Error</b>";
         $AllError=1;
     }
-
-
-// Версия Zend
-    $filename =  "http://".$_SERVER['SERVER_NAME'].$path_parts['dirname']."/rewritemodtest/rewritemodtest.php";
-    $html = implode('', file ($filename));
-    if (eregi('Zend Optimizer', $html)) $zend="............<img src=\"rewritemodtest/icon-activate.gif\" border=0 align=absmiddle> <b class='ok'>Ok</b>";
-    else {
-        $zend="............<img src=\"rewritemodtest/errormessage.gif\"  border=0 align=absmiddle> <b class='error'>Error</b>";
-        $AllError=1;
-    }
-
 
     $GD=gd_info();
 
@@ -555,7 +529,14 @@ else {
         $gd_freetype_linkage="............<img src=\"rewritemodtest/errormessage.gif\"  border=0 align=absmiddle> <b class='error'>Error</b>";
         $AllError=1;
     }
-
+    
+// XML Support
+if(function_exists("xml_parser_create"))
+    $xml_support="............<img src=\"rewritemodtest/icon-activate.gif\" border=0 align=absmiddle> <b class='ok'>Ok</b>";
+else  {
+    $xml_support="............<img src=\"rewritemodtest/errormessage.gif\"  border=0 align=absmiddle> <b class='error'>Error</b>";
+    $AllError=1;
+}
     ?>
 <TABLE cellSpacing=1 cellPadding=5 width="100%" height="400" align=center border=0>
     <FORM method="post" name="regForma">
@@ -566,12 +547,11 @@ else {
                         <ol>
                             <li id="line1" style="visibility:hidden"> Apache => 1.3.*&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?=$API?></li>
                             <li id="line2" style="visibility:hidden"> PHP => 4.* &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?=$php?></li>
-                            <li id="line3" style="visibility:hidden"> ZendOptimizer => 2.1.5.3 &nbsp;&nbsp;&nbsp;&nbsp;<?=$zend?></li>
-                            <li id="line4" style="visibility:hidden"> RewriteEngine ON для Apache&nbsp;&nbsp;&nbsp;<?=$rewrite?></li>
-                            <li id="line5" style="visibility:hidden"> Register Globals ON для PHP &nbsp;&nbsp;&nbsp;<?=$register_globals?></li>
-                            <li id="line6" style="visibility:hidden">GD Support для PHP <?=$gd_support?></li>
-                            <li id="line7" style="visibility:hidden">FreeType Support для PHP <?=$gd_freetype_support?></li>
-                            <li id="line8" style="visibility:hidden">FreeType Linkage для PHP <?=$gd_freetype_linkage?></li>
+                            <li id="line3" style="visibility:hidden"> RewriteEngine ON для Apache&nbsp;&nbsp;&nbsp;<?=$rewrite?></li>
+                            <li id="line4" style="visibility:hidden">GD Support для PHP <?=$gd_support?></li>
+                            <li id="line5" style="visibility:hidden">FreeType Support для PHP <?=$gd_freetype_support?></li>
+                            <li id="line6" style="visibility:hidden">FreeType Linkage для PHP <?=$gd_freetype_linkage?></li>
+                            <li id="line7" style="visibility:hidden">XML Parser для PHP <?=$xml_support?></li>
                             <br><br>
                             <ol>
                                 </DIV>
@@ -600,10 +580,10 @@ else {
                                 <script>
                                     function LoadTest(i){
                                         document.getElementById("line"+i).style.visibility = 'visible';
-                                        if(i != 8) setTimeout("LoadTest("+(i+1)+")",300);}
+                                        if(i != 7) setTimeout("LoadTest("+(i+1)+")",300);}
                                     setTimeout("LoadTest(1)",300);
                                 </script>
-    <?}?>
+                                    <?}?>
 
 
                                 </body>

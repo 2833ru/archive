@@ -1,17 +1,10 @@
-<?
-/*
-+-------------------------------------+
-|  Имя: PHPShopPage                   |
-|  Разработчик: PHPShop Software      |
-|  Использование: Enterprise          |
-|  Назначение: База стран             |
-|  Версия: 1.0                        |
-|  Тип: Extends class                 |
-|  Зависимости: нет                   |
-|  Вызов: Object                      |
-+-------------------------------------+
-*/
-
+<?php
+/**
+ * Библиотека данных по страницам
+ * @author PHPShop Software
+ * @version 1.0
+ * @package PHPShopClass
+ */
 
 if (!defined("OBJENABLED")){
 require_once(dirname(__FILE__)."/obj.class.php");

@@ -193,6 +193,13 @@ $row = mysql_fetch_array($result);
 	case(3): $sklad_status3="selected"; break;
 	}
 	
+        switch($option['nowbuy_enabled']){
+	case(0): $nowbuy_enabled0="selected"; break;
+	case(1): $nowbuy_enabled1="selected"; break;
+	case(2): $nowbuy_enabled2="selected"; break;
+        default: $nowbuy_enabled0="selected";
+	}
+
 	if($option['message_enabled']==1) $message_enabled="checked";
 	 else $message_enabled="";
 	
@@ -656,6 +663,17 @@ tabPane.addTabPage( document.getElementById( \"regim\" ) );
 	<td><span name=txtLang id=txtLang>Облако тегов</span>:</td>
 	<td><input type=\"checkbox\" value=\"1\" name=\"cloud_enabled_new\" $cloud_enabled> * Опция сортировки товаров по ключевым тегам</td>
 </tr>
+        <tr>
+	<td><span name=txtLang id=txtLang>Сейчас покупают</span>:</td>
+	<td>
+        <select name=nowbuy_enabled_new>
+	        <option value=0 $nowbuy_enabled0>не показывать</option>
+			<option value=1 $nowbuy_enabled1>компактный вид</option>
+			<option value=2 $nowbuy_enabled2>расширенный вид</option>
+
+        </select> * Влияет на время генерации первой страницы
+        </td>
+</tr>
 </table>
 </div>
 <div class=\"tab-page\" id=\"user\" style=\"height:250px\">
@@ -855,6 +873,7 @@ $option["user_skin"]=$user_skin_new;
 $option["cart_minimum"]=$cart_minimum_new;
 $option["editor_enabled"]=$editor_enabled_new;
 $option["calibrated"]=$calibrated_new;
+$option["nowbuy_enabled"]=$nowbuy_enabled_new;
 $option_new=serialize($option);
 
 $sql="UPDATE $table_name3

@@ -65,7 +65,7 @@ function actionStart() {
                     else $InstallDate="";
 
                     $ModuleHomePage='<img src="../modules/'.$file.'/install/'.$Info['icon'].'" align="absmiddle">
-<a href="http://phpshop.ru/module/?id='.$Info['base'].'" target="_blank" title="Домашняя страничка: http://phpshop.ru/module/?id='.$Info['base'].'" class="blue">'.$Info['name'].' '.$Info['version'].'</a>';
+<a href="http://wiki.phpshop.ru/index.php/Modules#'.$Info['name'].'" target="_blank" title="Описание модуля" class="blue">'.$Info['name'].' '.$Info['version'].'</a>';
                     $PHPShopInterface->setRow($i,$ChekInstallModule[1],$ModuleHomePage,$Info['description'],$InstallDate,"phpshop/modules/".$file);
                     $i++;
                 }

@@ -1,11 +1,6 @@
-<?
-/*
-+-------------------------------------+
-|  PHPShop Enterprise Pro 1C          |
-|  Модуль Авторизации                 |
-+-------------------------------------+
-*/
+<?php
 
+// Библиотеки
 include("../phpshop/class/obj.class.php");
 PHPShopObj::loadClass("base");
 PHPShopObj::loadClass("system");
@@ -13,10 +8,16 @@ PHPShopObj::loadClass("math");
 PHPShopObj::loadClass("array");
 PHPShopObj::loadClass("valuta");
 PHPShopObj::loadClass("security");
+
+// Подключение к БД
 $PHPShopBase = new PHPShopBase("../phpshop/inc/config.ini");
 
-
-// Авторизация
+/**
+ * Авторизация пользователей
+ * @package PHPShopExchange
+ * @author PHPShop Software
+ * @version 1.1
+ */
 class UserChek {
     var $logPHPSHOP;
     var $pasPHPSHOP;
@@ -35,10 +36,8 @@ class UserChek {
                 }
             }
         }
-
     }
-
-
+    
     function myDecode($disp) {
         $decode=substr($disp,0,strlen($disp)-4);
         $decode=str_replace("I",11,$decode);

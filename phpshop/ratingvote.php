@@ -1,43 +1,34 @@
-<?
-@extract($_SESSION);
-@extract($_REQUEST);
+<?php
 session_start();
+
+/**
+ * Рейтинг товаров
+ * @package PHPShopAjaxElementsDepricated
+ */
+
+
+$_classPath="./";
+include($_classPath."class/obj.class.php");
+PHPShopObj::loadClass("base");
+$PHPShopBase = new PHPShopBase($_classPath."inc/config.ini");
+PHPShopObj::loadClass("date");
+PHPShopObj::loadClass("security");
 
 // Подключаем библиотеку поддержки.
 require_once "./lib/Subsys/JsHttpRequest/Php.php";
-// Создаем главный объект библиотеки.
-// Указываем кодировку страницы (обязательно!).
 $JsHttpRequest =& new Subsys_JsHttpRequest_Php("windows-1251");
 
-// Парсируем установочный файл
-$SysValue=parse_ini_file("./inc/config.ini",1);
-  while(list($section,$array)=each($SysValue))
-                while(list($key,$value)=each($array))
-$SysValue['other'][chr(73).chr(110).chr(105).ucfirst(strtolower($section)).ucfirst(strtolower($key))]=$value;
 
-// Подключаем базу MySQL
-@mysql_connect ($SysValue['connect']['host'], $SysValue['connect']['user_db'],  $SysValue['connect']['pass_db'])or 
-@die("".PHPSHOP_error(101,$SysValue['my']['error_tracer'])."");
-mysql_select_db($SysValue['connect']['dbase'])or 
-@die("".PHPSHOP_error(102,$SysValue['my']['error_tracer'])."");
-@mysql_query("SET NAMES cp1251");
-
-//Подключаем функцию
-function CleanStr($str){
-	  $str=str_replace("/","",$str);
-	  $str=str_replace("\"","",$str);
-	  $str=str_replace("'","",$str);
-	  return $str;
-}
 $idc = $_REQUEST['idc'];
 $idgood = $_REQUEST['idgood'];
 $rate = $_REQUEST['rate'];
 $enabled = $_REQUEST['enabled'];
 
-$idc = CleanStr($idc); //Очистка переменных от хаков
-$idgood = CleanStr($idgood) ;//Очистка переменных от хаков
-$rate = CleanStr($rate) ;//Очистка переменных от хаков
-$enabled = CleanStr($enabled) ;//Очистка переменных от хаков
+
+$idc = PHPShopSecurity::CleanStr($idc);
+$idgood = PHPShopSecurity::CleanStr($idgood);
+$rate = PHPShopSecurity::CleanStr($rate);
+$enabled = PHPShopSecurity::CleanStr($enabled);
 $id_user=$_SESSION['UsersId'];
 $userip=$_SERVER['REMOTE_ADDR'];
 
@@ -90,12 +81,7 @@ if ($id_user) {
 			$result=3;		
 		}
 	}
-/*
-	$result[]=$idgood;
-	$result[]=$idc;
-	$result[]=$id_user;
-	$result[]=$userip;
-//*/
+
 } else {
 	$result=0;	
 }
@@ -105,5 +91,4 @@ $result=print_r($result, true);
 $_RESULT = array(
   'result' => $result
 ); 
-//http://phpshop96/phpshop/ratingvote.php
 ?>

@@ -46,7 +46,7 @@ class PluginStatInterface extends PHPShopInterface{
                          <td valign="top">
                             <table cellpadding="0" cellspacing="1" width="100%" border="0">
                                 <tr><td width="100%"><button class="pane"><img src="'.$this->imgPath.'arrow_d.gif" width="7" height="7" border="0" hspace="5">График</button></td></tr>
-                                <tr class="row" id="rchart"><td align="center"><img src="'.$this->chart.'"></td></tr>
+                                <tr class="row" id="rchart"><td align="center"><img src="'.$this->chart.'" width="682"></td></tr>
                                 </table>
                          </td>
                   </tr>

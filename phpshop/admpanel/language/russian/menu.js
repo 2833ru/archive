@@ -8,7 +8,7 @@ stm_ai("p1i1",[6,1,"#999999","",-1,-1,0]);
 stm_aix("p1i2","p1i0",[0,"Создать...","","",-1,-1,0,"","_self","","","black-r.gif","black-r.gif",7,7]);
 stm_bpx("p2","p1",[1,2]);
 stm_aix("p2i0","p1i0",[0,"Новый каталог","","",-1,-1,0,"javascript:miniWin('catalog/adm_catalog_new.php?reload=true','500','370')","_self","","","page_new.gif","page_new.gif"]);
-stm_aix("p2i1","p2i0",[0,"Новый товар","","",-1,-1,0,"javascript:miniWin('product/adm_product_new.php?reload=true',650,630)"]);
+stm_aix("p2i1","p2i0",[0,"Новый товар","","",-1,-1,0,"javascript:miniWin('product/adm_product_new.php?reload=true',700,650)"]);
 stm_aix("p2i2","p2i0",[0,"Новая характеристика","","",-1,-1,0,"javascript:miniWin('sort/adm_sort_new.php',500,300)"]);
 stm_aix("p2i3","p2i0",[0,"Новая группа характеристик","","",-1,-1,0,"javascript:miniWin('sort/adm_sortcategory_new.php',500,300)"]);
 stm_ep();
@@ -39,7 +39,7 @@ stm_aix("p5i0","p1i0",[0,"Новая страница","","",-1,-1,0,"javascript:miniWin('pag
 stm_aix("p5i0","p1i0",[0,"Новый каталог  страниц","","",-1,-1,0,"javascript:miniWin('page/adm_catalog_new.php','500','320')","_self","","","page_add.gif","page_add.gif"]);
 stm_aix("p5i1","p5i0",[0,"Новый банер","","",-1,-1,0,"javascript:miniWin('baner/adm_baner_new.php','630','510')"]);
 stm_aix("p5i2","p5i0",[0,"Новый текстовый блок","","",-1,-1,0,"javascript:miniWin('menu/adm_menu_new.php','630','510')"]);
-stm_aix("p5i3","p5i0",[0,"Новая новость","","",-1,-1,0,"javascript:miniWin('news/adm_news_new.php?id=3',630,630)"]);
+stm_aix("p5i3","p5i0",[0,"Новая новость","","",-1,-1,0,"javascript:miniWin('news/adm_news_new.php?id=3',670,650)"]);
 stm_aix("p5i6","p5i0",[0,"Новая ссылка","","",-1,-1,0,"javascript:miniWin('link/adm_links_new.php',630,550)"]);
 stm_aix("p5i7","p5i0",[0,"Новый опрос","","",-1,-1,0,"javascript:miniWin('opros/adm_opros_new.php',630,330)"]);
 stm_aix("p5i6","p5i0",[0,"Новый рейтинг","","",-1,-1,0,"javascript:miniWin('rating/adm_rating_new.php',630,450)"]);
@@ -78,7 +78,7 @@ stm_aix("p9i4","p1i0",[0,"Черный список","","",-1,-1,0,"javascript:DoReload('use
 stm_ep();
 stm_aix("p0i5","p0i0",[0,"Настройка"],70,20);
 stm_bpx("p10","p1",[]);
-stm_aix("p10i0","p1i0",[0,"Система","","",-1,-1,0,"javascript:miniWin('system/adm_system.php',500,380)","_self","","","joystick.gif","joystick.gif"]);
+stm_aix("p10i0","p1i0",[0,"Система","","",-1,-1,0,"javascript:miniWin('system/adm_system.php',600,450)","_self","","","joystick.gif","joystick.gif"]);
 stm_aix("p10i1","p1i0",[0,"Реквизиты","","",-1,-1,0,"javascript:miniWin('system/adm_system_recvizit.php',500,500)","_self","","","telephone.gif","telephone.gif"]);
 stm_aix("p10i2","p1i0",[0,"Keywords & Titles","","",-1,-1,0,"javascript:miniWin('system/adm_system_promo.php',650,630)","_self","","","xhtml.gif","xhtml.gif"]);
 stm_aix("p10i3","p1i0",[0,"Скидки","","",-1,-1,0,"javascript:DoReload('discount')","_self","","","award_star_gold_1.gif","award_star_gold_1.gif"]);

@@ -1,4 +1,4 @@
-<?
+<?php
 
 // Парсируем установочный файл
 $SysValue = parse_ini_file(dirname(__FILE__)."/../../phpshop/inc/config.ini",1);
@@ -34,13 +34,11 @@ window.onresize=function(){
 </SCRIPT>';
 }
 
-
 // Ресайз редактора
 function DoResize($p,$w) {
     $mywin = $p/100;
     return $w+$w*$mywin;
 }
-
 
 // Типы оплат
 function TipPayment($payment) {
@@ -61,7 +59,6 @@ function TipPayment($payment) {
     return "Оплата ".$payment;
 }
 
-
 $RegTo = $SysValue['license']['regto'];
 $ProductName=$SysValue['license']['product_name'];
 $ProductNameVersion=$SysValue['license']['product_name']." (сборка ".$SysValue['upload']['version'].")";
@@ -70,6 +67,8 @@ $ProductNameVersion=$SysValue['license']['product_name']." (сборка ".$SysValue['
 // Вывод валюты в выборе для загрузки товаров
 function ChoiceValuta() {
     global $SysValue;
+    
+    $dis=null;
     $sql="select * from ".$SysValue['base']['table_name24']." WHERE enabled='1' order by num";
     $result=mysql_query($sql);
     while ($row = mysql_fetch_array($result)) {
@@ -80,17 +79,11 @@ function ChoiceValuta() {
         $vkurs=$row['kurs'];
         $venabled=$row['enabled'];
         if($vkurs == 1) $selected="selected"; else $selected="";
-        @$dis.="<option value=".$vid." $selected>".$viso."</option>";
+        $dis.="<option value=".$vid." $selected>".$viso."</option>";
     }
-    $disp='
-<select id="tip_16">
-'.$dis.'
-</select>';
+    $disp='<select id="tip_16">'.$dis.'</select>';
     return $disp;
 }
-
-
-
 
 // Отрезаем до точки
 function mySubstr($str,$a) {
@@ -101,10 +94,10 @@ function mySubstr($str,$a) {
     return substr($str, 0, $T+1);
 }
 
-
 // Вывод доставки
 function GetDeliveryPrice($deliveryID,$sum,$weight=0) {
     global $SysValue;
+    
     $sql="select * from ".$SysValue['base']['table_name30']." where id='$deliveryID'";
     $result=mysql_query($sql);
     $row = mysql_fetch_array($result);
@@ -130,6 +123,7 @@ function GetDeliveryPrice($deliveryID,$sum,$weight=0) {
 // Вывод доставки
 function GetDelivery($deliveryID,$name) {
     global $SysValue;
+    
     $sql="select * from ".$SysValue['base']['table_name30']." where id='$deliveryID'";
     $result=mysql_query($sql);
     $row = mysql_fetch_array($result);
@@ -137,6 +131,7 @@ function GetDelivery($deliveryID,$name) {
 }
 
 function dataV($nowtime,$flag="true") {
+    
     $Months = array("01"=>"января","02"=>"февраля","03"=>"марта", 
             "04"=>"апреля","05"=>"мая","06"=>"июня", "07"=>"июля",
             "08"=>"августа","09"=>"сентября",  "10"=>"октября",
@@ -151,15 +146,16 @@ function dataV($nowtime,$flag="true") {
     return $t;
 }
 
-
-function TotalClean($str,$flag)// чистка 
 /*
+  Форматированеи строки
   1 - проверяет корзину;
   2 - преобразует все в код html;
   3 - проверяет мыло;
   4 - проверяет ввод с формы
   5 - прверяет цифры
-*/ {
+*/ 
+function TotalClean($str,$flag){
+
     if($flag==1)// корзина
     {
         if (!ereg ("([0-9])", $str)) {
@@ -195,7 +191,7 @@ function TotalClean($str,$flag)// чистка
     }
 }
 
-// Чистим
+// Форматирование строки
 function CleanStr($str) {
     $str=str_replace("/","|",$str);
     $str=str_replace("\"","*",$str);
@@ -203,8 +199,8 @@ function CleanStr($str) {
     return htmlspecialchars(stripslashes($str));
 }
 
-function GetSystems()// вывод настроек
-{
+// Вывод настроек магазина
+function GetSystems(){
     global $SysValue;
     
     $sql="select * from ".$SysValue['base']['table_name3'];
@@ -219,47 +215,47 @@ function GetSystems()// вывод настроек
     return $option;
 }
 
-function UpdateWrite() {// Пишем изменение документа
+// Запись изменение документа
+function UpdateWrite() {
     global $SysValue;
-    $sql="UPDATE ".$SysValue['base']['table_name3']."
-SET
-updateU='".date("U")."'";
+    
+    $sql="UPDATE ".$SysValue['base']['table_name3']." SET updateU='".date("U")."'";
     $result=mysql_query($sql);
 }
 
+
 function GetValutaValue($n) {
     global $SysValue;
+    
     $sql="select $n from ".$SysValue['base']['table_name3'];
     $result=mysql_query($sql);
     $row = mysql_fetch_array($result);
     return $row[$n];
 }
 
-
 function GetIsoValuta() {
     global $SysValue;
+    
     $sql="select code from ".$SysValue['base']['table_name24']." where id=".GetValutaValue("dengi");
     $result=mysql_query($sql);
     $row = mysql_fetch_array($result);
     return $row['code'];
 }
 
-
-
-
 function GetIsoValutaOrder() {
     global $SysValue;
-    $sql="select code from ".$SysValue['base']['table_name24']." where 
-id=".GetValutaValue("kurs");
+    
+    $sql="select code from ".$SysValue['base']['table_name24']." where id=".GetValutaValue("kurs");
     $result=mysql_query($sql);
     $row = mysql_fetch_array($result);
     return $row['code'];
 }
 
-function GetKursOrder() { // Курс
+// Курс
+function GetKursOrder() { 
     global $SysValue;
-    $sql="select kurs from ".$SysValue['base']['table_name24']." where 
-id=".GetValutaValue("kurs");
+
+    $sql="select kurs from ".$SysValue['base']['table_name24']." where id=".GetValutaValue("kurs");
     $result=mysql_query($sql);
     $row = mysql_fetch_array($result);
     return $row['kurs'];
@@ -272,6 +268,8 @@ function GetUnicTime($data) {
 
 function GetUsersStatusForma($n) {
     global $SysValue;
+
+    $dis=null;
     $sql="select * from ".$SysValue['base']['table_name28']." order by discount";
     $result=mysql_query($sql);
     while ($row = mysql_fetch_array($result)) {
@@ -282,19 +280,17 @@ function GetUsersStatusForma($n) {
         if($n==$id) $sel="selected";
         @$dis.="<option value=".$id." ".$sel." >".$name." - ".$discount."%</option>\n";
     }
-    @$disp='
+    $disp='
 <select name=list size=1>
 <option value="" id=txtLang>Все</option>
-<option value=0 id=txtLang>Авторизованный пользователь</option>
-'.$dis.'
-</select>
-<input type=button name="btnLang" value=Показать class=but3 onclick="DoReload(\'shopusers\',\'\',document.getElementById(\'list\').value)">
-';
+<option value=0 id=txtLang>Авторизованный пользователь</option>'.$dis.'</select>
+<input type=button name="btnLang" value=Показать class=but3 onclick="DoReload(\'shopusers\',\'\',document.getElementById(\'list\').value)">';
     return @$disp;
 }
 
 function GetOrderStatusArray() {
     global $SysValue;
+
     $sql="select * from ".$SysValue['base']['table_name32'];
     $result=mysql_query($sql);
     while(@$row = mysql_fetch_array(@$result)) {
@@ -306,26 +302,27 @@ function GetOrderStatusArray() {
         );
         $Status[$row['id']]=$array;
     }
-    return @$Status;
+    return $Status;
 }
 
 function GetOrderStatusApi($n) {
     global $SysValue;
+
+    $dis=null;
     $sql="select * from ".$SysValue['base']['table_name32'];
     $result=mysql_query($sql);
     while(@$row = mysql_fetch_array(@$result)) {
         if($n==$row['id'])  $sel2="selected";
         else $sel2="";
-        @$dis.="<option value='".$row['id']."' $sel2>".$row['name']."</option>";
+        $dis.="<option value='".$row['id']."' $sel2>".$row['name']."</option>";
     }
-    $disp="
-<select name='list' id='list'>
-<option value='all'>Все</option>
-<option value='new'>Новый заказ</option>
-".@$dis."
-</select>";
-    return @$disp;
+    $disp="<select name='list' id='list'><option value='all'>Все</option><option value='new'>Новый заказ</option>".$dis."</select>";
+    return $disp;
 }
+
+// Временная поддержка API 2.X
+extract($_POST);
+extract($_GET);
 
 // Определяем переменные
 $host=$SysValue['connect']['host'];             
@@ -347,9 +344,6 @@ $table_name18=$SysValue['base']['table_name18'];
 $table_name19=$SysValue['base']['table_name19'];
 $table_name27=$SysValue['base']['table_name27'];
 $table_name32=$SysValue['base']['table_name32'];
-
-
-
 
 // Обновление
 define("TIME_LIMIT", 600);

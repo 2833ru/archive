@@ -249,7 +249,7 @@ class ReadCsv1C {
             // Подчиненные товары
             if(is_numeric($CsvToArray[16]) and $CsvToArray[16]==1){
             $sql.="parent_enabled='1', ";
-            }else{
+            }elseif(!empty($CsvToArray[16])){
             $sql.="parent_enabled='0', ";
             $sql.="parent='".$CsvToArray[16]."', ";
             }

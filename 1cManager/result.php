@@ -1,17 +1,25 @@
 <?php
-/*
-+-------------------------------------+
-|  PHPShop Enterprise Pro 1C          |
-|  Модуль Автономной Загрузки 1С      |
-+-------------------------------------+
-*/
 
-include("login.php");
+/**
+ * Автономная синхронизация номенклатуры из 1С
+ * @package PHPShopExchange
+ * @author PHPShop Software
+ * @version 1.5
+ */
+
+// Авторизация
+include_once("login.php");
 PHPShopObj::loadClass("readcsv");
+
+$F_done=null;
+$GetItemCreate=0;
+$GetItemUpdate=0;
+$GetCatalogCreate=0;
 
 // Привязывает текущую характеристику к каталогу
 function updateCatalog($parent_id,$charID) {
     global $SysValue;
+    
     $sql2_3='select sort from '.$SysValue['base']['table_name'].' WHERE id="'.$parent_id.'"';
     $result2_3=mysql_query($sql2_3);
     $num2_3=mysql_num_rows(@$result2_3);
@@ -109,15 +117,12 @@ function charsGenerator($parent_id,$CsvToArray) {
                     if ($id) {
                         $resCharsArray[$charID][]=$id;
                     }
-
                 }
             }
         }
     }
     return $resCharsArray;
 }
-
-
 
 
 // Обработка каталогов
@@ -134,7 +139,6 @@ class ReadCsvCatalog extends PHPShopReadCsv {
         parent::PHPShopReadCsv();
     }
 
-
     // Создаем новую запись
     function CreateCatalog($id) {
         $CsvToArray=$this->CsvToArray[$id];
@@ -147,7 +151,6 @@ class ReadCsvCatalog extends PHPShopReadCsv {
             $this->ItemCreate++;
         }
     }
-
 
     function GetItemCreate() {
         return $this->ItemCreate;
@@ -164,10 +167,7 @@ class ReadCsvCatalog extends PHPShopReadCsv {
             if(empty($CheckIdParent)) $this->ChekTree($parent);
         }
     }
-
 }
-
-
 
 // Обработка товаров
 class ReadCsv1C extends PHPShopReadCsv {
@@ -179,7 +179,6 @@ class ReadCsv1C extends PHPShopReadCsv {
     var $ItemCreate=0;
     var $ItemUpdate=0;
     var $ImageSrc="jpg";
-
 
     function ReadCsv1C($CsvContent,$ObjCatalog,$ObjSystem) {
         $this->ImagePath=$GLOBALS['SysValue']['dir']['dir']."/UserFiles/Image/";
@@ -210,7 +209,6 @@ class ReadCsv1C extends PHPShopReadCsv {
         else $num=0;
         return $num;
     }
-
 
     // Путь к картинке
     function ImagePlus($img) {
@@ -249,6 +247,7 @@ class ReadCsv1C extends PHPShopReadCsv {
         return $row['id'];
     }
 
+    // Обновление данных
     function UpdateBase($CsvToArray) {
 
         // Есть ли товары в базе
@@ -261,20 +260,19 @@ class ReadCsv1C extends PHPShopReadCsv {
 
             $sql="UPDATE ".$this->TableName." SET ";
 
-            if(@$this->ObjSystem->getSerilizeParam("1c_option.update_name")==1 and !empty($CsvToArray[2]))
+            if($this->ObjSystem->getSerilizeParam("1c_option.update_name")==1 and !empty($CsvToArray[1]))
                 $sql.="name='".$CsvToArray[1]."', ";// название
 
-            if(@$this->ObjSystem->getSerilizeParam('1c_option.update_content')==1 and !empty($CsvToArray[4]))
+            if($this->ObjSystem->getSerilizeParam('1c_option.update_content')==1 and !empty($CsvToArray[4]))
                 $sql.="content='".$CsvToArray[4]."', ";// краткое описание
 
-            if(@$this->ObjSystem->getSerilizeParam("1c_option.update_description")==1 and !empty($CsvToArray[2]))
+            if($this->ObjSystem->getSerilizeParam("1c_option.update_description")==1 and !empty($CsvToArray[2]))
                 $sql.="description='".$CsvToArray[2]."', ";// подробное описание
 
-            if(@$this->ObjSystem->getSerilizeParam("1c_option.update_category")==1 and !empty($CsvToArray[15]))
+            if($this->ObjSystem->getSerilizeParam("1c_option.update_category")==1 and !empty($CsvToArray[15]))
                 $sql.="category='".trim($CsvToArray[15])."', ";// подробное описание
 
             $sql.="price='".@$CsvToArray[7]."', ";// цена 1
-
 
             // Склад
             switch($this->Sklad_status) {
@@ -304,7 +302,6 @@ class ReadCsv1C extends PHPShopReadCsv {
             $sql.="price5='".@$CsvToArray[11]."', ";// цена 5
             $sql.="items='".@$CsvToArray[6]."', ";// склад
             
-
             // Подчиненные товары
             if(is_numeric($CsvToArray[16]) and $CsvToArray[16]==1){
                 $sql.="parent_enabled='1', ";
@@ -318,7 +315,6 @@ class ReadCsv1C extends PHPShopReadCsv {
 
             $result=mysql_query($sql);
             $this->ItemUpdate++;
-
 
             // Добавляем картинки в галерею
             if(!empty($CsvToArray[3])) {
@@ -335,33 +331,31 @@ class ReadCsv1C extends PHPShopReadCsv {
             }
 
             // Обновляем характеристики
-            if(@$this->ObjSystem->getSerilizeParam("1c_option.update_category")==1 and !empty($CsvToArray[17])) {
+            if($this->ObjSystem->getSerilizeParam("1c_option.update_category")==1 and $this->ObjSystem->getSerilizeParam("1c_option.update_sort")==1 and !empty($CsvToArray[17])) {
                 $resCharsArray='';
 
                 // Генератор характеристик
                 $resCharsArray=charsGenerator($CsvToArray[15],$CsvToArray);
                 $resSerialized=serialize($resCharsArray);
-                $vendor='';
+                $vendor=null;
                 if(is_array($resCharsArray)) {
                     foreach($resCharsArray as $k=>$v) {
                         if(is_array($v)) {
                             foreach($v as $o=>$p) {
-                                @$vendor.="i".$k."-".$p."i";
+                                $vendor.="i".$k."-".$p."i";
                             }
                         } else {
-                            @$vendor.="i".$k."-".$v."i";
+                            $vendor.="i".$k."-".$v."i";
                         }
                     }
                 }
+
                 $sql="UPDATE ".$this->TableName." SET ";
                 $sql.="vendor='".$vendor."', ";
                 $sql.="vendor_array='".$resSerialized."' ";
                 $sql.=" where uid='".$CsvToArray[0]."'";
                 $result=mysql_query($sql);
-
             }
-
-
         }
         else {
             // Создаем новый товар
@@ -393,12 +387,12 @@ class ReadCsv1C extends PHPShopReadCsv {
             }
 
             // Добавляем характеристики
-            $vendor='';
-            $vendor_array='';
-            if(@$this->ObjSystem->getSerilizeParam("1c_option.update_category")==1 and !empty($CsvToArray[17])) {
-                $resCharsArray='';
+            $vendor=null;
+            $vendor_array=nyll;
+            if($this->ObjSystem->getSerilizeParam("1c_option.update_category")==1 and !empty($CsvToArray[17])) {
+                $resCharsArray=null;
 
-                //Генератор характеристик
+                // Генератор характеристик
                 $resCharsArray=charsGenerator($CsvToArray[15],$CsvToArray);
                 $resSerialized=serialize($resCharsArray);
                 if(is_array($resCharsArray)) {
@@ -415,21 +409,20 @@ class ReadCsv1C extends PHPShopReadCsv {
                 $vendor_array=serialize($resCharsArray);
             }
 
-
             $sql="INSERT INTO ".$this->TableName." SET ";
 
             // Родительская категория
-            if(@$this->ObjSystem->getSerilizeParam("1c_option.update_category")==1 and !empty($CsvToArray[15]))
-            $sql.="category='".trim(@$CsvToArray[15])."',";
+            if($this->ObjSystem->getSerilizeParam("1c_option.update_category")==1 and !empty($CsvToArray[15]))
+            $sql.="category='".trim($CsvToArray[15])."',";
 
-            $sql.="name='".trim(@$CsvToArray[1])."',
-            description='".@$CsvToArray[2]."',
-            content='".@$CsvToArray[4]."',
-            price='".@$CsvToArray[7]."',
+            $sql.="name='".trim($CsvToArray[1])."',
+            description='".$CsvToArray[2]."',
+            content='".$CsvToArray[4]."',
+            price='".$CsvToArray[7]."',
             sklad='".$sklad."',
-            p_enabled='".PHPShopMath::Zero(@$CsvToArray[9])."',
+            p_enabled='".PHPShopMath::Zero($CsvToArray[9])."',
             enabled='".$enabled."',
-            uid='".@$CsvToArray[0]."',
+            uid='".$CsvToArray[0]."',
             yml='1',
             datas='".date("U")."',
             vendor='".$vendor."',
@@ -439,7 +432,6 @@ class ReadCsv1C extends PHPShopReadCsv {
                 $sql.="pic_small='".$this->ImagePlus($CsvToArray[3])."_1s.".$this->ImageSrc."',
             pic_big='".$this->ImagePlus($CsvToArray[3])."_1.".$this->ImageSrc."',";
 
-
             // Подчиненные товары
             if(is_numeric($CsvToArray[16]) and $CsvToArray[16]==1){
                 $sql.="parent_enabled='1', ";
@@ -448,15 +440,14 @@ class ReadCsv1C extends PHPShopReadCsv {
                 $sql.="parent='".$CsvToArray[16]."', ";
             }
 
-
-            $sql.="items='".@$CsvToArray[6]."',
-            weight='".@$CsvToArray[12]."',
-            price2='".@$CsvToArray[8]."',
-            price3='".@$CsvToArray[9]."',
-            price4='".@$CsvToArray[10]."',
-            price5='".@$CsvToArray[11]."',
-            baseinputvaluta='".@$this->GetIdValuta[$CsvToArray[14]]."',
-            ed_izm='".@$CsvToArray[13]."'";
+            $sql.="items='".$CsvToArray[6]."',
+            weight='".$CsvToArray[12]."',
+            price2='".$CsvToArray[8]."',
+            price3='".$CsvToArray[9]."',
+            price4='".$CsvToArray[10]."',
+            price5='".$CsvToArray[11]."',
+            baseinputvaluta='".$this->GetIdValuta[$CsvToArray[14]]."',
+            ed_izm='".$CsvToArray[13]."'";
             $result=mysql_query($sql);
             $this->ItemCreate++;
 
@@ -476,25 +467,19 @@ class ReadCsv1C extends PHPShopReadCsv {
     }
 }
 
-
-if(preg_match("/[^(0-9)|(\-)]/",@$_GET['date'])) $date="";
-else $date=@$_GET['date'];
-
-
-
-
+// форматирование даты
+if(preg_match("/[^(0-9)|(\-)]/",$_GET['date'])) $date="";
+else $date=$_GET['date'];
 
 $path="sklad";
 $dir=$path."/".$date;
 
-
 // Читаем категории
-if(@$_GET['create_category'] == "true") $ReadCsvCatalog = new ReadCsvCatalog($dir."/tree.csv");
+if($_GET['create_category'] == "true") $ReadCsvCatalog = new ReadCsvCatalog($dir."/tree.csv");
 else $ReadCsvCatalog=false;
 
-// Подключаем настройки из базы
+// Подключаем настройки магазина
 $PS = new PHPShopSystem();
-
 
 // Смотрим папку
 if ($_GET['files']=="all" and is_dir($dir)) 
@@ -502,7 +487,7 @@ if ($_GET['files']=="all" and is_dir($dir))
         while (($file = readdir($dh)) !== false) {
 
             if($file!="." and $file!=".." and $file!="tree.csv")
-                @$list_file[]= $file;
+                $list_file[]= $file;
         }
         closedir($dh);
     }
@@ -510,19 +495,16 @@ if(is_file("./".$dir."/".$_GET['files'])) {
     $list_file[]=$_GET['files'];
 }
 
-
 // Тестирование
 if(isset($error)) {
     if(is_array($list_file))
         $list_file[$error]="";
 }
 
-
-
 if(is_array($list_file))
     foreach($list_file as $val) {
 
-// Включаем таймер
+        // Включаем таймер
         $time=explode(' ', microtime());
         $start_time=$time[1]+$time[0];
 
@@ -534,10 +516,10 @@ if(is_array($list_file))
 
             // Читаем файл
             $ReadCsv = new ReadCsv1C($CsvContent,$ReadCsvCatalog,$PS);
-            @$F_done.=$val.";";
-            @$GetItemCreate+=$ReadCsv->GetItemCreate();
-            @$GetItemUpdate+=$ReadCsv->GetItemUpdate();
-            @$GetCatalogCreate+=$ReadCsv->GetCatalogCreate();
+            $F_done.=$val.";";
+            $GetItemCreate+=$ReadCsv->GetItemCreate();
+            $GetItemUpdate+=$ReadCsv->GetItemUpdate();
+            $GetCatalogCreate+=$ReadCsv->GetCatalogCreate();
 
             // Результат
             if($_GET['files']!="all")
@@ -558,4 +540,5 @@ else exit("Не могу прочитать файл ".$dir."/".$val);
 if($_GET['files']=="all")
     echo $date.";".$F_done."
 ".$GetItemCreate.";".$GetItemUpdate.";".$GetCatalogCreate.";";
+
 ?>

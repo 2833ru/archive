@@ -1,4 +1,5 @@
-<div class="newtipDivleST"><table cellpadding="0" cellspacing="0" border="0" class="newtipTableST">
+<div class="newtipDivleST">
+<table cellpadding="0" cellspacing="0" border="0" class="newtipTableST" width="100%">
 	<tbody>
 		<tr>
         	<td align="center" valign="top"><table cellpadding="0" cellspacing="0" border="0" class="tovarDivImg2" align="left"><tr><td align="center" valign="middle"><a class="highslide" onclick="return hs.expand(this)" href="@productImgBigFoto@" target="_blank" getParams="null" title="@productName@"><img src="@productImg@" lowsrc="images/shop/no_photo.gif"  onerror="NoFoto(this,'@pathTemplate@')" onload="EditFoto(this,@productImgWidth@)" alt="@productName@" title="@productName@" border="0"></a><div class=highslide-caption>@productName@</div></td></tr></table></td>
@@ -17,4 +18,5 @@
 </table></div></td>
 		</tr>
 	</tbody>
-</table></div>
+</table>
+</div>

@@ -1,67 +1,92 @@
-<?
-/*
-+-------------------------------------+
-|  Имя: PHPShopObj                    |
-|  Разработчик: PHPShop Software      |
-|  Использование: Enterprise          |
-|  Назначение: Родительский класс     |
-|  Версия: 1.0                        |
-|  Тип: parent class                  |
-|  Зависимости: нет                   |
-|  Вызов: Parent Object               |
-+-------------------------------------+
-*/
-
-
-
+<?php
 if (!defined("OBJENABLED")) define("OBJENABLED", dirname(__FILE__));
 
+/**
+ * Родительский класс Объекта
+ * @author PHPShop Software
+ * @version 1.2
+ * @package PHPShopClass
+ */
 class PHPShopObj {
-     var $objID;
-	 var $objBase;
-	 var $objRow;
-	 var $objDebug=false;
-	 
-     function PHPShopObj(){
-	 $this->setRow();
-	 }
-	 
-	 // Вывод колонки данных
-	 function setRow(){
-	 $sql="select * from ".$this->objBase." where id=".$this->objID." limit 1";
-	   if($this->objDebug)
-          $result=mysql_query($sql) or die($this->debug($sql));
-		  else $result=mysql_query($sql);
-	 $this->objRow=@mysql_fetch_array($result);
-	 }
-     
-	 function debug($sql){
-     if($this->objDebug)
-	 exit("Нет результата для таблицы  ".$this->objBase."<br>Sql: ".$sql."<br> File: ".OBJENABLED."/".str_replace("phpshop","",get_class($this)).".class.php");
-	 }
-	 
-	 
-	 // Вывод параметра
-	 function getParam($paramName){
-	 return $this->objRow[$paramName];
-	 }
-	 
-	 function getArray(){
-	 return $this->objRow;
-	 }
-	 
-	 // Загрузка класса
-	 function loadClass($class_name){
-	 $class_path=OBJENABLED."/".$class_name.".class.php";
-	 if(file_exists($class_path)) include_once($class_path);
-	   else echo "Нет файла ".$class_path;
-	 }
-	 
-	 // Десериализация параметра
-	 function unserializeParam($paramName){
-	 return unserialize($this->getParam($paramName));
-	 }
+    /**
+     * @var int ИД объекта в БД
+     */
+    var $objID;
+    /**
+     * @var string имя БД
+     */
+    var $objBase;
+    /**
+     * @var array массив данных
+     */
+    var $objRow;
+    /**
+     * @var bool режим отладки
+     */
+    var $debug=false;
+    /**
+     * @var bool проверка установки
+     */
+    var $install=true;
+    /**
+     * Конструктор
+     * @var var поле выборки, по умолчанию id
+     */
+    function PHPShopObj($var='id') {
+        $this->setRow($var);
+    }
+    /**
+     * Запрос к БД
+     * @var var поле выборки, по умолчанию id
+     */
+    function setRow($var) {
+        $this->loadClass("orm");
+        $PHPShopOrm = &new PHPShopOrm($this->objBase);
+        $PHPShopOrm->debug=$this->debug;
+        $PHPShopOrm->install=$this->install;
+        $this->objRow = $PHPShopOrm->select(array('*'),array($var=>'='.$this->objID),false,array('limit'=>1));
+    }
 
+    /**
+     * Выдача параметра из массива по ключу
+     * @param string $paramName ключ
+     * @return mixed
+     */
+    function getParam($paramName) {
+        return $this->objRow[$paramName];
+    }
+    /**
+     * Выдача параметра из массива по ключу, копия функции getParam($paramName)
+     * @param string $paramName ключ
+     * @return mixed
+     */
+    function getValue($paramName) {
+        return $this->objRow[$paramName];
+    }
+    /**
+     * Выдача массива значений целиком
+     * @return array
+     */
+    function getArray() {
+        return $this->objRow;
+    }
+
+    /**
+     * Загрузка класса
+     * @param string $class_name имя класса, согласно config.ini
+     */
+    function loadClass($class_name) {
+        $class_path=OBJENABLED."/".$class_name.".class.php";
+        if(file_exists($class_path)) require_once($class_path);
+        else echo "Нет файла ".$class_path;
+    }
+    /**
+     * Выдача десериализованного значения
+     * @param string $paramName имя параметра
+     * @return <type>
+     */
+    function unserializeParam($paramName) {
+        return unserialize($this->getParam($paramName));
+    }
 }
-
 ?>

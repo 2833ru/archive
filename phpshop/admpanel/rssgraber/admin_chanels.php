@@ -80,7 +80,7 @@ if($i>20)$razmer="height:600;";
     </table>
 
 
-<div align=\"right\" style=\"padding:10;width:100%\"><BUTTON style=\"width: 15em; height: 2.2em; margin-left:5\"  onclick=\"miniWin('rssgraber/adm_chanels_new.php',400, 270); return false;\">
+<div align=\"right\" style=\"padding:10;width:100%\"><BUTTON style=\"width: 15em; height: 2.2em; margin-left:5\"  onclick=\"miniWin('rssgraber/adm_chanels_new.php',400, 480); return false;\">
 <img src=\"icon/page_add.gif\" width=\"16\" height=\"16\" border=\"0\" align=\"absmiddle\" hspace=\"5\">
 <span name=txtLang id=txtLang>Новая прозиция</span>
 </BUTTON></div>

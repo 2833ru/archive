@@ -8,8 +8,7 @@
 
 function ReturnMapSelect(){
 global $HTTP_USER_AGENT ;
-if(eregi('Windows', $HTTP_USER_AGENT)) return "<FONT face=wingdings>1</FONT> ";
-  else return "";
+return "";
 }
 
 

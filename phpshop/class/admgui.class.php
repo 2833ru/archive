@@ -35,7 +35,7 @@ class PHPShopGUI {
     /**
      * @var string параметр перезагрузки контента при закрытии окна
      */
-   // var $reload="top";
+    // var $reload="top";
     /**
      * @var bool режим отладки, закрывает окно
      */
@@ -70,6 +70,9 @@ class PHPShopGUI {
 
         if(empty($_SESSION['theme'])) $this->theme="classic";
         else $this->theme=$_SESSION['theme'];
+
+        // Языковой файл
+        PHPShopObj::loadClass("lang");
     }
     /**
      * Прорисовка элемента Form
@@ -248,7 +251,7 @@ class PHPShopGUI {
 	 </div>';
             $this->tab_key++;
         }
-        //$this->_CODE.='</div>';
+        $this->_CODE.='</div>';
     }
 
     /**
@@ -310,7 +313,7 @@ class PHPShopGUI {
      * @param mixed $height ширина элемента
      * @return string
      */
-    function setTextarea($name,$value,$float="none",$width=100,$height=50) {
+    function setTextarea($name,$value,$float="none",$width='99%',$height='50px') {
         $CODE='
 	 <textarea style="float:'.$float.';margin:'.$this->margin.'px;height:'.$height.';width:'.$width.'" name="'.$name.'" id="'.$name.'">'.$value.'</textarea>
 	 ';
@@ -381,7 +384,7 @@ class PHPShopGUI {
      */
     function setCheckbox($name,$value,$caption,$checked="checked",$onchange="return true") {
 
-            if($checked==1) $checked="checked";
+        if($checked==1) $checked="checked";
 
         $CODE='
 	 <input type="checkbox" value="'.$value.'" name="'.$name.'" id="'.$name.'" '.$checked.' onchange="'.$onchange.'"> '.$caption.'
@@ -468,11 +471,14 @@ class PHPShopGUI {
             if ($this->reload == "right") $this->_CODE.=' window.opener.top.frame2.location.reload();';
             if ($this->reload == "top")
 
-                    if($this->ajax) $this->_CODE.=" DoReloadMainWindow('".$this->ajax."');";
-                      else $this->_CODE.=' window.opener.location.reload();';
+                // Поддержка Ajax
+                if($this->ajax) $this->_CODE.=" DoReloadMainWindowModule(".$this->ajax.");";
+                else $this->_CODE.=' window.opener.location.reload();';
 
             $this->_CODE.='
-	 }catch(e){self.close();}';
+	 }catch(e){
+         self.close();
+         }';
 
             if($this->debug_close_window) $this->_CODE.='window.close();';
             $this->_CODE.='</script>';
@@ -602,6 +608,7 @@ class PHPShopGUI {
 
         return $CODE;
     }
+
 }
 
 /**
@@ -646,10 +653,12 @@ class PHPShopInterface extends PHPShopGUI {
     function PHPShopInterface() {
         $this->n=1;
         $this->numRows=0;
+        $this->razmer=$this->winsize;
 
         if(empty($_SESSION['theme'])) $this->theme="classic";
         else $this->theme=$_SESSION['theme'];
     }
+
     /**
      * Прорисовка заголовка
      * @return string
@@ -721,6 +730,7 @@ class PHPShopInterface extends PHPShopGUI {
      ';
         }
         $this->_CODE.='<tr class="row" onmouseover="show_on(\''.$this->idRows.$this->n.'\')" id="'.$this->idRows.$this->n.'" onmouseout="show_out(\''.$this->idRows.$this->n.'\')" '.$javaAction.'>'.$CODE.'</tr>';
+        //$this->_CODE.='<tr class="row" id="'.$this->idRows.$this->n.'" onmouseover="PHPShopJS.rowshow_on(this)" onmouseout="PHPShopJS.rowshow_out(this)" '.$javaAction.'>'.$CODE.'</tr>';
         $this->n++;
     }
     /**
@@ -742,8 +752,8 @@ class PHPShopInterface extends PHPShopGUI {
      * @return string
      */
     function icon($flag) {
-        if(empty($flag)) $imgchek='<img src="img/icon-deactivate.gif" width="16" height="16" border="0">';
-        else $imgchek='<img src="img/icon-activate.gif" width="16" height="16" border="0">';
+        if(empty($flag)) $imgchek='<img src="'.$this->imgPath.'icon-deactivate.gif" width="16" height="16" border="0">';
+        else $imgchek='<img src="'.$this->imgPath.'icon-activate.gif" width="16" height="16" border="0">';
         return $imgchek;
     }
 }
@@ -818,4 +828,41 @@ class PHPShopIcon extends PHPShopGUI {
     }
 }
 
+/**
+ * Библиотека внешних интерфейсов
+ * @author PHPShop Software
+ * @version 1.0
+ * @package PHPShopGUI
+ */
+class PHPShopFrontInterface extends PHPShopInterface {
+    var $css;
+    var $js;
+
+    /**
+     * Компиляция результата
+     * @return string
+     */
+    function Compile() {
+
+        if($this->numRows>10 and !$this->razmer) $this->razmer="height:450px;";
+
+        if(!empty($this->css)) $compile.='<LINK href="'.$this->css.'" type="text/css" rel="stylesheet">';
+        if(!empty($this->js)) $compile.='<SCRIPT language="JavaScript" src="'.$this->js.'"></SCRIPT>';
+
+        $compile.='<div style="'.$this->razmer.';overflow:auto;">
+	       <table cellpadding="0" class="phpshop-gui" cellspacing="1" border="0">'.$this->_CODE.'</table></div>';
+        return $compile;
+    }
+
+
+    /**
+     * Выдача содержимого
+     * @return string
+     */
+    function getContent() {
+        return $this->_CODE;
+    }
+
+
+}
 ?>

@@ -35,7 +35,6 @@ function readDatabase($filename,$keyName,$file=true) {
     xml_parser_free($parser);
 
     foreach ($tags as $key=>$val) {
-        echo $tags['type'];
         if($key == $keyName) {
             $molranges=$val;
 

@@ -27,11 +27,12 @@ class PHPShopBase {
      * Подключения к БД
      * @param string $iniPath путь до конфигурационного файла config.ini
      */
-    function PHPShopBase($iniPath) {
+    function PHPShopBase($iniPath,$connectdb=true) {
         $this->iniPath=$iniPath;
         $this->SysValue=parse_ini_file($this->iniPath,1);
         $GLOBALS['SysValue']=$this->SysValue;
-        $this->connect();
+        if(!empty($connectdb))
+            $this->connect();
     }
     /**
      * Выдача системных параметров конфига
@@ -77,9 +78,11 @@ class PHPShopBase {
      * @param string $error текст ошибки
      */
     function errorConnect($e=false,$message="Нет соединения с базой",$error=false) {
-        echo "<strong>$message</strong> ( <a href='http://www.phpshopcms.ru/help/Content/install/phpshop.html#6' target='_blank'>Error $e</a> )<br>";
+        echo "<strong>$message</strong> ( <a href='http://www.phpshop.ru/help/Content/install/phpshop.html#6' target='_blank'>Error $e</a> )<br>";
         echo "<em>Ошибка: ".$error.mysql_error()."</em>";
-        echo '<script>window.open("http://www.phpshopcms.ru/help/Content/install/phpshop.html#6");</script>';
+
+        if(is_dir('./install/')) echo '<script>window.open("./install/");</script>';
+        else echo '<script>window.open("http://www.phpshop.ru/help/Content/install/phpshop.html#6");</script>';
         exit();
     }
     /**
@@ -87,7 +90,7 @@ class PHPShopBase {
      */
     function connect() {
         $SysValue=$this->SysValue;
-        mysql_connect($this->getParam("connect.host"),$this->getParam("connect.user_db"),$this->getParam("connect.pass_db")) or die( $this->errorConnect(101));
+        @mysql_connect($this->getParam("connect.host"),$this->getParam("connect.user_db"),$this->getParam("connect.pass_db")) or die( $this->errorConnect(101));
         mysql_select_db($SysValue['connect']['dbase']) or die( $this->errorConnect(102));
         mysql_query("SET NAMES '".$this->codBase."'");
     }

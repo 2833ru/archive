@@ -79,19 +79,15 @@ DoResize(<? echo $GetSystems['width_icon']?>,400,270);
 <LEGEND><span name=txtLang id=txtLang><u>Н</u>азвание</span> </LEGEND>
 <div style="padding:10">
 <input type="text" name="name_new"  value="<?=$name?>" style="width:200px"><br><br>
-<?
-if($SysValue['pro']['enabled'] == "true")
-echo '
 
 <span name=txtLang id=txtLang>Использовать</span> <select name="price_new">
-				<option value="1" '.$price_1.'>1</option>
-				<option value="2" '.$price_2.'>2</option>
-				<option value="3" '.$price_3.'>3</option>
-				<option value="4" '.$price_4.'>4</option> 
-				<option value="5" '.$price_5.'>5</option> 
+				<option value="1" <?=$price_1?>>1</option>
+				<option value="2" <?=$price_2?>>2</option>
+				<option value="3" <?=$price_3?>>3</option>
+				<option value="4" <?=$price_4?>>4</option>
+				<option value="5" <?=$price_5?>>5</option>
 </select> <span name=txtLang id=txtLang>колонку цен</span>.
 </div>
-';?>
 </FIELDSET>
 	</td>
 	<td>
@@ -163,6 +159,3 @@ DoReloadMainWindow('shopusers_status');
 }else $UserChek->BadUserFormaWindow();
 }
 ?>
-
-
-

@@ -154,44 +154,46 @@ function upload_folder_create($str,$mask,$ftp_stream){
 		if(ftp_site($ftp_stream,"CHMOD ".$SysValue['user_ftp']['chmod']." ".$SysValue['user_ftp']['dir']."/$folder")) $temp1 = " - права проставлены автоматически!";
 		
 		log_write("/  - на корневую папку сайта $temp1");	
-		return "/  - на корневую папку сайта $temp1<br>";
+		return "/  - на корневую папку сайта $temp1<br><br>";
 	}
 
 	$str = explode("/",$str);
 	
 	
-	for ($i=count($str)-1;$i>=0;$i--){
+	for ($i=0;$i<count($str);$i++){
 		$folder = $str[0];
 		for ($c=1;$c<=$i;$c++) 
 		{
 			$folder .= "/".$str[$c];		
 			
 		}
+                
 		if (is_dir("../../../../$folder")) {
-			if(!stristr($mask,$folder."<br>")){
+			if(!stristr($mask,$folder." ") && $i==(count($str)-1)){
 				$temp .= $folder;
 				if(ftp_site($ftp_stream,"CHMOD ".$SysValue['user_ftp']['chmod']." ".$SysValue['user_ftp']['dir']."/$folder")) $temp .= " - права проставлены автоматически!";
 				$temp .= "<br>";
 				log_write($temp);
 			}
-			return $temp;
+			//return $temp;
 			
 		}else {
-			if(!stristr($mask,$folder."<br>")){
+			if(!stristr($mask,$folder." ")){
 				$temp .= $folder;
 				if(ftp_mkdir($ftp_stream,$SysValue['user_ftp']['dir']."/$folder")) {
-					$temp .= " - папка cоздана";
-					if(ftp_site($ftp_stream,"CHMOD ".$SysValue['user_ftp']['chmod']." ".$SysValue['user_ftp']['dir']."/$folder")) 
-					$temp .= ", права проставлены автоматически!";
+					$temp .= " - папка cоздана";                                        
+                                        if(ftp_site($ftp_stream,"CHMOD ".$SysValue['user_ftp']['chmod']." ".$SysValue['user_ftp']['dir']."/$folder")) 
+                                        $temp .= ", права проставлены автоматически!";
+                                        
 				}
 				$temp .= "<br>";
 				log_write($temp);
 			}
-			return $temp;
+			//return $temp;
 		}
 		
 	}
-	return $temp;
+	return $temp."<br>";
 
 }
 

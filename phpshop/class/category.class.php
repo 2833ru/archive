@@ -1,44 +1,78 @@
-<?
-/*
-+-------------------------------------+
-|  Имя: PHPShopValuta                 |
-|  Разработчик: PHPShop Software      |
-|  Использование: Enterprise          |
-|  Назначение: База валют             |
-|  Версия: 1.0                        |
-|  Тип: Extends class                 |
-|  Зависимости: нет                   |
-|  Вызов: Object                      |
-+-------------------------------------+
-*/
+<?php
+/**
+ * Категории
+ * Упрощенный доступ к категориями
+ * @author PHPShop Software
+ * @version 1.0
+ * @package PHPShopObj
+ */
+class PHPShopCategory extends PHPShopObj {
+    /**
+     * Конструктор
+     * @param int $objID ИД категории
+     */
+    function PHPShopCategory($objID) {
+        $this->objID=$objID;
+        $this->objBase=$GLOBALS['SysValue']['base']['table_name'];
+        parent::PHPShopObj();
+    }
+    /**
+     * Выдача имени категории
+     * @return string 
+     */
+    function getName() {
+        return parent::getParam("name");
+    }
+    /**
+     * Выдача описания категории
+     * @return string 
+     */
+    function getContent() {
+        return parent::getParam("content");
+    }
+    /**
+     * Проверка на существование
+     * @return bool
+     */
+    function init() {
+        $id=parent::getParam("id");
+        if(!empty($id)) return true;
+    }
 
-
-if (!defined("OBJENABLED")){
-require_once(dirname(__FILE__)."/obj.class.php");
-require_once(dirname(__FILE__)."/array.class.php");
 }
 
-class PHPShopCategory extends PHPShopObj{
-	 
-	 function PHPShopCategory($objID){
+/**
+ * Страницы
+ * Упрощенный доступ к страницам
+ * @author PHPShop Software
+ * @version 1.0
+ * @package PHPShopObj
+ */
+class PHPShopPages extends PHPShopObj{
+
+         /**
+          * Конструктор
+          * @param int $objID ИД страницы
+          */
+	 function PHPShopPages($objID){
 	 $this->objID=$objID;
-	 $this->objBase=$GLOBALS['SysValue']['base']['table_name'];
+	 $this->objBase=$GLOBALS['SysValue']['base']['table_name11'];
 	 parent::PHPShopObj();
 	 }
-	 
+         /**
+          * Выдача имени страницы
+          * @return string
+          */
 	 function getName(){
 	 return parent::getParam("name");
 	 }
-}
 
-
-class PHPShopCategoryArray extends PHPShopArray{
-	 
-	 function PHPShopCategoryArray(){
-	 $this->objBase=$GLOBALS['SysValue']['base']['table_name'];
-	 parent::PHPShopArray("id","name","parent_to","num_row","num_cow","sort","title_enabled",
-     "descrip_enabled","keywords_enabled","skin_enabled","skin","order_by","order_to","vid","servers");
+         /**
+          * Выдача содержания
+          * @return string
+          */
+	 function getContent(){
+	 return parent::getParam("content");
 	 }
 }
-
 ?>

@@ -25,7 +25,7 @@ require("../language/".$Lang."/language.php");
 DoResize(<? echo $GetSystems['width_icon']?>,400,270);
 </script>
 </head>
-<body bottommargin="0"  topmargin="0" leftmargin="0" rightmargin="0" onload="DoCheckLang(location.pathname,<?=$SysValue['lang']['lang_enabled']?>);preloader(0)">
+<body bottommargin="0"  topmargin="0" leftmargin="0" rightmargin="0" >
 <table id="loader">
 <tr>
 	<td valign="middle" align="center">
@@ -62,9 +62,7 @@ DoResize(<? echo $GetSystems['width_icon']?>,400,270);
 <LEGEND><span name=txtLang id=txtLang><u>Н</u>азвание</span> </LEGEND>
 <div style="padding:10">
 <input type="text" name="name_new"  style="width:200px"><br><br>
-<?
-if($SysValue['pro']['enabled'] == "true")
-echo '
+
 <span name=txtLang id=txtLang>Использовать</span> <select name="price_new">
 				<option value="1">1</option>
 				<option value="2">2</option>
@@ -72,7 +70,7 @@ echo '
 				<option value="4">4</option> 
 				<option value="5">5</option> 
 </select> <span name=txtLang id=txtLang>колонку цен</span>.
-';?>
+
 </div>
 </FIELDSET>
 	</td>
@@ -125,6 +123,3 @@ DoReloadMainWindow('shopusers_status');
 }else $UserChek->BadUserFormaWindow();
 }
 ?>
-
-
-

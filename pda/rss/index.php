@@ -44,7 +44,7 @@ mysql_select_db($SysValue['connect']['dbase'])or
 
 $SYSTEM=Systems();
 
-    $sql = "SELECT id, datas, zag, podrob FROM ".$SysValue['base']['table_name8']." ORDER BY datas DESC LIMIT 0, 15";
+    $sql = "SELECT id, datas, zag, podrob FROM ".$SysValue['base']['table_name8']." ORDER BY id DESC LIMIT 0, 15";
 
     if (!($result = mysql_query ($sql))) exit;
     ob_start("output_handler");
@@ -53,13 +53,13 @@ $SYSTEM=Systems();
     echo '        <channel>' . "\n";
     echo '                <title>RSS Новости - '.$SYSTEM['title'].'</title>' . "\n";
     echo '                <description>RSS Новости от '.$SYSTEM['company'].'</description>' . "\n";
-    echo '                <link>http://'.$SERVER_NAME.'/pda/</link>' . "\n";
+    echo '                <link>http://'.$_SERVER['SERVER_NAME'].'/pda/</link>' . "\n";
     echo '                <language>ru</language>' . "\n";
     echo '                <generator>PHPShop</generator>' . "\n";
   while($row = mysql_fetch_array($result)){
     echo '                <item>' . "\n";
     echo '                        <title>' . trim($row['zag']) . '</title>' . "\n";
-    echo '                        <link>http://'.$SERVER_NAME.'/pda/news/ID_'.$row["id"].'.html</link>' . "\n";
+    echo '                        <link>http://'.$_SERVER['SERVER_NAME'].'/pda/news/ID_'.$row["id"].'.html</link>' . "\n";
     echo '                        <pubDate>' . trim($row['datas']) . '</pubDate>' . "\n";
     echo '                        <description><![CDATA[' . trim($row['podrob']) . ']]></description>' . "\n";
     echo '                        <author>'.$SYSTEM['name'].'</author>' . "\n";

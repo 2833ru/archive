@@ -116,39 +116,43 @@ class Guard {
 
         // Проверка лицензии
         $this->license();
-        $this->update_url.="?from=".$_SERVER['SERVER_NAME']."&version=".$this->SysValue['upload']['version']."&support=".$this->support;
-        if(function_exists("xml_parser_create")) {
-            if(@$db=readDatabase($this->update_url,"virus")) {
 
-                // Очищаем
-                if(is_array($db)) {
+        if($this->support > time()) {
 
-                    if($db[0]['status'] != 'passive') {
+            $this->update_url.="?from=".$_SERVER['SERVER_NAME']."&version=".$this->SysValue['upload']['version']."&support=".$this->support;
+            if(function_exists("xml_parser_create")) {
+                if(@$db=readDatabase($this->update_url,"virus")) {
 
-                        $PHPShopOrm = &new PHPShopOrm();
-                        $PHPShopOrm->query('TRUNCATE TABLE '.$this->SysValue['base']['guard']['guard_signature']);
+                    // Очищаем
+                    if(is_array($db)) {
 
-                        // Вставляем новые сигнатуры
-                        foreach($db as $key=>$val) {
-                            $PHPShopOrm = &new PHPShopOrm($this->SysValue['base']['guard']['guard_signature']);
-                            $PHPShopOrm->insert(array('virus_name_new'=>$val['name'],'virus_signature_new'=>$val['signature']));
+                        if($db[0]['status'] != 'passive') {
+
+                            $PHPShopOrm = &new PHPShopOrm();
+                            $PHPShopOrm->query('TRUNCATE TABLE '.$this->SysValue['base']['guard']['guard_signature']);
+
+                            // Вставляем новые сигнатуры
+                            foreach($db as $key=>$val) {
+                                $PHPShopOrm = &new PHPShopOrm($this->SysValue['base']['guard']['guard_signature']);
+                                $PHPShopOrm->insert(array('virus_name_new'=>$val['name'],'virus_signature_new'=>$val['signature']));
+                            }
+
+                            // Обновляем дату обновления сигнатур
+                            $PHPShopOrm= &new PHPShopOrm($this->SysValue['base']['guard']['guard_system']);
+                            $PHPShopOrm->update(array('last_update_new'=>$this->date),array('id'=>'=1'));
+
+                            $this->update_result=1;
                         }
-
-                        // Обновляем дату обновления сигнатур
-                        $PHPShopOrm= &new PHPShopOrm($this->SysValue['base']['guard']['guard_system']);
-                        $PHPShopOrm->update(array('last_update_new'=>$this->date),array('id'=>'=1'));
-
-                        $this->update_result=1;
+                        else $this->update_result=0;
                     }
-                    else $this->update_result=0;
+                    else $this->update_result=2;
                 }
-                else $this->update_result=2;
+
+
+                // Кол-во сигнатур
+                $this->signature_num=count($db);
+
             }
-
-
-            // Кол-во сигнатур
-            $this->signature_num=count($db);
-
         }
     }
 
