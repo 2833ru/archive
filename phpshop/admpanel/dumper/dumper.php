@@ -1,171 +1,72 @@
 <?php
 
 // Снятие ограничение для больших папок
-if(function_exists('set_time_limit'))
+if (function_exists('set_time_limit'))
     set_time_limit(0);
 
 /**
  * Резервная копия БД
  * @param string $dbname имя БД
+ * @param string $file имя файла
  * @param bool $structure_only только структуру
+ * @param bool $pattern_table отбор таблиц
  */
-function mysqlbackup($dbname,$structure_only,$pattern_table=false) {
-	global $link_db;
+function mysqlbackup($dbname, $file, $structure_only = false, $pattern_table = false) {
+    global $link_db;
 
-    $crlf = '
-';
+    $crlf = PHP_EOL;
+    $stat = null;
 
-    //$con=@mysql_connect($host,$uid, $pwd) or die("Could not connect");
-    //$db=@mysql_select_db($dbname,$con) or die("Could not select db");
-    // mysql_query("SET NAMES 'cp1251'");
-    
-    // here we check MySQL Version
-    $result = @mysqli_query($link_db,"SELECT VERSION() AS version");
-    if ($result != FALSE && @mysqli_num_rows($result) > 0) {
-        $row = @mysqli_fetch_array($result);
-        $match = explode('.', $row['version']);
-    } else {
-        $result = @mysqli_query($link_db,"SHOW VARIABLES LIKE \'version\'");
-        if ($result != FALSE && @mysqli_num_rows($result) > 0) {
-            $row = @mysqli_fetch_row($result);
-            $match = explode('.', $row[1]);
-        }
-    }
-
-    if (!isset($match) || !isset($match[0])) {
-        $match[0] = 3;
-    }
-    if (!isset($match[1])) {
-        $match[1] = 21;
-    }
-    if (!isset($match[2])) {
-        $match[2] = 0;
-    }
-    if (!isset($row)) {
-        $row = '3.21.0';
-    }
-
-
-    define('MYSQL_INT_VERSION', (int) sprintf('%d%02d%02d', $match[0], $match[1], intval($match[2])));
-    define('MYSQL_STR_VERSION', $row['version']);
-    unset($match);
-
-    //$sql = "# MySQL dump by phpMyDump".$crlf;
-    //$sql.= "# Host: $host Database: $dbname".$crlf;
-    //$sql.= "#----------------------------".$crlf;
-    //$sql.= "# Server version: ".MYSQL_STR_VERSION.$crlf;
-    //$sql.= $crlf.$crlf.$crlf;
-
-    
-    //$res = @mysql_list_tables($dbname);
-	$res = mysqli_query($link_db,"SHOW TABLES FROM `".$dbname."`");
+    $res = mysqli_query($link_db, "SHOW TABLES FROM `" . $dbname . "`");
     $nt = mysqli_num_rows($res);
 
     for ($a = 0; $a < $nt; $a++) {
         $row = mysqli_fetch_row($res);
         $tablename = $row[0];
-        
-        
-        if($pattern_table)
-            if(!in_array($tablename,$pattern_table))
+
+        if ($pattern_table)
+            if (!in_array($tablename, $pattern_table))
                 continue;
 
         //$sql=$crlf."# ----------------------------------------".$crlf."# table structure for table '$tablename' ".$crlf;
         $sql = "DROP TABLE IF EXISTS $tablename;" . $crlf;
-        // For MySQL < 3.23.20
-        if (MYSQL_INT_VERSION >= 32321) {
 
-            $result = mysqli_query($link_db,"SHOW CREATE TABLE $tablename");
-            if ($result != FALSE && mysqli_num_rows($result) > 0) {
-                $tmpres = mysqli_fetch_array($result);
-                $pos = strpos($tmpres[1], ' (');
-                $tmpres[1] = substr($tmpres[1], 0, 13)
-                        . $tmpres[0]
-                        . substr($tmpres[1], $pos);
+        $result = mysqli_query($link_db, "SHOW CREATE TABLE $tablename");
+        if ($result != FALSE && mysqli_num_rows($result) > 0) {
+            $tmpres = mysqli_fetch_array($result);
+            $pos = strpos($tmpres[1], ' (');
+            $tmpres[1] = substr($tmpres[1], 0, 13)
+                    . $tmpres[0]
+                    . substr($tmpres[1], $pos);
 
-                $sql .= $tmpres[1] . ";" . $crlf . $crlf;
-            }
-            mysqli_free_result($result);
-        } else {
-            $sql.="CREATE TABLE $tablename(" . $crlf;
-            $result = mysqli_query($link_db,"show fields from $tablename", $con);
-
-            while ($row = mysqli_fetch_array($result)) {
-                $sql .= "  " . $row['Field'];
-                $sql .= ' ' . $row['Type'];
-                if (isset($row['Default']) && $row['Default'] != '') {
-                    $sql .= ' DEFAULT \'' . $row['Default'] . '\'';
-                }
-                if ($row['Null'] != 'YES') {
-                    $sql .= ' NOT NULL';
-                }
-                if ($row['Extra'] != '') {
-                    $sql .= ' ' . $row['Extra'];
-                }
-                $sql .= "," . $crlf;
-            }
-
-            mysqli_free_result($result);
-            //$sql = preg_replace('/,' . $crlf . '/$', '', $sql);
-
-            $result = mysqli_query($link_db,"SHOW KEYS FROM $tablename");
-            while ($row = mysqli_fetch_array($result)) {
-                $ISkeyname = $row['Key_name'];
-                $IScomment = (isset($row['Comment'])) ? $row['Comment'] : '';
-                $ISsub_part = (isset($row['Sub_part'])) ? $row['Sub_part'] : '';
-                if ($ISkeyname != 'PRIMARY' && $row['Non_unique'] == 0) {
-                    $ISkeyname = "UNIQUE|$kname";
-                }
-                if ($IScomment == 'FULLTEXT') {
-                    $ISkeyname = 'FULLTEXT|$kname';
-                }
-                if (!isset($index[$ISkeyname])) {
-                    $index[$ISkeyname] = array();
-                }
-                if ($ISsub_part > 1) {
-                    $index[$ISkeyname][] = $row['Column_name'] . '(' . $ISsub_part . ')';
-                } else {
-                    $index[$ISkeyname][] = $row['Column_name'];
-                }
-            }
-            mysqli_free_result($result);
-
-            while (list($x, $columns) = @each($index)) {
-                $sql .= "," . $crlf;
-                if ($x == 'PRIMARY') {
-                    $sql .= '  PRIMARY KEY (';
-                } else if (substr($x, 0, 6) == 'UNIQUE') {
-                    $sql .= '  UNIQUE ' . substr($x, 7) . ' (';
-                } else if (substr($x, 0, 8) == 'FULLTEXT') {
-                    $sql .= '  FULLTEXT ' . substr($x, 9) . ' (';
-                } else {
-                    $sql .= '  KEY ' . $x . ' (';
-                }
-                $sql .= implode($columns, ', ') . ')';
-            }
-            $sql .= $crlf . ");" . $crlf . $crlf;
+            $sql .= $tmpres[1] . ";" . $crlf . $crlf;
         }
-        out(1, $sql);
+        mysqli_free_result($result);
+
+        $stat .= out($file, $sql);
+        $sql = null;
+        $count = 0;
         if ($structure_only == FALSE) {
+
             // here we get table content
-            $result = mysqli_query($link_db,"SELECT * FROM  $tablename");
+            $result = mysqli_query($link_db, "SELECT * FROM  $tablename");
             $fields_cnt = mysqli_num_fields($result);
             while ($row = mysqli_fetch_row($result)) {
                 $table_list = '(';
                 for ($j = 0; $j < $fields_cnt; $j++) {
-					$finfo =  mysqli_fetch_field_direct($result, $j);
+                    $finfo = mysqli_fetch_field_direct($result, $j);
                     $table_list .= $finfo->name . ', ';
                 }
                 $table_list = substr($table_list, 0, -2);
                 $table_list .= ')';
 
-                $sql = 'INSERT INTO ' . $tablename
+                $sql .= 'INSERT INTO ' . $tablename
                         . ' VALUES (';
                 for ($j = 0; $j < $fields_cnt; $j++) {
                     if (!isset($row[$j])) {
                         $sql .= ' NULL, ';
                     } else if ($row[$j] == '0' || $row[$j] != '') {
-                        $finfo =  mysqli_fetch_field_direct($result, $j);
+                        $finfo = mysqli_fetch_field_direct($result, $j);
                         $type = $finfo->type;
                         // a number
                         if ($type == 'tinyint' || $type == 'smallint' || $type == 'mediumint' || $type == 'int' ||
@@ -202,26 +103,51 @@ function mysqlbackup($dbname,$structure_only,$pattern_table=false) {
                 $sql = preg_replace('/, $/', '', $sql);
                 $sql .= ");" . $crlf;
 
-                out(1, $sql);
+                // Лимит строк
+                if ($count == 100) {
+                    $stat .= out($file, $sql);
+                    $count = 0;
+                    $sql=null;
+                } else
+                    $count++;
             }
+            $stat .= out($file, $sql);
             mysqli_free_result($result);
         }
     }
 
+    // Статистика в 1 строку
+    $file_data = $stat . $crlf;
+    $file_data .= file_get_contents($file);
+    file_put_contents($file, $file_data);
 
-    return;
+    return true;
 }
 
-function out($fptr, $s) {
-    echo $s;
+// Сохранение в файл
+function out($file, $content) {
+
+    if (file_exists($file))
+        $file_start = file($file);
+    else $file_start=null;
+
+    if (is_array($file_start))
+        $start = count($file_start);
+    else
+        $start = 1;
+
+    $fp = fopen($file, "a+");
+    if ($fp) {
+        fputs($fp, $content);
+        fclose($fp);
+    }
+
+    $file_end = file($file);
+
+    if (is_array($file_end))
+        $end = count($file_end);
+    else
+        $end = 1;
+
+    return '#' . $start . '-' . ($end - $start + 1);
 }
-
-
-/*
-
-ob_start();
-mysqlbackup($GLOBALS['SysValue']['connect']['dbase'], $_POST['export_structure']);
-$dump = ob_get_clean();
- 
- */
-?>

@@ -4,7 +4,7 @@
  * Автономная синхронизация номенклатуры из 1С
  * @package PHPShopExchange
  * @author PHPShop Software
- * @version 3.3
+ * @version 3.4
  */
 // Авторизация
 include_once("login.php");
@@ -120,7 +120,7 @@ function charsGenerator($category, $CsvToArray) {
 
                 $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['sort_categories']);
                 $PHPShopOrm->debug = $debug;
-                if ($parent = $PHPShopOrm->insert(array('name_new' => $sort_name, 'category_new' => intval($cat_set)), '_new', __FUNCTION__, __LINE__)) {
+                if ($parent = $PHPShopOrm->insert(array('name_new' => $sort_name, 'category_new' => intval($cat_set), 'num_new'=>$i), '_new', __FUNCTION__, __LINE__)) {
 
                     // Создаем новое значение характеристики
                     $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['sort']);

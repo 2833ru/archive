@@ -36,20 +36,19 @@
     </tr>-->
    
     <tr class="pad-10">
-        <td>{Скидки и бонусы}:</td>
+        <td colspan="2">{Скидки и бонусы}:</td>
        
-        <td class=""></td>
+
         <td></td>
        
         <td colspan="2" align="right" class="red" id="SkiSummaAll"><span id="SkiSumma" class="text-danger" data-discount="@discount_sum@">- @discount_sum@</span><span class="rubznak text-danger">@currency@</span></td>
     </tr> 
     <tr class="pad-20-10">
-        <td>{Доставка}:</td>
+        <td colspan="3">{Доставка}: <span id="deliveryInfo"></span></td>
     
-        <td class="" style="display: none;"></td>
         <td style="display: none;"></td>
        
-        <td colspan="4" align="right" class="red"><span id="DosSumma">@delivery_price@</span>&nbsp; <span class="rubznak">@currency@</span> <span id="deliveryInfo"></span></td>
+        <td colspan="3" align="right" class="red"><span id="DosSumma">@delivery_price@</span><span class="rubznak">@currency@</span></td>
     </tr>
     
     <tr>

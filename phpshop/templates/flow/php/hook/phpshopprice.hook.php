@@ -30,18 +30,18 @@ function template_pricecore_product_hook($obj, $category, $rout) {
         // Добавляем в дизайн ячейки с товарами
         if (is_array($data))
             foreach ($data as $row) {
-                $name = '<a href="' . $obj->seourl($row) . '" class="list-group-item">' . $row['name'] ;
+                $name = '<li class="list-group-item"><a href="' . $obj->seourl($row) . '">' . $row['name'].'</a>' ;
                 if (empty($row['sklad']) and empty($user_price_activate))
-                    $cart = '<button class="btn btn-default btn-xs  addToCartList" data-uid="' . $row['id'] . '">'.$obj->lang('product_sale').'</button>';
+                    $cart = '<button class="btn btn-xs btn-outline-secondary addToCartList" data-uid="' . $row['id'] . '"><i class="fa fa-shopping-cart"></i></button>';
                 if (empty($user_price_activate))
-                    $price = $obj->price($row) . ' <span class="rubznak">' . $obj->currency().'</span>';
+                    $price = $obj->getPrice($row) . '<span class="rubznak">' . $obj->currency().'</span> '.$cart;
                 else
                     $price = PHPShopText::a('../users/register.html', PHPShopText::img('images/shop/icon_user.gif', false, 'absMiddle'), $obj->lang('user_register_title'));
 
                 
                 
 
-                $dis.=$name.'<b class="float-right">'.$price.'</b></a>';
+                $dis.=$name.'<b class="float-right">'.$price.'</b></li>';
             }
         $block = $dis ;
         $obj->add($block, true);

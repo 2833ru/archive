@@ -30,7 +30,7 @@ function actionStart() {
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $data);
 
     // Вывод кнопок сохранить и выход в футер
-    $ContentFooter = $PHPShopGUI->setInput("submit", "saveID", "ОК", "right", 70, "", "but", "actionInsert.news.create");
+    $ContentFooter = $PHPShopGUI->setInput("submit", "saveID", "ОК", "right", 70, "", "but", "actionInsert.sort.create");
 
     // Футер
     $PHPShopGUI->setFooter($ContentFooter);

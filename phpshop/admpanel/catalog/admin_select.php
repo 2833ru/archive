@@ -422,7 +422,7 @@ function actionSave() {
 }
 
 // Построение дерева категорий
-function treegenerator($array, $i, $parent) {
+function treegenerator($array, $i, $parent, $multi) {
     global $tree_array;
     $del = '&brvbar;&nbsp;&nbsp;&nbsp;';
     $tree = $tree_select = $check = false;
@@ -430,7 +430,7 @@ function treegenerator($array, $i, $parent) {
     if (is_array($array['sub'])) {
         foreach ($array['sub'] as $k => $v) {
 
-            $check = treegenerator($tree_array[$k], $i + 1, $k);
+            $check = treegenerator($tree_array[$k], $i + 1, $k, $multi);
 
             if ($k == $_GET['parent_to'])
                 $selected = 'selected';
@@ -440,8 +440,11 @@ function treegenerator($array, $i, $parent) {
             if (empty($check['select'])) {
                 $tree_select .= '<option value="' . $k . '" ' . $selected . '>' . $del . $v . '</option>';
                 $i = 1;
-            } else {
+            } elseif (!empty($multi)) {
                 $tree_select .= '<option value="' . $k . '" ' . $selected . '>' . $del . $v . '</option>';
+                //$i++;
+            } else {
+                $tree_select .= '<option value="' . $k . '" ' . $selected . ' disabled>' . $del . $v . '</option>';
                 //$i++;
             }
 
@@ -482,7 +485,7 @@ function viewCatalog($name = 'category_new', $multi = false) {
 
     if (is_array($tree_array[0]['sub']))
         foreach ($tree_array[0]['sub'] as $k => $v) {
-            $check = treegenerator($tree_array[$k], 1, $data['category']);
+            $check = treegenerator($tree_array[$k], 1, $data['category'], $multi);
 
             if ($k == $data['category'])
                 $selected = 'selected';
@@ -511,7 +514,7 @@ function actionStart() {
 
     $PHPShopGUI->setActionPanel(__("Обновить Товары"), false, array('Сохранить и закрыть'));
     $PHPShopGUI->addJSFiles('./catalog/gui/catalog.gui.js');
-    $PHPShopGUI->field_col = 2;
+    $PHPShopGUI->field_col = 3;
     $select_error = null;
 
     $PHPShopGUI->_CODE .= $PHPShopGUI->setHelp('Вы можете редактировать одновременно несколько записей. Выберите записи из списка товаров, отметьте галочкой товары, которые нужно отредактировать, и нажмите на кнопку "Редактировать выбранные".<hr>', false);
@@ -526,11 +529,11 @@ function actionStart() {
 
                 // Каталоги
                 if ($val['Field'] == 'category') {
-                    $PHPShopGUI->_CODE .= $PHPShopGUI->setField("Размещение", viewCatalog());
+                    $PHPShopGUI->_CODE .= $PHPShopGUI->setField("Каталог", viewCatalog());
                 }
                 // Каталоги
                 elseif ($val['Field'] == 'dop_cat') {
-                    $PHPShopGUI->_CODE .= $PHPShopGUI->setField("Размещение", viewCatalog('dop_cat[]', 'multiple'));
+                    $PHPShopGUI->_CODE .= $PHPShopGUI->setField("Дополнительные каталоги", viewCatalog('dop_cat[]', 'multiple'));
                 }
                 // Характеристики
                 elseif ($val['Field'] == 'vendor_array') {

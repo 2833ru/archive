@@ -59,7 +59,7 @@ function alfabank_check($obj, $id, $merchant_order_id){
     if($conf["dev_mode"] == 1)
         $url ='https://web.rbsuat.com/ab/rest/getOrderStatusExtended.do';
     else
-        $url ='https://pay.alfabank.ru/payment/rest/getOrderStatusExtended.do';
+        $url =$conf["api_url"];
 
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, $url . "?" . http_build_query($params)); // set url to post to

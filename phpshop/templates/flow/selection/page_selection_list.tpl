@@ -18,21 +18,21 @@
                             "width": "auto"
                             }'  aria-hidden="true">
 
-                        <option value="?s=3" @fSetCselected@>{Популярные}</option>
-                        <option value="?s=2&f=2" @fSetBselected@>{Дорогие}</option>
-                        <option value="?s=2&f=1" @fSetAselected@>{Дешевые}</option>
+                        <option value="?@productVendor@s=3" @fSetCselected@>{Популярные}</option>
+                        <option value="?@productVendor@s=2&f=2" @fSetBselected@>{Дорогие}</option>
+                        <option value="?@productVendor@s=2&f=1" @fSetAselected@>{Дешевые}</option>
                     </select>
 
 
                     <!-- Nav -->
                     <ul class="nav nav-segment float-right" id="filter-wel-stat">
                         <li class="list-inline-item">
-                            <a class="nav-link @gridSetAactive@" href="?gridChange=1" data-toggle="tooltip" data-placement="top" title="{Товары сеткой}" name="gridChange" value="1">
+                            <a class="nav-link @gridSetAactive@" href="?@productVendor@gridChange=1" data-toggle="tooltip" data-placement="top" title="{Товары сеткой}" name="gridChange" value="1">
                                 <i class="fas fa-list"></i>
                             </a>
                         </li>
                         <li class="list-inline-item ">
-                            <a class="nav-link @gridSetBactive@" href="?gridChange=2" data-toggle="tooltip" data-placement="top" title="{Товары списком}" name="gridChange" value="2">
+                            <a class="nav-link @gridSetBactive@" href="?@productVendor@gridChange=2" data-toggle="tooltip" data-placement="top" title="{Товары списком}" name="gridChange" value="2">
                                 <i class="fas fa-th-large"></i>
                             </a>
                         </li>

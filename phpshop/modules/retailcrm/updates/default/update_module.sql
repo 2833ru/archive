@@ -10,3 +10,5 @@ CREATE TABLE IF NOT EXISTS `phpshop_modules_retailcrm_log` (
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=cp1251;
 
+ALTER TABLE `phpshop_orders` ADD `retail_status` enum('1','2') DEFAULT '1';
+ALTER TABLE `phpshop_products` ADD `retail_product_id` varchar(64) default '';

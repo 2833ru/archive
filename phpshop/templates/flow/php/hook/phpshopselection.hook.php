@@ -5,9 +5,17 @@ function template_v($obj, $data, $rout) {
 
         // —ортировка по характеристикам сохран€ем значени€
         if (is_array($_GET['v'])) {
-            foreach ($_GET['v'] as $k => $v)
-                $productVendor.='v[' . intval($k) . ']=' . intval($v) . '&';
-            $productVendor = substr($productVendor, 0, strlen($productVendor) - 1);
+            foreach ($_GET['v'] as $k => $v) {
+
+                if (is_array($v)) {
+                    foreach ($v as $val)
+                        $productVendor .= 'v[' . intval($k) . '][]=' . intval($val) . '&';
+                } else
+                    $productVendor .= 'v[' . intval($k) . '][]=' . intval($v) . '&';
+            }
+
+
+            //$productVendor = substr($productVendor, 0, strlen($productVendor) - 1);
         }
         if ($productVendor)
             $obj->set('productVendor', $productVendor);
@@ -28,7 +36,7 @@ function template_v($obj, $data, $rout) {
         }
 
 
-         switch ($_GET['s']) {
+        switch ($_GET['s']) {
             case 1:
                 $obj->set('sSetAactive', 'active');
                 break;

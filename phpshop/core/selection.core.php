@@ -3,7 +3,7 @@
 /**
  * Обработчик подбора товаров по характеристикам
  * @author PHPShop Software
- * @version 1.2
+ * @version 1.3
  * @package PHPShopShopCore
  */
 class PHPShopSelection extends PHPShopShopCore {
@@ -86,7 +86,7 @@ class PHPShopSelection extends PHPShopShopCore {
 
         // Количество ячеек
         if (empty($this->cell))
-            $this->cell = $this->calculateCell("selection", $this->PHPShopSystem->getValue('num_vitrina'));
+            $this->cell = $this->calculateCell("selection", $this->PHPShopSystem->getValue('num_row_adm'));
 
         // Поиск одноименных характеристик
         $this->checkName();

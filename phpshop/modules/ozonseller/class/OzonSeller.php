@@ -3,7 +3,7 @@
 /**
  * Библиотека работы с Ozon Seller API
  * @author PHPShop Software
- * @version 1.5
+ * @version 1.6
  * @package PHPShopModules
  * @todo https://docs.ozon.ru/api/seller/#tag/Environment
  */
@@ -68,7 +68,14 @@ class OzonSeller {
      */
     public function setProductStock($product) {
 
-        $info = $this->sendProductsInfo($product)['result']['items'][0];
+        // Если нет OZON ID
+        if (empty($product['export_ozon_id'])) {
+            $info = $this->sendProductsInfo($product)['result']['items'][0];
+        }
+        else {
+            $info['offer_id']=$product['uid'];
+            $info['product_id']=$product['export_ozon_id'];
+        }
 
         if (empty($product['enabled']))
             $product['items'] = 0;

@@ -143,7 +143,7 @@ class PHPShopFile {
     static function getLines($file, $delim) {
         $fp = fopen($file, 'r');
         try {
-            while ($line = @fgetcsv($fp, 0, $delim)) {
+            while ($line = fgetcsv($fp, 0, $delim)) {
                 yield $line;
             }
         } finally {

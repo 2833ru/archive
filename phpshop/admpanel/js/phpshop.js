@@ -40,6 +40,28 @@ function showAlertMessage(message, danger, hide) {
     }
 }
 
+/**
+ * Прогресс бар
+ * @param {string} message текст сообщения
+ */
+function showProgressBar(message) {
+
+    $('.success-notification').find('.alert').removeClass('alert-danger');
+    $('.success-notification').find('.alert').removeClass('alert-info');
+    $('.success-notification .close').addClass('hide');
+
+    var messageBox = '.success-notification';
+    var innerBox = '#notification .notification-alert';
+    
+    message+='<div class="progress bot-progress" style="width:250px"><div class="progress-bar progress-bar-striped  progress-bar-success active" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">0%</div></div>';
+
+    if ($(messageBox).length > 0 ) {
+        $(messageBox).removeClass('hide');
+        $(innerBox).html(message);
+        $(messageBox).fadeIn('slow');
+    }
+}
+
 
 // Инициализируем таблицу перевода https://wm-school.ru/html/html_win-1251.html
 var trans = [];
@@ -594,10 +616,10 @@ $().ready(function () {
             $('html, body').animate({scrollTop: el.offset().top - 50}, 500);
         }
     }
-    
+
     // Переход к элементу закладки по ?tab
     if ($.getUrlVar('tab') !== undefined) {
-         $('#myTabs a[href="#tabs-"'+$.getUrlVar('tab')+'"]').tab('show');
+        $('#myTabs a[href="#tabs-"' + $.getUrlVar('tab') + '"]').tab('show');
     }
 
     // Filemanager в отдельное окно

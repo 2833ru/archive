@@ -123,7 +123,7 @@ function actionStart() {
         $Tab1 .= $PHPShopGUI->setField('OAuth-токен', $PHPShopGUI->setInputText(null, 'client_token_new', $data['client_token']));
         $Tab1 .= $PHPShopGUI->setField('Блокировать прием заказов', $PHPShopGUI->setCheckbox('stop_new', 1, null, $data['stop']));
         $Tab1 .= $PHPShopGUI->setField('Выгружать изображения', $PHPShopGUI->setCheckbox('options[block_image]', 1, null, $options['block_image']));
-        $Tab1 .= $PHPShopGUI->setField('Выгружать описание',$PHPShopGUI->setCheckbox('options[block_content]', 1, null, $options['block_content'] ));
+        $Tab1 .= $PHPShopGUI->setField('Выгружать описание', $PHPShopGUI->setCheckbox('options[block_content]', 1, null, $options['block_content']));
 
         if ($data['model'] === 'FBS') {
             $Tab1 .= $PHPShopGUI->setField('Доставка для заказов с Маркета', $PHPShopGUI->setSelect('delivery_id_new', $delivery_value, 300, null));
@@ -133,14 +133,14 @@ function actionStart() {
             установите значение 0, иначе рекомендуется не изменять это значение.';
                 $Tab1 .= $PHPShopGUI->setField('Продолжить импорт с', $PHPShopGUI->setInputText(null, 'import_from_new', $data['import_from'], 100), 1, $fromCaption);
             }
-
-            
         }
     }
 
     $PHPShopCategoryArray = new PHPShopCategoryArray($where);
     $CategoryArray = $PHPShopCategoryArray->getArray();
-    $GLOBALS['count'] = count($CategoryArray);
+
+    if (is_array($CategoryArray))
+        $GLOBALS['count'] = count($CategoryArray);
 
     $tree_array = array();
 

@@ -1404,7 +1404,7 @@ class PHPShopSliderElement extends PHPShopElements {
                     $this->set('sliderID', $row['id']);
                     $this->set('sliderName', $row['name']);
                     $this->set('sliderLinkName', $row['link_text']);
-                    $this->set('sliderColor', (int)$row['color']);
+                    $this->set('sliderColor', (int) $row['color']);
 
                     // Перехват модуля
                     $this->setHook(__CLASS__, __FUNCTION__, $row, 'END');
@@ -1454,7 +1454,7 @@ class PHPShopBannerElement extends PHPShopElements {
         $this->set('banerDescription', $row['description']);
         $this->set('banerImage', $row['image']);
         $this->set('banerLink', $row['link']);
-        $this->set('banerColor', (int)$row['color']);
+        $this->set('banerColor', (int) $row['color']);
         $this->set('popupSize', $size_value[$row['size']]);
         $this->set('popupId', $row['id']);
 
@@ -1494,7 +1494,7 @@ class PHPShopBannerElement extends PHPShopElements {
 
                 $this->horizontal = $this->parseTemplate($this->getValue('templates.banner_horizontal_forma'));
                 break;
-            
+
             // Баннер в меню
             case 3:
 
@@ -1547,6 +1547,9 @@ class PHPShopBannerElement extends PHPShopElements {
         if (is_array($data))
             foreach ($data as $row) {
                 if (empty($row['dir'])) {
+     
+                    if (!empty($true_cid) and empty($row['dop_cat']))
+                        continue;
 
                     // Шаблон
                     $this->template($row);
@@ -1561,9 +1564,12 @@ class PHPShopBannerElement extends PHPShopElements {
                         if (!empty($dir))
                             if ($this->PHPShopNav->objNav['truepath'] == trim($dir) or ! empty($true_cid)) {
 
-                                // Проверка индекса
-                                if ($dir == '/' and $this->PHPShopNav->objNav['truepath'] != '/')
+                                if (!empty($true_cid) and empty($row['dop_cat']))
                                     continue;
+
+                                // Проверка индекса
+                                //if ($dir == '/' and $this->PHPShopNav->objNav['truepath'] != '/')
+                                   // continue;
 
                                 // Шаблон
                                 $this->template($row);
@@ -1592,7 +1598,7 @@ class PHPShopBannerElement extends PHPShopElements {
     function banersDispHorizontal() {
         return $this->horizontal;
     }
-    
+
     /**
      * Вывод баннера в меню
      * @return string
@@ -1860,6 +1866,7 @@ class PHPShopRecaptchaElement extends PHPShopElements {
      */
     public function true(){
     return $this->recaptcha;
+
 
 
     }

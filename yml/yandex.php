@@ -451,6 +451,7 @@ class PHPShopYml {
                 "price_cdek" => round($row['price_cdek'], (int) $this->format),
                 "price_aliexpress" => round($row['price_aliexpress'], (int) $this->format),
                 "price_ozon" => round($row['price_ozon'], (int) $this->format),
+                "yandex_service_life_days" => $row['yandex_service_life_days'],
             );
 
             // Параметр сортировки

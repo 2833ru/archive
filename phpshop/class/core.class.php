@@ -224,9 +224,9 @@ class PHPShopCore {
             $this->set('breadcrumbElemTitle', $title['name']);
             $this->set('breadcrumbElemIndex', $currentIndex++);
 
-            $dis = ParseTemplateReturn($elementTemplate, true, $this->template_debug);
+            $home .= ParseTemplateReturn($elementTemplate, true, $this->template_debug);
         }
-
+        
         $this->set('breadcrumbElemTitle', $name);
         
         if(empty($name))

@@ -20,11 +20,9 @@ function tab_menu() {
        <li class="' . @$menu_active_warehouse . '"><a href="?path=system.warehouse">'.__('Склады').'</a></li>
        <li class="' . @$menu_active_dialog . '"><a href="?path=system.dialog">'.__('Диалоги').'</a></li>
        <li class="' . @$menu_active_integration . '"><a href="?path=system.integration">'.__('Интеграция').'</a></li>     
-            
+       <li class="' . @$menu_active_locale . '"><a href="?path=system.locale">'.__('Локализация').'</a></li>     
        <li><a href="?path=tpleditor">'.__('Шаблоны дизайна').'</a></li>
        </ul>';
     
     return $tree;
 }
-
-?>

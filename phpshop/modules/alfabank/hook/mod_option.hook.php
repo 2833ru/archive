@@ -11,7 +11,7 @@ class PHPShopAlfabankArray extends PHPShopArray
     {
         $this->objType = 3;
         $this->objBase = $GLOBALS['SysValue']['base']['alfabank']['alfabank_system'];
-        parent::__construct("login", "password", "dev_mode", "status", "title_sub", "taxationSystem");
+        parent::__construct("login", "password", "dev_mode", "status", "title_sub", "taxationSystem","api_url");
     }
 
     /**

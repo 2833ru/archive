@@ -4,7 +4,7 @@ include_once dirname(__FILE__) . '/../class/OzonSeller.php';
 
 function addOzonsellerProductTab($data) {
     global $PHPShopGUI;
-    
+
     // Размер названия поля
     $PHPShopGUI->field_col = 4;
 
@@ -15,12 +15,12 @@ function addOzonsellerProductTab($data) {
     if (!empty($data['export_ozon']) and $data['export_ozon_task_status'] != 'imported') {
 
         $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['products']);
-        
+
         $OzonSeller = new OzonSeller();
         if (empty($data['export_ozon_task_id'])) {
 
             $products[] = $data;
-            
+
             $result = $OzonSeller->sendProducts($products);
             $task_id = $data['export_ozon_task_id'] = $result['result']['task_id'];
 
@@ -31,7 +31,7 @@ function addOzonsellerProductTab($data) {
         }
 
         $info = $OzonSeller->sendProductsInfo($data)['result']['items'][0];
-        $PHPShopOrm->update(['export_ozon_task_status_new' => $info['status']], ['id' => '=' . $data['id']]);
+        $PHPShopOrm->update(['export_ozon_task_status_new' => $info['status'], 'export_ozon_id_new' => $info['product_id']], ['id' => '=' . $data['id']]);
 
         if (empty($info['status']))
             $info['status'] = 'error';
@@ -44,6 +44,14 @@ function addOzonsellerProductTab($data) {
                 $error .= ($k + 1) . ' - ' . PHPShopString::utf8_win1251($er['description']) . '<br>';
             }
         }
+    }
+    // Обновляем export_ozon_id если его не было
+    else if (empty($data['export_ozon_id']) and $data['export_ozon_task_status'] == 'imported') {
+
+        $OzonSeller = new OzonSeller();
+        $product_id = $OzonSeller->sendProductsInfo($data)['result']['items'][0]['product_id'];
+
+        (new PHPShopOrm($GLOBALS['SysValue']['base']['products']))->update(['export_ozon_id_new' => $product_id], ['id' => '=' . $data['id']]);
     }
 
     if (empty($info['status']))
@@ -67,6 +75,7 @@ function addOzonsellerProductTab($data) {
 
     $tab .= $PHPShopGUI->setField('Цена OZON', $PHPShopGUI->setInputText(null, 'price_ozon_new', $data['price_ozon'], 150, $valuta_def_name), 2);
     $tab .= $PHPShopGUI->setField("Штрихкод", $PHPShopGUI->setInputText(null, 'barcode_ozon_new', $data['barcode_ozon']));
+    $tab .= $PHPShopGUI->setField('OZON ID', $PHPShopGUI->setInputText(null, 'export_ozon_id_new', $data['export_ozon_id']));
 
 
     $PHPShopGUI->addTab(array("OZON", $tab, true));
@@ -83,16 +92,26 @@ function OzonsellerUpdate($data) {
 
     // Изменение склада
     if (isset($_POST['enabled_new'])) {
-        
+
         $PHPShopProduct = new PHPShopProduct($_POST['rowID']);
         $data['export_ozon_task_id'] = $PHPShopProduct->getParam('export_ozon_task_id');
+        $data['export_ozon_id'] = $PHPShopProduct->getParam('export_ozon_id');
 
         if (!empty($data['export_ozon_task_id'])) {
             $OzonSeller = new OzonSeller();
             $data['id'] = $PHPShopProduct->getParam('id');
             $data['items'] = $_POST['items_new'];
             $data['enabled'] = $_POST['enabled_new'];
-            $OzonSeller->setProductStock($data);
+            $product_id = $OzonSeller->setProductStock($data)['result']['items'][0]['product_id'];
+
+            // Ошибка обновления, не найден OZON ID, сбрасываем статусы
+            if (empty($product_id)) {
+                (new PHPShopOrm($GLOBALS['SysValue']['base']['products']))->update(['export_ozon_task_status_new' => '', 'export_ozon_task_id_new' => ''], ['id' => '=' . $_POST['rowID']]);
+            }
+            // Обновляем export_ozon_id если его не было
+            elseif (empty($data['export_ozon_id'])) {
+                (new PHPShopOrm($GLOBALS['SysValue']['base']['products']))->update(['export_ozon_id_new' => $product_id], ['id' => '=' . $_POST['rowID']]);
+            }
         }
     }
 }

@@ -103,7 +103,7 @@ $().ready(function () {
         event.preventDefault();
 
         $('.modal-next').attr('data-id', $(this).attr('data-id'));
-        $('#adminModal .modal-title').text(locale.editing);
+        $('#adminModal .modal-title').text($('#catname').text());
         $('.product-modal-content').attr('height', $(window).height() - 120);
         $('.product-modal-content').attr('src', $(this).attr('href') + '&frame=true&admin=true');
 
@@ -123,8 +123,6 @@ $().ready(function () {
             else
                 parent.window.location.reload();
         }
-
-
     });
 
     // Предпросмотр

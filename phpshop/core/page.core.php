@@ -3,7 +3,7 @@
 /**
  * Обработчик страниц
  * @author PHPShop Software
- * @version 1.6
+ * @version 1.9
  * @package PHPShopCore
  */
 class PHPShopPage extends PHPShopCore {
@@ -65,27 +65,30 @@ class PHPShopPage extends PHPShopCore {
             foreach ($data as $row) {
 
                 if (empty($row['page_cat_seo_name']) or empty($this->seourlpro_enabled))
-                    $url = '/page/CID_' . $row['id'] . '.html';
+                    $url = 'CID_' . $row['id'];
                 else
-                    $url = '/page/' . $row['page_cat_seo_name'] . '.html';
+                    $url = $row['page_cat_seo_name'];
 
-                if (PHPShopParser::checkFile($this->cid_cat_with_foto_template)) {
-                    $this->set('podcatalogIcon', $row['icon']);
-                    $this->set('podcatalogId', $row['id']);
-                    $this->set('podcatalogName', $row['name']);
-                    $this->set('podcatalogUrl', $url);
+                  // Определяем переменные
+                $this->set('pageLink', $url);
+                $this->set('pageName', $row['name']);
+                $this->set('pageIcon', $row['icon']);
+                $this->set('pageData', PHPShopDate::get($row['datas']));
+                $this->set('pagePreview', Parser(stripslashes($row['preview'])));
 
-                    $dis .= ParseTemplateReturn('catalog/cid_page_category.tpl');
-                } else {
-                    $dis .= PHPShopText::li($row['name'], $url);
-                }
+                // Перехват модуля
+                $this->setHook(__CLASS__, __FUNCTION__, $row, 'END');
+
+                // Подключаем шаблон
+                $dis .= parseTemplateReturn($this->getValue('templates.page_mini'));
+                
             }
         }
 
         // Навигация хлебные крошки
         $this->navigation(0, $title);
 
-        $this->set('pageContent', PHPShopText::ul($dis));
+        $this->set('pageContent', $dis);
         $this->set('pageTitle', $title);
         $this->set('pageIcon', $data['icon']);
 
@@ -107,9 +110,8 @@ class PHPShopPage extends PHPShopCore {
         if (empty($link))
             $link = PHPShopSecurity::TotalClean($this->PHPShopNav->getName(true), 2);
 
-        if (empty($link))
+        if (empty($link) and $this->PHPShopNav->objNav['truepath'] == '/page/')
             return $this->getAll();
-
 
         // Страницы только для аторизованных
         if (isset($_SESSION['UsersId'])) {
@@ -148,8 +150,8 @@ class PHPShopPage extends PHPShopCore {
         $this->set('pageTitle', $row['name']);
         $this->set('catalogCategory', $this->category_name);
         $this->set('catalogId', $this->category);
-        $this->set('pageIcon', $row['icon']);
-        $this->set('pagePreview', Parser(stripslashes($row['preview'])));
+        $this->set('pageMainIcon', $row['icon']);
+        $this->set('pageMainPreview', Parser(stripslashes($row['preview'])));
         $this->PHPShopNav->objNav['id'] = $row['id'];
 
         // Выделяем меню раздела
@@ -173,7 +175,7 @@ class PHPShopPage extends PHPShopCore {
         $this->lastmodified = $row['datas'];
 
         // Навигация хлебные крошки
-        $this->navigation($row['category'], $row['name']);
+        $this->navigation($row['category'], $row['name'],['url'=>'/page/','name'=>__('Блог')]);
 
         // Последние записи
         $this->set('pageLast', $this->getLast($link));
@@ -244,24 +246,31 @@ class PHPShopPage extends PHPShopCore {
         $dataArray = $this->PHPShopOrm->select(array('*'), $where, array('order' => 'num,id desc'), array('limit' => 100));
         if (is_array($dataArray)) {
 
-            if (count($dataArray) > 1)
-                foreach ($dataArray as $row) {
-                    $dis .= PHPShopText::li($row['name'], '/page/' . $row['link'] . '.html');
+            foreach ($dataArray as $row) {
 
-                    // Максимальная дата изменения
-                    if ($row['datas'] > $lastmodified)
-                        $lastmodified = $row['datas'];
-                }
-            else {
-                return $this->index($dataArray[0]['link']);
+                // Максимальная дата изменения
+                if ($row['datas'] > $lastmodified)
+                    $lastmodified = $row['datas'];
+
+                // Определяем переменные
+                $this->set('pageLink', $row['link']);
+                $this->set('pageName', $row['name']);
+                $this->set('pageIcon', $row['icon']);
+                $this->set('pageData', PHPShopDate::get($row['datas']));
+                $this->set('pagePreview', Parser(stripslashes($row['preview'])));
+
+                // Перехват модуля
+                $this->setHook(__CLASS__, __FUNCTION__, $row, 'END');
+
+                // Подключаем шаблон
+                $dis .= parseTemplateReturn($this->getValue('templates.page_mini'));
             }
         }
 
-
-        $disp = PHPShopText::ul($dis);
-
         $this->set('catContent', $this->PHPShopCategory->getContent());
-        $this->set('pageContent', $disp);
+        $this->set('catIcon', $this->PHPShopCategory->getParam('icon'));
+        
+        $this->set('pageContent', $dis);
         $this->set('pageTitle', $this->category_name);
         $this->set('pageIcon', $row['icon']);
         $this->set('pagePreview', Parser(stripslashes($row['preview'])));
@@ -294,13 +303,13 @@ class PHPShopPage extends PHPShopCore {
         $this->lastmodified = $lastmodified;
 
         // Навигация хлебные крошки
-        $this->navigation($cat, $this->category_name);
+        $this->navigation($cat, $this->category_name,['url'=>'/page/','name'=>__('Блог')]);
 
         // Перехват модуля
         $this->setHook(__CLASS__, __FUNCTION__, $dataArray, 'END');
 
         // Подключаем шаблон
-        $this->parseTemplate($this->getValue('templates.page_page_list'));
+        $this->parseTemplate($this->getValue('templates.page_catalog_list'));
     }
 
     /**
@@ -337,32 +346,36 @@ class PHPShopPage extends PHPShopCore {
                 else
                     $url = '/page/' . $row['page_cat_seo_name'] . '.html';
 
-                if (PHPShopParser::checkFile($this->cid_cat_with_foto_template)) {
-                    $this->set('podcatalogIcon', $row['icon']);
-                    $this->set('podcatalogId', $row['id']);
-                    $this->set('podcatalogName', $row['name']);
-                    $this->set('podcatalogUrl', $url);
+                 // Определяем переменные
+                $this->set('pageLink', $row['link']);
+                $this->set('pageName', $row['name']);
+                $this->set('pageIcon', $row['icon']);
+                $this->set('pageData', PHPShopDate::get($row['datas']));
+                $this->set('pagePreview', Parser(stripslashes($row['preview'])));
 
-                    $dis .= ParseTemplateReturn('catalog/cid_page_category.tpl');
-                } else {
-                    $dis .= PHPShopText::li($row['name'], $url);
-                }
+                // Перехват модуля
+                $this->setHook(__CLASS__, __FUNCTION__, $row, 'END');
+
+                // Подключаем шаблон
+                $dis .= parseTemplateReturn($this->getValue('templates.page_mini'));
             }
 
-        // Список подкаталогов
-        $disp = PHPShopText::ul($dis);
 
         // Описание каталога
         $this->set('catContent', $this->PHPShopCategory->getContent());
+        $this->set('catIcon', $this->PHPShopCategory->getParam('icon'));
         $this->set('catName', $this->category_name);
-        $this->set('pageContent', $disp);
+        $this->set('catName', $this->category_name);
+        
+        
+        $this->set('pageContent', $dis);
         $this->set('pageTitle', $this->category_name);
 
         // Мета
         $this->title = $this->category_name . " - " . $this->PHPShopSystem->getValue("name");
 
         // Навигация хлебные крошки
-        $this->navigation($this->PHPShopCategory->getParam('parent_to'), $this->category_name);
+        $this->navigation($this->PHPShopCategory->getParam('parent_to'), $this->category_name,['url'=>'/page/','name'=>__('Блог')]);
 
         // Перехват модуля
         $this->setHook(__CLASS__, __FUNCTION__, $dataArray, 'END');

@@ -3,7 +3,7 @@
 /**
  * Обработчик прайс-листов
  * @author PHPShop Software
- * @version 1.6
+ * @version 1.7
  * @package PHPShopShopCore
  */
 class PHPShopPrice extends PHPShopShopCore {
@@ -233,7 +233,7 @@ class PHPShopPrice extends PHPShopShopCore {
                     $cart = PHPShopText::a('../users/notice.html?productId=' . $row['id'], PHPShopText::img('images/shop/date.gif', false, 'absMiddle'), $this->lang('product_notice'));
 
                 if (empty($user_price_activate))
-                    $price = $this->price($row) . ' ' . $this->currency();
+                    $price = $this->getPrice($row) . ' ' . $this->currency();
                 else
                     $price = null;
 
@@ -247,6 +247,16 @@ class PHPShopPrice extends PHPShopShopCore {
             $dis = $hook;
 
         $this->add(PHPShopText::table($dis, 3, 1, 'left', '98%', '#D2D2D2'), true);
+    }
+    
+    function getPrice($row){
+        
+        // Перехват модуля
+        $hook = $this->setHook(__CLASS__, __FUNCTION__, $row);
+        if ($hook)
+            return $hook;
+        
+        return parent::price($row,false, true);
     }
 
     /**

@@ -1,6 +1,6 @@
 <h1 class="h2 page-title d-none">@pageTitle@</h1> 
 @catContent@
-<div class="row mb-3">@pageContent@</div>
+<div class="mb-3 page-list">@pageContent@</div>
 @odnotipDisp@
 
 <!-- Page Section -->

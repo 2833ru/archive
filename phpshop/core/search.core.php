@@ -9,6 +9,7 @@
 class PHPShopSearch extends PHPShopShopCore {
 
     const YANDEX_SEARCH_API_URL = 'https://catalogapi.site.yandex.net/v1.0';
+    const YANDEX_SPELLER_API_URL = 'https://speller.yandex.net/services/spellservice.json/checkText';
 
     /**
      * сетка товаров
@@ -21,6 +22,7 @@ class PHPShopSearch extends PHPShopShopCore {
     var $grid = false;
     var $empty_index_action = false;
     var $isYandexSearch = false;
+    var $isYandexSpeller = false;
     var $yandexSearchAPI;
     var $yandexSearchId;
     var $dataArray;
@@ -37,6 +39,8 @@ class PHPShopSearch extends PHPShopShopCore {
         if (!empty($this->yandexSearchAPI) && !empty($this->yandexSearchId)) {
             $this->isYandexSearch = (bool) $this->PHPShopSystem->getSerilizeParam('admoption.yandex_search_enabled');
         }
+
+        $this->isYandexSpeller = (bool) $this->PHPShopSystem->getSerilizeParam('admoption.yandex_speller_enabled');
 
         $this->title = __('Поиск') . " - " . $this->PHPShopSystem->getValue("name");
     }
@@ -179,6 +183,25 @@ class PHPShopSearch extends PHPShopShopCore {
     }
 
     /**
+     * Yandex Speller
+     */
+    function speller($words) {
+
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, self::YANDEX_SPELLER_API_URL . '?text=' . PHPShopString::win_utf8($words, true));
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        $data = json_decode(curl_exec($ch), 1);
+        curl_close($ch);
+
+        if (is_array($data)) {
+            if (!empty($data[0]['s'][0]))
+                $words = PHPShopString::utf8_win1251($data[0]['s'][0], true);
+        }
+
+        return $words;
+    }
+
+    /**
      * Экшен поиска по запросу
      */
     function words() {
@@ -202,6 +225,10 @@ class PHPShopSearch extends PHPShopShopCore {
 
         // Фильтр поиска
         $_REQUEST['words'] = PHPShopSecurity::true_search($_REQUEST['words']);
+
+        // Yandex Speller
+        if ($this->isYandexSpeller)
+            $_REQUEST['words'] = $this->speller($_REQUEST['words']);
 
         if (!empty($_REQUEST['words'])) {
 
@@ -313,8 +340,8 @@ class PHPShopSearch extends PHPShopShopCore {
      * Генерация пагинатора
      */
     function setPaginator($count = null, $sql = null) {
-        
-        $this->search_order['cat'] = (int)$_REQUEST['cat'];
+
+        $this->search_order['cat'] = (int) $_REQUEST['cat'];
 
         // проверяем наличие шаблонов пагинации в папке шаблона
         // если отсутствуют, то используем шаблоны из lib

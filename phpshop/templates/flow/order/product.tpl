@@ -13,12 +13,12 @@
                         <span class="h5 d-block mb-1">@cart_price_all@<span class="rubznak">@currency@</span></span>
                     </div>
 
-                    <div class="text-body font-size-1 mb-1 d-none d-sm-block">
+                    <div class="text-body font-size-1 mb-1 @php __hide('cart_art'); php@">
                         <span>{Артикул}:</span>
                         <span>@cart_art@</span>
                     </div>
                     
-                    <div class="text-body font-size-1 mb-1 d-none d-sm-block @php __hide('cart_weight'); php@">
+                    <div class="text-body font-size-1 mb-1 @php __hide('cart_weight'); php@">
                         <span>{Вес}:</span>
                         <span>@cart_weight@ {г}</span>
                     </div>

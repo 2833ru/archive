@@ -479,7 +479,7 @@ function actionStart() {
           <div class="panel panel-default">
              <div class="panel-heading"><span class="glyphicon glyphicon-eye-open"></span> ' . __('На витрине') . '</div>
                 <div class="panel-body text-right panel-intro">
-                <a href="?path=catalog&where[enabled]=1">' . $PHPShopBase->getNumRows('products', "where enabled='1' and parent_enabled='0'") . '</a>
+                <a href="?path=catalog&where[enabled]=1">' . $PHPShopBase->getNumRows('products', "where enabled='1' and parent_enabled='0' and category != 1000004") . '</a>
                </div>
           </div>
        </div>
@@ -487,7 +487,7 @@ function actionStart() {
           <div class="panel panel-default">
              <div class="panel-heading"><span class="glyphicon glyphicon-eye-close"></span> ' . __('Скрыто') . '</div>
                 <div class="panel-body text-right panel-intro">
-                 <a href="?path=catalog&where[enabled]=0&where[parent_enabled]=0">' . $PHPShopBase->getNumRows('products', "where enabled='0' and parent_enabled='0'") . '</a>
+                 <a href="?path=catalog&where[enabled]=0&where[parent_enabled]=0">' . $PHPShopBase->getNumRows('products', "where (enabled='0' and parent_enabled='0') or category=1000004") . '</a>
                </div>
           </div>
        </div>

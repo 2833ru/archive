@@ -68,7 +68,6 @@ class PHPShopShopCore extends PHPShopCore {
      */
     var $price_min = 0;
     var $price_max = 0;
-
     // Кешируемые данные
     var $previewSorts;
     var $sortCategories;
@@ -88,7 +87,7 @@ class PHPShopShopCore extends PHPShopCore {
 
         PHPShopObj::loadClass('product');
         parent::__construct();
-       
+
         // Валюта товара
         $this->dengi = $this->PHPShopSystem->getParam('dengi');
         $this->currency = $this->currency();
@@ -121,7 +120,7 @@ class PHPShopShopCore extends PHPShopCore {
      * @param string $where параметр отбора
      * @return mixed
      */
-    function query_filter($where = false,$v=false) {
+    function query_filter($where = false, $v = false) {
 
         if (!empty($where))
             $where .= ' and ';
@@ -157,16 +156,16 @@ class PHPShopShopCore extends PHPShopCore {
         $percent = $this->PHPShopSystem->getValue('percent');
 
         // Форма вывода
-        if(!empty($_GET['gridChange']))
-        switch ($_GET['gridChange']) {
-            case 1:
-                $this->set('gridSetAactive', 'active');
-                break;
-            case 2:
-                $this->set('gridSetBactive', 'active');
-                break;
-            default: $this->set('gridSetBactive', 'active');
-        }
+        if (!empty($_GET['gridChange']))
+            switch ($_GET['gridChange']) {
+                case 1:
+                    $this->set('gridSetAactive', 'active');
+                    break;
+                case 2:
+                    $this->set('gridSetBactive', 'active');
+                    break;
+                default: $this->set('gridSetBactive', 'active');
+            }
 
         // Сортировка принудительная пользователем
         switch ($f) {
@@ -299,10 +298,10 @@ class PHPShopShopCore extends PHPShopCore {
         $PHPShopOrm->debug = $this->debug;
         $PHPShopOrm->cache = $cache;
         $PHPShopOrm->mysql_error = $mysql_error;
-        
-        if(!empty($cache_format))
-        $PHPShopOrm->cache_format = $cache_format;
-        
+
+        if (!empty($cache_format))
+            $PHPShopOrm->cache_format = $cache_format;
+
         $result = $PHPShopOrm->select($select, $where, $order, $option, __CLASS__, $function_name);
 
         return $result;
@@ -359,12 +358,12 @@ class PHPShopShopCore extends PHPShopCore {
         // Перехват модуля в начале функции
         if ($this->setHook(__CLASS__, __FUNCTION__, array('count' => $count, 'sql' => $sql), 'START'))
             return true;
-        
+
         // Директория установки
         $dir = $this->getValue('dir.dir');
-        if($this->PHPShopNav->objNav['path'] != 'shop')
+        if ($this->PHPShopNav->objNav['path'] != 'shop')
             $dir = null;
-  
+
         // проверяем наличие шаблонов пагинации в папке шаблона
         // если отсутствуют, то используем шаблоны из lib
         $type = $this->memory_get(__CLASS__ . '.' . __FUNCTION__);
@@ -381,8 +380,8 @@ class PHPShopShopCore extends PHPShopCore {
         if ($type == "lib") {
             $template_location = "./phpshop/lib/templates/";
             $template_location_bool = true;
-        }
-        else $template_location = $template_location_bool = null;
+        } else
+            $template_location = $template_location_bool = null;
 
         // Кол-во данных
         $this->count = $count;
@@ -472,12 +471,12 @@ class PHPShopShopCore extends PHPShopCore {
                 $this->set("paginPageNumber", $i);
                 if ($i != $this->page) {
                     if ($i == 1) {
-                        $this->set("paginLink", $dir.substr($this->objPath, 0, strlen($this->objPath) - 1) . '.html' . $sort);
-                        $this->set("catalogFirstPage", $dir.substr($this->objPath, 0, strlen($this->objPath) - 1) . '.html');
+                        $this->set("paginLink", $dir . substr($this->objPath, 0, strlen($this->objPath) - 1) . '.html' . $sort);
+                        $this->set("catalogFirstPage", $dir . substr($this->objPath, 0, strlen($this->objPath) - 1) . '.html');
                         $navigat .= parseTemplateReturn($template_location . "paginator/paginator_one_link.tpl", $template_location_bool);
                     } else {
                         if ($i > ($this->page - $this->nav_len) and $i < ($this->page + $this->nav_len)) {
-                            $this->set("paginLink", $dir.$this->objPath . $i . '.html' . $sort);
+                            $this->set("paginLink", $dir . $this->objPath . $i . '.html' . $sort);
                             $navigat .= parseTemplateReturn($template_location . "paginator/paginator_one_link.tpl", $template_location_bool);
                         } else if ($i - ($this->page + $this->nav_len) < 3 and ( ($this->page - $this->nav_len) - $i) < 3) {
                             $navigat .= parseTemplateReturn($template_location . "paginator/paginator_one_more.tpl", $template_location_bool);
@@ -497,16 +496,16 @@ class PHPShopShopCore extends PHPShopCore {
 
             // Убираем дубль первой страницы CID_X_1.html
             if ($p_do == 1)
-                $this->set("previousLink", $dir.substr($this->objPath, 0, strlen($this->objPath) - 1) . '.html' . $sort);
+                $this->set("previousLink", $dir . substr($this->objPath, 0, strlen($this->objPath) - 1) . '.html' . $sort);
             else
-                $this->set("previousLink", $dir.$this->objPath . ($p_do) . '.html' . $sort);
+                $this->set("previousLink", $dir . $this->objPath . ($p_do) . '.html' . $sort);
 
 
             // Убираем дубль первой страницы CID_X_0.html
             if ($p_to == 0 or strtoupper($this->page) == 'ALL')
-                $this->set("nextLink", $dir.substr($this->objPath, 0, strlen($this->objPath) - 1) . '.html' . $sort);
+                $this->set("nextLink", $dir . substr($this->objPath, 0, strlen($this->objPath) - 1) . '.html' . $sort);
             else
-                $this->set("nextLink", $dir.$this->objPath . ($p_to) . '.html' . $sort);
+                $this->set("nextLink", $dir . $this->objPath . ($p_to) . '.html' . $sort);
 
             // Добавлем ссылку показать все
             if (strtoupper($this->page) == 'ALL')
@@ -636,7 +635,7 @@ class PHPShopShopCore extends PHPShopCore {
      */
     function getStore() {
 
-        if(is_array($this->warehouse)) {
+        if (is_array($this->warehouse)) {
             return;
         }
 
@@ -692,9 +691,9 @@ class PHPShopShopCore extends PHPShopCore {
 
             // Проверка дополнительных складов
             $this->getStore($row);
-            
+
             // Общий склад
-            $this->set('productWarehouse',$row['items']);
+            $this->set('productWarehouse', $row['items']);
 
             // Дополнительные склады
             if (is_array($this->warehouse) and count($this->warehouse) > 0) {
@@ -705,7 +704,7 @@ class PHPShopShopCore extends PHPShopCore {
                     $this->set('productSklad', PHPShopText::div(__('Общий склад') . ": " . $row['items'] . " " . $row['ed_izm']), true);
 
                 foreach ($this->warehouse as $store_id => $store_name) {
-                    if(isset($row['items' . $store_id])) {
+                    if (isset($row['items' . $store_id])) {
                         $this->set('productSklad', PHPShopText::div($store_name . ": " . $row['items' . $store_id] . " " . $row['ed_izm']), true);
                     }
                 }
@@ -726,6 +725,11 @@ class PHPShopShopCore extends PHPShopCore {
 
         if ($price < $this->price_min)
             $this->price_min = $price;
+
+        // Бонусы
+        $bonus = $price * $this->PHPShopSystem->getSerilizeParam('admoption.bonus') / 100;
+        if (!empty($bonus))
+            $this->set('productBonus', $bonus);
 
         // Форматирование
         $this->set('productSchemaPrice', $price);
@@ -823,7 +827,7 @@ class PHPShopShopCore extends PHPShopCore {
             $this->set('parentLangFrom', null);
             $this->set('productPriceOld', null);
         }
-        
+
         // Промоакции лейблы
         if (!empty($row['promo_label'])) {
             $this->set('promoLabel', $row['promo_label']);
@@ -892,7 +896,7 @@ class PHPShopShopCore extends PHPShopCore {
                     }
                 $tr .= '</div>';
                 break;
-                
+
             // Flex
             case 'flex':
                 $tr = null;
@@ -1124,7 +1128,7 @@ function product_grid($dataArray, $cell = 2, $template = false) {
 
 public function getPreviewSorts($products, $currentProduct) {
 
-    if(is_null($this->sortCategories)) {
+    if (is_null($this->sortCategories)) {
         $sortCategoryOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['sort_categories']);
         $this->sortCategories = $sortCategoryOrm->getList(['id', 'name'], ['show_preview' => '="1"'], ['order' => 'num, name']);
     }

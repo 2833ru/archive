@@ -157,7 +157,7 @@ function userorderpaymentlink_mod_alfabank_hook($obj, $PHPShopOrderFunction) {
         //exit($orderBundle);
         // Режим разработки и боевой режим
         if ($option["dev_mode"] == 0)
-            $url = 'https://pay.alfabank.ru/payment/rest/register.do';
+            $url = $option["api_url"];
         else
             $url = 'https://web.rbsuat.com/ab/rest/register.do';
 

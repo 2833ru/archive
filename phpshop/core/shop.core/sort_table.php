@@ -3,7 +3,7 @@
 /**
  * Вывод сортировок для товаров таблицей
  * @author PHPShop Software
- * @version 1.8
+ * @version 1.9
  * @package PHPShopCoreFunction
  * @param obj $obj объект класса
  * @return mixed
@@ -39,7 +39,13 @@ function sort_table($obj, $row) {
                         $sortValue .= intval($value) . ',';
             }
 
-
+        // SeoUrl настройки
+        if (class_exists('PHPShopSeourlOption')) {
+            $seourl_option = (new PHPShopSeourlOption())->getArray();
+        }
+        else {
+            $seourl_option["seo_brands_enabled"]=1;
+        }
 
         if (!empty($sortValue)) {
 
@@ -47,7 +53,7 @@ function sort_table($obj, $row) {
             $PHPShopOrm = new PHPShopOrm();
             $PHPShopOrm->debug = $obj->debug;
             $result = $PHPShopOrm->query("select * from " . $SysValue['base']['sort'] . " where id IN ( $sortValue 0) order by num");
-            while (@$row = mysqli_fetch_array($result)) {
+            while ($row = mysqli_fetch_array($result)) {
 
                 // Определение цвета
                 if ($row['name'][0] == '#')
@@ -55,7 +61,8 @@ function sort_table($obj, $row) {
                 else
                     $arrayVendorValue[$row['category']]['name'][$row['id']] = $row['name'];
 
-                $arrayVendorValue[$row['category']]['seo_name'][$row['id']] = $row['sort_seo_name'];
+                if ($seourl_option["seo_brands_enabled"] == 2)
+                    $arrayVendorValue[$row['category']]['seo_name'][$row['id']] = $row['sort_seo_name'];
 
                 $arrayVendorValue[$row['category']]['id'][] = $row['id'];
 
@@ -74,10 +81,13 @@ function sort_table($obj, $row) {
                         $desc = stripslashes($page['content']);
                     }
 
-                    // SEO
-                    if (!empty($row['sort_seo_name']))
-                        $obj->set('brandPageLink', '/brand/' . $row['sort_seo_name'] . '.html');
-                    else
+                    // SEOUrl
+                    if (!empty($row['sort_seo_name']) and ! empty($GLOBALS['SysValue']['base']['seourlpro']['seourlpro_system'])) {
+                        if ($seourl_option["seo_brands_enabled"] == 2)
+                            $obj->set('brandPageLink', '/brand/' . $row['sort_seo_name'] . '.html');
+                        else
+                            $obj->set('brandPageLink', '/selection/?v[' . $row['category'] . ']=' . $row['id']);
+                    } else
                         $obj->set('brandPageLink', '/selection/?v[' . $row['category'] . ']=' . $row['id']);
 
                     if (!empty($desc)) {
@@ -89,6 +99,7 @@ function sort_table($obj, $row) {
                     $obj->set('brandUidDescription', ParseTemplateReturn('product/brand_uid_description.tpl'), true);
                 }
             }
+
 
             // Создаем таблицу характеристик с учетом сортировки
             if (is_array($arrayVendor))
@@ -132,9 +143,11 @@ function sort_table($obj, $row) {
                             if (!empty($value['brand'])) {
                                 $arr = array();
                                 foreach ($arrayVendorValue[$idCategory]['id'] as $valueId) {
-                                    
-                                    if(!empty($arrayVendorValue[$idCategory]['seo_name'][$valueId]))
-                                    $arr[] = PHPShopText::a('/brand/' . $arrayVendorValue[$idCategory]['seo_name'][$valueId] . '.html' , $arrayVendorValue[$idCategory]['name'][$valueId]);
+
+                                    if (!empty($arrayVendorValue[$idCategory]['seo_name'][$valueId]))
+                                        $arr[] = PHPShopText::a('/brand/' . $arrayVendorValue[$idCategory]['seo_name'][$valueId] . '.html', $arrayVendorValue[$idCategory]['name'][$valueId]);
+                                    else
+                                        $arr[] = PHPShopText::a('/selection/?v[' . $idCategory . ']=' . $valueId, $arrayVendorValue[$idCategory]['name'][$valueId]);
                                 }
                                 $sortValueName = implode(', ', $arr);
                             } else if (isset($arrayVendorValue[$idCategory]['page'])) {

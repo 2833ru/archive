@@ -42,6 +42,11 @@ function actionStart() {
             $PHPShopGUI->setField('Идентификатор поиска', $PHPShopGUI->setInputText(false, 'option[yandex_search_id]', $option['yandex_search_id'], 300)) .
             $PHPShopGUI->setField("Включить Яндекс.Поиск", $PHPShopGUI->setCheckbox('option[yandex_search_enabled]', 1, 'Использовать Яндекс.Поиск на сайте, вместо стандартного поиска', $option['yandex_search_enabled'])), 'in', true
     );
+    
+    // Яндекс.Спеллер
+    $PHPShopGUI->_CODE .= $PHPShopGUI->setCollapse('Яндекс.Спеллер', 
+            $PHPShopGUI->setField("Включить Яндекс.Спеллер", $PHPShopGUI->setCheckbox('option[yandex_speller_enabled]', 1, 'Использовать Яндекс.Спеллер для  проверки орфографии в поиске на сайте', $option['yandex_speller_enabled'])), 'in', true
+    );
 
     // Google Analitiks
     $PHPShopGUI->_CODE .= $PHPShopGUI->setCollapse('Статистика посещений Google', $PHPShopGUI->setField('Идентификатор отслеживания', $PHPShopGUI->setInputText('UA-', 'option[google_id]', $option['google_id'], 300, false, false, false, 'XXXXX-Y') .
@@ -75,7 +80,7 @@ function actionStart() {
     );
 
     $PHPShopGUI->_CODE .= $PHPShopGUI->setCollapse('PUSH Уведомления', $PHPShopGUI->setField("PUSH оповещение", $PHPShopGUI->setCheckbox('option[push_enabled]', 1, 'Уведомление о заказе администратору. Требуется SSL сертификат.', $option['push_enabled'])) .
-            $PHPShopGUI->setField("Ключ сервера", $PHPShopGUI->setInputText(null, "option[push_token]", $option['push_token'])) .
+            $PHPShopGUI->setField("Ключ сервера", $PHPShopGUI->setInputText(null, "option[push_token]", $option['push_token'],300)) .
             $PHPShopGUI->setField("Идентификатор отправителя", $PHPShopGUI->setInputText(null, "option[push_id]", $option['push_id'], 300) . $PHPShopGUI->setHelp('Информация о сервисе, регистрация, получение ключей <a href="https://console.firebase.google.com/" target="_blank">Firebase.google.com</a>'))
     );
 
@@ -120,7 +125,7 @@ function actionUpdate() {
     $option = unserialize($data['admoption']);
 
     // Корректировка пустых значений
-    $PHPShopOrm->updateZeroVars('option.recaptcha_enabled', 'option.dadata_enabled', 'option.sms_enabled', 'option.sms_status_order_enabled', 'option.notice_enabled', 'option.metrica_enabled', 'option.metrica_widget', 'option.metrica_ecommerce', 'option.google_enabled', 'option.google_analitics', 'option.rss_graber_enabled', 'option.yandexmap_enabled', 'option.push_enabled', 'option.metrica_webvizor', 'option.yandex_search_enabled', 'option.sms_login','option.hcaptcha_enabled');
+    $PHPShopOrm->updateZeroVars('option.recaptcha_enabled', 'option.dadata_enabled', 'option.sms_enabled', 'option.sms_status_order_enabled', 'option.notice_enabled', 'option.metrica_enabled', 'option.metrica_widget', 'option.metrica_ecommerce', 'option.google_enabled', 'option.google_analitics', 'option.rss_graber_enabled', 'option.yandexmap_enabled', 'option.push_enabled', 'option.metrica_webvizor', 'option.yandex_search_enabled', 'option.sms_login','option.hcaptcha_enabled', 'option.yandex_speller_enabled');
 
     if (is_array($_POST['option']))
         foreach ($_POST['option'] as $key => $val)

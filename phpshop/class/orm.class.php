@@ -588,7 +588,7 @@ class PHPShopOrm {
      */
     public function getOne($select = array('*'), $where = false, $order = false, $option = false, $class_name = false, $function_name = false) {
         $option['limit'] = 1;
-
+        //$this->debug=true;
         $result = $this->select($select, $where, $order, $option, $class_name, $function_name);
 
         return $result;

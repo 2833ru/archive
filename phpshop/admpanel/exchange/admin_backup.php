@@ -2,7 +2,7 @@
 
 $TitlePage = __("Резервное копирование и восстановление");
 
-// Функция обновления
+// Восстановление бекапа
 function actionSave() {
     global $PHPShopGUI, $PHPShopOrm, $result_message, $result_error_tracert, $link_db;
 

@@ -19,10 +19,6 @@
             </div>
         </div>
         <div class="col-md-5 col-sm-5">
-            <div class="text-right hidden-xs">
-                <div class="share42init"></div>
-                <script  src="@php echo $GLOBALS['SysValue']['dir']['templates'].chr(47).$_SESSION['skin']; php@/js/share/share42.js"></script>
-            </div>
             <div class="alert alert-warning">
                 <h1 itemprop="name">@productName@</h1>
 

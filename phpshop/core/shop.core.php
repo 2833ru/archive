@@ -889,6 +889,41 @@ function CID_Product($category = null, $mode = false) {
 
     $data = $this->select($search_where, $where, $group);
 
+    // Проверка промоакций
+    $promotion = (new PHPShopPromotions())->promotion_get_discount(['category' => $this->category]);
+
+    if (!empty($promotion['action'])) {
+
+        // %
+        if (!empty($promotion['percent'])) {
+
+            // Повышение
+            if ($promotion['status'] == 1) {
+                $data['max'] += $data['max'] * $promotion['percent'];
+                $data['min'] += $data['min'] * $promotion['percent'];
+            }
+            // Понижение
+            else {
+                $data['max'] -= $data['max'] * $promotion['percent'];
+                $data['min'] -= $data['min'] * $promotion['percent'];
+            }
+        }
+        // Сумма
+        elseif (!empty($promotion['sum'])) {
+
+            // Повышение
+            if ($promotion['status'] == 1) {
+                $data['max'] += $promotion['sum'];
+                $data['min'] += $promotion['sum'];
+            }
+            // Понижение
+            else {
+                $data['max'] -= $promotion['sum'];
+                $data['min'] -= $promotion['sum'];
+            }
+        }
+    }
+
     $this->price_max = intval($data['max']) + 6;
     $this->price_min = intval($data['min']);
 
@@ -898,8 +933,6 @@ function CID_Product($category = null, $mode = false) {
     $this->set('price_max', intval($this->price_max));
     $this->set('price_min', intval($this->price_min));
 
-    // Облако тегов
-    //$this->cloud($this->dataArray);
     // Перехват модуля в конце функции
     $this->setHook(__CLASS__, __FUNCTION__, $this->dataArray, 'END');
 
@@ -1102,7 +1135,7 @@ function CID_Category($mode = false) {
                 $this->set('podcatalogId', $row['id']);
                 $this->set('podcatalogName', $row['name']);
                 $this->set('podcatalogDesc', $row['content']);
-                $this->set('podcatalogColor', (int)$row['color']);
+                $this->set('podcatalogColor', (int) $row['color']);
 
                 $dis .= ParseTemplateReturn($this->cid_cat_with_foto_template);
             }

@@ -198,7 +198,10 @@ function setProducts_yandexcart_hook($obj, $data) {
 
         $add .= '<condition type="' . $condition . '"><reason>' . $data['val']['condition_reason'] . '</reason></condition>';
     }
-
+    
+    // Срок годности
+    if (!empty($data['val']['yandex_service_life_days']))
+        $add .= '<period-of-validity-days>' . $data['val']['yandex_service_life_days'] . '</period-of-validity-days>';
 
     if (!empty($add))
         $data['xml'] = str_replace('</offer>', $add . '</offer>', $data['xml']);

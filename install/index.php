@@ -112,7 +112,7 @@ if (!empty($_POST['version_update'])) {
                     <h3 class="panel-title"><span class="glyphicon glyphicon-exclamation-sign"></span> Удаление установщика</h3>
                 </div>
                <div class="panel-body">
-               Необходимо удалить папку <kbd>/install</kbd> для безопасности вашего сервера.
+               Необходимо удалить папку <kbd>/install</kbd> для безопасности Вашего сервера.
                </div>
             </div>';
     } else
@@ -186,7 +186,7 @@ elseif (!empty($_POST['password'])) {
             }
         }
         $done = '
-            <p>Поздравляем Вас, PHPShop успешно установлен на ваш сервер. Для перехода в панель управления воспользуйтесь <a href="../phpshop/admpanel/" class="btn btn-primary btn-xs" target="_blank"><span class="glyphicon glyphicon-share-alt"></span>Ссылкой</a></p>
+            <p>Поздравляем, PHPShop успешно установлен на Ваш сервер. Для перехода в панель управления используйте <a href="../phpshop/admpanel/" class="btn btn-primary btn-xs" target="_blank"><span class="glyphicon glyphicon-share-alt"></span>ссылку</a></p>
             <div class="panel panel-success">
                 <div class="panel-heading">
                     <h3 class="panel-title"><span class="glyphicon glyphicon-ok"></span> Установка завершена</h3>
@@ -205,7 +205,7 @@ elseif (!empty($_POST['password'])) {
                     <h3 class="panel-title"><span class="glyphicon glyphicon-exclamation-sign"></span> Удаление установщика</h3>
                 </div>
                <div class="panel-body">
-               Необходимо удалить папку <kbd>/install</kbd> для безопасности вашего сервера.
+               Удалите папку <kbd>/install</kbd> для безопасности Вашего сервера.
                </div>
             </div>
 ';
@@ -285,9 +285,6 @@ elseif (!empty($_POST['password'])) {
                 <li><a href="/install/">Установка</a></li>
                 <li class="active"><?php echo $brand; ?></li>
             </ol>
-            <p class="lead">
-                На этой странице вы найдет всю необходимую информацию для установки и настройки Интернет-магазина
-            </p>
 
             <?php
             if (!empty($done)) {
@@ -299,8 +296,8 @@ elseif (!empty($_POST['password'])) {
                 $system = null;
             ?>   
             <p class="<?php echo $system; ?>">   
-                Ниже приведена инструкция для ручной установки PHPShop на виртуальный хостинг. Перед установкой рекомендуем ознакомиться со
-                списком <a class="btn btn-info btn-xs" href="https://phpshop.ru/page/hosting-list.html" target="_blank" title="Хостинги"><span class="glyphicon glyphicon-share-alt"></span> рекомендуемых хостингов</a> на соответствие с системными требованиями PHPShop.</p>
+                Это инструкция для ручной установки PHPShop на хостинг. Перед установкой, рекомендуем ознакомиться со
+                списком <a class="btn btn-info btn-xs" href="https://phpshop.ru/page/hosting-list.html" target="_blank" title="Хостинги"><span class="glyphicon glyphicon-share-alt"></span> рекомендуемых хостингов</a> на соответствие системным требованиям PHPShop.</p>
 
             
 
@@ -325,11 +322,10 @@ elseif (!empty($_POST['password'])) {
                 </div>
                 <div class="panel-body">
                     <ol>
-                        <li>Подключиться к своему серверу через FTP-клиент (FileZilla, CuteFTP, Total Commander и др.)
-                        <li>Загрузить распакованный архив с PHPShop на FTP
-                        <li>Создайте новую базу MySQL на своем сервере или узнайте пароли доступа к уже созданной базе у хост-провайдера.
-                        <li>
-                            Отредактируйте файл связи с базой MySQL <kbd>config.ini</kbd> в папке <code><?php echo $_SERVER['SERVER_NAME'] ?>/phpshop/inc/</code>. Изменить данные в кавычках " " на свои данные. Кодировка базы может иметь значения cp1251 (кириллическая по умолчанию) или utf-8 (международная). Для использования utf-8 базой данных кодировка сервера так же должна быть utf-8. Для управления кодировкой сервера можно использовать параметр <code>AddDefaultCharset utf-8</code> в корневом файле <code>.htaccess</code>. По умолчанию установка рассчитана на кодировку сервера windows-1251 и базы данных cp1251. Изменять настройки кодировки рекомендуется только для языков, не имеющих  кириллических символов (армянская, азербайджанская и т.д.). База данных в кириллической кодировке cp1251 работает быстрее и занимает меньше места.
+                        <li>Подключитесь к своему серверу через FTP-клиент (FileZilla, CuteFTP, Total Commander и др.) или через файловый менеджер на хостинге.
+                        <li>Загрузите распакованный архив с PHPShop в корневую директорию для веб-документов (www, public_html и т.д.).
+                        <li>Создайте новую базу MySQL на сервере или узнайте пароли доступа к уже созданной базе у Вашего хост-провайдера.
+                        <li>Отредактируйте файл связи с базой MySQL <kbd>config.ini</kbd> в папке <code><?php echo $_SERVER['SERVER_NAME'] ?>/phpshop/inc/</code>. Измените данные в кавычках " " на свои данные. Кодировка базы может иметь значения cp1251 (кириллическая по умолчанию) или utf-8 (международная). Для использования utf-8 базой данных, кодировка сервера также должна быть utf-8. Для управления кодировкой сервера можно использовать параметр <code>AddDefaultCharset utf-8</code> в корневом файле <code>.htaccess</code>. По умолчанию, установка рассчитана на кодировку сервера windows-1251 и базы данных cp1251. Изменять настройки кодировки рекомендуется только для языков, не имеющих  кириллических символов (армянская, азербайджанская и т.д.). База данных в кириллической кодировке cp1251 работает быстрее и занимает меньше места.
 
                             <pre>[connect]
 host="localhost";   # имя хоста базы данных
@@ -353,15 +349,15 @@ charset="cp1251";   # кодировка базы</pre>
 /phpshop/admpanel/csv
 /phpshop/admpanel/dumper/backup</pre>
 
-                        <li>Для входа в <b>Административную панель</b> нажмите комбинацию клавиш <kbd>CTRL</kbd> + <kbd>F12</kbd>  или по ссылке  <a href="http://<?php echo $_SERVER['SERVER_NAME'] ?>/phpshop/admpanel/">http://<?php echo $_SERVER['SERVER_NAME'] ?>/phpshop/admpanel/</a><br>
+                        <li>Для входа в <b>Административную панель</b>, нажмите комбинацию клавиш <kbd>CTRL</kbd> + <kbd>F12</kbd>  или по ссылке  <a href="http://<?php echo $_SERVER['SERVER_NAME'] ?>/phpshop/admpanel/">http://<?php echo $_SERVER['SERVER_NAME'] ?>/phpshop/admpanel/</a><br>
                             Пользователь и пароль задается при установке скрипта. При установке пользователь и пароль задается в ручном режиме. По желанию, регистрационные данные отсылаются на E-mail.
 
-                        <li>Существует возможность размещение 2-х и более независимых интернет-магазинов в любых директориях домена. Данная особенность позволяет создавать многоязычные проекты и гипермаркеты, используя одну лицензию. Для задания папки размещения требуется выполнить всего несколько шагов:
+                        <li>Есть возможность размещения 2-х и более независимых интернет-магазинов, в любых директориях домена. Данная особенность позволяет создавать многоязычные проекты и гипермаркеты, используя одну лицензию. Для задания папки размещения, требуется выполнить всего несколько шагов:
 
                             <ol>
-                                <li>Копируем скрипт в любую директорию, например <code>/market/</code>
+                                <li>Скопируйте скрипт в любую директорию, например <code>/market/</code>
                                     <div class="alert alert-warning" role="alert"><b>Внимание!</b> Использование зарегистрированных ссылок с именами <em>shop, news, gbook, spec, users</em>  запрещено.</div>
-                                <li>В файле конфигурации <code>market/phpshop/inc/config.ini</code> указываем имя директории, куда установлен скрипт
+                                <li>В файле конфигурации <code>market/phpshop/inc/config.ini</code> укажите имя директории, куда установлен скрипт
                                     <pre>[dir]
 dir="/market";</pre>
                             </ol>
@@ -376,17 +372,15 @@ dir="/market";</pre>
                                 </div>
                                 <div class="panel-body">
                                     <ol>
-                                        <li>Создайте новую базу MySQL на своем сервере или узнайте пароли доступа к уже созданной базе у хост-провайдера.
+                                        <li>Создайте новую базу MySQL на своем сервере или узнайте пароли доступа к уже созданной базе у Вашего хост-провайдера.
                                         <li>Скачайте и распакуйте архив phpshop6.zip в корневую директорию сайта
                                             <pre>wget https://www.phpshop.ru/loads/files/phpshop6.zip
 unzip phpshop6.zip</pre>
                                         <li>Запустите скрипт установщика <kbd>install.sh</kbd>, в нем укажите данные доступа к созданной на первом шаге базе MySQL и параметры нового администратора. Файлы для запуска в командной строке собраны в папке <kbd>/sh</kbd><pre>
 cd sh
 sh install.sh</pre>
-                                        <li>Для компактности и автоматизации установки параметры можно указать в качестве аргументов (сервер БД, имя БД, пароль БД, логин админа, пароль админа, почта админа), пример <code>install.sh localhost phpshop_bd1 phpshop_bd1 dGyEySHRO admin 123456 mail@phpshop.ru</code><pre>
+                                        <li>Для компактности и автоматизации установки, параметры можно указать в качестве аргументов (сервер БД, имя БД, пароль БД, логин админа, пароль админа, почта админа), пример <code>install.sh localhost phpshop_bd1 phpshop_bd1 dGyEySHRO admin 123456 mail@phpshop.ru</code><pre>
 sh install.sh host user_db dbase pass_db admin admin_pass admin_mail</pre>
-
-
 
                                     </ol>
                                 </div>
@@ -398,19 +392,19 @@ sh install.sh host user_db dbase pass_db admin admin_pass admin_mail</pre>
                                 </div>
                                 <div class="panel-body">
                                     <ol>
-                                        <li>Создать копию текущей базы данных через меню <kbd>База</kbd> - <kbd>Резервное копирование</kbd>
-                                        <li>Создать папку <code>/old</code> и перенести в нее все файлы из корневой директории с PHPShop (<em>www, httpdocs, docs, public_html</em>)
-                                        <li>Загрузить в очищенную корневую директорию файлы из архива новой версии
-                                        <li>Из старого конфигурационного файла <code>/old/phpshop/inc/config.ini</code> взять параметры подключения к базе данных (первые 5 строк) и вставить в новый конфигурационный файл <code>/phpshop/inc/config.ini</code>
+                                        <li>Создайте копию текущей базы данных через меню <kbd>База</kbd> - <kbd>Резервное копирование</kbd>
+                                        <li>Создайте папку <code>/old</code> и перенесите в нее все файлы из корневой директории с PHPShop (<em>www, httpdocs, docs, public_html</em>)
+                                        <li>Загрузите в очищенную корневую директорию файлы из архива новой версии
+                                        <li>Из старого конфигурационного файла <code>/old/phpshop/inc/config.ini</code> возьмите параметры подключения к базе данных (первые 5 строк) и вставьте в новый конфигурационный файл <code>/phpshop/inc/config.ini</code>
                                             <pre>[connect]
 host="localhost";   # имя хоста базы данных
 user_db="user";     # имя пользователя
 pass_db="mypas";    # пароль базы
 dbase="mybase";     # имя базы</pre>
-                                        <li>Запустить <a href="#" class="btn btn-success btn-xs update" <?php echo $mysql_break_install; ?> target="_blank" data-target="#install"><span class="glyphicon glyphicon-refresh"></span> Обновление базы данных</a>, выбрать предыдущую версию (которая была перед обновлением), если ее там нет, то обновлять базу не нужно. 
-                                        <li>Удалить папку <code>/install</code>
-                                        <li>Копировать папки <code>/old/UserFiles</code>, <code>/old/license</code> со старыми изображениями и лицензией в обновленный скрипт
-                                        <li>По необходимости копировать старый шаблон <code>/old/phpshop/templates/{имя-шаблона}</code>
+                                        <li>Запустите <a href="#" class="btn btn-success btn-xs update" <?php echo $mysql_break_install; ?> target="_blank" data-target="#install"><span class="glyphicon glyphicon-refresh"></span> Обновление базы данных</a>, выберите предыдущую версию (которая была перед обновлением), если ее там нет, то обновлять базу не нужно. 
+                                        <li>Удалите папку <code>/install</code>
+                                        <li>Скопируйте папки <code>/old/UserFiles</code>, <code>/old/license</code> со старыми изображениями и лицензией в обновленный скрипт
+                                        <li>По необходимости, скопируйте Ваш старый шаблон <code>/old/phpshop/templates/{имя-шаблона}</code>
                                     </ol>
                                 </div>
                             </div>
@@ -425,7 +419,7 @@ dbase="mybase";     # имя базы</pre>
 cd sh
 sh update.sh</pre>
                                         <li>Подтвердите согласие на обновления
-                                        <li>При обновление создается резервная копия обновленных файлов и базы данных. Резервные копии хранятся в <code>/backup/backups</code>   
+                                        <li>При обновлении, создается резервная копия обновленных файлов и базы данных. Резервные копии хранятся в <code>/backup/backups</code>   
                                     </ol>
                                 </div>
                             </div>
@@ -436,8 +430,8 @@ sh update.sh</pre>
                                 </div>
                                 <div class="panel-body">
                                     <ol>
-                                        <li>Создать копию текущей базы данных на старом сервере через меню <kbd>База</kbd> - <kbd>Резервное копирование</kbd>
-                                        <li>Загрузить файлы переносимого скрипта из корневой веб-директории с PHPShop (<em>www, httpdocs, docs, public_html</em>) в корневую веб-директорию на новом сервере.  Для мгновенного переноса файлов с сервера на сервер можно воспользоваться утилитой <a href="https://ru.wikipedia.org/wiki/PuTTY" target="_blank">PyTTY</a> и  протоколом SSH. Команды оболочки после подключения на старом сервере (www заменяется на имя своей папки хранения веб-файлов):
+                                        <li>Создайте копию текущей базы данных на старом сервере через меню <kbd>База</kbd> - <kbd>Резервное копирование</kbd>
+                                        <li>Загрузите файлы переносимого скрипта из корневой веб-директории с PHPShop (<em>www, httpdocs, docs, public_html</em>) в корневую веб-директорию на новом сервере.  Для мгновенного переноса файлов с сервера на сервер, можно воспользоваться утилитой <a href="https://ru.wikipedia.org/wiki/PuTTY" target="_blank">PyTTY</a> и  протоколом SSH. Команды оболочки после подключения на старом сервере (www заменяется на имя своей папки хранения веб-файлов):
                                             <pre>tar cvf file.tar ./
 gzip file.tar</pre>
                                             Команды оболочки после подключения на новом сервере:
@@ -445,18 +439,18 @@ gzip file.tar</pre>
                                             <pre>wget http://имя_домена/file.tar.gz
 tar -zxf file.tar.gz</pre>
 
-                                        <li>Восстановить из архива скрипта папку <kbd>/install</kbd> и скопировать ее вместе с входящими в нее файлами на новый сервер.
-                                        <li>Прописать в файл конфигурации  <code>/phpshop/inc/config.ini</code> на новом сервере новые параметры доступа к базе данных MySQL.
+                                        <li>Восстановите из архива скрипта папку <kbd>/install</kbd> и скопируйте ее, вместе с входящими в нее файлами, на новый сервер.
+                                        <li>Пропишите в файл конфигурации  <code>/phpshop/inc/config.ini</code> на новом сервере новые параметры доступа к базе данных MySQL.
                                             <pre>[connect]
 host="localhost";       # имя хоста
 user_db="user";         # имя пользователя
 pass_db="mypas";        # пароль базы
 dbase="mybase";         # имя базы</pre>
-                                        <li>Запустить <a href="#" class="btn btn-success btn-xs" <?php echo $mysql_break_install; ?>  data-target="#install"><span class="glyphicon glyphicon-download-alt"></span> Установщик базы данных</a>. Выполнить установку баз с нуля, указать пароли доступа к панели управления (временные, после завершения пароли будут идентичны старому серверу). Будет установлена тестовая база временно.
-                                        <li>Удалить папку <code>/install</code>
-                                        <li>Авторизоваться в панели управления  <code>/phpshop/admpanel/</code>, используя новые временные пароли доступа.
-                                        <li>Восстановить резервную копию базы через меню <kbd>База</kbd> - <kbd>Резервное копирование</kbd>. 
-                                        <li>Теперь для входа в панель управления следует вводить пароли со старого сервера.
+                                        <li>Запустите <a href="#" class="btn btn-success btn-xs" <?php echo $mysql_break_install; ?>  data-target="#install"><span class="glyphicon glyphicon-download-alt"></span> Установщик базы данных</a>. Выполните установку баз с нуля, укажите пароли доступа к панели управления (временные - после завершения, пароли будут идентичны старому серверу). Будет установлена тестовая база временно.
+                                        <li>Удалите папку <code>/install</code>
+                                        <li>Авторизуйтесь я в панели управления  <code>/phpshop/admpanel/</code>, используя новые временные пароли доступа.
+                                        <li>Восстановите резервную копию базы через меню <kbd>База</kbd> - <kbd>Резервное копирование</kbd>. 
+                                        <li>Теперь, для входа в панель управления, следует вводить пароли со старого сервера.
                                     </ol>
 
                                 </div>
@@ -470,8 +464,8 @@ dbase="mybase";         # имя базы</pre>
                                     <ul>
                                         <li><b>101 Ошибка подключения к базе данных</b>
                                             <ol>
-                                                <li>Проверь настройки подключения к базе данных: <em>host, user_db, pass_db, dbase</em>.
-                                                <li>В файле <code>phpshop/inc/config.ini</code> отредактировать переменные под вашу базу (заменить данные между кавычками).<br>
+                                                <li>Проверьте настройки подключения к базе данных: <em>host, user_db, pass_db, dbase</em>.
+                                                <li>В файле <code>phpshop/inc/config.ini</code> отредактируйте переменные под Вашу базу (замените данные между кавычками).<br>
                                                     <pre>[connect]
 host="localhost";       # имя хоста
 user_db="user";         # имя пользователя
@@ -479,10 +473,10 @@ pass_db="mypas";        # пароль базы
 dbase="mybase";         # имя базы</pre>
                                             </ol>
                                         <li><b>102 Не установлены базы</b>
-                                            <ol><li>Запустить установку базы данных <code>/install/</code></ol>
+                                            <ol><li>Запустите установку базы данных <code>/install/</code></ol>
                                         <li><b>105 Ошибка существования папки /install</b>
                                             <ol>
-                                                <li>Удалить папку <code>/install</code>
+                                                <li>Удалите папку <code>/install</code>
                                             </ol>
                                     </ul>
                                 </div>

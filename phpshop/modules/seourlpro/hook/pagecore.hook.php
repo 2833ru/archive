@@ -28,9 +28,9 @@ function index_seourl_hook($obj, $row, $rout) {
 
             // Каталог
             if (!empty($result['id'])) {
-                
+
                 // Навигация SEO
-                $obj->navigation_seourl_array[$result['id']]=$result['page_cat_seo_name'];
+                $obj->navigation_seourl_array[$result['id']] = $result['page_cat_seo_name'];
                 $obj->category_name = $result['name'];
                 $obj->category = $result['id'];
                 $obj->PHPShopCategory = new PHPShopPageCategory($obj->category);
@@ -54,7 +54,7 @@ function index_seourl_hook($obj, $row, $rout) {
     }
 
     if ($rout == 'END')
-        navigation_seourl($obj, $row['name']);
+        navigation_seourl($obj, $row['name'],['url'=>'/page/','name'=>__('Блог')]);
 }
 
 /**
@@ -94,12 +94,7 @@ function ListPage_seourl_hook($obj, $row, $rout) {
     }
 
     if ($rout == 'END') {
-        navigation_seourl($obj, $obj->category_name);
-        // Учет модуля Mobile
-        if (!empty($_GET['mobile']) and $_GET['mobile'] == 'true' and !empty($GLOBALS['SysValue']['base']['mobile']['mobile_system'])) {
-            header('Location: ' . $obj->getValue('dir.dir') . '/page/CID_' . $obj->PHPShopNav->getId() . '.html', true, 302);
-            return true;
-        }
+        navigation_seourl($obj, $obj->category_name, ['url' => '/page/', 'name' => __('Блог')]);
     }
 }
 
@@ -149,15 +144,15 @@ function ListCategory_seourl_hook($obj, $dataArray, $rout) {
                     $seoURL = $GLOBALS['PHPShopSeoPro']->setLatin($row['name']);
                     $PHPShopOrm->update(array('page_cat_seo_name_new' => "$seoURL"), array('id=' => $row['id']));
                 }
-                $dis.=PHPShopText::li($row['name'], '/page/' . $seoURL . '.html');
+                $dis .= PHPShopText::li($row['name'], '/page/' . $seoURL . '.html');
             }
 
         $disp = PHPShopText::ul($dis);
         $obj->set('pageContent', $disp);
 
         // SEO хлебные крошки
-        navigation_seourl($obj, $obj->category_name);
-        if (!empty($_GET['mobile']) and $_GET['mobile'] == 'true' and !empty($GLOBALS['SysValue']['base']['mobile']['mobile_system'])) {
+        navigation_seourl($obj, $obj->category_name, ['url'=>'/page/','name'=>__('Блог')]);
+        if (!empty($_GET['mobile']) and $_GET['mobile'] == 'true' and ! empty($GLOBALS['SysValue']['base']['mobile']['mobile_system'])) {
             header('Location: ' . $obj->getValue('dir.dir') . '/page/CID_' . $obj->PHPShopNav->getId() . '.html', true, 302);
             return true;
         }
@@ -176,7 +171,7 @@ class PHPShopSeoPageCategoryArray extends PHPShopArray {
 
         $this->objBase = $GLOBALS['SysValue']['base']['page_categories'];
         $this->order = array('order' => 'num');
-        parent::__construct("id", "name", "parent_to","page_cat_seo_name");
+        parent::__construct("id", "name", "parent_to", "page_cat_seo_name");
     }
 
 }
@@ -184,11 +179,11 @@ class PHPShopSeoPageCategoryArray extends PHPShopArray {
 /**
  * SEO Навигация хлебных крошек
  */
-function navigation_seourl($obj, $name) {
+function navigation_seourl($obj, $name, $title = false) {
     global $SysValue;
 
     $dis = null;
-    
+
     $PHPShopSeoPageCategoryArray = new PHPShopSeoPageCategoryArray();
 
     $seourl_option = $GLOBALS['PHPShopSeoPro']->getSettings();
@@ -199,13 +194,13 @@ function navigation_seourl($obj, $name) {
 
     // Шаблоны разделителя навигации
     $elementTemplate = $SysValue['dir']['templates'] . chr(47) . $_SESSION['skin'] . chr(47) . $obj->getValue('templates.breadcrumbs_splitter');
-    $lastElemTemplate = $SysValue['dir']['templates'] . chr(47) . $_SESSION['skin'] . chr(47). $obj->getValue('templates.breadcrumbs_splitter_last');
+    $lastElemTemplate = $SysValue['dir']['templates'] . chr(47) . $_SESSION['skin'] . chr(47) . $obj->getValue('templates.breadcrumbs_splitter_last');
 
-    if((bool) PHPShopParser::check($obj->getValue('templates.breadcrumbs_splitter'), 'breadcrumbElemTitle') === false) {
+    if ((bool) PHPShopParser::check($obj->getValue('templates.breadcrumbs_splitter'), 'breadcrumbElemTitle') === false) {
         $elementTemplate = './phpshop/lib/templates/breadcrumbs/breadcrumbs_splitter.tpl';
     }
     $lastTemplatePath = $obj->getValue('templates.breadcrumbs_splitter_last');
-    if(empty($lastTemplatePath) || PHPShopParser::checkFile($lastElemTemplate, true) === false) {
+    if (empty($lastTemplatePath) || PHPShopParser::checkFile($lastElemTemplate, true) === false) {
         $lastElemTemplate = './phpshop/lib/templates/breadcrumbs/breadcrumbs_last.tpl';
     }
 
@@ -219,10 +214,10 @@ function navigation_seourl($obj, $name) {
 
     if (!empty($arrayPath) and is_array($arrayPath)) {
         foreach ($arrayPath as $v) {
-            $seo = $PHPShopSeoPageCategoryArray->getParam($v['id'].'.page_cat_seo_name');
+            $seo = $PHPShopSeoPageCategoryArray->getParam($v['id'] . '.page_cat_seo_name');
             $obj->set('breadcrumbElemTitle', $v['name']);
             $obj->set('breadcrumbElemIndex', $currentIndex++);
-            if(empty($seo)) {
+            if (empty($seo)) {
                 $obj->set('breadcrumbElemLink', '/page/' . $GLOBALS['PHPShopSeoPro']->setLatin($v['name']) . '.html');
             } else {
                 $obj->set('breadcrumbElemLink', '/page/' . $seo . '.html');
@@ -230,6 +225,15 @@ function navigation_seourl($obj, $name) {
 
             $dis .= ParseTemplateReturn($elementTemplate, true, $obj->template_debug);
         }
+    }
+
+    // Указан массив родителя
+    if (empty($dis) and is_array($title)) {
+        $obj->set('breadcrumbElemLink', $title['url']);
+        $obj->set('breadcrumbElemTitle', $title['name']);
+        $obj->set('breadcrumbElemIndex', $currentIndex++);
+
+        $home .= ParseTemplateReturn($elementTemplate, true, $obj->template_debug);
     }
 
     $obj->set('breadcrumbElemTitle', $name);
@@ -260,9 +264,9 @@ function displayPage($obj, $link) {
 
     // Мультибаза
     if (defined("HostID")) {
-        $sort.= " and servers REGEXP 'i" . HostID . "i'";
+        $sort .= " and servers REGEXP 'i" . HostID . "i'";
     } elseif (defined("HostMain"))
-        $sort.= " and (servers = '' or servers REGEXP 'i1000i')";
+        $sort .= " and (servers = '' or servers REGEXP 'i1000i')";
 
     $PHPShopOrm = new PHPShopOrm();
     $PHPShopOrm->debug = $obj->debug;
@@ -280,7 +284,7 @@ function displayPage($obj, $link) {
     $obj->category_name = $obj->PHPShopCategory->getName();
 
     // Определяем переменные
-    $obj->set('isPage',true);
+    $obj->set('isPage', true);
     $obj->set('pageContent', Parser(stripslashes($row['content'])));
     $obj->set('pageTitle', $row['name']);
     $obj->set('catalogCategory', $obj->category_name);
@@ -305,7 +309,7 @@ function displayPage($obj, $link) {
     $obj->lastmodified = $row['datas'];
 
     // Навигация хлебные крошки
-    navigation_seourl($obj, $obj->category_name);
+    navigation_seourl($obj, $obj->category_name,['url'=>'/page/','name'=>__('Блог')]);
 
     // Подключаем шаблон
     $obj->parseTemplate($obj->getValue('templates.page_page_list'));

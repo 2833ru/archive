@@ -10,7 +10,7 @@
     <div class="news-mini-block  ">
 	 <a itemprop="mainEntityOfPage" href="/page/@pageLink@.html" title="@pageName@">
         <div class="img-block">
-           <img src="@pageIcon@"  alt="@pageName@">
+           <img src="@pageIcon@"  alt="">
         </div>
         <div class="text-block">
             <div class="news-name">@pageName@</div>

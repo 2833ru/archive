@@ -16,6 +16,7 @@ PHPShopObj::loadClass("modules");
 PHPShopObj::loadClass("security");
 PHPShopObj::loadClass("delivery");
 PHPShopObj::loadClass("lang");
+PHPShopObj::loadClass("order");
 
 $PHPShopLang = new PHPShopLang();
 
@@ -70,26 +71,26 @@ switch ($_SERVER["PATH_INFO"]) {
         if (is_array($data['cart']['items']))
             foreach ($data['cart']['items'] as $item) {
                 $PHPShopProduct = new PHPShopProduct($item["offerId"]);
-                
+
                 // Блокировка приема заказов
-                if(!empty($option['stop']))
-                    $PHPShopProduct->setParam('items',0);
-                
+                if (!empty($option['stop']))
+                    $PHPShopProduct->setParam('items', 0);
+
                 $result['cart']['items'][] = [
-                    'feedId'  => $item['feedId'],
+                    'feedId' => $item['feedId'],
                     'offerId' => $item['offerId'],
-                    'count'   => (int) $PHPShopProduct->getParam('items') > 0 ? (int) $PHPShopProduct->getParam('items') : 0
+                    'count' => (int) $PHPShopProduct->getParam('items') > 0 ? (int) $PHPShopProduct->getParam('items') : 0
                 ];
-                
-                
+
+
                 $weight += (float) $PHPShopProduct->getParam('weight');
                 $sum += (float) $PHPShopProduct->getPrice();
             }
 
-        if($option['model'] === 'DBS') {
+        if ($option['model'] === 'DBS') {
             $orm = new PHPShopOrm($GLOBALS['SysValue']['base']['delivery']);
 
-            $storeDeliveries = $orm->getList(['*'], ['yandex_enabled' => '="2"'], ['order'=>'num ASC']);
+            $storeDeliveries = $orm->getList(['*'], ['yandex_enabled' => '="2"'], ['order' => 'num ASC']);
 
             $regionIds = [];
             $getRegionIds = function ($region) use (&$getRegionIds) {
@@ -97,7 +98,7 @@ switch ($_SERVER["PATH_INFO"]) {
 
                 $ids[] = $region['id'];
 
-                if(isset($region['parent']) && is_array($region['parent'])) {
+                if (isset($region['parent']) && is_array($region['parent'])) {
                     $ids = array_merge($getRegionIds($region['parent']), $ids);
                 }
 
@@ -110,23 +111,23 @@ switch ($_SERVER["PATH_INFO"]) {
 
             // Доставка в конкретный город
             foreach ($storeDeliveries as $delivery) {
-                if((int) $delivery['yandex_region_id'] === (int) $data['cart']['delivery']['region']['id'] or (int) $delivery['yandex_region_id'] === 0) {
+                if ((int) $delivery['yandex_region_id'] === (int) $data['cart']['delivery']['region']['id'] or (int) $delivery['yandex_region_id'] === 0) {
                     $deliveries[] = $delivery;
                 }
             }
 
             // Если его нет - ищем доставку в регион
-            if(count($deliveries) === 0) {
+            if (count($deliveries) === 0) {
                 foreach ($storeDeliveries as $delivery) {
-                    if(in_array($delivery['yandex_region_id'], $regionIds) or (int) $delivery['yandex_region_id'] === 0) {
+                    if (in_array($delivery['yandex_region_id'], $regionIds) or (int) $delivery['yandex_region_id'] === 0) {
                         $deliveries[] = $delivery;
                     }
                 }
             }
 
-            if(count($deliveries) === 0) {
+            if (count($deliveries) === 0) {
                 setYandexcartLog([
-                    'error'      => __('Не найдено доставок для региона ') . (int) $data['cart']['delivery']['region']['name'],
+                    'error' => __('Не найдено доставок для региона ') . (int) $data['cart']['delivery']['region']['name'],
                     'parameters' => $data
                 ]);
                 exit;
@@ -134,7 +135,7 @@ switch ($_SERVER["PATH_INFO"]) {
 
             $deliveryOptions = [];
             foreach ($deliveries as $delivery) {
-                if((int) $delivery['yandex_type'] === 1) {
+                if ((int) $delivery['yandex_type'] === 1) {
                     $type = 'DELIVERY';
                 } elseif ((int) $delivery['yandex_type'] === 2) {
                     $type = 'PICKUP';
@@ -148,19 +149,19 @@ switch ($_SERVER["PATH_INFO"]) {
                 $to = $dateTimeTo->modify('+' . $delivery['yandex_day'] . ' days')->setTime(0, 0);
 
                 $deliveryOption = array(
-                    'id'          => $delivery['id'],
-                    'price'       => (float) yandexDeliveryPrice($delivery, $sum, $weight),
-                    'serviceName' => PHPShopString::win_utf8(substr($delivery['city'],0,50)),
-                    'type'        => $type,
-                    'dates'       => array(
+                    'id' => $delivery['id'],
+                    'price' => (float) yandexDeliveryPrice($delivery, $sum, $weight),
+                    'serviceName' => PHPShopString::win_utf8(substr($delivery['city'], 0, 50)),
+                    'type' => $type,
+                    'dates' => array(
                         'fromDate' => $from->format('d-m-Y'),
-                        'toDate'   => $to->format('d-m-Y')
+                        'toDate' => $to->format('d-m-Y')
                     )
                 );
 
-                if($type === 'PICKUP') {
+                if ($type === 'PICKUP') {
                     $outlets = array_unique(unserialize($delivery['yandex_delivery_points']));
-                    if(!is_array($outlets)) {
+                    if (!is_array($outlets)) {
                         $outlets = [];
                     }
 
@@ -183,7 +184,7 @@ switch ($_SERVER["PATH_INFO"]) {
 
         setYandexcartLog([
             'parameters' => $data,
-            'response'   => $result
+            'response' => $result
         ]);
 
         break;
@@ -199,13 +200,13 @@ switch ($_SERVER["PATH_INFO"]) {
                 $PHPShopProduct = new PHPShopProduct($product['offerId']);
 
                 $order["Cart"]["cart"][$product["offerId"]] = [
-                    'id'        => $product['offerId'],
-                    'name'      => $PHPShopProduct->getName(),
-                    'price'     => $product['price'],
-                    'uid'       => $PHPShopProduct->getParam('uid'),
-                    'num'       => $product['count'],
+                    'id' => $product['offerId'],
+                    'name' => $PHPShopProduct->getName(),
+                    'price' => $product['price'],
+                    'uid' => $PHPShopProduct->getParam('uid'),
+                    'num' => $product['count'],
                     'pic_small' => $PHPShopProduct->getParam('pic_small'),
-                    'category'  => $PHPShopProduct->getParam('category')
+                    'category' => $PHPShopProduct->getParam('category')
                 ];
                 $weight += (float) $PHPShopProduct->getParam('weight');
             }
@@ -213,7 +214,7 @@ switch ($_SERVER["PATH_INFO"]) {
         $order["Cart"]["sum"] = $sum;
 
         // Доставка
-        if($option['model'] === 'DBS') {
+        if ($option['model'] === 'DBS') {
             $deliveryId = $data['order']['delivery']['shopDeliveryId'];
             $order["Cart"]["dostavka"] = $data['order']['delivery']['price'];
         } else {
@@ -279,7 +280,7 @@ switch ($_SERVER["PATH_INFO"]) {
         $insert['yandex_order_id_new'] = $data['order']['id'];
         $insert['sum_new'] = $sum + $order["Cart"]["dostavka"];
 
-        if($option['model'] === 'DBS') {
+        if ($option['model'] === 'DBS') {
             $insert['country_new'] = PHPShopString::utf8_win1251($data['order']['delivery']['address']['country']);
             $insert['city_new'] = PHPShopString::utf8_win1251($data['order']['delivery']['address']['city']);
             $insert['street_new'] = PHPShopString::utf8_win1251($data['order']['delivery']['address']['street']);
@@ -295,13 +296,13 @@ switch ($_SERVER["PATH_INFO"]) {
             'accepted' => true,
             'id' => $orderNum,
         );
-        if($option['model'] === 'DBS') {
+        if ($option['model'] === 'DBS') {
             $result['shipmentDate'] = $data['order']['delivery']['dates']['fromDate'];
         }
 
         setYandexcartLog([
             'parameters' => $data,
-            'response'   => $result
+            'response' => $result
         ]);
 
         break;
@@ -312,13 +313,19 @@ switch ($_SERVER["PATH_INFO"]) {
         if ($data['order']['status'] === 'PROCESSING') {
 
             $row = (new PHPShopOrm($GLOBALS['SysValue']['base']['orders']))
-                ->getOne(['*'], ['yandex_order_id' => sprintf("='%s'", $data['order']['id'])]);
+                    ->getOne(['*'], ['yandex_order_id' => sprintf("='%s'", $data['order']['id'])]);
+
 
             // Статус заказа подтвержден клиентом 
             $update['statusi_new'] = $statuses['processing_started'];
 
-            (new PHPShopOrm($GLOBALS['SysValue']['base']['orders']))
-                ->update($update, array('id' => sprintf('="%s"', $row['id'])));
+            /* (new PHPShopOrm($GLOBALS['SysValue']['base']['orders']))
+              ->update($update, array('id' => sprintf('="%s"', $row['id']))); */
+
+            // Смена статуса с учетом списания товара со склада
+            $PHPShopOrderFunction = new PHPShopOrderFunction((int) $row['id']);
+            $PHPShopOrderFunction->changeStatus((int) $update['statusi_new'], (int) $row['statusi']);
+
 
             // Сообщение о новом заказе администрации
             new PHPShopMail($PHPShopSystem->getEmail(), $PHPShopSystem->getEmail(), 'Поступил заказ №' . $row['uid'], 'Заказ оформлен на Яндекс.Маркет', false, false);
@@ -353,7 +360,14 @@ switch ($_SERVER["PATH_INFO"]) {
             }
 
             if (!empty($data['order']['id'])) {
-                $PHPShopOrm->update($update, ['yandex_order_id' => sprintf("='%s'", $data['order']['id'])]);
+                //$PHPShopOrm->update($update, ['yandex_order_id' => sprintf("='%s'", $data['order']['id'])]);
+
+                $row = (new PHPShopOrm($GLOBALS['SysValue']['base']['orders']))
+                        ->getOne(['*'], ['yandex_order_id' => sprintf("='%s'", $data['order']['id'])]);
+
+                // Смена статуса с учетом возврата товара на склад
+                $PHPShopOrderFunction = new PHPShopOrderFunction((int) $row['id']);
+                $PHPShopOrderFunction->changeStatus((int) $update['statusi_new'], (int) $row['statusi']);
             }
         }
 
@@ -361,12 +375,18 @@ switch ($_SERVER["PATH_INFO"]) {
         if ($data['order']['status'] === 'PICKUP') {
 
             $row = (new PHPShopOrm($GLOBALS['SysValue']['base']['orders']))
-                ->getOne(['*'], ['yandex_order_id' => sprintf("='%s'", $data['order']['id'])]);
+                    ->getOne(['*'], ['yandex_order_id' => sprintf("='%s'", $data['order']['id'])]);
 
             $update['statusi_new'] = $statuses['pickup'];
 
-            (new PHPShopOrm($GLOBALS['SysValue']['base']['orders']))
-                ->update($update, array('id' => sprintf('="%s"', $row['id'])));
+            /* (new PHPShopOrm($GLOBALS['SysValue']['base']['orders']))
+              ->update($update, array('id' => sprintf('="%s"', $row['id']))); */
+
+            // Смена статуса с учетом списания товара со склада
+            if ($row['sklad_action'] == 1) {
+                $PHPShopOrderFunction = new PHPShopOrderFunction((int) $row['id']);
+                $PHPShopOrderFunction->changeStatus((int) $update['statusi_new'], (int) $row['statusi']);
+            }
         }
 
         setYandexcartLog([
@@ -381,18 +401,18 @@ switch ($_SERVER["PATH_INFO"]) {
     case "/stocks":
         $skus = [];
 
-        if(is_array($data['skus']) && count($data['skus']) > 0) {
+        if (is_array($data['skus']) && count($data['skus']) > 0) {
             $counts = (new PHPShopOrm($GLOBALS['SysValue']['base']['products']))
-                ->getList(['items', 'id'], ['id' => sprintf(' IN(%s)', implode(',', $data['skus']))]);
+                    ->getList(['items', 'id'], ['id' => sprintf(' IN(%s)', implode(',', $data['skus']))]);
 
             foreach ($counts as $count) {
                 $skus[] = [
-                    'sku'         => PHPShopString::win_utf8($count['id']),
+                    'sku' => PHPShopString::win_utf8($count['id']),
                     'warehouseId' => $data['warehouseId'],
-                    'items'       => [
+                    'items' => [
                         [
-                            'type'      => 'FIT',
-                            'count'     => $count['items'],
+                            'type' => 'FIT',
+                            'count' => $count['items'],
                             'updatedAt' => (new DateTime())->format('c')
                         ]
                     ]
@@ -401,7 +421,7 @@ switch ($_SERVER["PATH_INFO"]) {
         }
 
         $response = [
-           'skus' => $skus
+            'skus' => $skus
         ];
 
         //setYandexcartLog($data);

@@ -25,7 +25,7 @@ class PHPShopGbook extends PHPShopCore {
         $this->debug = false;
 
         // Список экшенов
-        $this->action = array("post" => "send_gb", "nav" => "index", "nav" => "ID", "get" => "add_forma");
+        $this->action = array("post" => "send_gb", "nav" => "ID", "get" => "add_forma");
         parent::__construct();
 
         // кол-во отзывов на странице

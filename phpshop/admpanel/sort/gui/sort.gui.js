@@ -14,10 +14,8 @@ $().ready(function() {
          }
     });
     
-    
     // Быстрое изменение checkbox
     $("body").on('click', ".data-row .checkbox", function (event) {
-
         var data = [];
         var id = $(this).attr('data-id');
         var name=$(this).attr('name');
@@ -231,6 +229,9 @@ $().ready(function() {
         data.push({name: 'rowID', value: $(this).attr('data-id')});
         data.push({name: 'editID', value: 1});
         data.push({name: 'actionList[editID]', value: 'actionUpdate'});
+        
+        $(this).css('text-decoration','underline').css('text-decoration-style','dashed');
+        
         $.ajax({
             mimeType: 'text/html; charset='+locale.charset,
             url: '?path=sort.value&id=' + $(this).attr('data-id'),

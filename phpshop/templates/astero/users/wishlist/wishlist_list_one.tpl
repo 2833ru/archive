@@ -9,7 +9,7 @@
         </div>
     </td>
     <td class="wishlst-fix-block">
-        <a class="btn btn-success  btn-main btn-sm" title="{В корзину}" onclick="addToCartList('@prodId@');"><i class="icon-basket"></i></a>
+        <a class="btn btn-success  btn-main btn-sm @wishlistCartHide@" title="{В корзину}" onclick="addToCartList('@prodId@');"><i class="icon-basket"></i></a>
         <a href="?delete=@prodId@" title="{Удалить}" class="btn btn-info btn-main  btn-sm hidden-xs">X</a>
     </td>
 </tr>

@@ -36,7 +36,7 @@ function actionStart() {
             // Статус загрузки
             $info['status'] = $row['export_ozon_task_status'];
 
-            if (empty($data['export_ozon_task_id'])) {
+            if (empty($row['export_ozon_task_id'])) {
 
                 if ($import_count < 10) {
 
@@ -47,8 +47,16 @@ function actionStart() {
 
                     if (!empty($task_id)) {
                         $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['products']);
-                        $PHPShopOrm->update(['export_ozon_task_id_new' => $task_id, 'export_ozon_task_status_new' => 'imported'], ['id' => '=' . $row['id']]);
-                        $info['status'] = 'imported';
+
+                        // Получение OZON ID
+                        $product_id = $OzonSeller->sendProductsInfo($row)['result']['items'][0]['product_id'];
+
+                        $PHPShopOrm->update(['export_ozon_task_id_new' => $task_id, 'export_ozon_task_status_new' => 'imported', 'export_ozon_id_new' => $product_id], ['id' => '=' . $row['id']]);
+
+                        if (!empty($product_id))
+                            $info['status'] = 'imported';
+                        else
+                            $info['status'] = 'error';
 
                         $info['errors'][] = ['description' => $result['message']];
                     } else {
@@ -58,8 +66,8 @@ function actionStart() {
                 } else {
                     $info['status'] = 'wait';
                 }
-            }
-            else $info['status'] = 'imported';
+            } else
+                $info['status'] = 'imported';
 
 
             if (empty($info['status']))
@@ -78,7 +86,7 @@ function actionStart() {
             } else {
                 $error = $result['message'];
             }
-            
+
 
             // Артикул
             if (!empty($row['uid']))

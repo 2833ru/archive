@@ -3422,9 +3422,8 @@ body.modal-open.fix {
         position: absolute;
     }
     .order-page-top-totals-body {
-        width: 60%;
-        margin-left: 30%;
-        margin-right: 10%;
+        margin-left: 10px;
+        margin-right: 10px;
         font-size: 16px;
     }
     .order-page-top-label-left,

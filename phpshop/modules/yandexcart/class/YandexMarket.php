@@ -1,8 +1,9 @@
 <?php
+
 /**
  * Библиотека работы с Yandex.Market API
  * @author PHPShop Software
- * @version 1.2
+ * @version 1.3
  * @package PHPShopClass
  * @subpackage RestApi
  * @todo https://yandex.ru/dev/market/partner-marketplace-cd/doc/dg/reference/post-campaigns-id-offer-mapping-entries-updates.html
@@ -23,9 +24,12 @@ class YandexMarket {
     ];
 
     public $options;
+    private $image_source = false;
 
     public function __construct() {
         $this->options = (new PHPShopOrm('phpshop_modules_yandexcart_system'))->select();
+        $this->system = new PHPShopSystem();
+        $this->image_source = $this->system->ifSerilizeParam('admoption.image_save_source');
     }
 
     public function getProductsCount() {
@@ -57,9 +61,9 @@ class YandexMarket {
         $modules = array_column((new PHPShopOrm('phpshop_modules'))->getList(['path']), 'path');
 
         $data = [];
-       
+
         foreach ($products as $product) {
-            
+
             $urls = [];
             $pictures = [];
 
@@ -87,11 +91,16 @@ class YandexMarket {
                     $url = '/id/' . $product['prod_seo_name'] . '-' . $product['id'] . '.html';
             }
 
-            $photos = (new PHPShopOrm($GLOBALS['SysValue']['base']['foto']))->getList(['*'], ['parent' => '=' . $product['id']],['order'=>'num']);
+            $photos = (new PHPShopOrm($GLOBALS['SysValue']['base']['foto']))->getList(['*'], ['parent' => '=' . $product['id']], ['order' => 'num']);
 
-            $urls[] =$this->getFullUrl($url);
-            
+            $urls[] = $this->getFullUrl($url);
+
             foreach ($photos as $photo) {
+
+                // Исходое изображение
+                if (!empty($this->image_source))
+                    $photo['name'] = str_replace(".", "_big.", $photo['name']);
+
                 $pictures[] = $this->getFullUrl($photo['name']);
             }
             if (count($pictures) === 0) {
@@ -100,17 +109,17 @@ class YandexMarket {
 
             if (empty($product['description']))
                 $product['description'] = $product['content'];
-            
+
             $options = unserialize($this->options['options']);
-            
+
             // Блокировка изображений
-            if(empty($options['block_image']))
-                $pictures=[];
-            
+            if (empty($options['block_image']))
+                $pictures = [];
+
             // Блокировка описаний
-            if(empty($options['block_content']))
-                $product['description']=null;
-            
+            if (empty($options['block_content']))
+                $product['description'] = null;
+
             $offer = [
                 'offer' => [
                     'shopSku' => $product['id'],
@@ -143,13 +152,12 @@ class YandexMarket {
         }
 
         $method = sprintf('campaigns/%s/offer-mapping-entries/updates.json', trim($this->options['campaign_id']));
-        
+
         // Отладочный токен
         //$debug='?dbg=4B00000152811A67';
-        
         //print_r($data);
-        
-        $result = $this->post($method.$debug, ['offerMappingEntries' => $data]);
+
+        $result = $this->post($method . $debug, ['offerMappingEntries' => $data]);
 
         if ($result['status'] === 'ERROR') {
             $errors = [];
@@ -284,7 +292,6 @@ class YandexMarket {
     private function getPrice($product) {
         global $PHPShopValutaArray;
 
-        $system = new PHPShopSystem();
         $promotions = new PHPShopPromotions();
         $options = unserialize($this->options['options']);
 
@@ -292,16 +299,16 @@ class YandexMarket {
         if (isset($options['price']) && (int) $options['price'] > 1)
             $column = 'price' . $options['price'];
         else
-            $column = $system->getPriceColumn();
+            $column = $this->system->getPriceColumn();
 
-        $defaultCurrency = $system->getValue('dengi');
-        $format = $system->getSerilizeParam('admoption.price_znak');
+        $defaultCurrency = $this->system->getValue('dengi');
+        $format = $this->system->getSerilizeParam('admoption.price_znak');
 
         // Наценка %
         if (isset($options['price_fee']) && (float) $options['price_fee'] > 0)
             $fee = (float) $options['price_fee'];
         else
-            $fee = $system->getValue('percent');
+            $fee = $this->system->getValue('percent');
 
         $PHPShopValutaArr = $PHPShopValutaArray->getArray();
 

@@ -60,7 +60,7 @@ function tab_img($data) {
             $path_parts = pathinfo($row['name']);
 
             if ($i == 1)
-                $img_list .= '<div class="row">';
+                $img_list .= '<div class="row intro-row">';
 
             if ($row['name'] == $data['pic_big'])
                 $main = "btn-success";
@@ -101,7 +101,7 @@ function tab_img($data) {
             if (!file_exists($_SERVER['DOCUMENT_ROOT'] . $img))
                 $img = $row['name'];
 
-            $img_list .= '<div class="col-md-3 col-sm-4 col-xs-12 data-row"><div class="panel panel-default"><div class="panel-heading" title="' . $path_parts['basename'] . '"><a href="' . $row['name'] . '" target="_blank">' . $basename . '</a><span class="glyphicon glyphicon-remove pull-right btn btn-default btn-xs img-delete" data-id="' . $row['id'] . '" data-toggle="tooltip" data-placement="top" title="' . __('Удалить') . '"></span><span class="pull-right">&nbsp;</span><span class="glyphicon glyphicon-heart pull-right btn ' . $main . ' btn-xs img-main" data-path="' . $row['name'] . '" data-path-s="' . $img . '"  data-toggle="tooltip" data-placement="top" title="' . __('Главное превью товара') . '"></span><span class="pull-right">&nbsp;</span>' . $select . '</div><div class="panel-body text-center"><a href="#" class="setAlt" data-id="' . $row['id'] . '" data-alt="' . $row['info'] . '"><img data-id="' . $row['id'] . '" title="' . $row['info'] . '" alt="' . $row['info'] . '" style="max-width:220px;max-height:220px;" src="' . $img . '"></a></div><div class="panel-footer ' . $parent_style . '">' . __('Подтип') . ': ' . $select_option . '</div></div></div>';
+            $img_list .= '<div class="col-md-3 col-sm-4 col-xs-12 data-row col-panel"><div class="panel panel-default"><div class="panel-heading" title="' . $path_parts['basename'] . '"><a href="' . $row['name'] . '" target="_blank">' . $basename . '</a><span class="glyphicon glyphicon-remove pull-right btn btn-default btn-xs img-delete" data-id="' . $row['id'] . '" data-toggle="tooltip" data-placement="top" title="' . __('Удалить') . '"></span><span class="pull-right">&nbsp;</span><span class="glyphicon glyphicon-heart pull-right btn ' . $main . ' btn-xs img-main" data-path="' . $row['name'] . '" data-path-s="' . $img . '"  data-toggle="tooltip" data-placement="top" title="' . __('Главное превью товара') . '"></span><span class="pull-right">&nbsp;</span>' . $select . '</div><div class="panel-body text-center"><a href="#" class="setAlt" data-id="' . $row['id'] . '" data-alt="' . $row['info'] . '"><img data-id="' . $row['id'] . '" title="' . $row['info'] . '" alt="' . $row['info'] . '" style="max-width:220px;max-height:220px;" src="' . $img . '"></a></div><div class="panel-footer ' . $parent_style . '">' . __('Подтип') . ': ' . $select_option . '</div></div></div>';
 
             if ($i == $row_num) {
                 $img_list .= '</div>';

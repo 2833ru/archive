@@ -284,6 +284,7 @@ if (!empty($_COOKIE['fullscreen'])) {
                                     <li><a href="?path=system.warehouse"><?php _e('Склады'); ?></a></li>
                                     <li><a href="?path=system.dialog"><?php _e('Диалоги'); ?></a></li>
                                     <li><a href="?path=system.integration"><?php _e('Интеграция'); ?></a></li>
+                                    <li><a href="?path=system.locale"><?php _e('Локализация'); ?></a></li>
                                     <li class="divider"></li>
                                     <li><a href="?path=tpleditor"><span class="glyphicon glyphicon-picture"></span> <?php _e('Шаблоны дизайна'); ?></a></li>
                                 </ul>
@@ -304,7 +305,8 @@ if (!empty($_COOKIE['fullscreen'])) {
                                     </li>
 
                                     <li><a href="?path=exchange.sql"><?php _e('SQL запрос к базе'); ?></a></li>
-                                    <li><a href="?path=exchange.backup"><?php _e('Резервное копирование'); ?></a></li>
+                                    <li class="divider"></li>
+                                    <li><a href="?path=exchange.backup"> <span class="glyphicon glyphicon-hdd"></span> <?php _e('Резервное копирование'); ?></a></li>
                                 </ul>
                             </li>
 

@@ -31,7 +31,7 @@ function create_theme_menu($file) {
         'cyant' => '#09a5be',
         'gray' => '#71869d',
         'green' => '#00c9a7',
-        'dark' =>'#21325b',
+        'dark' => '#21325b',
     );
     if (preg_match("/^bootstrap-theme-([a-zA-Z0-9_]{1,30}).css$/", $file, $match)) {
         $icon = $color[$match[1]];
@@ -106,7 +106,7 @@ if ($GLOBALS['SysValue']['template_theme']['user'] == 'true' or ! empty($GLOBALS
 
     // Сохранить
     if (!empty($_SESSION['logPHPSHOP'])) {
-        $css_edit .= '<br>'.$PHPShopGUI->setButton('Сохранить', 'floppy-disk', 'btn-xs btn-primary saveTheme');
+        $css_edit .= '<br>' . $PHPShopGUI->setButton('Сохранить', 'floppy-disk', 'btn-xs btn-primary saveTheme');
         $admin_edit .= $PHPShopGUI->setButton('Управлять', 'cog', 'btn-xs btn-primary openAdminModal');
 
         if (!empty($_COOKIE['debug_template']))
@@ -126,7 +126,7 @@ if ($GLOBALS['SysValue']['template_theme']['user'] == 'true' or ! empty($GLOBALS
             $editor['right'] = -280;
             $editor['close'] = false;
         }
-    } else if ($GLOBALS['SysValue']['template_theme']['demo'] == 'true' and !PHPShopString::is_mobile()) {
+    } else if ($GLOBALS['SysValue']['template_theme']['demo'] == 'true' and ! PHPShopString::is_mobile()) {
         $editor['right'] = 0;
         $editor['close'] = 'ss-close';
     } else {
@@ -162,6 +162,22 @@ if ($GLOBALS['SysValue']['template_theme']['user'] == 'true' or ! empty($GLOBALS
         $admin_help = __('Для управления текущей страницей требуется') . ' <a href="https://www.phpshop.ru/mydemo/" target="_blank">' . __('авторизоваться') . '</a>';
     else
         $admin_help = __('Для управления текущей страницей требуется') . ' <a href="//' . $_SERVER['SERVER_NAME'] . $GLOBALS['SysValue']['dir']['dir'] . 'phpshop/admpanel/" target="_blank">' . __('авторизоваться') . '</a>';
+
+    // Выбор БД
+    if (is_array($GLOBALS['SysValue']['connect_select'])) {
+        foreach ($GLOBALS['SysValue']['connect_select'] as $k => $v) {
+            if ($_SESSION['base'] == $k)
+                $sel = "selected";
+            else
+                $sel = null;
+            $connect_select[] = array($v, $k, $sel);
+        }
+
+        $forma = PHPShopText::div(PHPShopText::form(PHPShopText::select('base', $connect_select, '100%', $float = "none", $caption = false, $onchange = "javascript:document.BdForm.submit()"), 'BdForm', 'get', '/'), 'left', 'padding:10px');
+        PHPShopParser::set('leftMenuContent', $forma);
+        PHPShopParser::set('leftMenuName', __("Сменить базу"));
+        $GLOBALS['SysValue']['other']['skinSelect'] .= PHPShopParser::file($GLOBALS['SysValue']['dir']['templates'] . chr(47) . $_SESSION['skin'] . chr(47) . $GLOBALS['SysValue']['templates']['left_menu'], true, true, false);
+    }
 
     $collapse_menu = '<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
   <div class="panel panel-default card">
@@ -251,16 +267,15 @@ $PHPShopBrandsElement->init('topBrands');
 $PHPShopShopCatalogElement = new PHPShopShopCatalogElement();
 
 // Меняем имена шаблонов каталога для @topCatal@
-$PHPShopShopCatalogElement->setValue('sys.multimenu',false);
-$PHPShopShopCatalogElement->setValue('templates.catalog_forma','catalog/top_catalog_forma.tpl');
-$PHPShopShopCatalogElement->setValue('templates.catalog_forma_3','catalog/top_catalog_forma_3.tpl');
-$PHPShopShopCatalogElement->setValue('templates.podcatalog_forma','catalog/top_podcatalog_forma.tpl');
-$PHPShopShopCatalogElement->set('topCatal',$PHPShopShopCatalogElement->leftCatal());
+$PHPShopShopCatalogElement->setValue('sys.multimenu', false);
+$PHPShopShopCatalogElement->setValue('templates.catalog_forma', 'catalog/top_catalog_forma.tpl');
+$PHPShopShopCatalogElement->setValue('templates.catalog_forma_3', 'catalog/top_catalog_forma_3.tpl');
+$PHPShopShopCatalogElement->setValue('templates.podcatalog_forma', 'catalog/top_podcatalog_forma.tpl');
+$PHPShopShopCatalogElement->set('topCatal', $PHPShopShopCatalogElement->leftCatal());
 
 // Возвращаем имена шаблонов каталога для @leftCatal@
-$PHPShopShopCatalogElement->setValue('templates.catalog_forma','catalog/catalog_forma.tpl');
-$PHPShopShopCatalogElement->setValue('templates.catalog_forma_3','catalog/catalog_forma_3.tpl');
-$PHPShopShopCatalogElement->setValue('templates.podcatalog_forma','catalog/podcatalog_forma.tpl');
-$PHPShopShopCatalogElement->setValue('sys.multimenu',true);
-
+$PHPShopShopCatalogElement->setValue('templates.catalog_forma', 'catalog/catalog_forma.tpl');
+$PHPShopShopCatalogElement->setValue('templates.catalog_forma_3', 'catalog/catalog_forma_3.tpl');
+$PHPShopShopCatalogElement->setValue('templates.podcatalog_forma', 'catalog/podcatalog_forma.tpl');
+$PHPShopShopCatalogElement->setValue('sys.multimenu', true);
 ?>

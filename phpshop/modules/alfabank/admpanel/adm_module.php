@@ -5,6 +5,16 @@ PHPShopObj::loadClass('order');
 // SQL
 $PHPShopOrm = new PHPShopOrm("phpshop_modules_alfabank_system");
 
+// Обновление версии модуля
+function actionBaseUpdate() {
+    global $PHPShopModules, $PHPShopOrm;
+    $PHPShopOrm->clean();
+    $option = $PHPShopOrm->select();
+    $new_version = $PHPShopModules->getUpdate($option['version']);
+    $PHPShopOrm->clean();
+    $action = $PHPShopOrm->update(array('version_new' => $new_version));
+}
+
 // Функция обновления
 function actionUpdate() {
     global $PHPShopOrm, $PHPShopModules;
@@ -31,6 +41,13 @@ function actionStart() {
 
     $Tab2 = $PHPShopGUI->setField('Логин API магазина', $PHPShopGUI->setInputText(false, 'login_new', $data['login'], 300));
     $Tab2 .= $PHPShopGUI->setField('Пароль магазина', $PHPShopGUI->setInput("password", 'password_new', $data['password'], false, 300));
+    
+    $api = array(
+        array('pay.alfabank.ru', 'https://pay.alfabank.ru/payment/rest/register.do', $data['api_url']),
+        array('payment.alfabank.ru', 'https://payment.alfabank.ru/payment/rest/register.do', $data['api_url'])
+    );
+    
+    $Tab2.= $PHPShopGUI->setField('URL адрес API', $PHPShopGUI->setSelect('api_url_new', $api, 300));
 
 
     // Система налогообложения
@@ -53,7 +70,7 @@ function actionStart() {
             $order_status_value[] = array($order_status['name'], $order_status['id'], $data['status']);
 
     // Статус заказа
-    $Tab2 .= $PHPShopGUI->setField('Оплата при статусе', $PHPShopGUI->setSelect('status_new', $order_status_value, 250));
+    $Tab2 .= $PHPShopGUI->setField('Оплата при статусе', $PHPShopGUI->setSelect('status_new', $order_status_value, 300));
 
     $Tab2 .= $PHPShopGUI->setField('Режим разработки', $PHPShopGUI->setCheckbox("dev_mode_new", 1, "Отправка данных на тестовую среду Альфабанка", $data["dev_mode"]));
 
@@ -73,7 +90,7 @@ function actionStart() {
 ';
 
     // Вывод формы закладки
-    $PHPShopGUI->setTab(array("Настройки", $Tab2, true), array("Инструкция", $PHPShopGUI->setInfo($info)), array("О Модуле", $PHPShopGUI->setPay(false, false, $data['version'], false)));
+    $PHPShopGUI->setTab(array("Настройки", $Tab2, true), array("Инструкция", $PHPShopGUI->setInfo($info)), array("О Модуле", $PHPShopGUI->setPay(false, false, $data['version'],true)));
 
     // Вывод кнопок сохранить и выход в футер
     $ContentFooter = $PHPShopGUI->setInput("submit", "saveID", "Применить", "right", 80, "", "but", "actionUpdate.modules.edit");

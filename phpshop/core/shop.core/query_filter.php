@@ -43,12 +43,13 @@ function query_filter($obj) {
         $l = $_REQUEST['l'];
     else
         $l = null;
-    
+
     // Логика поиска
     $filter_logic = (int) $obj->PHPShopSystem->getSerilizeParam('admoption.filter_logic');
-    if(empty($filter_logic))
+    if (empty($filter_logic))
         $filter_sort = 'and';
-    else $filter_sort = 'or';
+    else
+        $filter_sort = 'or';
 
     // Сортировка по характеристикам
     if (is_array($v)) {
@@ -61,7 +62,7 @@ function query_filter($obj) {
                     if (PHPShopSecurity::true_num($key) and PHPShopSecurity::true_num($v)) {
                         $obj->selected_filter[$key][] = $v;
                         $hash = $key . "-" . $v;
-                        $sort .= " vendor REGEXP 'i" . $hash . "i' ".$filter_sort;
+                        $sort .= " vendor REGEXP 'i" . $hash . "i' " . $filter_sort;
                     }
                 }
                 $sort = substr($sort, 0, strlen($sort) - strlen($filter_sort));
@@ -153,12 +154,47 @@ function query_filter($obj) {
         $string = $key . ' by ' . $val;
 
     // Поиск по цене
-    if (!empty($_REQUEST['min']) and !empty($_REQUEST['max'])) {
+    if (!empty($_REQUEST['min']) and ! empty($_REQUEST['max'])) {
 
         $priceOT = intval($_REQUEST['min']) - 1;
         $priceDO = intval($_REQUEST['max']) + 1;
 
         $percent = $obj->PHPShopSystem->getValue('percent');
+
+        // Проверка промоакций
+        $promotion = (new PHPShopPromotions())->promotion_get_discount(['category' => $obj->category]);
+        if (!empty($promotion['action'])) {
+
+            // %
+            if (!empty($promotion['percent'])) {
+
+                // Повышение
+                if ($promotion['status'] == 1) {
+                    $priceDO = intval($priceDO / (1 + $promotion['percent']));
+                    $priceOT = intval($priceOT / (1 + $promotion['percent']));
+                }
+                // Понижение
+                else {
+                    $priceDO = intval(($priceDO / (100 - $promotion['percent'] * 100)) * 100);
+                    $priceOT = intval(($priceOT / (100 - $promotion['percent'] * 100)) * 100);
+                }
+            }
+            // Сумма
+            elseif (!empty($promotion['sum'])) {
+
+                // Повышение
+                if ($promotion['status'] == 1) {
+                    $priceDO -= $promotion['sum'];
+                    $priceOT -= $promotion['sum'];
+                }
+                // Понижение
+                else {
+                    $priceDO += $promotion['sum'];
+                    $priceOT += $promotion['sum'];
+                }
+            }
+        }
+
 
         if (empty($priceDO))
             $priceDO = 1000000000;
@@ -174,7 +210,7 @@ function query_filter($obj) {
         else
             $sort .= " and (" . $obj->PHPShopSystem->getPriceColumn() . " BETWEEN " . ($priceOT / (100 + $percent) * 100) . " AND " . ($priceDO / (100 + $percent) * 100) . ") ";
     }
-
+    //echo  $sort . $string;
     return array('sql' => $catt . " and enabled='1' and parent_enabled='0' " . $sort . $string);
 }
 

@@ -339,7 +339,7 @@ img.media-object{
 .navbar-action{
     background-image: none;
     min-height: 41px;
-    margin-bottom:4px;
+    margin-bottom:1px;
     border: 0px;
 }
 
@@ -839,6 +839,14 @@ li.active .text-muted{
 
 .modal-open {    
     overflow: hidden;
+}
+
+.modal {
+    margin-right: -20px;
+}
+
+body.modal-open {
+    overflow: visible;
 }
 
 .row .col-panel {

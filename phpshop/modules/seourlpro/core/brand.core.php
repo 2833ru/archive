@@ -125,10 +125,9 @@ class PHPShopBrand extends PHPShopShopCore {
         $this->set('productValutaName', $this->currency());
 
         // Количество ячеек
-        if (empty($this->cell) and isset($_GET['gridChange']))
-            $this->cell = $this->calculateCell("selection", $this->PHPShopSystem->getValue('num_vitrina'));
-        elseif (empty($this->cell))
-            $this->cell = 3;
+        if (empty($this->cell))
+            $this->cell = $this->calculateCell("selection", $this->PHPShopSystem->getValue('num_row_adm'));
+ 
 
         if (!empty($_GET['gridChange']))
             switch ($_GET['gridChange']) {

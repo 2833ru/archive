@@ -162,6 +162,22 @@ if ($GLOBALS['SysValue']['template_theme']['user'] == 'true' or ! empty($GLOBALS
     else
         $admin_help = __('Для управления текущей страницей требуется') . ' <a href="//' . $_SERVER['SERVER_NAME'] . $GLOBALS['SysValue']['dir']['dir'] . 'phpshop/admpanel/" target="_blank"><span class="glyphicon glyphicon-user"></span> ' . __('авторизоваться') . '</a>';
 
+     // Выбор БД
+    if (is_array($GLOBALS['SysValue']['connect_select'])) {
+        foreach ($GLOBALS['SysValue']['connect_select'] as $k => $v) {
+            if ($_SESSION['base'] == $k)
+                $sel = "selected";
+            else
+                $sel = null;
+            $connect_select[] = array($v, $k, $sel);
+        }
+
+        $forma = PHPShopText::div(PHPShopText::form(PHPShopText::select('base', $connect_select, '100%', $float = "none", $caption = false, $onchange = "javascript:document.BdForm.submit()"), 'BdForm', 'get', '/'), 'left', 'padding:10px');
+        PHPShopParser::set('leftMenuContent', $forma);
+        PHPShopParser::set('leftMenuName', __("Сменить базу"));
+        $GLOBALS['SysValue']['other']['skinSelect'] .= PHPShopParser::file($GLOBALS['SysValue']['dir']['templates'] . chr(47) . $_SESSION['skin'] . chr(47) . $GLOBALS['SysValue']['templates']['left_menu'], true, true, false);
+    }
+    
     $collapse_menu = '<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
   <div class="panel panel-default">
     <div class="panel-heading" role="tab">

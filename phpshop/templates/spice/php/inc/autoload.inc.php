@@ -167,10 +167,6 @@ if ($GLOBALS['SysValue']['template_theme']['user'] == 'true'  or !empty($GLOBALS
     }
 
 
-
-    // Панель                       
-    //$theme_menu = $PHPShopGUI->setPanel('Оформление', $css_edit . $theme_menu, 'panel-default form-horizontal');
-    //$theme_menu.='<div class="text-muted editor-help">Для обновления цвета в редакторе используйте сочетания клавиш <kbd>Ctrl</kbd> + <kbd>F5</kbd></div>';
     // Память вывода панели
     if (!empty($_COOKIE['style_selector_status'])) {
         if ($_COOKIE['style_selector_status'] == 'enabled') {
@@ -212,6 +208,22 @@ if ($GLOBALS['SysValue']['template_theme']['user'] == 'true'  or !empty($GLOBALS
         $admin_help = '{Вы можете управлять содержанием текущей страницы}';
     else
         $admin_help = 'Для управления текущей страницей требуется <a href="//' . $_SERVER['SERVER_NAME'] . $GLOBALS['SysValue']['dir']['dir'] . 'phpshop/admpanel/" target="_blank"><span class="glyphicon glyphicon-user"></span> {Авторизоваться}</a>';
+    
+     // Выбор БД
+    if (is_array($GLOBALS['SysValue']['connect_select'])) {
+        foreach ($GLOBALS['SysValue']['connect_select'] as $k => $v) {
+            if ($_SESSION['base'] == $k)
+                $sel = "selected";
+            else
+                $sel = null;
+            $connect_select[] = array($v, $k, $sel);
+        }
+
+        $forma = PHPShopText::div(PHPShopText::form(PHPShopText::select('base', $connect_select, '100%', $float = "none", $caption = false, $onchange = "javascript:document.BdForm.submit()"), 'BdForm', 'get', '/'), 'left', 'padding:10px');
+        PHPShopParser::set('leftMenuContent', $forma);
+        PHPShopParser::set('leftMenuName', __("Сменить базу"));
+        $GLOBALS['SysValue']['other']['skinSelect'] .= PHPShopParser::file($GLOBALS['SysValue']['dir']['templates'] . chr(47) . $_SESSION['skin'] . chr(47) . $GLOBALS['SysValue']['templates']['left_menu'], true, true, false);
+    }
 
     $collapse_menu = '<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
   <div class="panel panel-default">

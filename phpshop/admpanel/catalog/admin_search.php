@@ -96,9 +96,9 @@ function actionSearch() {
 
     if (empty($_POST['frame'])) {
         $PHPShopInterface->_CODE .= $PHPShopInterface->set_(3);
-        $PHPShopInterface->_CODE .= $PHPShopInterface->setInputArg(array('type' => 'text', 'name' => 'search_price_start', 'size' => '100px', 'placeholder' => '÷ена от', 'class' => 'pull-left', 'value' => $_REQUEST['price_start']));
+        $PHPShopInterface->_CODE .= $PHPShopInterface->setInputArg(array('type' => 'text', 'name' => 'search_price_start', 'size' => '80px', 'placeholder' => '÷ена от', 'class' => 'pull-left', 'value' => $_REQUEST['price_start']));
         $PHPShopInterface->_CODE .= $PHPShopInterface->set_(3);
-        $PHPShopInterface->_CODE .= $PHPShopInterface->setInputArg(array('type' => 'text', 'name' => 'search_price_end', 'size' => '100px', 'placeholder' => '÷ена до', 'class' => 'pull-left', 'value' => $_REQUEST['price_end']));
+        $PHPShopInterface->_CODE .= $PHPShopInterface->setInputArg(array('type' => 'text', 'name' => 'search_price_end', 'size' => '80px', 'placeholder' => '÷ена до', 'class' => 'pull-left', 'value' => $_REQUEST['price_end']));
     }
     $PHPShopInterface->_CODE .= $PHPShopInterface->set_(3);
     $PHPShopInterface->_CODE .= '<div class="pull-left">' . viewCatalog() . '</div> ';

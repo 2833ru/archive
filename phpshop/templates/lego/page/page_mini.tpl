@@ -9,7 +9,7 @@
     </div>
     <div class="news-mini-block  fadeInUp animated wow">
         <div class="img-block">
-            <a itemprop="mainEntityOfPage" href="/page/@pageLink@.html" title="@pageName@"><img src="@pageIcon@"  alt="@pageName@"></a>
+            <a itemprop="mainEntityOfPage" href="/page/@pageLink@.html" title="@pageName@"><img src="@pageIcon@"  alt=""></a>
         </div>
         <div class="text-block">
             <h2><a href="/page/@pageLink@.html" itemprop="headline" title="@pageName@">@pageName@</a></h2>

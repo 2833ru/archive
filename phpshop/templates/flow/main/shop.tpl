@@ -337,6 +337,9 @@
             if($GLOBALS['PHPShopNav']->objNav['name'] == 'UID' or  $GLOBALS['PHPShopNav']->objNav['path'] == 'order' or  $GLOBALS['PHPShopNav']->objNav['path'] == 'done' or $GLOBALS['PHPShopNav']->objNav['path'] == 'news' or $GLOBALS['PHPShopNav']->objNav['path'] == 'users' or $GLOBALS['PHPShopNav']->objNav['path'] == 'page'){
             $GLOBALS['container_style'] = null;
             $GLOBALS['container_col'] = 12;
+            $GLOBALS['SysValue']['other']['leftCatal'] = null;
+            $GLOBALS['SysValue']['other']['leftMenu'] = null;
+            $GLOBALS['SysValue']['other']['banersDisp'] = null;
             }
             else {
             $GLOBALS['container_style'] = 'd-lg-block';

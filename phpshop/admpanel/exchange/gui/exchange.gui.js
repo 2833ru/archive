@@ -68,8 +68,6 @@ $().ready(function () {
 
         var count = Number($('#total-update').html());
         var stop = $('#stop').val();
-        //var imgdelim = $('#export_imgdelim').val();
-        
 
         if (stop != 1) {
 
@@ -80,7 +78,7 @@ $().ready(function () {
             data.push({name: 'end', value: end});
             data.push({name: 'ajax', value: true});
 
-            console.log(data);
+            //console.log(data);
 
             $('#product_edit').ajaxSubmit({
                 data: data,
@@ -92,7 +90,7 @@ $().ready(function () {
                     count += json['count'];
                     $('#total-update').html(count);
 
-                    if (json['success'] == 'done' || json['bar'] == 100) {
+                    if (json['success'] == 'done') {
                         $('.progress-bar').css('width', '100%');
                         $('.progress-bar').removeClass('active').html('100%');
                         $('#play').trigger("play");
@@ -105,8 +103,6 @@ $().ready(function () {
                         }).done(function () {
                             window.location.href = '?path=exchange.import';
                         });
-
-
 
                     } else if (json['success']) {
                         start += limit;
@@ -312,6 +308,46 @@ $().ready(function () {
             alert(locale.select_no);
     });
 
+    // Автоматизация восстанвления бекапа
+    function auto_restore(file, option) {
+
+        var data = [];
+        data.push({name: 'file', value: '/phpshop/admpanel/dumper/backup/' + file});
+        data.push({name: 'restoreID', value: 1});
+        data.push({name: 'ajax', value: 1});
+        data.push({name: 'actionList[restoreID]', value: 'actionRestore'});
+        data.push({name: 'option', value: option});
+
+        //console.log(data);
+        $.ajax({
+            mimeType: 'text/html; charset=' + locale.charset,
+            url: './dumper/ajax/restore.ajax.php',
+            type: 'post',
+            data: data,
+            dataType: "json",
+            success: function (json) {
+                if (json['success'] == 'done') {
+                    $('#play').trigger("play");
+                    $(window).unbind("beforeunload");
+                    $('.progress-bar').css('width', json['bar'] + '%').html(json['bar'] + '%').removeClass('active');
+
+                    $.MessageBox({
+                        buttonDone: "OK",
+                        message: locale.restore_backup + ' ' + file + ' ' + locale.done.toLowerCase()
+                    }).done(function () {
+                        $('.success-notification').delay(500).fadeOut(1000);
+                    });
+
+                } else if (json['success']) {
+                    option = json['option'];
+                    $('.progress-bar').css('width', json['bar'] + '%').html(json['bar'] + '%');
+                    auto_restore(file, option);
+                }
+
+            }
+        });
+    }
+
     // Восстановить бекап из списка
     $("body").on('click', ".data-row .restore", function (event) {
         event.preventDefault();
@@ -323,25 +359,12 @@ $().ready(function () {
             message: locale.confirm_restore + ': ' + file + '?'
         }).done(function () {
 
-            var data = [];
-            data.push({name: 'lfile', value: '/phpshop/admpanel/dumper/backup/' + file});
-            data.push({name: 'saveID', value: 1});
-            data.push({name: 'ajax', value: 1});
-            data.push({name: 'actionList[saveID]', value: 'actionSave'});
-            $.ajax({
-                mimeType: 'text/html; charset=' + locale.charset,
-                url: '?path=exchange.sql',
-                type: 'post',
-                data: data,
-                dataType: "json",
-                async: false,
-                success: function (json) {
-                    if (json['success'] == 1) {
-                        showAlertMessage(locale.backup_done);
-                    } else
-                        showAlertMessage('<strong>' + locale.backup_false + '</strong><br>' + json['error'], true, true);
-                }
+            $(window).bind("beforeunload", function () {
+                return "Are you sure you want to exit? Please complete sign up or the app will get deleted.";
             });
+
+            showProgressBar(locale.restore_backup);
+            auto_restore(file, 0);
         })
     });
 

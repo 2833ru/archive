@@ -56,6 +56,14 @@ function addYandexcartCPA($data) {
 
     $Tab3 .= $PHPShopGUI->setField('Состояние товара', $PHPShopGUI->setSelect('yandex_condition_new', $condition,300), 1, 'Тег condition');
     
+    $service_life_days[] = array(__('Ничего не выбрано'), '', $data['yandex_service_life_days']);
+    $service_life_days[] = array(__('6 месяцев'), 'P6M', $data['yandex_service_life_days']);
+    $service_life_days[] = array(__('1 год'), 'P1Y', $data['yandex_service_life_days']);
+    $service_life_days[] = array(__('2 года'), 'P2Y', $data['yandex_service_life_days']);
+    $service_life_days[] = array(__('3 года'), 'P3Y', $data['yandex_service_life_days']);
+ 
+    $Tab3 .= $PHPShopGUI->setField('Срок годности', $PHPShopGUI->setSelect('yandex_service_life_days_new', $service_life_days,300), 1, 'Тег period-of-validity-days');
+    
     $Tab3 .= $PHPShopGUI->setField('Причина уценки', $PHPShopGUI->setTextarea('yandex_condition_reason_new', $data['yandex_condition_reason'],true,300), 1, 'Тег reason');
 
     $Tab3 .= $PHPShopGUI->setField('Курьерская доставка', $PHPShopGUI->setRadio('delivery_new', 1, 'Включить', $data['delivery']) . $PHPShopGUI->setRadio('delivery_new', 2, 'Выключить', $data['delivery'], false, 'text-muted'), 1, 'Тег delivery');

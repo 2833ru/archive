@@ -19,7 +19,7 @@ function addRetailTab($data) {
 
         $Tab1 = $PHPShopGUI->setCheckbox("retail_status_new", 2, __("Отправить заказ в RetailCRM"), 0);
         $PHPShopGUI->addTab(array("RetailCRM", $Tab1, false, 101));
-   }
+    }
 }
 
 function retailOrder($id, $type) {
@@ -34,7 +34,7 @@ function retailOrder($id, $type) {
 
     $PHPShopOrm = new PHPShopOrm($PHPShopModules->getParam("base.retailcrm.retailcrm_system"));
     $data = $PHPShopOrm->select();
-    
+
     $value = Tools::iconvArray(unserialize($data['value']));
 
     //ini_set('memory_limit', '-1');
@@ -106,13 +106,26 @@ function retailOrder($id, $type) {
 
         if (isset($order["orders"]["Cart"]["cart"]) && count($order["orders"]["Cart"]["cart"]) > 0) {
             foreach ($order["orders"]["Cart"]["cart"] as $item) {
-                $tmp["items"][] = array(
-                    "initialPrice" => $item["price"],
-                    "productId" => $item["id"],
-                    "productName" => $item["name"],
-                    "quantity" => $item["num"],
-                    "xmlId" => isset($tmpProduct[$item["id"]]) ? $tmpProduct[$item["id"]] : "",
-                );
+
+                $item["retail_product_id"] = (new PHPShopOrm($GLOBALS['SysValue']['base']['products']))->getOne(['retail_product_id'], ['id' => '=' . $item["id"]])["retail_product_id"];
+                
+                // Есть externalId
+                if (!empty($item["retail_product_id"])) {
+                    $tmp["items"][] = array(
+                        "initialPrice" => $item["price"],
+                        "productName" => $item["name"],
+                        "quantity" => $item["num"],
+                        "offer" => array('externalId' => $item["retail_product_id"])
+                    );
+                } else {
+                    $tmp["items"][] = array(
+                        "productId" => $item["id"],
+                        "initialPrice" => $item["price"],
+                        "productName" => $item["name"],
+                        "quantity" => $item["num"],
+                        "xmlId" => isset($tmpProduct[$item["id"]]) ? $tmpProduct[$item["id"]] : "",
+                    );
+                }
             }
         }
 

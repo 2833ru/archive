@@ -454,7 +454,7 @@ elseif (isset($_GET['where']))
 else
     $catname = __('Новые товары');
 
-$PHPShopInterface->_AJAX["catname"] = PHPShopString::win_utf8($catname);
+$PHPShopInterface->_AJAX["catname"] = PHPShopString::win_utf8($catname).' ['.$total['count'].']';
 
 if (!empty($total['count'])) {
     $PHPShopInterface->_AJAX["recordsFiltered"] = $total['count'];

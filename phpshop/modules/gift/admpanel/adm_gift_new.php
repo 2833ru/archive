@@ -51,15 +51,16 @@ function actionStart() {
     $PHPShopGUI->addJSFiles('./js/jquery.tagsinput.min.js', './js/bootstrap-datetimepicker.min.js', './promotions/gui/promotions.gui.js');
     $PHPShopGUI->addCSSFiles('./css/jquery.tagsinput.css', './css/bootstrap-datetimepicker.min.css');
 
-    $PHPShopGUI->field_col = 2;
+    $PHPShopGUI->field_col = 3;
 
-    $Tab1 = $PHPShopGUI->setCollapse('Основное', $PHPShopGUI->setField('Название', $PHPShopGUI->setInputText('', 'name_new', $data['name'], 300)) .
+    $Tab1 = $PHPShopGUI->setCollapse('Основное', $PHPShopGUI->setField('Название', $PHPShopGUI->setInputText('', 'name_new', $data['name'])) .
             $PHPShopGUI->setField('Статус', $PHPShopGUI->setRadio("enabled_new", 1, "Показывать", $data['enabled']) . $PHPShopGUI->setRadio("enabled_new", 0, "Скрыть", $data['enabled'])).
             $PHPShopGUI->setField('Формула',
                     $PHPShopGUI->setRadio("discount_tip_new", 0, "При заказе товара А, получи в подарок товар В", $data['discount_tip']) . '<br>'.
                     $PHPShopGUI->setRadio("discount_tip_new", 1, "При заказе N количества товара А, получи в подарок M количество товара А", $data['discount_tip']). '<br>'.
-            $PHPShopGUI->setRadio("discount_tip_new", 2, "При заказе получи в подарок товар A", $data['discount_tip'])
-    ));
+            $PHPShopGUI->setRadio("discount_tip_new", 2, "При заказе получи в подарок товар A", $data['discount_tip'])).
+            $PHPShopGUI->setField('Лейбл на сайте', $PHPShopGUI->setInputText('', 'label_new', $data['label']))
+            );
 
 
     $Tab1 .= $PHPShopGUI->setCollapse('Активность', $PHPShopGUI->setField('Начало', $PHPShopGUI->setInputDate("active_date_ot_new", $data['active_date_ot'])) . $PHPShopGUI->setField('Завершение', $PHPShopGUI->setInputDate("active_date_do_new", $data['active_date_do'])));
@@ -114,28 +115,26 @@ function actionStart() {
 
     $Tab1 .= $PHPShopGUI->setCollapse('Условия', 
             $PHPShopGUI->setField('Категории', $PHPShopGUI->setHelp('Выберите категории товаров и/или укажите ID товаров для акции.') .
-                    $PHPShopGUI->setCheckbox("categories_check_new", 1, "Учитывать категории товара", $data['categories_check']) .
-                    $PHPShopGUI->setCheckbox("categories_all", 1, "Выбрать все категории?", 0) .
+                    $PHPShopGUI->setCheckbox("categories_check_new", 1, "Учитывать категории товара", $data['categories_check']) . '<br>'.
+                    $PHPShopGUI->setCheckbox("categories_all", 1, "Выбрать все категории?", 0). '<br><br>' .
                     $tree_select) .
-            $PHPShopGUI->setField('Товары', $PHPShopGUI->setCheckbox("products_check_new", 1, "Учитывать товары", $data['products_check']) . $PHPShopGUI->setCheckbox("block_old_price_new", 1, "Игнорировать товары со старой ценой", $data['block_old_price']) .
+            $PHPShopGUI->setField('Товары', $PHPShopGUI->setCheckbox("products_check_new", 1, "Учитывать товары", $data['products_check']) . '<br>'.
+                    $PHPShopGUI->setCheckbox("block_old_price_new", 1, "Игнорировать товары со старой ценой", $data['block_old_price']) . '<br><br>' .
                     $PHPShopGUI->setTextarea('products_new', $data['products'], false, false, false, __('Укажите ID товаров или воспользуйтесь') . ' <a href="#" data-target="#products_new"  class="btn btn-sm btn-default tag-search"><span class="glyphicon glyphicon-search"></span> ' . __('поиском товаров') . '</a>')) 
            
     );
 
-    $Tab1.=$PHPShopGUI->setField('Лейбл товара на сайте', $PHPShopGUI->setInputText('', 'label_new', $data['label']));
-
     $PHPShopGUI->setEditor($PHPShopSystem->getSerilizeParam("admoption.editor"), true);
     
-
     $oFCKeditor = new Editor('description_new', true);
     $oFCKeditor->Height = '120';
     $oFCKeditor->ToolbarSet = 'Normal';
     $oFCKeditor->Value = $data['description'];
 
-    $Tab2 .= $PHPShopGUI->setField('Описание акции на сайте', $oFCKeditor->AddGUI());
+   $Tab2 = $PHPShopGUI->setCollapse('Описание акции на сайте',$oFCKeditor->AddGUI());
 
     // Вывод формы закладки
-    $PHPShopGUI->setTab(array("Основное", $Tab1), array("Дополнительно", $Tab2,true));
+    $PHPShopGUI->setTab(array("Основное", $Tab1, true,false,true), array("Дополнительно", $Tab2,true,false,true));
 
     // Вывод кнопок сохранить и выход в футер
     $ContentFooter = $PHPShopGUI->setInput("submit", "saveID", "Сохранить", "right", false, false, false, "actionInsert.modules.create");

@@ -325,6 +325,8 @@ function actionStart() {
 
     // Характеристики
     $Tab_sorts = $PHPShopGUI->loadLib('tab_sorts', $data);
+    
+    
 
     // Заголовки
     $Tab_header = $PHPShopGUI->loadLib('tab_headers', $data);

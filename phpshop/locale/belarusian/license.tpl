@@ -105,6 +105,4 @@
     Адрас сайта: <a href="http://www.phpshop.ru" target="_blank"> www.phpshop.ru </a> <br>
     Падручнік: <a href="http://faq.phpshop.ru" target="_blank"> faq.phpshop.ru </a> <br>
     Тэлефон: +7 (495) 989-11-15 <br>
-    Тэхнічная падтрымка: <a href="https://help.phpshop.ru" target="_blank"> help.phpshop.ru </a> <br> <br>
-    <Input type = "checkbox" checked disabled> Я прымаю ўмовы ліцэнзійнай дамовы.
 </P>

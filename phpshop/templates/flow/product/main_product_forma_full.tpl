@@ -95,7 +95,7 @@
                     <span itemprop="price" class="priceService" content="@productSchemaPrice@">@productPrice@</span> 
                     <span itemprop="priceCurrency" class="rubznak" content="RUB">@productValutaName@</span>  
                 </span>
-                <span class="text-body ml-4 @php __hide('productPriceOld'); php@"><del>@productPriceOld@</del> @specIcon@</span>
+                <span class="text-body ml-4 @php __hide('productPriceOld'); php@"><del class="price-old">@productPriceOld@</del> @specIcon@</span>
             </div>
 
             <div class="option-block">
@@ -131,6 +131,23 @@
                     </div>
                 </div>
             </div>
+            
+            <div class="border rounded-lg py-2 px-3 mb-3 @elementCartOptionHide@">
+                <div class="js-quantity-counter row align-items-center">
+                    <div class="col-7">
+                        <small class="d-block text-body font-weight-bold">{Выберите количество}:</small>
+                        <input class="js-result form-control h-auto border-0 rounded-lg p-0" type="text" value="1" name="quant[1]">
+                    </div>
+                    <div class="col-5 text-right">
+                        <a class="js-minus btn btn-xs btn-icon btn-outline-secondary rounded-circle" href="javascript:;">
+                            <i class="fas fa-minus"></i>
+                        </a>
+                        <a class="js-plus btn btn-xs btn-icon btn-outline-secondary rounded-circle" href="javascript:;">
+                            <i class="fas fa-plus"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
             <!-- Модуль услуги -->
             @productservices_list@
 
@@ -138,6 +155,10 @@
             @sticker_accordion@
 
             <div class="mb-4 @elementCartHide@">
+                <button type="button" class="btn btn-block btn-primary btn-pill transition-3d-hover addToCartFull" data-num="1" data-uid="@productUid@">@flowProductSale@</button>
+            </div>
+            
+            <div class="mb-4 @elementCartOptionHide@">
                 <button type="button" class="btn btn-block btn-primary btn-pill transition-3d-hover addToCartFull" data-num="1" data-uid="@productUid@">@flowProductSale@</button>
             </div>
 

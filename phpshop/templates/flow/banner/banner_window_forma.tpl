@@ -11,7 +11,7 @@
                 <a href="@banerLink@"> 
                     <div class="banner-list">
                         @banerContent@
-                        <button class="btn btn-sm btn-primary transition-3d-hover">@banerDescription@</button> 
+                        <button class="btn btn-sm btn-primary transition-3d-hover @php __hide('banerDescription'); php@">@banerDescription@</button> 
                 </a>
             </div>
         </div>

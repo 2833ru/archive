@@ -74,12 +74,12 @@ class Payment extends PHPShopPaymentResult {
                 // Изменение статуса платежа
                 (new PHPShopOrderFunction((int) $row['id']))->changeStatus((int) $this->set_order_status_101(), $row['statusi']);
 
-                $this->YandexKassa->log($order, $row['id'], 'Заказ оплачен, статус заказа изменен', 'Уведомление Яндекс.Кассы');
+                $this->YandexKassa->log($order, $row['id'], 'Заказ оплачен, статус заказа изменен', 'Уведомление ЮKassa');
             } else {
-                $this->YandexKassa->log($order, $log['order_id'], 'Заказ не найден', 'Уведомление Яндекс.Кассы');
+                $this->YandexKassa->log($order, $log['order_id'], 'Заказ не найден', 'Уведомление ЮKassa');
             }
         } else {
-            $this->YandexKassa->log($order, $log['order_id'], 'Заказ не оплачен', 'Уведомление Яндекс.Кассы');
+            $this->YandexKassa->log($order, $log['order_id'], 'Заказ не оплачен', 'Уведомление ЮKassa');
         }
 
         header("HTTP/1.0 200");

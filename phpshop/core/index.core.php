@@ -3,7 +3,7 @@
 /**
  * Обработчик приветственного сообщения на главной странице
  * @author PHPShop Software
- * @version 1.3
+ * @version 1.4
  * @package PHPShopCore
  */
 class PHPShopIndex extends PHPShopCore {
@@ -21,6 +21,9 @@ class PHPShopIndex extends PHPShopCore {
         // Перехват модуля
         if ($this->setHook(__CLASS__, __FUNCTION__, false, 'START'))
             return true;
+        
+        if($this->PHPShopNav->objNav['truepath'] != '/')
+            return header('Location: /404/');
         
         $where['category'] = "=2000";
         $where['enabled'] = "='1'";
@@ -42,8 +45,6 @@ class PHPShopIndex extends PHPShopCore {
         // Перехват модуля
         $this->setHook(__CLASS__, __FUNCTION__, $row, 'END');
     }
-
-
 }
 
 ?>

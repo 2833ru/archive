@@ -72,15 +72,7 @@ function actionStart() {
 function actionCreate() {
     global $PHPShopModules, $PHPShopGUI;
 
-    include_once('./dumper/dumper.php');
-
-    $is_safe_mode = ini_get('safe_mode') == '1' ? 1 : 0;
-    if (!$is_safe_mode)
-        set_time_limit(600);
-
-    ob_start();
-    mysqlbackup($GLOBALS['SysValue']['connect']['dbase'], $_POST['export_structure'], $_POST['pattern_table']);
-    $dump = ob_get_clean();
+    
 
     // Обновление
     if (!empty($_REQUEST['update']))
@@ -91,9 +83,9 @@ function actionCreate() {
         $file = 'base_' . date("d_m_y_His") . '.sql';
 
 
-
     $file = "./dumper/backup/" . $file;
-    $result = PHPShopFile::write($file, $dump);
+    include_once('./dumper/dumper.php');
+    $result = mysqlbackup($GLOBALS['SysValue']['connect']['dbase'], $file, $_POST['export_structure'], $_POST['pattern_table']);
 
     // Gzip
     if (!empty($_REQUEST['export_gzip'])) {

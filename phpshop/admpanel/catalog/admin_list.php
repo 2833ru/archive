@@ -128,12 +128,12 @@ function actionStart() {
         [__('Удалить'), 2, 1]
     ];
 
-    $PHPShopInterface->_CODE .= '<div class="row">';
-    $PHPShopInterface->_CODE .= '<div class="col-md-12 text-center">';
+    $PHPShopInterface->_CODE .= '<div class="row intro-row">';
+    $PHPShopInterface->_CODE .= '<div class="col-md-12 text-center col-panel">';
     $PHPShopInterface->_CODE .= '<div class="panel panel-default fix-products-block">';
     $PHPShopInterface->_CODE .= '<div class="panel-heading"><span class="glyphicon glyphicon-transfer"></span> ' . __('Товары с удаленными категориями') . '</div>';
     $PHPShopInterface->_CODE .= '<div class="panel-body text-left panel-intro text-center">';
-    $PHPShopInterface->_CODE .= $PHPShopGUI->setSelect('fix_products', $fixVariants, 350);
+    $PHPShopInterface->_CODE .= $PHPShopGUI->setSelect('fix_products', $fixVariants, 400);
     $PHPShopInterface->_CODE .= $PHPShopGUI->setButton('Перенести', 'ok', 'fix-products');
     $PHPShopInterface->_CODE .= '</div>';
     $PHPShopInterface->_CODE .= '</div>';

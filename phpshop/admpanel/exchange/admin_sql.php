@@ -40,9 +40,8 @@ function actionSave() {
     if (!empty($_POST['sql_text'])) {
         $sql_query = explode(";\r", trim($_POST['sql_text']));
 
-        foreach ($sql_query as $v){
+        foreach ($sql_query as $v) {
             $result = mysqli_query($link_db, trim($v));
-            @mysqli_free_result($result);
         }
 
         // Выполнено успешно
@@ -103,7 +102,7 @@ function actionSave() {
 
         foreach ($sql_query as $k => $v) {
 
-            if (strlen($v) > 10){
+            if (strlen($v) > 10) {
                 $result = mysqli_query($link_db, $v);
             }
 
@@ -111,8 +110,8 @@ function actionSave() {
                 $error_line .= '[Line ' . $k . '] ';
                 $result_error_tracert .= 'Запрос: ' . $v . '
 Ошибка: ' . mysqli_error($link_db);
-            }
-            else @mysqli_free_result($result);
+            } else
+                @mysqli_free_result($result);
         }
 
         // Удаление файла после выполнения
@@ -179,13 +178,13 @@ function actionStart() {
     unset($baseArray['phpshop_order_status']);
     unset($baseArray['phpshop_payment_systems']);
     unset($baseArray['phpshop_page']);
-
+    unset($baseArray['phpshop_jurnal']);
 
     $TRUNCATE = null;
 
     foreach ($baseArray as $val) {
-        if(!strstr($val,'_modules')) 
-        $TRUNCATE .= 'TRUNCATE `' . $val . '`;
+        if (!strstr($val, '_modules'))
+            $TRUNCATE .= 'TRUNCATE `' . $val . '`;
 ';
     }
 
@@ -210,7 +209,7 @@ function actionStart() {
     $query_value[] = array('Оптимизировать базу', 'OPTIMIZE TABLE ' . $bases, $optimize_sel);
     $query_value[] = array('Починить базу', 'REPAIR TABLE ' . $bases, '');
     $query_value[] = array('Удалить все фото товаров', 'TRUNCATE ' . $GLOBALS['SysValue']['base']['foto'] . ';
-UPDATE ' . $GLOBALS['SysValue']['base']['products'] . ' set pic_small=\'\', pic_big=\'\';','');
+UPDATE ' . $GLOBALS['SysValue']['base']['products'] . ' set pic_small=\'\', pic_big=\'\';', '');
     $query_value[] = array('Удалить характеристики', 'TRUNCATE ' . $GLOBALS['SysValue']['base']['sort'] . ';
 TRUNCATE ' . $GLOBALS['SysValue']['base']['sort_categories'] . ';
 UPDATE ' . $GLOBALS['SysValue']['base']['products'] . ' set vendor=\'\', vendor_array=\'\';
@@ -225,16 +224,14 @@ TRUNCATE ' . $GLOBALS['SysValue']['base']['foto'] . ';', '');
     $query_value[] = array('Уменьшить время генерации меню каталогов', "UPDATE phpshop_categories SET phpshop_categories.vid = '0' WHERE phpshop_categories.parent_to IN (select * from ( SELECT phpshop_categories.id
  FROM phpshop_categories WHERE phpshop_categories.parent_to='0')t );
  UPDATE phpshop_categories SET vid='1' where parent_to !='0';");
-    $query_value[] = array('Очистить базу городов', 'TRUNCATE ' . $GLOBALS['SysValue']['base']['citylist_country'].';
-TRUNCATE ' . $GLOBALS['SysValue']['base']['citylist_region'].';
-TRUNCATE ' . $GLOBALS['SysValue']['base']['citylist_city'].';', '');
+    $query_value[] = array('Очистить базу городов', 'TRUNCATE ' . $GLOBALS['SysValue']['base']['citylist_country'] . ';
+TRUNCATE ' . $GLOBALS['SysValue']['base']['citylist_region'] . ';
+TRUNCATE ' . $GLOBALS['SysValue']['base']['citylist_city'] . ';', '');
 
 
 
     $query_value[] = array('Очистить базу', $TRUNCATE, '');
     //$query_value[] = array('Уничтожить базу (!)', $DROP, '');
-
-
     // Оптимизация по ссылке
     if (!empty($_GET['query']) and $_GET['query'] == 'optimize')
         $result_error_tracert = 'OPTIMIZE TABLE ' . $bases;
@@ -251,7 +248,7 @@ TRUNCATE ' . $GLOBALS['SysValue']['base']['citylist_city'].';', '');
     // Модальное окно таблицы описаний перменных
     $selectModalBody = '<table class="table table-striped"><tr><th>' . __('Таблица') . '</th><th>' . __('Описание') . '</th></tr>' . $selectModal . '</table>';
 
-    $PHPShopGUI->_CODE .= $PHPShopGUI->setCollapse('Настройки', $PHPShopGUI->setField('Команда', $PHPShopGUI->setSelect('sql_query', $query_value, null, true,false, false, false, 1, false, false, 'selectpicker')) .
+    $PHPShopGUI->_CODE .= $PHPShopGUI->setCollapse('Настройки', $PHPShopGUI->setField('Команда', $PHPShopGUI->setSelect('sql_query', $query_value, null, true, false, false, false, 1, false, false, 'selectpicker')) .
             $PHPShopGUI->setField("Файл", $PHPShopGUI->setFile()), 'in', false, true
     );
 
@@ -261,6 +258,7 @@ TRUNCATE ' . $GLOBALS['SysValue']['base']['citylist_city'].';', '');
 
     // Вывод кнопок сохранить и выход в футер
     $ContentFooter = $PHPShopGUI->setInput("hidden", "saveID", "Применить", "right", 80, "", "but", "actionSave.system.edit");
+    $ContentFooter .= $PHPShopGUI->setInput("hidden", "restoreID", "Применить", "right", 80, "", "but", "actionRestore.system.edit");
 
     $PHPShopGUI->setFooter($ContentFooter);
 

@@ -9,7 +9,7 @@ PHPShopObj::loadClass('delivery');
 /**
  * Обработчик кабинета пользователя
  * @author PHPShop Software
- * @version 1.8
+ * @version 1.9
  * @package PHPShopCore
  */
 class PHPShopUsers extends PHPShopCore {
@@ -457,7 +457,7 @@ class PHPShopUsers extends PHPShopCore {
         } else {
 
             // Сообщение об обязательной авторизации
-            //$this->set('usersError', __('Требуется авторация пользователя'));
+            $this->set('usersError', __('Требуется авторация пользователя'));
 
             // Форма регистрации нового пользователя
             $this->action_register();
@@ -786,7 +786,7 @@ class PHPShopUsers extends PHPShopCore {
                         $this->set('wishlistCartHide', null);
                     }
                     elseif ($objProduct->getParam("parent") != "") {
-                        $this->set('wishlistCartHide', 'hide');
+                        $this->set('wishlistCartHide', 'hide d-none');
                     } else {
                         $this->set('prodUid', $key);
                         $this->set('wishlistCartHide', null);

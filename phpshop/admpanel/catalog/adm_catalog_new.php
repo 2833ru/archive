@@ -113,15 +113,17 @@ function actionStart() {
     $CategoryArray[0]['name'] = '- ' . __('Корневой уровень') . ' -';
     $tree_array = array();
 
-    foreach ($PHPShopCategoryArray->getKey('parent_to.id', true) as $k => $v) {
-        foreach ($v as $cat) {
-            $tree_array[$k]['sub'][$cat] = $CategoryArray[$cat]['name'];
+    $getKey = $PHPShopCategoryArray->getKey('parent_to.id', true);
+    if (is_array($getKey))
+        foreach ($getKey as $k => $v) {
+            foreach ($v as $cat) {
+                $tree_array[$k]['sub'][$cat] = $CategoryArray[$cat]['name'];
+            }
+            $tree_array[$k]['name'] = $CategoryArray[$k]['name'];
+            $tree_array[$k]['id'] = $k;
+            if ($k == $data['parent_to'])
+                $tree_array[$k]['selected'] = true;
         }
-        $tree_array[$k]['name'] = $CategoryArray[$k]['name'];
-        $tree_array[$k]['id'] = $k;
-        if ($k == $data['parent_to'])
-            $tree_array[$k]['selected'] = true;
-    }
 
     $GLOBALS['tree_array'] = &$tree_array;
     $_GET['parent_to'] = $data['parent_to'];

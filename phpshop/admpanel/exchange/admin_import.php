@@ -166,9 +166,8 @@ function setCategory() {
 }
 
 function sort_encode($sort, $category) {
-    global $PHPShopBase;
 
-    $return = null;
+    $return = [];
     $delim = $_POST['export_sortdelim'];
     $sortsdelim = $_POST['export_sortsdelim'];
     $debug = false;
@@ -187,99 +186,8 @@ function sort_encode($sort, $category) {
                     $sort_list_array = explode($sortsdelim, $sort_list, 2);
                     $sort_name = PHPShopSecurity::TotalClean($sort_list_array[0]);
                     $sort_value = PHPShopSecurity::TotalClean($sort_list_array[1]);
-
-                    // Получить ИД набора характеристик в каталоге
-                    $PHPShopOrm = new PHPShopOrm();
-                    $PHPShopOrm->debug = $debug;
-                    $result_1 = $PHPShopOrm->query('select sort,name from ' . $GLOBALS['SysValue']['base']['categories'] . ' where id="' . $category . '"  limit 1', __FUNCTION__, __LINE__);
-                    $row_1 = mysqli_fetch_array($result_1);
-
-                    $cat_sort = unserialize($row_1['sort']);
-
-                    $cat_name = $row_1['name'];
-
-                    // Отсутствует в базе
-                    if (is_array($cat_sort))
-                        $where_in = ' and a.id IN (' . @implode(",", $cat_sort) . ') ';
-                    else
-                        $where_in = null;
-
-                    $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['sort_categories']);
-                    $PHPShopOrm->debug = $debug;
-
-                    $result_2 = $PHPShopOrm->query('select a.id as parent, b.id from ' . $GLOBALS['SysValue']['base']['sort_categories'] . ' AS a 
-        JOIN ' . $GLOBALS['SysValue']['base']['sort'] . ' AS b ON a.id = b.category where a.name="' . $sort_name . '" and b.name="' . $sort_value . '" ' . $where_in . ' limit 1', __FUNCTION__, __LINE__);
-                    $row_2 = mysqli_fetch_array($result_2);
-
-                    // Присутствует в  базе
-                    if (!empty($where_in) and isset($row_2['id'])) {
-                        $return[$row_2['parent']][] = $row_2['id'];
-                    }
-                    // Отсутствует в базе
-                    else {
-
-                        // Проверка характеристики
-                        if (!empty($where_in))
-                            $sort_name_present = $PHPShopBase->getNumRows('sort_categories', 'as a where a.name="' . $sort_name . '" ' . $where_in . ' limit 1');
-
-                        // Создаем новую характеристику
-                        if (empty($sort_name_present) and ! empty($category)) {
-
-                            // Есть
-                            if (!empty($cat_sort[0])) {
-                                $PHPShopOrm = new PHPShopOrm();
-                                $PHPShopOrm->debug = $debug;
-
-                                $result_3 = $PHPShopOrm->query('select category from ' . $GLOBALS['SysValue']['base']['sort_categories'] . ' where id="' . intval($cat_sort[0]) . '"  limit 1', __FUNCTION__, __LINE__);
-                                $row_3 = mysqli_fetch_array($result_3);
-                                $cat_set = $row_3['category'];
-                            }
-                            // Нет, создать новый набор
-                            elseif (!empty($cat_name)) {
-
-                                // Создание набора характеристик
-                                $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['sort_categories']);
-                                $PHPShopOrm->debug = $debug;
-                                $cat_set = $PHPShopOrm->insert(array('name_new' => __('Для каталога') . ' ' . $cat_name, 'category_new' => 0), '_new', __FUNCTION__, __LINE__);
-                            }
-
-                            $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['sort_categories']);
-                            $PHPShopOrm->debug = $debug;
-
-                            if (!empty($sort_name) and ! empty($cat_set))
-                                if ($parent = $PHPShopOrm->insert(array('name_new' => $sort_name, 'category_new' => $cat_set), '_new', __FUNCTION__, __LINE__)) {
-
-                                    // Создаем новое значение характеристики
-                                    $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['sort']);
-                                    $PHPShopOrm->debug = $debug;
-                                    $slave = $PHPShopOrm->insert(array('name_new' => $sort_value, 'category_new' => $parent, 'sort_seo_name_new' => PHPShopString::toLatin($sort_value)), '_new', __FUNCTION__, __LINE__);
-
-                                    $return[$parent][] = $slave;
-                                    $cat_sort[] = $parent;
-
-                                    // Обновляем набор каталога товаров
-                                    $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['categories']);
-                                    $PHPShopOrm->debug = $debug;
-                                    $PHPShopOrm->update(array('sort_new' => serialize($cat_sort)), array('id' => '=' . $category), '_new', __FUNCTION__, __LINE__);
-                                }
-                        }
-                        // Дописываем значение 
-                        elseif (!empty($sort_value)) {
-
-                            // Получаем ИД существующей характеристики
-                            $PHPShopOrm = new PHPShopOrm();
-                            $PHPShopOrm->debug = $debug;
-                            $result = $PHPShopOrm->query('select a.id  from ' . $GLOBALS['SysValue']['base']['sort_categories'] . ' AS a where a.name="' . $sort_name . '" ' . $where_in . ' limit 1', __FUNCTION__, __LINE__);
-                            if ($row = mysqli_fetch_array($result)) {
-                                $parent = $row['id'];
-                                $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['sort']);
-                                $PHPShopOrm->debug = $debug;
-                                $slave = $PHPShopOrm->insert(array('name_new' => $sort_value, 'category_new' => $parent), '_new', __FUNCTION__, __LINE__);
-
-                                $return[$parent][] = $slave;
-                            }
-                        }
-                    }
+                    
+                    $return += (new sortCheck($sort_name,$sort_value,$category,$debug))->result();
                 }
             }
     }
@@ -314,6 +222,11 @@ function csv_update($data) {
             if (is_array($_POST['select_action'])) {
 
                 foreach ($_POST['select_action'] as $k => $name) {
+                    
+                    // Автоматизация
+                    if(!empty($_POST['bot'])){
+                        $_POST['select_action'][$k]= PHPShopString::utf8_win1251($name,true);
+                    }
 
                     if (!empty($name))
                         $select = true;
@@ -402,7 +315,6 @@ function csv_update($data) {
                     $row['category'] = $category->search_id;
                 }
             }
-
 
             // Коррекция флага подтипа
             if (isset($row['parent']) and $row['parent'] == '')
@@ -580,6 +492,20 @@ function csv_update($data) {
                     $uniq = $PHPShopBase->getNumRows('products', "where uid = '" . $row['uid'] . "'");
                 } else
                     $uniq = 0;
+                
+                // Проверка SEO имени каталога
+                if($subpath[2] == 'catalog' and !empty($row['name'])){
+                    $uniq_cat_data = (new PHPShopOrm($GLOBALS['SysValue']['base']['categories']))->getOne(['*'],['name'=>'="'.$row['name'].'"']);
+                    
+                    // Есть одноименный каталог
+                    if(!empty($uniq_cat_data['name'])){
+                        $parent_cat_data = (new PHPShopOrm($GLOBALS['SysValue']['base']['categories']))->getOne(['*'],['id'=>'="'.$uniq_cat_data['parent_to'].'"']);
+                        $row['cat_seo_name'] = PHPShopString::toLatin($row['name']);
+                        $row['cat_seo_name'] = PHPShopString::toLatin($parent_cat_data['name']).'-'.PHPShopString::toLatin($row['name']);
+                    }
+                    else $row['cat_seo_name'] = PHPShopString::toLatin($row['name']);
+                    
+                }
 
                 // Проверки пустого имени
                 if (isset($row['name']) and empty($row['name']))
@@ -784,10 +710,10 @@ function actionSave() {
     if (!empty($_FILES['file']['name'])) {
         $_FILES['file']['ext'] = PHPShopSecurity::getExt($_FILES['file']['name']);
         if ($_FILES['file']['ext'] == "csv") {
-            if (@move_uploaded_file($_FILES['file']['tmp_name'], "csv/" . $_FILES['file']['name'])) {
-                $csv_file = "csv/" . $_FILES['file']['name'];
-                $csv_file_name = $_FILES['file']['name'];
-                $_POST['lfile'] = $GLOBALS['dir']['dir'] . "/phpshop/admpanel/csv/" . $_FILES['file']['name'];
+            if (@move_uploaded_file($_FILES['file']['tmp_name'], "csv/" . PHPShopString::toLatin($_FILES['file']['name']).'.'.$_FILES['file']['ext'])) {
+                $csv_file_name = PHPShopString::toLatin($_FILES['file']['name']).'.'.$_FILES['file']['ext'];
+                $csv_file = "csv/" . $csv_file_name;
+                $_POST['lfile'] = $GLOBALS['dir']['dir'] . "/phpshop/admpanel/csv/" . $csv_file_name;
             } else
                 $result_message = $PHPShopGUI->setAlert(__('Ошибка сохранения файла') . ' <strong>' . $csv_file_name . '</strong> в phpshop/admpanel/csv', 'danger');
         }
@@ -865,7 +791,6 @@ function actionSave() {
                 while ($data = fgetcsv($handle, 0, $delim)) {
                     $total++;
                 }
-                //$total--;
 
                 $bar = 0;
                 $end = 0;
@@ -984,7 +909,7 @@ function actionSave() {
 
             $bar = round($_POST['end'] * 100 / $total);
 
-            return array("success" => $action, "bar" => $bar, "count" => $csv_load_count, "result" => PHPShopString::win_utf8($json_message), 'limit' => $limit);
+            return array("success" => $action, "bar" => $bar, "count" => $csv_load_count, "result" => PHPShopString::win_utf8($json_message), 'limit' => $limit,'action'=>PHPShopString::win_utf8(mb_strtolower($lang_do,$GLOBALS['PHPShopBase']->codBase)));
         } else
             return array("success" => 'done', "count" => $csv_load_count, "result" => PHPShopString::win_utf8($json_message), 'limit' => $limit,'action'=>PHPShopString::win_utf8(mb_strtolower($lang_do,$GLOBALS['PHPShopBase']->codBase)));
     }
@@ -1058,6 +983,9 @@ function actionStart() {
         $PHPShopOrm->clean();
         $data = $PHPShopOrm->select(array('*'), false, false, array('limit' => 1));
         $PHPShopOrm->delete(array('name' => '="Тестовый товар"'));
+        
+       if(empty($subpath[2]))
+         $memory[$_GET['path']]['export_action']='insert';
     }
 
     if (is_array($data)) {
@@ -1170,7 +1098,7 @@ function actionStart() {
             $PHPShopGUI->setField('Разделитель для изображений', $PHPShopGUI->setSelect('export_imgdelim', $delim_imgvalue, 150), 1, 'Дополнительные изображения', $class) .
             $PHPShopGUI->setField('Кодировка текста', $PHPShopGUI->setSelect('export_code', $code_value, 150)) .
             $PHPShopGUI->setField('Ключ обновления', $PHPShopGUI->setSelect('export_key', $key_value, 150, false, false, true), 1, 'Изменение ключа обновления может привести к порче данных', $class) .
-            $PHPShopGUI->setField('Проверка уникальности', $PHPShopGUI->setCheckbox('export_uniq', 1, null, @$memory[$_GET['path']]['export_uniq']), 1, 'Исключает дублирование данных при создании');
+            $PHPShopGUI->setField('Проверка уникальности', $PHPShopGUI->setCheckbox('export_uniq', 1, null, @$memory[$_GET['path']]['export_uniq']), 1, 'Исключает дублирование данных при создании', $class);
 
     // Память
     if (is_array($_POST['select_action'])) {
@@ -1278,6 +1206,118 @@ function actionStart() {
     $PHPShopGUI->Compile(2);
 
     return true;
+}
+
+// Обработка характеристик
+class sortCheck {
+
+    var $debug = false;
+
+    function __construct($name, $value, $category,$debug=false) {
+        
+        $this->debug = $debug;
+
+        $this->debug('Дано характеристика "' . $name . '" = "' . $value . '" в каталоге с ID=' . $category);
+
+        // Проверка имени характеристики 
+        $check_name = (new PHPShopOrm($GLOBALS['SysValue']['base']['sort_categories']))->getOne(['*'], ['name' => '="' . $name . '"']);
+        if ($check_name) {
+
+            $this->debug('Есть характеристика "' . $name . '" c ID=' . $check_name['id'] . ' и CATEGORY=' . $check_name['category']);
+
+            // Проверка значения характеристики
+            $check_value = (new PHPShopOrm($GLOBALS['SysValue']['base']['sort']))->getOne(['*'], ['name' => '="' . $value . '"']);
+            if ($check_value) {
+                $this->debug('Есть значение характеристики "' . $name . '" = "' . $value . '" c ID=' . $check_value['id']);
+
+                // Проверка категории набора характеристики
+                $check_category = (new PHPShopOrm($GLOBALS['SysValue']['base']['categories']))->getOne(['*'], ['id' => '="' . $category . '"']);
+                $sort = unserialize($check_category['sort']);
+
+                if (is_array($sort) and in_array($check_name['id'], $sort)) {
+                    $this->debug('Есть набор характеристики "' . $name . '" = "' . $value . '" c ID=' . $check_value['id'] . ' в каталоге ' . $check_category['name'] . '" с ID=' . $category);
+                } else {
+                    $sort_categories = (new PHPShopOrm($GLOBALS['SysValue']['base']['sort_categories']))->getOne(['*'], ['id' => '=' . $check_name['category']]);
+                    $this->debug('Нет набор характеристики "' . $sort_categories['name'] . '" c ID=' . $check_name['category'] . ' в каталоге ' . $check_category['name'] . '" с ID=' . $category);
+
+                    // Добавление в категорию набора характеристики
+                    $sort[] = $check_name['id'];
+                    (new PHPShopOrm($GLOBALS['SysValue']['base']['categories']))->update(['sort_new' => serialize($sort)], ['id' => '=' . $category]);
+                    $this->debug('Набор характеристик "' . $sort_categories['name'] . '" c ID=' . $check_name['category'] . ' добавлен в каталог "' . $check_category['name'] . '" с ID=' . $category);
+
+                    $result[$check_name['id']][] = $check_value['id'];
+                }
+                $result[$check_name['id']][] = $check_value['id'];
+            } else {
+                $this->debug('Нет значения характеристики "' . $name . '" = "' . $value . '"');
+
+                // Создание нового значения характеристики
+                $new_value_id = (new PHPShopOrm($GLOBALS['SysValue']['base']['sort']))->insert(['name_new' => $value, 'category_new' => $check_name['id'],'sort_seo_name_new'=>str_replace("_", "-",PHPShopString::toLatin($value))]);
+
+                $this->debug('Создание нового значения характеристики "' . $name . '" = "' . $value . '" c ID=' . $new_value_id);
+                $result[$check_name['id']][] = $new_value_id;
+            }
+        } else {
+
+            $this->debug('Нет характеристики "' . $name . '"');
+
+            // Проверка категории набора характеристики
+            $check_category = (new PHPShopOrm($GLOBALS['SysValue']['base']['categories']))->getOne(['*'], ['id' => '="' . $category . '"']);
+            $sort = unserialize($check_category['sort']);
+
+            // У каталога есть характеристики
+            if (is_array($sort)) {
+
+                // Проверка значения характеристики
+                foreach ($sort as $val) {
+                    $check_value = (new PHPShopOrm($GLOBALS['SysValue']['base']['sort_categories']))->getOne(['*'], ['id' => '=' . $val]);
+                    if (!empty($check_value['category'])) {
+                        $sort_categories = $check_value['category'];
+                        continue;
+                    }
+                }
+
+                $this->debug('Выбран набор характеристик c ID=' . $sort_categories);
+            }
+            // У каталога нет набора характеристик
+            else {
+
+                // Создание нового набора характеристик
+                $new_sort_categories_name = $check_category['name'];
+                $new_sort_categories = (new PHPShopOrm($GLOBALS['SysValue']['base']['sort_categories']))->insert(['name_new' => $new_sort_categories_name, 'category_new' => 0]);
+                $sort_categories = $new_sort_categories;
+                $this->debug('Создание нового набор характеристик "' . $new_sort_categories_name . '" c ID=' . $sort_categories . ' ');
+            }
+
+            // Создание новой характеристики 
+            $new_name_id = (new PHPShopOrm($GLOBALS['SysValue']['base']['sort_categories']))->insert(['name_new' => $name, 'category_new' => $sort_categories]);
+            $this->debug('Создание новой характеристики "' . $name . '" c ID=' . $new_name_id . ' в группе характеристик ID=' . $sort_categories);
+
+            // Создание нового значения характеристики
+            $new_value_id = (new PHPShopOrm($GLOBALS['SysValue']['base']['sort']))->insert(['name_new' => $value, 'category_new' => $new_name_id,'sort_seo_name_new'=>str_replace("_", "-",PHPShopString::toLatin($value))]);
+            $this->debug('Создание нового значения характеристики "' . $name . '" = "' . $value . '" c ID=' . $new_value_id);
+
+            // Добавление в категорию характеристики
+            $sort[] = $new_name_id;
+            (new PHPShopOrm($GLOBALS['SysValue']['base']['categories']))->update(['sort_new' => serialize($sort)], ['id' => '=' . $category]);
+            $this->debug('Характеристика "' . $name . '" c ID=' . $new_name_id . ' добавлен в каталог "' . $check_category['name'] . '" с ID=' . $category);
+
+            $result[$new_name_id][] = $new_value_id;
+        }
+
+        $this->result = $result;
+    }
+
+    // Отладка
+    function debug($str) {
+        if ($this->debug)
+            echo $str . PHP_EOL . '<br>';
+    }
+    
+    // Результат
+    function result(){
+        return $this->result;
+    }
 }
 
 // Обработка событий

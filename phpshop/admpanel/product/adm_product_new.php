@@ -182,13 +182,16 @@ function actionStart() {
     $tree_array = array();
     $tree_select = $tree_select_dop = null;
 
-    foreach ($PHPShopCategoryArray->getKey('parent_to.id', true) as $k => $v) {
-        foreach ($v as $cat) {
-            $tree_array[$k]['sub'][$cat] = $CategoryArray[$cat]['name'];
+    $getKey = $PHPShopCategoryArray->getKey('parent_to.id', true);
+
+    if (is_array($getKey))
+        foreach ($getKey as $k => $v) {
+            foreach ($v as $cat) {
+                $tree_array[$k]['sub'][$cat] = $CategoryArray[$cat]['name'];
+            }
+            $tree_array[$k]['name'] = $CategoryArray[$k]['name'];
+            $tree_array[$k]['id'] = $k;
         }
-        $tree_array[$k]['name'] = $CategoryArray[$k]['name'];
-        $tree_array[$k]['id'] = $k;
-    }
 
     $GLOBALS['tree_array'] = &$tree_array;
 

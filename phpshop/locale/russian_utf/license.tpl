@@ -74,6 +74,4 @@
         Адрес сайта: <a href="https://www.phpshop.ru" target="_blank">www.phpshop.ru</a> <br>
         Учебник: <a href="http://faq.phpshop.ru" target="_blank">faq.phpshop.ru</a> <br>
         Телефон: +7 (495) 989-11-15<br>
-        Техподдержка: <a href="https://help.phpshop.ru" target="_blank">help.phpshop.ru</a><br><br>
-        <input type="checkbox" checked disabled> Я принимаю условия лицензионного соглашения.
     </p>

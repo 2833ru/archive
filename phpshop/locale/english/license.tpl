@@ -73,6 +73,4 @@
     Site address: <a href="http://www.phpshop.ru" target="_blank"> www.phpshop.ru </a> <br>
     Tutorial: <a href="http://faq.phpshop.ru" target="_blank"> faq.phpshop.ru </a> <br>
     Phone: +7 (495) 989-11-15<br>
-    Technical support: <a href="https://help.phpshop.ru" target="_blank"> help.phpshop.ru </a> <br><br> 
-    <Input type = "checkbox" checked disabled> I accept the terms of the license agreement.
 </P>

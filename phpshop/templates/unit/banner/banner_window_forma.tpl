@@ -8,19 +8,19 @@
                 <h3 class="modal-title">@banerTitle@</h3>
             </div>
             <div class="modal-body">
-    <a href="@banerLink@"> 
-	    <div class="banner-list">
-        @banerContent@
-	    <button class="otz" >@banerDescription@</button> 
-    </a>
-</div>
+                <a href="@banerLink@"> 
+                    <div class="banner-list">
+                        @banerContent@
+                        <button class="otz @php __hide('banerDescription'); php@">@banerDescription@</button> 
+                </a>
             </div>
         </div>
     </div>
 </div>
+</div>
 <script>
     $(document).ready(function () {
-        
+
         // PopUp
         $("#bannerModal").modal("show");
 
@@ -28,7 +28,7 @@
         $('.popup-close').on('click', function (e) {
             e.preventDefault();
             $('#bannerModal').addClass('hide');
-            $.cookie('popup'+$(this).attr('data-id')+'_close', 1, {
+            $.cookie('popup' + $(this).attr('data-id') + '_close', 1, {
                 path: '/',
                 expires: 24
             });

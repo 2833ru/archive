@@ -339,6 +339,11 @@ class PHPShopProductElements extends PHPShopElements {
         if ($price < $this->price_min)
             $this->price_min = $price;
 
+        // Бонусы
+        $bonus = $price * $this->PHPShopSystem->getSerilizeParam('admoption.bonus') / 100;
+        if (!empty($bonus))
+            $this->set('productBonus', $bonus);
+
         // Форматирование
         $price = number_format($price, $this->format, '.', ' ');
 
