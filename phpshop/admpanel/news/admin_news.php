@@ -72,19 +72,19 @@ function actionStart() {
     // Календарь
     $Calendar = $PHPShopIcon->setForm(
             $PHPShopIcon->setInputText(false, 'pole1', $pole1, $size = 70, $description = false, $float = "left") .
-            $PHPShopIcon->setImage("icon/date.gif", 16, 16, 'absmiddle', "5", $style = 'float:left', $onclick = "popUpCalendar(this, calendar.pole1, 'dd-mm-yyyy');") .
+            $PHPShopIcon->setImage("icon/date.gif", 16, 16, 'absmiddle', "5", $style = 'float:left', $onclick = "popUpCalendar(this, calendar.pole1, 'dd-mm-yyyy');",false,'icon') .
             $PHPShopIcon->setInputText(false, 'pole2', $pole2, $size = 70, $description = false, $float = "left") .
-            $PHPShopIcon->setImage("icon/date.gif", 16, 16, 'absmiddle', "5", $style = 'float:left', $onclick = "popUpCalendar(this, calendar.pole2, 'dd-mm-yyyy');") .
-            $PHPShopIcon->setInput("button", "date_but", "Показать", "right", 70, "DoReload('news',calendar.pole1.value, calendar.pole2.value,'core')")
+            $PHPShopIcon->setImage("icon/date.gif", 16, 16, 'absmiddle', "5", $style = 'float:left', $onclick = "popUpCalendar(this, calendar.pole2, 'dd-mm-yyyy');",false,'icon') .
+            $PHPShopIcon->setInput("button", "date_but", "Показать", "right", 70, "DoReload('news',calendar.pole1.value, calendar.pole2.value,'core')",'but small')
             , $action = false, $name = "calendar", 'get');
 
-    $Tab1.= $PHPShopIcon->add($Calendar, 270, 10, 5) .
+    $Tab1.= $PHPShopIcon->add($Calendar, 270, 0, 5) .
             $PHPShopIcon->setBorder();
 
     // Форма поиска
     $Search = $PHPShopIcon->setForm(
             $PHPShopIcon->setInputText(__('Поиск: '), 'words', $search_text, $size = 180, $description = false, $float = "left", false,  __('Поиск по id, дате или содержанию')) .
-            $PHPShopIcon->setInput("button", "search_but", "Искать", "right", 70, "DoReload('news','search',search.words.value, 'core');"), $action = false, $name = "search", 'get');
+            $PHPShopIcon->setInput("button", "search_but", "Искать", "right", 70, "DoReload('news','search',search.words.value, 'core');",'but small'), $action = false, $name = "search", 'get');
 
     $Tab1.= $PHPShopIcon->add($Search, 300, 5) .
             $PHPShopIcon->setBorder();

@@ -102,3 +102,97 @@ PHPSESSID=6052736764621dfa36e87a82e26e3f82
  
   Liqpay Payment End --------------------
   
+  PayPal Payment Start ------------------
+   
+  PayPal Payment End --------------------
+  
+  PayPal Payment Start ------------------
+   
+  PayPal Payment End --------------------
+  
+  PayPal Payment Start ------------------
+   
+  PayPal Payment End --------------------
+  
+  PayPal Payment Start ------------------
+   
+  PayPal Payment End --------------------
+  
+  PayPal Payment Start ------------------
+   
+  PayPal Payment End --------------------
+  
+  PayPal Payment Start ------------------
+   
+  PayPal Payment End --------------------
+  
+  PayPal Payment Start ------------------
+   
+  PayPal Payment End --------------------
+  
+  PayPal Payment Start ------------------
+   
+  PayPal Payment End --------------------
+  
+  PayPal Payment Start ------------------
+   
+  PayPal Payment End --------------------
+  
+  PayPal Payment Start ------------------
+   
+  PayPal Payment End --------------------
+  
+  PayPal Payment Start ------------------
+  date=October 15, 2013, 6:03 pm
+  out_summ=10500
+  inv_id=105-21
+  crc=1
+  my_crc=1
+  REQUEST_URI=/phpshop/modules/paypal/payment/ipn.php
+  IP=127.0.0.1
+  PayPal Payment End --------------------
+  
+  ROBOXchange Payment Start ------------------
+  date=December 2, 2013, 4:58 pm
+  out_summ=
+  inv_id=
+  crc=
+  my_crc=437DE7BCAAF45A239E6B5E878CDD035D
+  REQUEST_URI=
+  IP=
+  ROBOXchange Payment End --------------------
+  
+  ROBOXchange Payment Start ------------------
+  date=December 2, 2013, 5:01 pm
+  out_summ=
+  inv_id=
+  crc=
+  my_crc=437DE7BCAAF45A239E6B5E878CDD035D
+  REQUEST_URI=
+  IP=
+  ROBOXchange Payment End --------------------
+  
+  RBS Payment Start ------------------
+  date=December 5, 2013, 6:42 pm
+  
+  MY_LMI_HASH=43E249DAD0
+  REQUEST_URI=
+  IP=
+  RBS Payment End --------------------
+  
+  RBK Payment Start ------------------
+  date=December 6, 2013, 10:21 am
+  
+  MY_LMI_HASH=580f7023f60d98818ab152c22c13de8b
+  REQUEST_URI=/payment/rbkmoney/result.php
+  IP=127.0.0.1
+  RBK Payment End --------------------
+  
+  RBK Payment Start ------------------
+  date=December 6, 2013, 10:22 am
+  
+  MY_LMI_HASH=580f7023f60d98818ab152c22c13de8b
+  REQUEST_URI=/payment/rbkmoney/result.php
+  IP=127.0.0.1
+  RBK Payment End --------------------
+  

@@ -5,7 +5,7 @@
     <description>Модуль приема кредитных заявок.</description>
     <icon>icon.png</icon>
     <trial>true</trial>
-    <category>pay</category>
+    <category>sale</category>
     <adminmenu>
         <title>Yes Credit</title>
         <podmenu>

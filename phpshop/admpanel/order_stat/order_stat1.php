@@ -38,11 +38,16 @@ function CheckPayment($id) {
     return $num;
 }
 
-function Visitor($pole1, $pole2, $words, $list) {// вывод покупателей
+function Visitor($pole1, $pole2, $words, $liststr) {// вывод покупателей
     global $table_name1;
 
-     $sec=md5(date('y-m-d').$_SESSION['pasPHPSHOP']);
-    
+    $sec = md5(date('y-m-d') . $_SESSION['pasPHPSHOP']);
+
+    // Определение слов для поиска
+    $list_array = explode("|", $liststr);
+    $list = $list_array[0];
+    $search = $list_array[1];
+
     if (empty($pole1))
         $pole1 = date("U") - 86400;
     else
@@ -114,16 +119,39 @@ function Visitor($pole1, $pole2, $words, $list) {// вывод покупателей
             switch ($list) {
                 // товары
                 case 1:
-                    // первое поле это название каталога
-                    $catName = $massCatData[$massProdCats[$id]]['name'];
-                    //прибыль
-                    $table[$catName][1] += ($data['price'] * $data['num'] * 0.3);
-                    // кол-во
-                    $table[$catName][2] += $data['num'];
-                    // выручка
-                    $table[$catName][3] += ($data['price'] * $data['num']);
-                    $rowName = "Категория товаров";
-                    $grName = "Отчёт по категориям товаров";
+
+                    if (empty($search)) {
+
+                        // первое поле это название каталога
+                        $catName = $massCatData[$massProdCats[$id]]['name'];
+                        //прибыль
+                        $table[$catName][1] += ($data['price'] * $data['num'] * 0.3);
+                        // кол-во
+                        $table[$catName][2] += $data['num'];
+                        // выручка
+                        $table[$catName][3] += ($data['price'] * $data['num']);
+                        $rowName = "Категория товаров";
+                        $grName = "Отчёт по категориям товаров";
+                        
+                    } 
+                    // Поиск по имени или артикулу или ID
+                    elseif(stristr($data['name'],$search) or $search == $data['uid'] or $search == $data['id']){
+                        
+                        // первое поле это название каталога
+                        $catName = $data['name'];
+                        //прибыль
+                        $table[$catName][1] += ($data['price'] * $data['num'] * 0.3);
+                        // кол-во
+                        $table[$catName][2] += $data['num'];
+                        // выручка
+                        $table[$catName][3] += ($data['price'] * $data['num']);
+                        $rowName = "Наименование";
+                        $grName = "Отчёт по категориям товаров";
+                    }
+
+
+
+
                     break;
                 // Клиенты
                 case 2:
@@ -215,7 +243,7 @@ function Visitor($pole1, $pole2, $words, $list) {// вывод покупателей
     $csv = "$rowName;Выручка;Количество единиц товара;Прибыль\n$csvDisp Итого;$value3sum;$value2sum;$value1sum\n";
 
     // создаём файл
-    $file = "orders_stat1_".$sec.".csv";
+    $file = "orders_stat1_" . $sec . ".csv";
     @$fp = fopen("../csv/" . $file, "w+");
     if ($fp) {
         //stream_set_write_buffer($fp, 0);
@@ -275,11 +303,11 @@ function Visitor($pole1, $pole2, $words, $list) {// вывод покупателей
     $g->y_label_steps(10);
     $g->set_y_legend(cp1251_to_utf8('RUR / RUR / quantity'), 12, '0x736AFF');
     $graphContent = $g->render();
-    
-   
+
+
 
     // создаём файл
-    $file = "orders_stat1_graph_".$sec.".csv";
+    $file = "orders_stat1_graph_" . $sec . ".csv";
     @$fp = fopen("../csv/" . $file, "w+");
     if ($fp) {
         //stream_set_write_buffer($fp, 0);
@@ -294,15 +322,16 @@ function Visitor($pole1, $pole2, $words, $list) {// вывод покупателей
 
     if ($i > 30)
         $razmer = "height:600;";
-    
-    if(empty($_COOKIE['stat_graph']))
-        $stat_graph_style='display:none;';
-    else $stat_graph_style='display:block;';
-    
+
+    if (empty($_COOKIE['stat_graph']))
+        $stat_graph_style = 'display:none;';
+    else
+        $stat_graph_style = 'display:block;';
+
     $_Return = ('
         
-    <div id="graph"  style="'.$stat_graph_style.'width:100%; text-align:center;padding-left:5px;"> 
-        ' . open_flash_chart_object('100%', 350, './csv/orders_stat1_graph_'.$sec.'.csv', false, $baseURL) . ' 
+    <div id="graph"  style="' . $stat_graph_style . 'width:100%; text-align:center;padding-left:5px;"> 
+        ' . open_flash_chart_object('100%', 350, './csv/orders_stat1_graph_' . $sec . '.csv', false, $baseURL) . ' 
     </div>
 <div align="left" id="interfacesWin" name="interfacesWin"  style="width:100%;' . @$razmer . ';overflow:auto"> 
 
@@ -313,7 +342,7 @@ function Visitor($pole1, $pole2, $words, $list) {// вывод покупателей
 
 <table cellpadding="0" cellspacing="1" width="100%" border="0">
 <tr>
-	<td width="100" id="pane" align="center"><img  src="icon/blank.gif"  width="1" height="1" border="0" onLoad="starter(\'visiter\');" align="left"><img src=img/arrow_d.gif width=7 height=7 border=0 hspace=5><span name=txtLang id=txtLang>' . $rowName . '</span></td>
+	<td width="100" id="pane" align="center"><img  src="icon/blank.gif"  width="1" height="1" border="0"  align="left"><img src=img/arrow_d.gif width=7 height=7 border=0 hspace=5><span name=txtLang id=txtLang>' . $rowName . '</span></td>
 	<td id="pane" width="130" align="center"><img src=img/arrow_d.gif width=7 height=7 border=0 hspace=5><span name=txtLang id=txtLang>Выручка</span></td>
 	<td id="pane" width="130" align="center"><img src=img/arrow_d.gif width=7 height=7 border=0 hspace=5><span name=txtLang id=txtLang>Количество единиц товара</span></td>
 	<td id="pane" width="130" align="center"><img src=img/arrow_d.gif width=7 height=7 border=0 hspace=5><span name=txtLang id=txtLang>Прибыль</span></td>

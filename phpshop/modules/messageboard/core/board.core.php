@@ -1,5 +1,8 @@
 <?php
 
+if (!defined("OBJENABLED"))
+    exit(header('Location: /?error=OBJENABLED'));
+
 class PHPShopBoard extends PHPShopCore {
 
     /**
@@ -31,7 +34,7 @@ class PHPShopBoard extends PHPShopCore {
      * Настройка
      */
     function system() {
-        $PHPShopOrm= &new PHPShopOrm($GLOBALS['SysValue']['base']['messageboard']['messageboard_system']);
+        $PHPShopOrm= new PHPShopOrm($GLOBALS['SysValue']['base']['messageboard']['messageboard_system']);
         $this->system=$PHPShopOrm->select();
     }
 

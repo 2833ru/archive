@@ -4,7 +4,7 @@
     <name>Partner</name>
     <description>Модуль партнерской программы.</description>
     <icon>icon.png</icon>
-    <category>partner</category>
+    <category>develop</category>
     <adminmenu>
         <title>Партнеры</title>
         <podmenu>

@@ -71,7 +71,7 @@ if(CheckedRules($UserStatus["csv"],1) == 1) {
     switch($_GET['DO']) {
 
         case("catalog"):// Выгрузка категорий для 1С
-            $PHPShopOrm=&new PHPShopOrm($GLOBALS['SysValue']['base']['table_name']);
+            $PHPShopOrm=new PHPShopOrm($GLOBALS['SysValue']['base']['table_name']);
             $data=$PHPShopOrm->select(array('id','name','parent_to'),false,array('order'=>'id DESC'),array('limit'=>10000));
             if(is_array($data))
                 foreach($data as $row) {

@@ -60,7 +60,7 @@ function actionStart() {
     $Select2[] = array("Справа", 1, "");
 
     // Содержание закладки 1
-    $Tab1 = $PHPShopGUI->setField("Название:", $PHPShopGUI->setInput("text", "name_new", $name, "none", 300) . $PHPShopGUI->setRadio("flag_new", 1, "Показывать", "checked", "left") . $PHPShopGUI->setRadio("flag_new", 0, "Скрыть", ""), "left") .
+    $Tab1 = $PHPShopGUI->setField("Название:", $PHPShopGUI->setInput("text", "name_new", $name, "none", 300) . $PHPShopGUI->setRadio("flag_new", 1, "Показывать", 1, "left") . $PHPShopGUI->setRadio("flag_new", 0, "Скрыть", 1), "left").
             $PHPShopGUI->setField("Позиция:", $PHPShopGUI->setSelect("num_new", $Select1, 50, 1), "left", 5) .
             $PHPShopGUI->setField("Расположение:", $PHPShopGUI->setSelect("element_new", $Select2, 100, 1), "none", 5) .
             $PHPShopGUI->setLine() .

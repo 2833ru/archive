@@ -126,8 +126,8 @@ function actionUpdate() {
 
                 $_SESSION['mod_edit_mes']='Редактор <b>'.$_POST['template_load'].'</b> загружен за '.$seconds.' сек.';
 
-            } else 'Ошибка распаковки файла '.$_POST['template_load'].'.zip, нет прав записи в папку phpshop/admpanel/editors/';
-        } else 'Ошибка записи файла '.$_POST['template_load'].'.zip, нет прав записи в папку /UserFiles/Image/';
+            } else $_SESSION['mod_edit_mes']='Ошибка распаковки файла '.$_POST['template_load'].'.zip, нет прав записи в папку phpshop/admpanel/editors/';
+        } else $_SESSION['mod_edit_mes']='Ошибка записи файла '.$_POST['template_load'].'.zip, нет прав записи в папку /UserFiles/Image/';
     }
     else {
         $_SESSION['mod_edit_mes']='Ошибка чтения файла '.$_POST['template_load'].'.zip';

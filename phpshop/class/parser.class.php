@@ -14,7 +14,7 @@ class PHPShopParser {
      * @param string $value переменная шабонизатора
      * @return boolean 
      */
-    function check($path, $value) {
+    static function check($path, $value) {
         $string = null;
         $path = $GLOBALS['SysValue']['dir']['templates'] . chr(47) . $_SESSION['skin'] . chr(47) . $path;
         if (file_exists($path))
@@ -31,7 +31,7 @@ class PHPShopParser {
      * @param bool $return режим вывода информации или возврата информации
      * @return string
      */
-    function file($path, $return = false) {
+    static function file($path, $return = false) {
 
         $string = null;
         if (is_file($path))
@@ -60,18 +60,19 @@ class PHPShopParser {
      * @param mixed $value значение
      * @param bool $flag [1] - добавить, [0] - переписать
      */
-    function set($name, $value, $flag = false) {
+    static function set($name, $value, $flag = false) {
         if ($flag)
             $GLOBALS['SysValue']['other'][$name].=$value;
         else
             $GLOBALS['SysValue']['other'][$name] = $value;
     }
+
     /**
      * Выдача системной переменной
      * @param string $name
      * @return string
      */
-    function get($name) {
+    static function get($name) {
         return $GLOBALS['SysValue']['other'][$name];
     }
 

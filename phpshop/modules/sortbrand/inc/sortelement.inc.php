@@ -1,5 +1,8 @@
 <?php
 
+if (!defined("OBJENABLED"))
+    exit(header('Location: /?error=OBJENABLED'));
+
 /**
  * Элемент побора по параметрам
  */
@@ -46,7 +49,10 @@ class AddToTemplateSortElement extends PHPShopElements {
                 }
 
             array_pop($value);
-            $size = (strlen($title) + 10) * 7;
+            
+            // Сортировка по имени
+            sort($value);
+            $size = (strlen($this->option['title']) + 10) * 7;
             $values = PHPShopText::select('v[' . $this->option['sort'] . ']', $value, $size, false, false, false, false, false, false);
 
             // Список

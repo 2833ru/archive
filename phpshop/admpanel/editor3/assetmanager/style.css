@@ -10,4 +10,21 @@ select {font:8pt tahoma,arial,sans-serif}
 .inpBtn {font:8pt tahoma,arial,sans-serif;}
 .inpBtnOver {}
 .inpBtnOut {}
-
+input[type=file]{
+    border: solid 1px #CCC;
+    background: #FFF;
+    -webkit-border-radius:5px;
+    -moz-border-radius:5px;
+    border-radius:5px;
+    width: 400px;
+}
+input,textarea,select{
+    border: solid 1px #CCC;
+    -webkit-border-radius:5px;
+    -moz-border-radius:5px;
+    border-radius:5px;
+    padding:2px;
+}
+input[type=button]{
+    cursor:pointer;
+}

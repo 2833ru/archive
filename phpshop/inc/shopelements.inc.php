@@ -263,11 +263,12 @@ class PHPShopProductIconElements extends PHPShopProductElements {
             $hook = $this->setHook(__CLASS__, __FUNCTION__, $Arg);
             if ($hook) {
                 return $hook;
-            } else
+            }
+            else
                 $this->memory_set(__CLASS__ . '.' . __FUNCTION__, 0);
         }
 
-        return parent::setCell($d1, $d2, $d3, $d4, $d5, $d5, $d6, $d7);
+        return parent::setCell($d1, $d2, $d3, $d4, $d5, $d6, $d7);
     }
 
     /**
@@ -433,16 +434,16 @@ class PHPShopProductIndexElements extends PHPShopProductElements {
 
         // Мультибаза
         if ($this->PHPShopSystem->ifSerilizeParam('admoption.base_enabled')) {
-            
+
             $where['servers'] = " REGEXP 'i" . $this->PHPShopSystem->getSerilizeParam('admoption.base_id') . "i'";
             $where['parent_to'] = " > 0";
             $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['categories']);
             $PHPShopOrm->debug = $this->debug;
             $PHPShopOrm->cache = true;
-            $data = $PHPShopOrm->select(array('id'), $where, false, array('limit' => 1),__CLASS__,__FUNCTION__);
+            $data = $PHPShopOrm->select(array('id'), $where, false, array('limit' => 1), __CLASS__, __FUNCTION__);
             if (is_array($data)) {
                 foreach ($data as $row) {
-                    $multi_cat='=' . $row['id'];
+                    $multi_cat = '=' . $row['id'];
                 }
             }
 
@@ -483,9 +484,9 @@ class PHPShopProductIndexElements extends PHPShopProductElements {
             // Параметры выборки учета товара в спецпредложении и наличия
             $where['spec'] = "='1'";
             $where['enabled'] = "='1'";
-            
+
             $randMultibase = $this->randMultibase();
-            if(!empty($randMultibase))
+            if (!empty($randMultibase))
                 $where['category'] = $randMultibase;
 
 
@@ -523,11 +524,12 @@ class PHPShopProductIndexElements extends PHPShopProductElements {
             $hook = $this->setHook(__CLASS__, __FUNCTION__, $Arg);
             if ($hook) {
                 return $hook;
-            } else
+            }
+            else
                 $this->memory_set(__CLASS__ . '.' . __FUNCTION__, 0);
         }
 
-        return parent::setCell($d1, $d2, $d3, $d4, $d5, $d5, $d6, $d7);
+        return parent::setCell($d1, $d2, $d3, $d4, $d5, $d6, $d7);
     }
 
     /**
@@ -578,6 +580,12 @@ class PHPShopShopCatalogElement extends PHPShopProductElements {
     var $grid = true;
 
     /**
+     * Лимит символов в описании каталога для расчета иконки каталога в элементе leftCatalTable
+     * @var int
+     */
+    var $cat_description_limit = 200;
+
+    /**
      * Конструктор
      */
     function PHPShopShopCatalogElement() {
@@ -600,7 +608,6 @@ class PHPShopShopCatalogElement extends PHPShopProductElements {
         return PHPShopText::a('/shop/CID_' . $val['id'] . '.html', $val['name'], $val['name']) . ' | ';
     }
 
-    
     /**
      * Форма ячеек для leftCatalTable
      * @return string
@@ -613,13 +620,14 @@ class PHPShopShopCatalogElement extends PHPShopProductElements {
             $hook = $this->setHook(__CLASS__, __FUNCTION__, $Arg);
             if ($hook) {
                 return $hook;
-            } else
+            }
+            else
                 $this->memory_set(__CLASS__ . '.' . __FUNCTION__, 0);
         }
 
         return parent::setCell($d1, $d2, $d3, $d4, $d5, $d5);
     }
-    
+
     /**
      * Таблица категорий с иконками
      * @return string
@@ -628,6 +636,8 @@ class PHPShopShopCatalogElement extends PHPShopProductElements {
 
         // Выполнение только в Index
         if ($this->PHPShopNav->index()) {
+
+
 
             $dis = null;
             $podcatalog = null;
@@ -653,7 +663,7 @@ class PHPShopShopCatalogElement extends PHPShopProductElements {
                     $this->set('catalogName', $row['name']);
 
                     // Проверка на наличие иконки в описании категории
-                    if (stristr($row['content'], 'img') and strlen($row['content']) < 150)
+                    if (stristr($row['content'], 'img') and strlen($row['content']) < $this->cat_description_limit)
                         $this->set('catalogContent', $row['content']);
                     else
                         $this->set('catalogContent', null);
@@ -737,7 +747,7 @@ class PHPShopShopCatalogElement extends PHPShopProductElements {
                 $this->set('catalogId', $row['id']);
                 $this->set('catalogI', $i);
                 $this->set('catalogTemplates', $this->getValue('dir.templates') . chr(47) . $this->PHPShopSystem->getValue('skin') . chr(47));
-                $this->set('catalogPodcatalog', $this->subcatalog($row['id']));
+                $this->set('catalogPodcatalog', $this->subcatalog($row));
                 $this->set('catalogTitle', $row['title']);
                 $this->set('catalogName', $row['name']);
 
@@ -773,7 +783,10 @@ class PHPShopShopCatalogElement extends PHPShopProductElements {
      * @param int $n ИД каталога
      * @return string
      */
-    function subcatalog($n) {
+    function subcatalog($parent_data) {
+
+        // ID родителя
+        $n = $parent_data['id'];
 
         $dis = null;
 
@@ -792,7 +805,28 @@ class PHPShopShopCatalogElement extends PHPShopProductElements {
             $where['servers'] = " REGEXP 'i" . $this->PHPShopSystem->getSerilizeParam('admoption.base_id') . "i'";
         }
 
-        $data = $PHPShopOrm->select(array('*'), $where, array('order' => 'num'), array('limit' => 100), __CLASS__, __FUNCTION__);
+
+        // Сортировка каталога
+        switch ($parent_data['order_to']) {
+            case(1): $order_direction = "";
+                break;
+            case(2): $order_direction = " desc";
+                break;
+            default: $order_direction = "";
+                break;
+        }
+        switch ($parent_data['order_by']) {
+            case(1): $order = array('order' => 'name' . $order_direction);
+                break;
+            case(2): $order = array('order' => 'name' . $order_direction);
+                break;
+            case(3): $order = array('order' => 'num' . $order_direction);
+                break;
+            default: $order = array('order' => 'num' . $order_direction);
+                break;
+        }
+
+        $data = $PHPShopOrm->select(array('*'), $where, $order, array('limit' => 100), __CLASS__, __FUNCTION__);
 
 
         if (is_array($data))
@@ -892,8 +926,12 @@ class PHPShopCartElement extends PHPShopElements {
             $numcompare = 0;
 
             // Если есть товары в корзине
-            if ($this->PHPShopCart->getNum() > 0)
-                $this->set('orderEnabled', 'block');
+            if ($this->PHPShopCart->getNum() > 0){
+                $this->set('orderEnabled', 'inline');
+                
+                // Отключение выдачи даты изменения при активной корзине для защита от кэша
+                $this->setValue("cache.last_modified",false);
+            }
             else
                 $this->set('orderEnabled', 'none');
 
@@ -904,9 +942,9 @@ class PHPShopCartElement extends PHPShopElements {
                         $numcompare = count($compare);
                     }
                 }
-                $this->set('compareEnabled', 'block');
+                $this->set('compareEnabled', 'inline');
             } else {
-                $numcompare = "--";
+                $numcompare = "0";
                 $this->set('compareEnabled', 'none');
             }
 
@@ -946,7 +984,9 @@ class PHPShopCurrencyElement extends PHPShopElements {
      * Конструктор
      */
     function PHPShopCurrencyElement() {
+        global $PHPShopValutaArray;
         parent::PHPShopElements();
+        $this->PHPShopValuta = $PHPShopValutaArray->getArray();
         $this->setAction(array('post' => 'valuta'));
     }
 
@@ -954,8 +994,11 @@ class PHPShopCurrencyElement extends PHPShopElements {
      * Перенаправление формы смены валюты
      */
     function valuta() {
-        $_SESSION['valuta'] = intval($_POST['valuta']);
-        header("Location: " . $_SERVER['REQUEST_URI']);
+        $currency = intval($_POST['valuta']);
+        if (!empty($this->PHPShopValuta[$currency])) {
+            $_SESSION['valuta'] = $currency;
+            header("Location: " . $_SERVER['REQUEST_URI']);
+        }
     }
 
     /**
@@ -963,7 +1006,6 @@ class PHPShopCurrencyElement extends PHPShopElements {
      * @return string
      */
     function valutaDisp() {
-        global $PHPShopValutaArray;
 
         if ($this->PHPShopNav->notPath('order')) {
 
@@ -972,10 +1014,8 @@ class PHPShopCurrencyElement extends PHPShopElements {
             else
                 $valuta = $this->PHPShopSystem->getParam('dengi');
 
-            $PHPShopValuta = $PHPShopValutaArray->getArray();
-
-            if (is_array($PHPShopValuta))
-                foreach ($PHPShopValuta as $v) {
+            if (is_array($this->PHPShopValuta))
+                foreach ($this->PHPShopValuta as $v) {
                     if ($valuta == $v['id'])
                         $sel = "selected";
                     else
@@ -989,7 +1029,7 @@ class PHPShopCurrencyElement extends PHPShopElements {
             $this->set('leftMenuContent', PHPShopText::form($select, 'ValutaForm'));
 
             // Перехват модуля
-            $this->setHook(__CLASS__, __FUNCTION__, $PHPShopValuta);
+            $this->setHook(__CLASS__, __FUNCTION__, $this->PHPShopValuta);
 
             // Подключаем шаблон
             $dis = $this->parseTemplate($this->getValue('templates.valuta_forma'));

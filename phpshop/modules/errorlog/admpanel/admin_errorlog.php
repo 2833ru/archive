@@ -32,10 +32,13 @@ function actionStart() {
         }
 
     $link = "../modules/errorlog/admpanel/export.php?sortdate_start=".$_GET['sortdate_start']."&sortdate_end=".$_GET['sortdate_end'];
+    $clean='../modules/errorlog/admpanel/export.php?do=clean';
 
     $notice='<b>Замечание</b> - совет для разработчика, необходим для отладки ошибок';
-    if(count($data)>5)$PHPShopInterface->_CODE_ADD_BUTTON=$PHPShopInterface->setDiv('left',$notice,'padding:10px;float:left').
-            $PHPShopInterface->setInput("button","","Выгрузить в CSV","right",150,"return  window.open('".$link."','_blank');","but");
+    if(count($data)>5){
+        $PHPShopInterface->_CODE_ADD_BUTTON=$PHPShopInterface->setDiv('left',$notice,'padding:10px;float:left').
+            $PHPShopInterface->setInput("button","",__("Выгрузить в CSV"),"right",150,"return  window.open('".$link."','_blank');","but").$PHPShopInterface->setInput("button","clean",__("Очистить"),"right",150,"window.open('".$clean."','_blank');window.location.reload();","but");
+    }
     $PHPShopInterface->Compile();
 }
 ?>

@@ -25,8 +25,8 @@ function loadText()
     optLang[2].text = "\u0418\u0437\u043E\u0431\u0440";
     optLang[3].text = "Flash";
 
-    document.getElementById("btnOk").value = " OK ";
-    document.getElementById("btnUpload").value = "\u0437\u0430\u0433\u0440\u0443\u0437\u0438\u0442\u044C";
+    document.getElementById("btnOk").value = " Применить ";
+    document.getElementById("btnUpload").value = " Загрузить ";
 	}
 function writeTitle()
     {

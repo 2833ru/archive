@@ -73,14 +73,14 @@ function actionStart() {
     $num_row_area.=$PHPShopGUI->setRadio('num_row_new', 2, 2, $data['num_row']);
     $num_row_area.=$PHPShopGUI->setRadio('num_row_new', 3, 3, $data['num_row']);
     $num_row_area.=$PHPShopGUI->setRadio('num_row_new', 4, 4, $data['num_row']);
-    $Tab1.=$PHPShopGUI->setField(__("Товаров в длину:"), $num_row_area, 'left');
+    $Tab1.=$PHPShopGUI->setField(__("Товаров в длину:"), $num_row_area);
 
     // Вывод
     $Tab1.=$PHPShopGUI->setField(__("Опции вывода:"), $PHPShopGUI->setCheckbox('vid_new', 1, __('Выводить подкаталоги списком в основном окне'), $data['vid']) .
-            $PHPShopGUI->setCheckbox('skin_enabled_new', 1, __('Скрыть каталог'), $data['skin_enabled']));
+            $PHPShopGUI->setCheckbox('skin_enabled_new', 1, __('Скрыть каталог'), $data['skin_enabled']),'none',0,0,array('height'=>'30px;'));
 
     // Товаров на странице
-    $Tab1.=$PHPShopGUI->setLine() . $PHPShopGUI->setField(__("Товаров на странице:"), $PHPShopGUI->setInputText(false, 'num_cow_new', $data['num_cow'], '50px', __('шт.')), 'left');
+    $Tab1.=$PHPShopGUI->setLine() . $PHPShopGUI->setField(__("Товаров на странице:"), $PHPShopGUI->setInputText(false, 'num_cow_new', $data['num_cow'], '50px', __('шт.')), 'left',0,0,array('width'=>'20%;'));
 
     // Тип сортировки
     $order_by_value[] = array('по имени', 1, $data['order_by']);
@@ -89,7 +89,7 @@ function actionStart() {
     $order_to_value[] = array('возрастанию', 1, $data['order_to']);
     $order_to_value[] = array('убыванию', 2, $data['order_to']);
     $Tab1.=$PHPShopGUI->setField(__("Сортировка:"), $PHPShopGUI->setInputText('№', "num_new", $data['num'], '50px', false, 'left') .
-            $PHPShopGUI->setSelect('order_by_new', $order_by_value, 120) . $PHPShopGUI->setSelect('order_to_new', $order_to_value, 120), 'left');
+            $PHPShopGUI->setSelect('order_by_new', $order_by_value, 120) . $PHPShopGUI->setSelect('order_to_new', $order_to_value, 120), 'right',0,0,array('width'=>'75%;'));
 
     $PHPShopGUI->setEditor($PHPShopSystem->getSerilizeParam("admoption.editor"));
     $oFCKeditor = new Editor('content_new');

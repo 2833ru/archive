@@ -95,7 +95,7 @@ function SearchJurnal($pole1, $pole2) {// Вывод журнала
 	<td valign=\"top\">
 <table cellpadding=\"0\" cellspacing=\"1\" width=\"100%\" border=\"0\" class=\"sortable\" id=\"sort\">
 <tr>
-    <td width=\"5%\" id=pane align=center><img  src=\"icon/blank.gif\"  width=\"1\" height=\"1\" border=\"0\" onLoad=\"starter('search_jurnal');\" align=left>&plusmn;</td>
+    <td width=\"5%\" id=pane align=center><img  src=\"icon/blank.gif\"  width=\"1\" height=\"1\" border=\"0\" align=left>&plusmn;</td>
 	<td width=\"20%\" id=pane align=center><span name=txtLang id=txtLang>Запрос</span></td>
     <td width=\"15%\" id=pane align=center><span name=txtLang id=txtLang>Дата</span></td>
 	<td width=\"10%\" id=pane align=center><span name=txtLang id=txtLang>Найдено</span></td>

@@ -16,8 +16,9 @@ class PHPShopProduct extends PHPShopObj {
     /**
      * Конструктор
      * @param Int $objID ИД товара
+     * @param string $var параметр поиска товара [id|uid]
      */
-    function PHPShopProduct($objID) {
+    function PHPShopProduct($objID, $var = 'id') {
         $this->objID = $objID;
         $this->objBase = $GLOBALS['SysValue']['base']['table_name2'];
         $this->cache = true;
@@ -25,12 +26,17 @@ class PHPShopProduct extends PHPShopObj {
         $this->cache_format = array('content');
 
         // Учет подтипов для выборки по артикулу
-        if (PHPShopProductFunction::true_parent($objID))
-            $var = 'uid';
-        else {
-            $objID = PHPShopSecurity::TotalClean($objID, 1);
-            $var = 'id';
+        if (empty($var)) {
+            if (PHPShopProductFunction::true_parent($objID))
+                $var = 'uid';
+            else {
+                $objID = PHPShopSecurity::TotalClean($objID, 1);
+                $var = 'id';
+            }
         }
+        // Настраиваемая опция поиска товара
+        else
+            $this->objID=PHPShopSecurity::true_search($objID);
 
         parent::PHPShopObj($var);
     }
@@ -98,7 +104,7 @@ class PHPShopProductArray extends PHPShopArray {
  */
 class PHPShopProductFunction {
 
-    function getLink() {
+    static function getLink() {
         $Arg = func_get_args();
         $link = '/shop/UID_' . $Arg[0] . '.html';
         return $link;
@@ -109,7 +115,7 @@ class PHPShopProductFunction {
      * @param string $str арткул товара
      * @return bool
      */
-    function true_parent($str) {
+    static function true_parent($str) {
         if (strstr($str, '-'))
             return preg_match("/^[a-zA-Z0-9]{8}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{12}$/", $str);
         else
@@ -125,7 +131,7 @@ class PHPShopProductFunction {
      * @param bool $check_user_price учитыватьперсональную колонку цен пользователя [true/false]
      * @return format
      */
-    function GetPriceValuta($id, $price_array, $baseinputvaluta = false, $order = false, $check_user_price = true) {
+    static function GetPriceValuta($id, $price_array, $baseinputvaluta = false, $order = false, $check_user_price = true) {
         global $PHPShopValutaArray, $PHPShopSystem;
 
         if (!is_array($price_array))
@@ -139,7 +145,8 @@ class PHPShopProductFunction {
 
         // Форматирование цены
         $format = $PHPShopSystem->getSerilizeParam("admoption.price_znak");
-        if(empty( $format))  $format=0;
+        if (empty($format))
+            $format = 0;
 
         if (!empty($_SESSION['UsersStatus']) and !empty($check_user_price)) {
 
@@ -186,6 +193,7 @@ class PHPShopProductFunction {
             $valuta = $LoadItems['System']['dengi'];
 
         // Правка на курс
+        if(!empty($valuta))
         $price = $price * $LoadItems['Valuta'][$valuta]['kurs'];
 
         // Наценка

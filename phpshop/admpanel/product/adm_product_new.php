@@ -82,7 +82,7 @@ function actionStart() {
     // Вес
     $Tab1.=$PHPShopGUI->setField('Вес:', $PHPShopGUI->setInputText(false, 'weight_new', $data['weight'], 50, 'гр.'), 'left');
 
-    $Tab1.=$PHPShopGUI->setField('Единица измерения:', $PHPShopGUI->setInputText(false, 'ed_izm_new', $data['ed_izm'], 70), 'left');
+    $Tab1.=$PHPShopGUI->setField('Единица измерения:', $PHPShopGUI->setInputText(false, 'ed_izm_new', $data['ed_izm'], 70), 'left',0,0,array('width'=>'140px'));
 
     // Рекомендуемые товары
     $Tab1.=$PHPShopGUI->setLine() . $PHPShopGUI->setField('Рекомендуемые товары для совместной продажи:', $PHPShopGUI->setTextarea('odnotip_new', $data['odnotip'], false, '300px') .
@@ -91,10 +91,10 @@ function actionStart() {
                     __('Введите ID товаров в формате 1,2,3 без пробелов'), 'left');
 
     // Дополнительные каталоги
-    $Tab1.=$PHPShopGUI->setField('Дополнительные каталоги:', $PHPShopGUI->setTextarea('dop_cat_new', $data['dop_cat'], false, '300px') .
+    $Tab1.=$PHPShopGUI->setField('Дополнительные каталоги:', $PHPShopGUI->setTextarea('dop_cat_new', $data['dop_cat'], false, '320px') .
             $PHPShopGUI->setLine() .
             $PHPShopGUI->setImage('../icon/icon_info.gif', 16, 16) .
-            __('Введите ID каталогов в формате #1#2#3# без пробелов'), 'left');
+            __('Введите ID каталогов в формате #1#2#3# без пробелов'), 'left',0,0,array('width'=>'335px'));
 
     $Tab1.=$PHPShopGUI->setLine();
 
@@ -105,7 +105,7 @@ function actionStart() {
                     $PHPShopGUI->setLine() .
                     $PHPShopGUI->setCheckbox('newtip_new', 1, 'Новинка', $data['newtip']) .
                     $PHPShopGUI->setLine() .
-                    $PHPShopGUI->setInputText('№', 'num_new', $data['num'], 50, 'по порядку'), 'left');
+                    $PHPShopGUI->setInputText('№', 'num_new', $data['num'], 50, 'по порядку'), 'left',false,false,array('height'=>'100px;'));
 
     // Валюты
     $PHPShopValutaArray = new PHPShopValutaArray();
@@ -128,20 +128,20 @@ function actionStart() {
             $PHPShopGUI->setLine() .
             $PHPShopGUI->setInputText('Цена 2', 'price2_new', $data['price2'], 50, $valuta_def_name) .
             $PHPShopGUI->setLine() .
-            $PHPShopGUI->setInputText('Цена 3', 'price3_new', $data['price3'], 50, $valuta_def_name), 'left');
+            $PHPShopGUI->setInputText('Цена 3', 'price3_new', $data['price3'], 50, $valuta_def_name), 'left',false,false,array('height'=>'100px;'));
 
     // Валюта
-    $Tab1_1.=$PHPShopGUI->setField(__('Валюта:'), $valuta_area, 'left');
+    $Tab1_1.=$PHPShopGUI->setField(__('Валюта:'), $valuta_area, 'left',false,false,array('height'=>'100px;'));
 
     // Цены дополнительные
     $Tab1_2.=$PHPShopGUI->setField('Цены:', $PHPShopGUI->setInputText('Цена 4', 'price4_new', $data['price4'], 50, $valuta_def_name) .
             $PHPShopGUI->setLine() .
             $PHPShopGUI->setInputText('Цена 5', 'price5_new', $data['price5'], 50, $valuta_def_name) .
             $PHPShopGUI->setLine() .
-            $PHPShopGUI->setCheckbox('sklad_new', 1, 'Под заказ', $data['sklad']), 'left');
+            $PHPShopGUI->setCheckbox('sklad_new', 1, 'Под заказ', $data['sklad']), 'left',false,false,array('height'=>'100px;'));
 
     // Распродажа
-    $Tab1_2.=$PHPShopGUI->setField(__('Распродажа:'), $PHPShopGUI->setInputText(__('Старая цена'), 'price_n_new', $data['price_n'], 50, $valuta_def_name), 'left');
+    $Tab1_2.=$PHPShopGUI->setField(__('Распродажа:'), $PHPShopGUI->setInputText(__('Старая цена'), 'price_n_new', $data['price_n'], 50, $valuta_def_name), 'left',false,false,array('height'=>'100px;'));
 
     // Иконка
     if (!empty($data['pic_small'])) {
@@ -167,7 +167,7 @@ function actionStart() {
     $Tab1_4.=$PHPShopGUI->setTextarea('parent_new', $data['parent'], "none", '99%', '50px') .
             $PHPShopGUI->setLine() .
             $PHPShopGUI->setImage('../icon/icon_info.gif', 16, 16) .
-            __('Введите ID товаров через запятую без пробела (100,101). ');
+            __('Введите ID товаров-подтипов через запятую без пробела (100,101). ');
 
     // Вывод
     $PHPShopInterface = new PHPShopInterface('_pretab2_');
@@ -236,16 +236,17 @@ function actionStart() {
     return true;
 }
 
+
 /**
- * Послдений ID в таблице
+ * Последний ID в таблице
  * @return integer 
  */
 function getLastID() {
     $PHPShopOrm = new PHPShopOrm();
-    $PHPShopOrm->sql = 'SELECT MAX(id) AS maxid from ' . $GLOBALS['SysValue']['base']['products'];
+    $PHPShopOrm->sql = 'SHOW TABLE STATUS LIKE "' . $GLOBALS['SysValue']['base']['products'] . '"';
     $data = $PHPShopOrm->select();
     if (is_array($data)) {
-        return $data[0]['maxid'] + 1;
+        return $data[0]['Auto_increment'];
     }
 }
 

@@ -4,13 +4,7 @@ require("../connect.php");
 mysql_select_db("$dbase")or @die("Невозможно подсоединиться к базе");
 require("../enter_to_admin.php");
 include("admin_catalog.php");
-
-$GetSystems=GetSystems();
-$option=unserialize($GetSystems['admoption']);
-
-// Подключение языков
-$Lang=$option['lang'];
-require("../language/".$Lang."/language.php");
+require("../language/russian/language.php");
 ?>
 <html>
 <head>

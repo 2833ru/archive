@@ -7,7 +7,7 @@ $TitlePage = __("Каталог страниц");
 $addJS = true;
 
 function actionStart() {
-    $PHPShopIframePanel = new PHPShopIframePanel(array('page/tree.php', 300, 500, 'frame1'), array('page/admin_page_content.php', '100%', 570, 'frame2'));
+    $PHPShopIframePanel = new PHPShopIframePanel(array('page/tree.php', 300, '80%', 'frame1'), array('page/admin_page_content.php', '100%', '90%', 'frame2'));
     $PHPShopIframePanel->title = __('Каталоги');
 
     $PHPShopIcon = new PHPShopIcon($start = 100);
@@ -17,9 +17,9 @@ function actionStart() {
     // Форма поиска
     $Search = $PHPShopIcon->setForm(
             $PHPShopIcon->setInputText(__('Поиск: '), 'words', '', $size = 180, false, "left",false, __('Поиск по заголовку или ссылке')) .
-            $PHPShopIcon->setInput("button", "search_but", "Искать", "right", 70,'PHPShopJS.page.search(search.words.value)'), $action = false, $name = "search", 'get');
+            $PHPShopIcon->setInput("button", "search_but", "Искать", "right", 70,'PHPShopJS.page.search(search.words.value)','but small'), $action = false, $name = "search", 'get');
 
-    $Tab1 = $PHPShopIcon->add($Search,300,'10px');
+    $Tab1 = $PHPShopIcon->add($Search,300);
     
     $Tab1.= $PHPShopIcon->setBorder() .
             $PHPShopIcon->setIcon("icon/folder_add.gif", __('Новый каталог'), "PHPShopJS.page.addcat()") .

@@ -32,7 +32,7 @@ function Page_comment($id){
     $num_ot=0;
     $q=0;
     while($q<$p) {
-        $sql="select * from ".$SysValue['base']['table_name36']." where parent_id=$id and enabled='1'  order by id desc LIMIT $num_ot, $num_row";
+        $sql="select * from ".$SysValue['base']['table_name36']." where parent_id=".intval($id)." and enabled='1'  order by id desc LIMIT $num_ot, $num_row";
         $q++;
         $num_ot=$num_ot+$num_row;
     }
@@ -54,7 +54,7 @@ function Nav_comment($id){
 
     // Ко-во позиций на странице
     $num_row=10;
-    $sql="select id from ".$SysValue['base']['table_name36']." where parent_id=$id";
+    $sql="select id from ".$SysValue['base']['table_name36']." where parent_id=".intval($id);
     @$result=mysql_query($sql);
     $num_page=mysql_numrows(@$result);
     $i=1;

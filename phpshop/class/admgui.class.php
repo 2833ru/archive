@@ -1,12 +1,12 @@
 <?php
 
-if(empty($_SESSION['theme']))
-$_SESSION['theme'] = 'classic';
+if (empty($_SESSION['theme']))
+    $_SESSION['theme'] = 'classic';
 
 /**
  * Библиотека оконных административных интерфейсов
  * @author PHPShop Software
- * @version 1.6
+ * @version 1.8
  * @package PHPShopGUI
  */
 class PHPShopGUI {
@@ -78,6 +78,7 @@ class PHPShopGUI {
      */
     var $tab_pre = '_';
     var $windowID = false;
+    var $form_enabled = true;
 
     /**
      * Конструктор
@@ -121,7 +122,6 @@ class PHPShopGUI {
             require_once($class_path);
             return $file($data, $option);
         }
-
         else
             echo "Нет файла " . $class_path;
     }
@@ -135,8 +135,8 @@ class PHPShopGUI {
      * @param string $target параметр target
      * @return string
      */
-    function setForm($value, $action = false, $name = "product_edit", $style=false, $target=false) {
-        $CODE.='<form method="post" target="'.$target.'" enctype="multipart/form-data" action="' . $action . '" name="' . $name . '" id="' . $name . '" style="'.$style.'">
+    function setForm($value, $action = false, $name = "product_edit", $style = false, $target = false) {
+        $CODE.='<form method="post" target="' . $target . '" enctype="multipart/form-data" action="' . $action . '" name="' . $name . '" id="' . $name . '" style="' . $style . '">
             ' . $value . '</form>';
         return $CODE;
     }
@@ -144,7 +144,7 @@ class PHPShopGUI {
     /**
      * Компиляция результата
      */
-    function Compile() {
+    function Compile($id = false, $form = false, $style = false) {
         global $_classPath;
 
         //  Авто загрузка JS Ajax
@@ -167,10 +167,15 @@ class PHPShopGUI {
         $this->_HEAD.='</head>';
 
         echo $this->_HEAD . '
-	 ' . $this->_BODY . '
-	 <form method="post" enctype="multipart/form-data" action="' . $_SERVER['PHP_SELF'] . '" name="product_edit" id="product_edit" onsubmit="' . $this->onsubmit . '">
+	 ' . $this->_BODY;
+        if ($this->form_enabled) {
+            echo'
+	 <form method="post" enctype="multipart/form-data" action="' . $_SERVER['PHP_SELF'] . '"  name="product_edit" id="product_edit" onsubmit="' . $this->onsubmit . '">
 	 ' . $this->_CODE . '
-	 </form>
+	 </form>';
+        }
+        else
+            echo $this->_CODE . '
 	 </body>
 	 </html>';
     }
@@ -204,9 +209,9 @@ class PHPShopGUI {
      * @param string $value текст
      * @return string
      */
-    function setLine($value = false,$padding_top=false) {
+    function setLine($value = false, $padding_top = false) {
         $CODE = '
-	 <div style="clear:both;padding-top:'.$this->chekSize($padding_top).'">' . $value . '</div>';
+	 <div style="clear:both;padding-top:' . $this->chekSize($padding_top) . '">' . $value . '</div>';
         return $CODE;
     }
 
@@ -217,11 +222,21 @@ class PHPShopGUI {
      * @param string $float параметр float стиля
      * @param int $margin_left отступ слева
      * @param int $padding_top отступ свеоху
+     * @param array $option дополнительные настройки стилей
      * @return string
      */
-    function setField($title, $content, $float = "none", $margin_left = 0, $padding_top = false) {
+    function setField($title, $content, $float = "none", $margin_left = 0, $padding_top = '0px', $option = false) {
+        
+        // Дополнительные опции
+        $dop_option=null;
+        if(is_array($option))
+            foreach($option as $k=>$v)
+                $dop_option.=';'.$k.':'.$v;
+        
+        
+        
         $CODE = '
-	 <FIELDSET style="float:' . $float . ';padding:' . $this->padding . 'px;margin-left:' . $margin_left . 'px;padding-top:' . $padding_top . '">
+	 <FIELDSET style="float:' . $float . ';padding:' . $this->padding . 'px;margin-left:' . $margin_left . 'px;padding-top:' . $padding_top .$dop_option.'">
 	 <LEGEND>' . $title . '</LEGEND>
 	 ' . $content . '
 	 </FIELDSET>';
@@ -304,7 +319,7 @@ class PHPShopGUI {
      * @param string $title описание
      * @param string $icon иконка
      */
-    function setHeader($name, $title, $icon) {
+    function setHeader($name=false, $title=false, $icon=false) {
         $this->_CODE.='
 	 <table cellpadding="0" cellspacing="0" width="100%" height="50" id="title">
      <tr bgcolor="#ffffff">
@@ -438,12 +453,13 @@ class PHPShopGUI {
      * @param string $code содержание
      */
     function setFooter($code) {
-        $this->_CODE.=$this->setDiv("right", $code, false, 'footer');
-
+       
         // Слушатель
         if (is_array($this->action))
             foreach ($this->action as $name => $function)
-                $this->_CODE.=$this->setInput("hidden", "actionList[$name]", $function);
+                $code.=$this->setInput("hidden", "actionList[$name]", $function);
+        
+        $this->_CODE.=$this->setDiv("right", $code, false, 'footer');
     }
 
     /**
@@ -483,7 +499,7 @@ class PHPShopGUI {
      * @return string
      */
     function setInfo($value, $height = false, $width = '100%', $align = "left") {
-        return $this->setDiv($align, $value, 'width:' . $this->chekSize($width) . ';height:' . $this->chekSize($height) . ';background-color:white;padding:10px;border:1px;border-style: inset;overflow:auto;');
+        return $this->setDiv($align, $value, 'width:' . $this->chekSize($width) . ';height:' . $this->chekSize($height) . ';overflow:auto;',__FUNCTION__);
     }
 
     /**
@@ -557,7 +573,8 @@ class PHPShopGUI {
         $i = 1;
         while ($i <= 10) {
             if ($n == $i)
-                $s = "selected"; else
+                $s = "selected";
+            else
                 $s = "";
             $select[] = array($i, $i, $s);
             $i++;
@@ -578,6 +595,8 @@ class PHPShopGUI {
 
         if ($checked == 1)
             $checked = "checked";
+        elseif($checked == 0) 
+            $checked=null;
 
         $CODE = '
 	 <input type="checkbox" value="' . $value . '" name="' . $name . '" id="' . $name . '" ' . $checked . ' onchange="' . $onchange . '"> ' . $caption . '
@@ -628,12 +647,12 @@ class PHPShopGUI {
      * @param string $style имя стиля css
      * @return string
      */
-    function setImage($src, $width, $height, $align = 'absmiddle', $hspace = "5", $style = false, $onclick = false, $alt = false) {
+    function setImage($src, $width, $height, $align = 'absmiddle', $hspace = "5", $style = false, $onclick = false, $alt = false, $class=false) {
         if (!empty($width))
             $width = 'width="' . $width . '"';
         if (!empty($height))
             $height = 'height="' . $height . '"';
-        $CODE = '<img src="' . $src . '" ' . $width . ' ' . $height . ' alt="' . $alt . '" title="' . $alt . '" border="0" align="' . $align . '" hspace="' . $hspace . '" style="' . $style . '" onclick="' . $onclick . '">';
+        $CODE = '<img src="' . $src . '" ' . $width . ' ' . $height . ' alt="' . $alt . '" title="' . $alt . '" border="0" align="' . $align . '" hspace="' . $hspace . '" style="' . $style . '" onclick="' . $onclick . '" class="' . $class . '">';
         return $CODE;
     }
 
@@ -746,7 +765,8 @@ class PHPShopGUI {
                         $this->setReload();
                     $this->Compile();
                 }
-            } else
+            }
+            else
                 $this->setError($function, "function do not exists");
         }
     }
@@ -765,7 +785,8 @@ class PHPShopGUI {
                 else {
                     $this->Compile();
                 }
-            } else
+            }
+            else
                 $this->setError($function, "function do not exists");
     }
 
@@ -791,7 +812,8 @@ class PHPShopGUI {
                             $this->setAction($action, $function_name);
                         else
                             $PHPShopBase->Rule->BadUserFormaWindow();
-                    } else
+                    }
+                    else
                         $this->setAction($action, $function);
                 }
     }
@@ -1009,7 +1031,7 @@ class PHPShopInterface extends PHPShopGUI {
      * Прорисовка заголовка
      * @return string
      */
-    function setHeader() {
+    function setHeader($name=false, $title=false, $icon=false) {
         return '<html>
             <head>
 <meta http-equiv="Content-Type" content="text/html; charset=' . $this->charset . '">
@@ -1027,8 +1049,11 @@ class PHPShopInterface extends PHPShopGUI {
      * Компиляция результата
      * @return string
      */
-    function Compile($id = 'interfacesWin2', $form = 'interfacesForm', $style = null) {
+    function Compile($id = false, $form = false, $style = false) {
         $compile = $this->_TOP;
+        
+        if(empty($id)) 
+            $id = 'interfacesWin2';
 
         if ($this->numRows > 10 and !$this->razmer)
             $this->razmer = "height:580px;";
@@ -1039,13 +1064,15 @@ class PHPShopInterface extends PHPShopGUI {
         $compile.='<div id="' . $id . '" name="' . $id . '" align="left" style="width:100%;' . $this->razmer . ';overflow:auto">
      <table width="100%"  cellpadding="0" cellspacing="0" style="' . $style . '">
      <tr>
-	    <td valign="top">
-            <form id="' . $form . '" name="' . $form . '">
-	       <table cellpadding="0" cellspacing="1" width="100%" border="0" class="sortable" id="sort">
+	    <td valign="top">';
+        if (!empty($form))
+            $compile.='<form id="' . $form . '" name="' . $form . '">';
+        $compile.='<table cellpadding="0" cellspacing="1" width="100%" border="0" class="sortable" id="sort">
 		   ' . $this->_CODE . '
-		   </table>
-            </form>
-	    </td>
+		   </table>';
+        if (!empty($form))
+            $compile.='</form>';
+        $compile.='</td>
      </tr>
      </table></div>' . $this->_CODE_ADD_BUTTON;
         if (empty($this->window))
@@ -1090,9 +1117,11 @@ class PHPShopInterface extends PHPShopGUI {
 
             if (empty($this->window)) {
                 if ($key == 1)
-                    $align = "center"; else
+                    $align = "center";
+                else
                     $align = "left";
-            } else
+            }
+            else
                 $align = "left";
 
             if ($key > 0) {
@@ -1177,12 +1206,12 @@ class PHPShopIframePanel extends PHPShopGUI {
     /**
      * Компиляция результата
      */
-    function Compile() {
+    function Compile($id = false, $form = false, $style = false) {
 
         $compile = $this->_CODE . '
-<table cellpadding="0" cellspacing="1" width="100%">
+<table cellpadding="0" cellspacing="1" width="100%" height="85%">
 <tr>
-  <td width="' . $this->iframe_left[1] . '" valign="top" height="' . $this->iframe_left[1] . '">
+  <td width="' . $this->iframe_left[1] . '" valign="top" height="' . $this->iframe_right[1] . '">
   <div id="pane"><img src="' . $this->imgPath . 'img/arrow_d.gif" width="7" height="7" border="0" hspace="5">' . $this->title . '</div>
 <iframe frameborder="0" id="' . $this->iframe_left[3] . '" name="' . $this->iframe_left[3] . '" src="' . $this->iframe_left[0] . '" width="' . $this->iframe_left[1] . '" height="' . $this->iframe_left[2] . '" scrolling="Auto">
 </iframe>';
@@ -1287,7 +1316,7 @@ class PHPShopIcon extends PHPShopGUI {
      * Прорисовка формы под иконку
      * @param string $CODE код иконки
      */
-    function setTab($CODE) {
+    function setTab($CODE=false) {
         $this->_CODE.='
 	 <table cellpadding="0" cellspacing="0" border="0" width="100%">
 	 <tr>
@@ -1300,9 +1329,9 @@ class PHPShopIcon extends PHPShopGUI {
     /**
      * Компиляция результата
      */
-    function Compile($return = false) {
+    function Compile($return = false, $form = false, $style = false) {
         $compile = '
-     <table width="100%" cellpadding="0" cellpadding="0" class="iconpane">
+     <table width="100%" cellpadding="0" cellpadding="0" class="iconpane border-bottom">
      <tr>
        <td style="padding-left:5">
 		   ' . $this->_CODE . '
@@ -1333,7 +1362,7 @@ class PHPShopFrontInterface extends PHPShopInterface {
      * Компиляция результата
      * @return string
      */
-    function Compile() {
+    function Compile($id = false, $form = false, $style = false) {
 
         if ($this->numRows > 10 and !$this->razmer)
             $this->razmer = "height:450px;";
@@ -1345,6 +1374,7 @@ class PHPShopFrontInterface extends PHPShopInterface {
 
         $compile.='<div style="' . $this->razmer . ';overflow:auto;">
 	       <table cellpadding="0" class="phpshop-gui" cellspacing="1" border="0">' . $this->_CODE . '</table></div>';
+       
         return $compile;
     }
 
@@ -1464,8 +1494,8 @@ class CatalogTree {
     /**
      * Рассчет дерева каталогов
      */
-    function create() {
-        $result = $this->sql("select * from " . $this->table . " where parent_to=0 order by num");
+    function create($parent_to=0) {
+        $result = $this->sql("select * from " . $this->table . " where parent_to=".intval($parent_to)." order by num");
         $i = 0;
         $j = 0;
         $dis = '';
@@ -1475,12 +1505,12 @@ class CatalogTree {
             $num = $this->chek($id);
             if ($num > 0)
                 $this->dis.="
-  d.add($id,0,'$name','');
+  d.add($id,".intval($parent_to).",'$name','');
                         " . $this->add($id) . "
   ";
             else
                 $this->dis.="
-  d.add($id,0,'$name','$name');
+  d.add($id,".intval($parent_to).",'$name','$name');
                         " . $this->add($id) . "
   ";
             $i++;

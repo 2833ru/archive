@@ -22,7 +22,6 @@ class PHPShopDoc extends PHPShopCore {
      * @return string
      */
     function OpenHTML($pages) {
-        global $SysValue;
         $dir="pageHTML/";
         $pages=$pages.".html";
         $handle=opendir($dir);

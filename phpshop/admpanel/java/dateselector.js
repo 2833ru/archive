@@ -286,7 +286,7 @@ function DocumentRegisterEvents()
   {
 	  if (event.keyCode == 27)
 	  {
-      hideCalendar();
+      //hideCalendar();
 	  }
   }
 

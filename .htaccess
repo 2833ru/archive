@@ -25,6 +25,13 @@ AddType text/csv csv
 
 DirectoryIndex index.php
 RewriteEngine On
+
+# Редирект на www
+# default - off
+#RewriteCond %{HTTP_HOST} ^name\.ru
+#RewriteRule ^(.*)$ http://www.name.ru/$1 [R=301,L]
+
+
 #Options FollowSymLinks
 #Options SymLinksIfOwnerMatch
 RewriteCond %{REQUEST_FILENAME} !-f
@@ -37,14 +44,15 @@ RewriteRule ^(.*)$ index.php
 ErrorDocument 404 /404.html
 
 # Проверка обязательного / в конце
-RewriteCond %{REQUEST_URI} (map|search|compare|order|done|clients|users|gbook|links|price|news)$
+RewriteCond %{REQUEST_URI} (map|search|compare|order|done|clients|users|gbook|links|price|news|spec|newtip)$
 RewriteRule ^(.*)$ /$1/ [L,R=302]
 
 
 ## PHPShop Security ##
 
 # Запрет навигации по папкам через браузер
-Options -Indexes 
+# default - off
+#Options -Indexes 
 
 # Запрет вызовы через браузер сторонних опасных файлов шаблона
 # default - off

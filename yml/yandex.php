@@ -2,7 +2,9 @@
 
 /**
  * Файл выгрузки для Яндекс Маркет
- * @package PHPShopCore
+ * @author PHPShop Software
+ * @version 1.4
+ * @package PHPShopXML
  */
 $_classPath = "../phpshop/";
 include($_classPath . "class/obj.class.php");
@@ -206,20 +208,18 @@ class PHPShopYml {
 
         return $Catalog;
     }
-
     /**
-     * Данные по товарам
+     * Данные по товарам. Оптимизировано.
      * @return array массив товаров
      */
     function product() {
         $Products = array();
 
         $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['products']);
-        $data = $PHPShopOrm->select(array('*'), array('yml' => "='1'", 'enabled' => "='1'", 'parent_enabled' => "='0'"), false, array('limit' => 1000000));
-        if (is_array($data))
-            foreach ($data as $row) {
+        $result=$PHPShopOrm->query("select * from ".$GLOBALS['SysValue']['base']['products']." where yml='1' and enabled='1' and parent_enabled='0'");
+        while($row = mysql_fetch_array($result)) {
                 $id = $row['id'];
-                $name = htmlspecialchars($row['name']);
+                $name = htmlspecialchars($row['name'],null,'windows-1251');
                 $category = $row['category'];
                 $uid = $row['uid'];
                 $price = $row['price'];
@@ -230,11 +230,16 @@ class PHPShopYml {
                     $p_enabled = "false";
 
                 $description = trim(PHPShopString::mySubstr($row['description'], 300));
+                $content = htmlspecialchars(trim(strip_tags($row['content'])),null,'windows-1251');
                 $baseinputvaluta = $row['baseinputvaluta'];
 
                 if ($baseinputvaluta) {
-                    if ($baseinputvaluta !== $this->defvaluta) {//Если валюта отличается от базовой
+                    //Если валюта отличается от базовой
+                    if ($baseinputvaluta !== $this->defvaluta) {
                         $vkurs = $this->PHPShopValuta[$baseinputvaluta]['kurs'];
+                        
+                        // Если курс нулевой или валюта удалена
+                        if(empty($vkurs)) $vkurs=1;
 
                         // Приводим цену в базовую валюту
                         $price = $price / $vkurs;
@@ -253,7 +258,8 @@ class PHPShopYml {
                     "p_enabled" => $p_enabled,
                     "yml_bid_array" => unserialize($row['yml_bid_array']),
                     "uid" => $uid,
-                    "description" => $description
+                    "description" => $description,
+                    "content"=>$content
                 );
 
                 // Параметр сортировки
@@ -264,21 +270,20 @@ class PHPShopYml {
             }
         return $Products;
     }
+    
+
+   
 
     /**
      * Заголовок 
      */
     function setHeader() {
-        global $PHPShopBase;
         $this->xml.='<?xml version="1.0" encoding="windows-1251"?>
 <!DOCTYPE yml_catalog SYSTEM "shops.dtd">
 <yml_catalog date="' . date('Y-m-d H:m') . '">
-
 <shop>
 <name>' . $this->PHPShopSystem->getName() . '</name>
 <company>' . $this->PHPShopSystem->getValue('company') . '</company>
-<platform>' . $PHPShopBase->getParam('license.product_name') . '</platform>
-<version>' . $PHPShopBase->getParam('upload.version') . '</version>
 <url>http://' . $_SERVER['SERVER_NAME'] . '</url>';
     }
 
@@ -339,17 +344,26 @@ class PHPShopYml {
 
         $seourl = null;
 
+
         foreach ($product as $val) {
 
             $bid_str = null;
             $bid_str = null;
-            $vendor = null;
+            $vendor = $param = null;
 
+            
             // Тэг характеристики
             if ($this->vendor) {
+                
                 if (is_array($PHPShopSortSearch))
-                    foreach ($PHPShopSortSearch as $SortSearch)
-                        $vendor.= $SortSearch->search($val['vendor_array']);
+                    foreach ($PHPShopSortSearch as $SortSearch) {
+                    
+                        // Выделение тега vendor
+                        if ($SortSearch->tag == 'vendor')
+                            $vendor = $SortSearch->search($val['vendor_array']);
+                        else
+                            $param.= $SortSearch->search($val['vendor_array']);
+                    }
             }
 
             // Если есть bid
@@ -363,15 +377,16 @@ class PHPShopYml {
             if (!empty($seourl_enabled))
                 $seourl = '_' . PHPShopString::toLatin($val['name']);
 
-             $xml = '<offer id="' . $val['id'] . '" available="' . $val['p_enabled'] . '" ' . $bid_str . '>
+            $xml = '<offer id="' . $val['id'] . '" available="' . $val['p_enabled'] . '" ' . $bid_str . '>
  <url>http://' . $_SERVER['SERVER_NAME'] . $GLOBALS['SysValue']['dir']['dir'] . '/shop/UID_' . $val['id'] . $seourl . '.html?from=yml</url>
       <price>' . $val['price'] . '</price>
       <currencyId>' . $this->defvalutaiso . '</currencyId>
       <categoryId>' . $val['category'] . '</categoryId>
       <picture>http://' . $_SERVER['SERVER_NAME'] . $val['picture'] . '</picture>
-      <name>' . $val['name'] . '</name>
+      <name>' . $val['name'] . '</name>'.
+                    $vendor.'
       <description>' . $val['description'] . '</description>' .
-                    $vendor . '
+                    $param . '
 ';
 
             $cart_min = $this->PHPShopSystem->getSerilizeParam('admoption.cart_minimum');
@@ -382,7 +397,7 @@ class PHPShopYml {
 
             // Перехват модуля, занесение в память наличия модуля для оптимизации
             if ($this->memory_get(__CLASS__ . '.' . __FUNCTION__, true)) {
-                $hook = $this->setHook(__CLASS__, __FUNCTION__, $xml);
+                $hook = $this->setHook(__CLASS__, __FUNCTION__, array('xml'=>$xml,'val'=>$val));
                 if ($hook) {
                     $this->xml.= $hook;
                 } else {

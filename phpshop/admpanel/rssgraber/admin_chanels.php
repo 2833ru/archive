@@ -81,7 +81,7 @@ function RSSchanels() {// Вывод
 	<form name=\"form_flag\">
 <table cellpadding=\"0\" cellspacing=\"1\" width=\"100%\" border=\"0\" class=\"sortable\" id=\"sort\">
 <tr>
-    <td width=\"50\" id=pane align=center><img  src=\"icon/blank.gif\"  width=\"1\" height=\"1\" border=\"0\" onLoad=\"starter('chanels');\" align=left><span name=txtLang id=txtLang>Статус</span></td>
+    <td width=\"50\" id=pane align=center><img  src=\"icon/blank.gif\"  width=\"1\" height=\"1\" border=\"0\" align=left><span name=txtLang id=txtLang>Статус</span></td>
 	<td id=pane align=center><span name=txtLang id=txtLang>Адрес ленты</span></td>
 	<td width=\"100\" id=pane align=center><span name=txtLang id=txtLang>Заборов в день</span></td>
     <td width=\"100\" id=pane align=center><span name=txtLang id=txtLang></span>Кол-во  новостей</td>

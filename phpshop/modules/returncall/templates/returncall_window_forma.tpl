@@ -1,22 +1,22 @@
 <script>
-    function checkModReturnCallForma(){
-        if(document.getElementById('returncall_mod_name').value == "" || document.getElementById('returncall_mod_tel').value == "")
+    function checkModReturnCallForma() {
+        if (document.getElementById('returncall_mod_name').value == "" || document.getElementById('returncall_mod_tel').value == "")
             return false;
     }
 </script>
-<a href="javascript:void(0)" onclick="document.getElementById('mod_recall_forma').style.display='block';">Заказать звонок</a>
+<a href="javascript:void(0)" onclick="document.getElementById('mod_recall_forma').style.display = 'block';">Заказать звонок</a>
 
 <div style="position:relative">
-    <div id="mod_recall_forma" style="display: none;width:200px;position:absolute;">
+    <div id="mod_recall_forma" style="display:none;width:200px;height:300px;position:absolute;">
         <div>
             <div style="position:relative; border:1px solid #ccc; background:#ebf1f6 ">
-                    <form action="@ShopDir@/returncall/" method="post" onsubmit="return checkModReturnCallForma();" >
+                <form action="@ShopDir@/returncall/" method="post" onsubmit="return checkModReturnCallForma();" >
                     <table style="margin:0px 8px 0px 9px" border="0" cellpadding="0" cellspacing="0">
                         <tbody>
                             <tr>
-                                <td colspan="2" style=" padding:10px;" align="right"><a style="padding:0px; font-size:11px;margin:0px 0px 0px 5px;color:#086ebd" href="javascript:void(0)" onclick="document.getElementById('mod_recall_forma').style.display='none';">закрыть</a></td>
+                                <td colspan="2" style="padding:10px;" align="right"><a style="padding:0px; font-size:11px;margin:0px 0px 0px 5px;color:#086ebd" href="javascript:void(0)" onclick="document.getElementById('mod_recall_forma').style.display = 'none';">закрыть</a></td>
                             </tr>
-                             <tr>
+                            <tr>
                                 <td colspan="2">@leftMenuName@</td>
                             </tr>
                             <tr>
@@ -35,6 +35,9 @@
                             <tr>
                                 <td>Сообщение:</td>
                                 <td><textarea name="returncall_mod_message" cols="12" rows="3"></textarea></td>
+                            </tr>
+                            <tr>
+                                <td colspan="2">@returncall_captcha@</td>
                             </tr>
                             <tr>
                                 <td></td>

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Ѕиблиотека работы с датами
  * @author PHPShop Software
@@ -7,17 +8,16 @@
  * @subpackage Helper
  */
 class PHPShopDate {
-    
+
     /**
      * ѕреобразование даты из Unix к строковый вид. 
      * —иноним PHPShopDate::dataV()
      * @return string 
      */
-    function get($nowtime=false,$full=false,$revers=false,$delim='-',$months_enabled=false){
-        return PHPShopDate::dataV($nowtime,$full,$revers,$delim,$months_enabled);
+    static function get($nowtime = false, $full = false, $revers = false, $delim = '-', $months_enabled = false) {
+        return PHPShopDate::dataV($nowtime, $full, $revers, $delim, $months_enabled);
     }
 
-    
     /**
      * ѕреобразование даты из Unix к строковый вид.
      * @param int $nowtime формат даты в Unix
@@ -25,27 +25,32 @@ class PHPShopDate {
      * @param bool $revers обратна€ строка даты
      * @return string
      */
-    function dataV($nowtime=false,$full=true,$revers=false,$delim='-',$months_enabled=false) {
+    static function dataV($nowtime = false, $full = true, $revers = false, $delim = '-', $months_enabled = false) {
 
-        if(empty($nowtime)) $nowtime = date("U");
+        if (empty($nowtime))
+            $nowtime = date("U");
 
-        $Months = array("01"=>"€нвар€","02"=>"феврал€","03"=>"марта",
-                "04"=>"апрел€","05"=>"ма€","06"=>"июн€", "07"=>"июл€",
-                "08"=>"августа","09"=>"сент€бр€",  "10"=>"окт€бр€",
-                "11"=>"но€бр€","12"=>"декабр€");
-        $d_array=array(
-            'y'=>date("Y",$nowtime),
-            'm'=>date("m",$nowtime),
-            'd'=>date("d",$nowtime),
-            'h'=>date("h:i",$nowtime)
+        $Months = array("01" => "€нвар€", "02" => "феврал€", "03" => "марта",
+            "04" => "апрел€", "05" => "ма€", "06" => "июн€", "07" => "июл€",
+            "08" => "августа", "09" => "сент€бр€", "10" => "окт€бр€",
+            "11" => "но€бр€", "12" => "декабр€");
+        $d_array = array(
+            'y' => date("Y", $nowtime),
+            'm' => date("m", $nowtime),
+            'd' => date("d", $nowtime),
+            'h' => date("h:i", $nowtime)
         );
-        
-        if($months_enabled) $d_array['m']=$Months[$d_array['m']];
 
-        if(!empty($revers)) $time=$d_array['y'].$delim.$d_array['m'].$delim.$d_array['d'];
-        else $time=$d_array['d'].$delim.$d_array['m'].$delim.$d_array['y'];
+        if ($months_enabled)
+            $d_array['m'] = $Months[$d_array['m']];
 
-        if(!empty($full)) $time.=" ".$d_array['h'];
+        if (!empty($revers))
+            $time = $d_array['y'] . $delim . $d_array['m'] . $delim . $d_array['d'];
+        else
+            $time = $d_array['d'] . $delim . $d_array['m'] . $delim . $d_array['y'];
+
+        if (!empty($full))
+            $time.=" " . $d_array['h'];
 
         return $time;
     }
@@ -56,8 +61,8 @@ class PHPShopDate {
      * @param string $delim разделитель даты [-] или [.]
      * @return <type>
      */
-    function GetUnixTime($data,$delim='-') {
-        $array=explode($delim,$data);
+    static function GetUnixTime($data, $delim = '-') {
+        $array = explode($delim, $data);
         return @mktime(12, 0, 0, $array[1], $array[0], $array[2]);
     }
 

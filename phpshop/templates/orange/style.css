@@ -1,7 +1,89 @@
-#banfx img {
-	max-width:462px;
-width:expression(document.body.clientWidth > 462? "462px":
- "auto" );
+img.template{
+   border: solid 1px #CCC;
+    padding: 3px;
+    border: solid 1px #CCC;
+    -webkit-border-radius:5px;
+    -moz-border-radius:5px;
+    border-radius:5px;
+    margin:3px;
+    cursor:pointer;
+}
+
+img.template:hover{
+    border: solid 1px #BFDBFF;
+    box-shadow: 0 0 5px #BFDBFF;
+}
+input,textarea,select{
+    border: solid 1px #CCC;
+    -webkit-border-radius:4px;
+    -moz-border-radius:4px;
+    border-radius:4px;
+    padding:2px;
+
+}
+input:hover[type=text],select:hover,textarea:hover {
+    border: solid 1px #BFDBFF;
+}
+input.searchf:hover{
+    border:0px;
+}
+input[type=image]{
+    border: 0px;
+}
+input[type=button],input[type=reset]{
+    background: -moz-linear-gradient(#FFF, #F0F0F0);
+    background: -ms-linear-gradient(#FFF, #F0F0F0);
+    background: -o-linear-gradient(#FFF, #F0F0F0);
+    background: -webkit-linear-gradient(#FFF, #F0F0F0);
+}
+input:hover[type=button],input:hover[type=reset]{
+    border: solid 1px #ED9B2F;
+    background: -moz-linear-gradient(#FFF, #FBEBD5);
+    background: -ms-linear-gradient(#FFF, #FBEBD5);
+    background: -o-linear-gradient(#FFF, #FBEBD5);
+    background: -webkit-linear-gradient(#FFF, #FBEBD5);
+    cursor:pointer;
+}
+#allspecwhite {
+    margin-top: 10px;
+    background-color: #f0f0f0;
+    margin-bottom: 10px;
+    padding: 5px;
+    border: solid 1px #CCC;
+    -webkit-border-radius:5px;
+    -moz-border-radius:5px;
+    border-radius:5px;
+}
+.ico_add_to_card {
+    background:url(images/shop/basket.png) no-repeat;
+    text-align: left !important;
+    padding-left: 45px;
+}
+.ico_add_to_compare {
+    background:url(images/shop/compare.png) no-repeat;
+    text-align: left !important;
+    padding-left: 45px;
+}
+.message{
+    border: solid 1px #EFD39C;
+    -webkit-border-top-left-radius:8px;
+    -webkit-border-top-right-radius:8px;
+    -moz-border-radius-topleft:8px;
+    -moz-border-radius-topright:8px;
+    border-top-left-radius:8px;
+    border-top-right-radius:8px;
+    background: -moz-linear-gradient(rgb(255,236,157),rgb(255,231,133));
+    background: -ms-linear-gradient(rgb(255,236,157),rgb(255,231,133));
+    background: -o-linear-gradient(rgb(255,236,157),rgb(255,231,133));
+    background: -webkit-linear-gradient(rgb(255,236,157),rgb(255,231,133));
+    position: absolute;
+    width: 250px; 
+    height: 35px;
+    padding: 15px 10px 10px 10px;
+    visibility:hidden;
+    left:10px;
+    top:0px;
+    box-shadow: 0.4em 0.4em 5px rgba(122,122,122,0.5);
 }
 .lmblock select {
 	width:180px
@@ -22,7 +104,6 @@ body, td, th {/* Основные шрифты */
 }
 tr.bgprice td b {
 	color: #222222;
-!important
 }
 #pri table td {
 	border:1px #ccc solid;
@@ -1968,21 +2049,7 @@ div.page_nava a:active {
 	font-size: 11px;
 	color: #383838;
 }
-#comparewindow {
-	position:absolute;
-	left:10px;
-	top:0;
-	visibility:hidden;
-	width: 250px;
-	height: 68px;
-	Z-INDEX: 2;
-	BACKGROUND: #f0f0f0;
-	padding:10px;
-	border: solid;
-	border-width: 1px;
-	border-color:#cacac8;
-	FILTER: revealTrans (duration=1, transition=4);
-}
+
 div.comment_list {/*отзывы*/
 	margin-top: 10px;
 	margin-bottom: 10px;
@@ -2169,38 +2236,7 @@ a.link {
 .sort_table b {
 	color: #696969;
 }
-#cartwindow {
-	position:absolute;
-	left:10px;
-	top:0;
-	visibility:hidden;
-	width: 250px;
-	height: 68px;
-	Z-INDEX: 2;
-	BACKGROUND: #f0f0f0;
-	padding:10px;
-	border: solid;
-	border-width: 1px;
-	border-color:#cacac8;
-	FILTER: revealTrans (duration=1, transition=4);
-}
-#cartwindow * {
-	color: 000000;
-	font-size: 11px;
-}
-input.ok {
-	width:89px;
-	height:24px;
-	text-align:center;
-	padding:0px 0px 0px 0px;
-	color: #6f6f6f;
-	font-size:11px;
-	font-weight:bold;
-	margin-left: 10px;
-	cursor:pointer;
-	background: url(images/ok.gif) left center no-repeat;
-	border:0px;
-}
+
 .productOdnotipTitleDiv {
 	background-image: url(images/clothes_40.gif);
 	background-repeat: repeat-x;

@@ -77,8 +77,8 @@ function actionStart() {
     // Графический заголовок окна
     $PHPShopGUI->setHeader("Настройка модуля 'PickPoint'","Настройки подключения",$PHPShopGUI->dir."img/i_display_settings_med[1].gif");
 
-    $Tab1=$PHPShopGUI->setField('Имя доставка PickPoint',$PHPShopGUI->setInputText(false,'city_new', $city,300,'<br>* Доставка должны быть создана
-        в базе и с точностью совпадать с ее именем.'));
+    $Tab1=$PHPShopGUI->setField('Имя доставка PickPoint',$PHPShopGUI->setInputText(false,'city_new', $city,300,'<br>* Доставки должны быть созданы
+        в базе и содержать ее имя.'));
     $Tab1.=$PHPShopGUI->setField('Текст ссылки',$PHPShopGUI->setInputText(false,'name_new', $name,300));
    
     $Tab1.=$PHPShopGUI->setField('Титы услуг',$PHPShopGUI->setSelect('type_service_new',$type_service_value,400));
@@ -87,7 +87,7 @@ function actionStart() {
 
     $info='Необходимо создать новые доставки, в именах которых есть слово \'PickPoint\'. Если имя доcтавки требуется изменить, то
         новое имя-формулу вхождения нужно указать в настройках этого модуля в поле \'Имя доставка PickPoint\'. Для примера, при указании имени
-        PickPoint, выбор пункта доставки появится у всех доставок, у которых слово PickPoint присутвует в имени доставки. Это правило не относится к
+        PickPoint, выбор пункта доставки появится у всех доставок, у которых слово PickPoint присутствует в имени доставки. Это правило не относится к
         именам каталога доставки.
 <p>
 После заказа на почту администратора придет письмо с вложенным XML файлом выгрузки заказа в панель управления услугой <a href="http://

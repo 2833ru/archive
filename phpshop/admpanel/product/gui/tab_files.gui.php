@@ -31,7 +31,7 @@ function tab_files($row) {
                 d.rows[currow].cells[2].className="";
 
                 d.rows[currow].cells[0].style.padding="5px";
-                d.rows[currow].cells[0].innerHTML = \'<INPUT TYPE=TEXT style="width:90%;" name="filenum[]" id="filenum\'+numb+\'"><BUTTON style="width: 50px;" onclick="ReturnPic(fid);return false;"><img src="../img/icon-move-banner.gif"  width="16" height="16" border="0"></BUTTON>\';
+                d.rows[currow].cells[0].innerHTML = \'<INPUT TYPE=TEXT style="width:80%;" name="filenum[]" id="filenum\'+numb+\'"> <BUTTON style="width: 50px;" onclick="ReturnPic(fid);return false;"><img src="../img/icon-move-banner.gif" aligh="absmiddle"  width="16" height="16" border="0"></BUTTON>\';
                 d.rows[currow].cells[1].innerHTML = \'<BUTTON onclick="remove_row();"><img src="../icon/wand.gif"  width="16" height="16" border="0" align="absmiddle"> -</BUTTON>\';
 
             }
@@ -45,7 +45,7 @@ function tab_files($row) {
         </SCRIPT>
                
 
-<TABLE id="tbl" style="width:100%; border:1px solid gray; background:#ffffff;" CELLPADDING="0" CELLSPACING=0>
+<TABLE id="tbl" class="iconpane border-bottom" CELLPADDING="0" CELLSPACING=0>
 <TR>
 <TD id=pane style="width: 90%;">Τΰιλ</TD>
 <TD><BUTTON  onclick="add_new_row();return false;">

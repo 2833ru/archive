@@ -212,7 +212,7 @@ if ($zeroweight) {$weight=0;}
 $iw=new inwords;  
 $s=$iw->get($PHPShopOrder->returnSumma($sum,$order['Person']['discount'])+$deliveryPrice); 
 $v=$PHPShopOrder->default_valuta_code;
-if (eregi("руб", $v)) echo $s;
+if (preg_match("/руб/i", $v)) echo $s;
 ?>
 </b></p><br>
 <p>Дата <u><?=date("d-m-y H:m a")?></u></p>

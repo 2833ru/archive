@@ -1,9 +1,11 @@
 <?php
 
+if (!defined("OBJENABLED"))
+    exit(header('Location: /?error=OBJENABLED'));
+
 /**
  * Учет реферала
  */
-
 $url=parse_url($_SERVER['HTTP_REFERER']);
 $referal=$url["host"];
 

@@ -16,6 +16,7 @@ PHPShopObj::loadClass("mail");
 // Настройки модуля
 PHPShopObj::loadClass("modules");
 $PHPShopModules = new PHPShopModules($_classPath . "modules/");
+$PHPShopModules->checkInstall('chat');
 
 function smile($string) {
 
@@ -70,6 +71,7 @@ function check_content($content){
     return $str;
 }
 
+
 // Начало чата
 if (empty($_SESSION['mod_chat_user_session'])) {
     
@@ -99,7 +101,7 @@ if (empty($_SESSION['mod_chat_user_session'])) {
             $PHPShopOrm = new PHPShopOrm($PHPShopModules->getParam("base.chat.chat_users"));
             $PHPShopOrm->debug = false;
             $insert = array();
-            $insert['name_new'] = PHPShopString::utf8_win1251($_REQUEST['name']);
+            $insert['name_new'] = PHPShopString::utf8_win1251((string)$_REQUEST['name']);
             $insert['date_new'] = time();
             $insert['user_session_new'] = md5(time());
             $insert['ip_new'] = $_SERVER['REMOTE_ADDR'];

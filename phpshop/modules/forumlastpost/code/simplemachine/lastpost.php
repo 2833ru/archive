@@ -24,8 +24,8 @@
     <body>
 
         <?
-
-        include("Settings.php");
+        if(!@include("Settings.php")) exit('Settings.php не обнаружен');
+        
         mysql_connect ($db_server, $db_user, $db_passwd) or die("Ќевозможно подсоединитьс€ к базе");
         mysql_select_db($db_name) or die("Ќевозможно подсоединитьс€ к базе");
         mysql_query("SET NAMES 'cp1251'");

@@ -33,6 +33,7 @@ $ouid = $row['uid'];
 $order = unserialize($row['orders']);
 $status = unserialize($row['status']);
 $nds = $LoadItems['System']['nds'];
+$dis = null;
 foreach ($order['Cart']['cart'] as $val) {
     $this_price = ($PHPShopOrder->returnSumma(number_format($val['price'], "2", ".", ""), $order['Person']['discount']));
     $this_nds = number_format($this_price * $nds / (100 + $nds), "2", ".", "");
@@ -40,9 +41,10 @@ foreach ($order['Cart']['cart'] as $val) {
     $this_price_c_nds = number_format($this_price * $val['num'], "2", ".", "");
     @$this_nds_summa+=$this_nds * $val['num'];
 
-    @$dis.="
+    $dis.="
   <tr>
     <td >" . $val['name'] . "</td>
+    <td align=\"center\">796</td>
     <td align=\"center\">" . $val['ed_izm'] . "</td>
     <td align=\"right\">" . $val['num'] . "</td>
     <td align=\"right\">" . $this_price . "</td>
@@ -51,6 +53,7 @@ foreach ($order['Cart']['cart'] as $val) {
     <td align=\"right\">" . $LoadItems['System']['nds'] . "%</td>
     <td align=\"right\">" . $this_nds * $val['num'] . "</td>
     <td align=\"right\">" . $this_price_c_nds . "</td>
+    <td align=\"center\">---</td>
     <td align=\"center\">---</td>
     <td align=\"center\">---</td>
   </tr>
@@ -86,10 +89,11 @@ $deliveryPrice = $PHPShopDelivery->getPrice($sum, $weight);
 
 $summa_nds_dos = number_format($deliveryPrice * $nds / (100 + $nds), "2", ".", "");
 
-@$dis.="
+$dis.="
   <tr>
     <td >Доставка " . $PHPShopDelivery->getCity() . "</td>
-    <td align=\"center\">шт.</td>
+    <td align=\"right\">----</td>
+    <td align=\"center\">----</td>
     <td align=\"right\">1</td>
     <td align=\"right\">" . $deliveryPrice . "</td>
     <td align=\"right\">" . $deliveryPrice . "</td>
@@ -97,6 +101,7 @@ $summa_nds_dos = number_format($deliveryPrice * $nds / (100 + $nds), "2", ".", "
     <td align=\"right\">" . $LoadItems['System']['nds'] . "%</td>
     <td align=\"right\">" . $summa_nds_dos . "</td>
     <td align=\"right\">" . $deliveryPrice . "</td>
+    <td align=\"center\">---</td>
     <td align=\"center\">---</td>
     <td align=\"center\">---</td>
   </tr>
@@ -110,7 +115,7 @@ if ($LoadItems['System']['nds_enabled']) {
 
 $name_person = $order['Person']['name_person'];
 $org_name = $order['Person']['org_name'];
-$datas = PHPShopDate::dataV($datas, "false");
+$datas = PHPShopDate::dataV($datas, $full = false, $revers = false, $delim = '-', $months_enabled = true);
 
 
 // Генерим номер товарного чека
@@ -121,14 +126,13 @@ $LoadBanc = unserialize($LoadItems['System']['bank']);
     <title>Счет - Фактура №<?= @$ouid ?></title>
     <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=windows-1251">
     <META HTTP-EQUIV="PRAGMA" CONTENT="NO-CACHE">
-    <meta http-equiv="Content-Type" content="text/html; charset=windows-1251">
     <link href="style.css" type=text/css rel=stylesheet>
     <style media="screen" type="text/css">
-        a.save{
+        .save{
             display: none;
         }
 
-        * HTML a.save{ /* Только для браузера IE */
+        * HTML .save{ /* Только для браузера IE */
             display: inline;
         }
     </style>
@@ -141,69 +145,90 @@ $LoadBanc = unserialize($LoadItems['System']['bank']);
     </style>
 </head>
 <body onload="window.focus()" bgcolor="#FFFFFF" text="#000000" marginwidth=5 leftmargin=5 style="padding: 2px;">
-    <div align="right" class="nonprint"><a href="#" onclick="window.print();return false;" ><img border=0 align=absmiddle hspace=3 vspace=3 src="http://<?= $_SERVER['SERVER_NAME'] . $SysValue['dir']['dir'] ?>/phpshop/admpanel/img/action_print.gif">Распечатать</a> | <a href="#" class="save" onclick="document.execCommand('SaveAs');return false;">Сохранить на диск<img border=0 align=absmiddle hspace=3 vspace=3 src="http://<?= $_SERVER['SERVER_NAME'] . $SysValue['dir']['dir'] ?>/phpshop/admpanel/img/action_save.gif"></a><br><br></div>
-    <table align="center" width="1000" border="0" cellspacing="0" cellpadding="0">
+    <div align="right" class="nonprint">
+        <button onclick="window.print()">
+            <img border=0 align=absmiddle hspace=3 vspace=3 src="http://<?= $_SERVER['SERVER_NAME'] . $SysValue['dir']['dir'] ?>/phpshop/admpanel/img/action_print.gif">Распечатать
+        </button> 
+
+        <button class="save" onclick="document.execCommand('SaveAs')">
+            <img border=0 align=absmiddle hspace=3 vspace=3 src="http://<?= $_SERVER['SERVER_NAME'] . $SysValue['dir']['dir'] ?>/phpshop/admpanel/img/action_save.gif">Распечатать
+        </button> 
+    </div>
+    <table align="center" width="90%" border="0" cellspacing="0" cellpadding="0">
         <tr>
             <td valign="top" align="right">
                 <?
                 $GetIsoValutaOrder = $PHPShopOrder->default_valuta_code;
                 if (preg_match("/руб/", $GetIsoValutaOrder)) {
                     echo '
-	<div id="d1">Приложение №1<br />
-к Правилам ведения журналов учета полученных и выставленных счетов-фактур,<br />
- книг покупок и книг продаж при расчетах по налогу на добавленную стоимость,<br />
-
- утвержденным постановлением Правительства Российской Федерации  от 2 декабря 2000 г. N 9</div>
+	<div id="d1">
+Приложение № 1<br>
+к постановлению Правительства Российской Федерации<br>
+от 26 декабря 2011 г. № 1137 
+ </div>
 ';
                 }
+
                 ?>
             </td>
         </tr>
         <tr>
-            <td valign="top" id="d2">СЧЕТ-ФАКТУРА №<?= @$ouid ?> от <?= $datas ?></td>
+            <td valign="top" id="d2">СЧЕТ-ФАКТУРА №<?= @$ouid ?> от <?= $datas ?> г.<br>
+                Исправление № --  от --</td>
         </tr>
         <tr>
             <td valign="top" >Продавец: <?= $LoadItems['System']['company'] ?><br />					
-                Адрес: <?= $LoadBanc['org_adres'] ?>, <?= $LoadItems['System']['tel'] ?> <br />							
-                Идентификационный номер продавца (ИНН) <?= $LoadBanc['org_inn'] ?>\<?= $LoadBanc['org_kpp'] ?> <br />							
+                Адрес: <?= $LoadBanc['org_adres'] ?>, <?= $LoadItems['System']['tel'] ?> <br />			
+                ИНН/КПП продавца <?= $LoadBanc['org_inn'] ?> <?= $LoadBanc['org_kpp'] ?> <br />				
                 Грузоотправитель и его адрес: Он же	<br />						
                 Грузополучатель и его адрес:  <?= @$order['Person']['adr_name'] ?>	<br />						
                 К платежно-расчетному документу       <br />							
                 Покупатель: <?= @$order['Person']['org_name'] ?>	<br />						
                 Адрес: <?= @$order['Person']['adr_name'] ?> <br />							
-                Идентификационный номер покупателя (ИНН) <?= @$order['Person']['org_inn'] ?>/<?= @$order['Person']['org_kpp'] ?> <br />							
+                ИНН/КПП покупателя: <?= @$order['Person']['org_inn'] ?> <?= @$order['Person']['org_kpp'] ?> <br />
+                Валюта: <?= $PHPShopOrder->default_valuta_name ?>
             </td>
         </tr>
         <tr>
-            <td align="right"><b>Валюта: <?= $PHPShopOrder->default_valuta_code ?></b></td>
-        </tr>
-        <tr>
-            <td valign="top" ><table style="margin-top:10px;" bordercolor="#000000"  width="998" border="1" cellspacing="0" cellpadding="0">
+            <td valign="top" >
+                <table style="margin-top:10px;" bordercolor="#000000"  border="1" cellspacing="0" cellpadding="0">
+
+
+
+
                     <tr>
-                        <td width="122" align="center">Наименование товара (описание выполненных работ, оказанных услуг)</td>
-                        <td width="68" align="center">Единица изме-
-                            рения</td>
-                        <td width="55" align="center">Коли-
-                            чество</td>
-                        <td width="113" align="center">Цена (тариф) за единицу измерения</td>
-                        <td width="92" align="center">Стоимость товаров (работ, услуг), всего без налога</td>
-                        <td width="98" align="center">В том
-                            числе
-                            акциз</td>
-                        <td width="97" align="center">Налоговая ставка</td>
-                        <td width="80" align="center">Сумма налога</td>
-                        <td width="97" align="center">Стоимость товаров (работ, услуг), всего с учетом налога</td>
-                        <td width="76" align="center">Страна
-                            происхож-
-                            дения</td>
-                        <td width="76" align="center">Номер
-                            грузовой
-                            таможенной
-                            декларации</td>
+                        <td width="200" align="center" rowspan="2">Наименование товара (описание выполненных 
+                            работ, оказанных услуг), имущественного права</td>
+                        <td  align="center" colspan="2">Единица измерения</td>
+                        <td  align="center" rowspan="2">Коли-
+                            чество 
+                            (объем)</td>
+                        <td  align="center"  rowspan="2">Цена (тариф) за единицу измерения</td>
+                        <td  align="center"  rowspan="2">Стоимость товаров (работ, услуг),
+                            имущественных
+                            прав без налога
+                            всего</td>
+                        <td  align="center" rowspan="2" >В том числе сумма акциза</td>
+                        <td  align="center"  rowspan="2">Налоговая ставка</td>
+                        <td  align="center" rowspan="2" >Сумма налога, предъявляемая покупателю</td>
+                        <td  align="center"  rowspan="2">Стоимость товаров (работ, услуг), имущественных прав с налогом всего</td>
+                        <td  align="center"  colspan="2">Страна<br>
+                            происхождения товара</td>
+                        <td  align="center"  rowspan="2">Номер таможенной декларации</td>
                     </tr>
+                    <tr>
+                        <td align="center">код</td>
+                        <td align="center">условное обозначение
+                            (национальное)</td>
+                        <td align="center">цифровой код</td>
+                        <td align="center">краткое наименование</td>
+
+                    </tr>
+                    <tr>
                     <tr>
                         <td align="center">1</td>
                         <td align="center">2</td>
+                        <td align="center">2а</td>
                         <td align="center">3</td>
                         <td align="center">4</td>
                         <td align="center">5</td>
@@ -212,17 +237,20 @@ $LoadBanc = unserialize($LoadItems['System']['bank']);
                         <td align="center">8</td>
                         <td align="center">9</td>
                         <td align="center">10</td>
+                        <td align="center">10a</td>
                         <td align="center">11</td>
                     </tr>
-                    <? echo @$dis; ?>
+                    <?= $dis; ?>
+
                     <tr>
-                        <td colspan="7"  ><b>Всего к оплате</b></td>
+                        <td colspan="8"><b>Всего к оплате</b></td>
 
                         <td align="right"><? echo $this_nds_summa + $summa_nds_dos; ?></td>
                         <td align="right"><? echo $total_summa + $deliveryPrice; ?></td>
-                        <td colspan="2">&nbsp;</td>
+                        <td colspan="3">&nbsp;</td>
 
                     </tr>
+
                 </table>
             </td>
         </tr>
@@ -237,41 +265,72 @@ $LoadBanc = unserialize($LoadItems['System']['bank']);
 
         </tr>
         <tr>
-            <td valign="top" ><table width="1000" border="0" cellspacing="0" cellpadding="0">
+            <td valign="top" ><table width="100%" border="0" cellspacing="0" cellpadding="0">
                     <tr>
-                        <td width="487"><table width="423" border="0" cellspacing="3" cellpadding="0">
+                        <td width="50%">
+                            <table  border="0" cellspacing="3" cellpadding="0">
                                 <tr>
-                                    <td width="417">Руководитель организации ____________________ </td>
+                                    <td>Руководитель организации</td>                                
+                                    <td>____________________</td>
+                                    <td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                                    <td>____________________</td>
                                 </tr>
                                 <tr>
-                                    <td height="29">(индивидуальный предприниматель)</td>
-                                </tr>
-                                <tr>
-                                    <td height="27" align="right"> М.П.</td>
-                                </tr>
-                                <tr>
-                                    <td height="30">ВЫДАЛ</td>
-                                </tr>
-                                <tr>
-                                    <td id="d3">Примечание. Первый  экземпляр  -  покупателю,  второй   экземпляр - продавцу</td>
-                                </tr>
-                            </table></td>
-                        <td width="513" valign="top" align="right"><table width="374" border="0" cellspacing="3" cellpadding="0">
-                                <tr>
-                                    <td>Главный бухгалтер ____________________ </td>
-                                </tr>
-                                <tr>
-                                    <td height="29">(реквизиты свидетельства о государственной<br /> 
-                                        регистрации индивидуального предпринимателя)</td>
-                                </tr>
-                                <tr>
-                                    <td height="59" valign="bottom">________________________________________</td>
-                                </tr>
-                                <tr>
+                                    <td>или иное уполномоченое лицо</td>                                
+                                    <td id="center">(подпись)</td>
                                     <td></td>
+                                    <td id="center">(ф.и.о.)</td>
+                                </tr>
+                            </table>
+                        </td>
+                        <td width="50%" valign="top" align="right">
+                            <table  border="0" cellspacing="3" cellpadding="0">
+                                <tr>
+                                    <td>Главный бухгалтер</td>                                
+                                    <td>____________________</td>
+                                    <td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                                    <td>____________________</td>
                                 </tr>
                                 <tr>
-                                    <td valign="top">(подпись ответственного лица от продавца)</td>
+                                    <td>или иное уполномоченое лицо</td>                                
+                                    <td id="center">(подпись)</td>
+                                    <td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                                    <td id="center" >(ф.и.о.)</td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td valign="top" >
+                <p><br></p>
+                <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                    <tr>
+                        <td width="70%">
+                            <table  border="0" cellspacing="3" cellpadding="0">
+                                <tr>
+                                    <td>Индивидуальный предприниматель</td>                                
+                                    <td>____________________</td>
+                                    <td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                                    <td>____________________</td>
+                                </tr>
+                                <tr>
+                                    <td></td>                                
+                                    <td id="center">(подпись)</td>
+                                    <td></td>
+                                    <td id="center" >(ф.и.о.)</td>
+                                </tr>
+                            </table>
+                        </td>
+                        <td width="10%"></td>
+                        <td width="20%" valign="top" align="right">
+                            <table  border="0" cellspacing="3" cellpadding="0">
+                                <tr>                             
+                                    <td>______________________________________________</td>
+                                <tr>                             
+                                    <td id="center">(реквизиты свидетельства о государственной регистрации индивидуального предпринимателя)</td>
                                 </tr>
                             </table>
                         </td>

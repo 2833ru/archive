@@ -3,12 +3,7 @@ require("../connect.php");
 @mysql_connect ("$host", "$user_db", "$pass_db")or @die("Невозможно подсоединиться к базе");
 mysql_select_db("$dbase")or @die("Невозможно подсоединиться к базе");
 require("../enter_to_admin.php");
-
-// Языки
-$GetSystems=GetSystems();
-$option=unserialize($GetSystems['admoption']);
-$Lang=$option['lang'];
-require("../language/".$Lang."/language.php");
+require("../language/russian/language.php");
 
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
@@ -19,13 +14,7 @@ require("../language/".$Lang."/language.php");
 <LINK href="../skins/<?= $_SESSION['theme'] ?>/texts.css" type=text/css rel=stylesheet>
 <SCRIPT language="JavaScript" src="/phpshop/lib/Subsys/JsHttpRequest/Js.js"></SCRIPT>
 <script language="JavaScript1.2" src="../java/javaMG.js" type="text/javascript"></script>
-<script type="text/javascript" language="JavaScript1.2" src="../language/<?=$Lang?>/language_windows.js"></script>
-<script type="text/javascript" language="JavaScript1.2" src="../language/<?=$Lang?>/language_interface.js"></script>
-<script>
-DoResize(<? echo $GetSystems['width_icon']?>,400,270);
-</script>
-</head>
-<body bottommargin="0"  topmargin="0" leftmargin="0" rightmargin="0" onload="DoCheckLang(location.pathname,<?=$SysValue['lang']['lang_enabled']?>);preloader(0)">
+<body bottommargin="0"  topmargin="0" leftmargin="0" rightmargin="0">
 <form name="product_edit"  method=post>
 <table cellpadding="0" cellspacing="0" width="100%" height="50" id="title">
 <tr bgcolor="#ffffff">
@@ -38,14 +27,13 @@ DoResize(<? echo $GetSystems['width_icon']?>,400,270);
 	</td>
 </tr>
 </table>
-<br>
 <table class=mainpage4 cellpadding="5" cellspacing="0" border="0" align="center" width="100%">
 <tr>
 	<td>
 	<FIELDSET style="height:80px">
 <LEGEND><span name=txtLang id=txtLang><u>С</u>умма</span> </LEGEND>
 <div style="padding:10">
-<input type="text" name="sum_new"   style="width:130px"> <?=GetIsoValuta()?><br><br>* <span name=txtLang id=txtLang>Сумма задается в</span> <?=GetIsoValuta()?>
+<input type="text" name="sum_new"   style="width:100px"> <?=GetIsoValuta()?><br><br>* <span name=txtLang id=txtLang>Сумма задается в</span> <?=GetIsoValuta()?>
 </div>
 </FIELDSET>
 	</td>
@@ -53,7 +41,7 @@ DoResize(<? echo $GetSystems['width_icon']?>,400,270);
 	<FIELDSET style="height:80px">
 <LEGEND><span name=txtLang id=txtLang><u>С</u>кидка</span> </LEGEND>
 <div style="padding:10">
-<input type="text" name="discount_new"  maxlength="3" style="width:70px;" > %
+<input type="text" name="discount_new"  maxlength="3" style="width:50px;" > %
 </div>
 </FIELDSET>
 	</td>

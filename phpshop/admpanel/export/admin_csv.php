@@ -255,7 +255,7 @@ if ($_REQUEST['page'] == "predload" and $_FILES['file']['ext'] == "csv") {
         fclose($fp);
 
         $interface.='
-<div id=interfacesWin name=interfacesWin align="left" style="width:100%;height:580;overflow:auto"> 
+<div id=interfacesWin name=interfacesWin align="left" style="width:100%;height:80%;overflow:auto"> 
 <TABLE cellSpacing=0 cellPadding=0 width="100%"><TBODY>
 <TR>
 <TD vAlign=top>
@@ -308,14 +308,10 @@ if ($_REQUEST['page'] == "predload" and $_FILES['file']['ext'] == "csv") {
 <TD vAlign=top style="padding-top:25">
 <div align="center"><h4><span name=txtLang2 id=txtLang2>Загрузка прайс-листа Excel выполнена</span>!</h4></div>
 <FIELDSET id=fldLayout style="width: 60em; height: 8em;">
-<table style="border: 1px;border-style: inset;background-color: White;" cellpadding="10" width="100%">
-<tr>
-	<td width="50%" ><h4><span name=txtLang2 id=txtLang2>Отчет:</span></h4>
+<legend>Отчет</legend>
 <ol>
 	<li>Обновлено позиций: ' . $ReadCsv->TotalUpdate . '
-</ol></td>
-</tr>
-</table>
+</ol>
 </FIELDSET>
 </TD></TR></TABLE>
 ' . $ReadCsv->Debug . '
@@ -323,17 +319,17 @@ if ($_REQUEST['page'] == "predload" and $_FILES['file']['ext'] == "csv") {
     }
 } else
     @$interface.=$disp = '
-	  <table width="100%" height="100%" style="Z-INDEX:2;">
+	  <table width="100%" height="80%" style="Z-INDEX:2;">
 <tr>
 	<td valign="middle" align="center">
-		<div style="width:400px;height:100px;BACKGROUND: #C0D2EC;padding:10px;border: solid;border-width: 1px; border-color:#4D88C8;FILTER: alpha(opacity=80);" align="left">
+		<div class="alert" align="left">
 <table width="100%" height="100%">
 <tr>
 	<td width="35" vAlign=center ><IMG 
             hspace=0 src="img/i_support_med[1].gif" align="absmiddle" 
             border=0 ></td>
-	<td ><b>Внимание, выберите файл с расширением *.csv.
-	Повторите  <a href="javascript:DoReload(\'csv\')" style="color:red">загрузку файла</a>.</b></td>
+	<td >Внимание, выберите файл с расширением *.csv.<br>
+	Повторите  <a href="javascript:DoReload(\'csv\')" style="color:red">загрузку файла</a>.</td>
 </tr>
 </table>
 

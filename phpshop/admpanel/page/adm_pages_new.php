@@ -57,7 +57,7 @@ function actionStart() {
     $oFCKeditor->Value = $content;
 
     // Содержание закладки 1
-    $Tab1 = $PHPShopGUI->setField("Каталог:", $PHPShopGUI->setInput("text", "parent_name", getCatPath($data['category']), "left", 450) .
+    $Tab1 = $PHPShopGUI->setField("Каталог:", $PHPShopGUI->setInput("text", "parent_name", getCatPath($_GET['categoryID']), "left", 450) .
                     $PHPShopGUI->setInput("hidden", "category_new", $data['category'], "left", 450) .
                     $PHPShopGUI->setButton("Выбрать", "../icon/folder_edit.gif", "100px", "Выбрать", "none", "miniWin('" . $dot . "./page/adm_cat.php?category=" . $category . "',300,400);return false;"), "none") .
             $PHPShopGUI->setLine() .
@@ -106,8 +106,14 @@ function actionStart() {
  */
 function getCatPath($category) {
     $PHPShopCategoryArray = new PHPShopPageCategoryArray();
+    $PHPShopCategoryArray->objArray[1000] = array('id'=>1000,'parent_to'=>3000,'name'=>'Главное меню сайта');
+    $PHPShopCategoryArray->objArray[3000] = array('id'=>3000,'parent_to'=>0,'name'=>'Меню');
+    $PHPShopCategoryArray->objArray[2000] = array('id'=>2000,'parent_to'=>3000,'name'=>'Начальная страница');
+
     $i = 1;
     $str = __('Корень');
+    
+    
     while ($i < 10) {
         $parent = $PHPShopCategoryArray->getParam($category . '.parent_to');
         if (isset($parent)) {

@@ -84,7 +84,7 @@ function actionStart() {
     // Единица измерения
     if (empty($data['ed_izm']))
         $data['ed_izm'] = 'шт.';
-    $Tab1.=$PHPShopGUI->setField('Единица изм.:', $PHPShopGUI->setInputText(false, 'ed_izm_new', $data['ed_izm'], 70), 'left');
+    $Tab1.=$PHPShopGUI->setField('Единица изм.:', $PHPShopGUI->setInputText(false, 'ed_izm_new', $data['ed_izm'], 70), 'right',0,0,array('width'=>'120px'));
 
     // Рекомендуемые товары
     $Tab1.=$PHPShopGUI->setLine() . $PHPShopGUI->setField('Рекомендуемые товары для совместной продажи:', $PHPShopGUI->setTextarea('odnotip_new', $data['odnotip'], false, '280px') .
@@ -93,10 +93,10 @@ function actionStart() {
                     __('Введите ID товаров в формате 1,2,3 без пробелов'), 'left');
 
     // Дополнительные каталоги
-    $Tab1.=$PHPShopGUI->setField('Дополнительные каталоги:', $PHPShopGUI->setTextarea('dop_cat_new', $data['dop_cat'], false, '280px') .
+    $Tab1.=$PHPShopGUI->setField('Дополнительные каталоги:', $PHPShopGUI->setTextarea('dop_cat_new', $data['dop_cat'], false, '330px') .
             $PHPShopGUI->setLine() .
             $PHPShopGUI->setImage('../icon/icon_info.gif', 16, 16) .
-            __('Введите ID каталогов в формате #1#2#3# без пробелов'), 'left');
+            __('Введите ID каталогов в формате #1#2#3# без пробелов'), 'left',0,0,array('width'=>'355px'));
 
     $Tab1.=$PHPShopGUI->setLine();
 
@@ -107,7 +107,7 @@ function actionStart() {
                     $PHPShopGUI->setLine() .
                     $PHPShopGUI->setCheckbox('newtip_new', 1, 'Новинка', $data['newtip']) .
                     $PHPShopGUI->setLine() .
-                    $PHPShopGUI->setInputText('№', 'num_new', $data['num'], 50, 'по порядку'), 'left');
+                    $PHPShopGUI->setInputText('№', 'num_new', $data['num'], 50, 'по порядку'), 'left',false,false,array('height'=>'100px;'));
 
     // Валюты
     $PHPShopValutaArray = new PHPShopValutaArray();
@@ -130,20 +130,20 @@ function actionStart() {
             $PHPShopGUI->setLine() .
             $PHPShopGUI->setInputText('Цена 2', 'price2_new', $data['price2'], 50, $valuta_def_name) .
             $PHPShopGUI->setLine() .
-            $PHPShopGUI->setInputText('Цена 3', 'price3_new', $data['price3'], 50, $valuta_def_name), 'left');
+            $PHPShopGUI->setInputText('Цена 3', 'price3_new', $data['price3'], 50, $valuta_def_name), 'left',false,false,array('height'=>'100px;'));
 
     // Валюта
-    $Tab1_1.=$PHPShopGUI->setField(__('Валюта:'), $valuta_area, 'left');
+    $Tab1_1.=$PHPShopGUI->setField(__('Валюта:'), $valuta_area, 'left',false,false,array('height'=>'100px;'));
 
     // Цены дополнительные
     $Tab1_2.=$PHPShopGUI->setField('Цены:', $PHPShopGUI->setInputText('Цена 4', 'price4_new', $data['price4'], 50, $valuta_def_name) .
             $PHPShopGUI->setLine() .
             $PHPShopGUI->setInputText('Цена 5', 'price5_new', $data['price5'], 50, $valuta_def_name) .
             $PHPShopGUI->setLine() .
-            $PHPShopGUI->setCheckbox('sklad_new', 1, 'Под заказ', $data['sklad']), 'left');
+            $PHPShopGUI->setCheckbox('sklad_new', 1, 'Под заказ', $data['sklad']), 'left',false,false,array('height'=>'100px;'));
 
     // Распродажа
-    $Tab1_2.=$PHPShopGUI->setField(__('Распродажа:'), $PHPShopGUI->setInputText(__('Старая цена'), 'price_n_new', $data['price_n'], 50, $valuta_def_name), 'left');
+    $Tab1_2.=$PHPShopGUI->setField(__('Распродажа:'), $PHPShopGUI->setInputText(__('Старая цена'), 'price_n_new', $data['price_n'], 50, $valuta_def_name), 'left',false,false,array('height'=>'100px;'));
 
     // Иконка
     if (!empty($data['pic_small'])) {
@@ -170,7 +170,7 @@ function actionStart() {
     $Tab1_4.=$PHPShopGUI->setTextarea('parent_new', $data['parent'], "none", '99%', '50px') .
             $PHPShopGUI->setLine() .
             $PHPShopGUI->setImage('../icon/icon_info.gif', 16, 16) .
-            __('Введите ID товаров через запятую без пробела (100,101). ');
+            __('Введите ID товаров-подтипов через запятую без пробела (100,101). ');
 
     // Вывод
     $PHPShopInterface = new PHPShopInterface('_pretab2_');
@@ -339,9 +339,10 @@ function actionUpdate() {
 
     // Статьи
     $_POST['page_new'] = null;
-    if (is_array($_POST['page']))
+    if (is_array($_POST['page'])){
         foreach ($_POST['page'] as $value)
             $_POST['page_new'].=$value . ",";
+    } else $_POST['page_new'] = " "; 
 
     // Файлы
     $_POST['files_new'] = serialize($_POST['filenum']);

@@ -1,5 +1,9 @@
 <?php
 
+if (!defined("OBJENABLED"))
+    exit(header('Location: /?error=OBJENABLED'));
+
+
 class PHPShopF extends PHPShopCore {
 
     // Конструктор

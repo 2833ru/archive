@@ -23,7 +23,7 @@ class PHPShopSelection extends PHPShopShopCore {
      * Лимит вывода товаров
      * @var int
      */
-    var $max_item = 100;
+    var $max_item = 250;
 
     /**
      * Конструктор

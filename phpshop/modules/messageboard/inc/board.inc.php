@@ -1,5 +1,8 @@
 <?php
 
+if (!defined("OBJENABLED"))
+    exit(header('Location: /?error=OBJENABLED'));
+
 class PHPShopMessageboardElement extends PHPShopElements {
     /**
      * @var int количество сообщений для вывода
@@ -21,7 +24,7 @@ class PHPShopMessageboardElement extends PHPShopElements {
      * Настройки
      */
     function option() {
-        $PHPShopOrm = &new PHPShopOrm($GLOBALS['SysValue']['base']['messageboard']['messageboard_system']);
+        $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['messageboard']['messageboard_system']);
         $this->data = $PHPShopOrm->select();
         
         // Сохраняем настройки

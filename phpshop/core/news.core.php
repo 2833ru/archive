@@ -24,9 +24,9 @@ class PHPShopNews extends PHPShopCore {
         $this->debug = false;
 
         // Список экшенов
-        $this->action = array('get' => 'timestamp', "nav" => array("ID", "index"), "post" => "news_plus");
+        $this->action = array('get' => 'timestamp', "nav" => array("index","ID"), "post" => "news_plus");
         parent::PHPShopCore();
-
+        
         // Календарь
         $this->calendar();
     }
@@ -39,7 +39,7 @@ class PHPShopNews extends PHPShopCore {
         // Перехват модуля
         if ($this->setHook(__CLASS__, __FUNCTION__, false, 'START'))
             return true;
-
+        
         // Выборка данных
         $this->dataArray = parent::getListInfoItem(array('*'), false, array('order' => 'id DESC'));
 

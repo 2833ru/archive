@@ -77,7 +77,7 @@ function actionStart() {
 
     $Tab1=$PHPShopGUI->setField('Выгрузка', $PHPShopGUI->setInput("button", "button1", "Выгрузить CSV", "left", 150, "window.open('file.php')"));
   
-    $Tab1.=$PHPShopGUI->setField('Выбериет файл с расширением *.csv',$PHPShopGUI->setInput("file", "file", "", "left", 350));
+    $Tab1.=$PHPShopGUI->setField('Выберите файл с расширением *.csv',$PHPShopGUI->setInput("file", "file", "", "left", 350));
 
     // Форма регистрации
     $Tab3 = $PHPShopGUI->setPay($serial, false, $version, true);

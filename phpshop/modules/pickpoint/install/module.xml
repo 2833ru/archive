@@ -4,7 +4,7 @@
     <name>PickPoint</name>
     <description>Модуль пунктов выдачи товара PickPoint</description>
     <icon>icon.png</icon>
-    <category>order</category>
+    <category>sape</category>
     <adminmenu>
         <title>PickPoint</title>
         <podmenu>

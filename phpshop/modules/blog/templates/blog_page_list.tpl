@@ -1,15 +1,14 @@
-<h1 >Блог</h1>
 
-<div style="padding-bottom: 20px; font-size:14px;">
-  <a href="/" title="Главная">Главная</a> / Блог
-</div>		
-
-
-
-<div>
-  @productPageDis@
+<div class="page_nava">
+  <div> <a href="/">Главная</a> /  Блог </div>
 </div>
-
-<div style="padding:7px">
-  @productPageNav@
-</div>
+<h2>Блог</h2>
+<div style="padding-top:7px;">@productPageDis@</div>
+<table cellpadding="0" cellspacing="0" border="0" class="catalogOptionTable2">
+  <tbody>
+    <tr>
+      <td align="left" valign="bottom"><div class="page_nav_bot">@productPageNav@</div></td>
+      <td align="right" valign="bottom">&nbsp;</td>
+    </tr>
+  </tbody>
+</table>

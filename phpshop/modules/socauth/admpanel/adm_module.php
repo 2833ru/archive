@@ -106,6 +106,10 @@ function actionStart() {
 	$Tab2.=$PHPShopGUI->setField("Инструкция по настройке", $ContentField2);
 
     $Tab3 = $PHPShopGUI->setPay($serial, false);
+    // История изменений
+    if(method_exists($PHPShopGUI,'setLine'))
+    $Tab3.= $PHPShopGUI->setLine('<br>').$PHPShopGUI->setHistory();
+
 
 // Вывод формы закладки
     $PHPShopGUI->setTab(array("Основное", $Tab1, 270), array("Инструкции", $Tab2, 270), array("О Модуле", $Tab3, 270));
@@ -162,7 +166,7 @@ http://<b>вашДомен.ру</b>/
 <h4>Настройка facebook.com</h4>
 - авторизоваться в фейсбуке<br><br>
 - перейти по ссылке:<br><br>
-<a href="http://www.facebook.com/developers/createapp.php?from=phpshop" target="_blank">http://www.facebook.com/developers/createapp.php</a><br><br>
+<a href="https://developers.facebook.com/apps" target="_blank">https://developers.facebook.com/apps</a><br><br>
 - создать приложение (App Name может быть любым)<br><br>
 - заполнить поля из раздела основной информации нужными данными<br><br>
 - в поле "App Domains" необходимо указать ваш домен (если сайт лежит ну субдомене, нужно указывать только основной), например:<br><br>

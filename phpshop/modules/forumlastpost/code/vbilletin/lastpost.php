@@ -24,8 +24,7 @@
     <body>
 
         <?
-
-        include("./includes/config.php");
+        if(!@include("./includes/config.php")) exit('conf_global.php не обнаружен');
         mysql_connect ($config['MasterServer']['servername'], $config['MasterServer']['username'], $config['MasterServer']['password']) or die("Ќевозможно подсоединитьс€ к базе");
         mysql_select_db($config['Database']['dbname']) or die("Ќевозможно подсоединитьс€ к базе");
         mysql_query("SET NAMES 'cp1251'");

@@ -47,8 +47,8 @@ function actionStart() {
             case '1': $checked=$PHPShopInterface->setImage('../img/icon-activate.gif',false,false,false,false,false,false,'Показывать');break;
             case '2': $checked=$PHPShopInterface->setImage('../img/icon-move-banner.gif',false,false,false,false,false,false,'Внутренняя');break;
         }
-
-        $PHPShopInterface->setRow($id,$checked,$link,$name,"http://".$_SERVER['SERVER_NAME'].$PHPShopBase->getParam('dir.dir')."/page/".$link.".html",array($PHPShopInterface->setCheckbox($id, $id,false,false),$link=false));
+        
+        $PHPShopInterface->setRow($id,$checked,$link,$name,array($PHPShopInterface->setLink("http://".$_SERVER['SERVER_NAME'].$PHPShopBase->getParam('dir.dir')."/page/".$link.".html", "http://".$_SERVER['SERVER_NAME'].$PHPShopBase->getParam('dir.dir')."/page/".$link.".html"),$link=false),array($PHPShopInterface->setCheckbox($id, $id,false,false),$link=false));
     }
     $PHPShopInterface->_CODE_ADD_BUTTON=$PHPShopInterface->setInput("hidden","catal",$_GET['pid'],"none",100);
     $PHPShopInterface->Compile('interfaces','flag_form',null);

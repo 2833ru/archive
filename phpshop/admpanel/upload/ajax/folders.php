@@ -2,7 +2,7 @@
 require_once "../../../../phpshop/lib/Subsys/JsHttpRequest/Php.php";
 // Создаем главный объект библиотеки.
 // Указываем кодировку страницы (обязательно!).
-$JsHttpRequest =& new Subsys_JsHttpRequest_Php("windows-1251");
+$JsHttpRequest = new Subsys_JsHttpRequest_Php("windows-1251");
 
 
 require("../../connect.php");
@@ -114,8 +114,8 @@ if ($errors != ""){
 		exit();
 	}
 	if (!copy("../../../../backup/temp/upload_backup.sql.gz","../../../..$name/sql/upload_backup.sql.gz")) {
-		$GLOBALS['_RESULT']['stat'] = "<span style=\"color:red\">Не удаётся скопphpировать phpshop/admpanel/dumper/backup/upload_backup.sql</span>";
-		log_write("Не удаётся скопphpировать phpshop/admpanel/dumper/backup/upload_backup.sql");
+		$GLOBALS['_RESULT']['stat'] = "<span style=\"color:red\">Не удаётся скопировать phpshop/admpanel/dumper/backup/upload_backup.sql</span>";
+		log_write("Не удаётся скопировать phpshop/admpanel/dumper/backup/upload_backup.sql");
 		exit();		
 	}
 	if (!unlink("../../../../backup/temp/upload_backup.sql.gz")){

@@ -1,5 +1,7 @@
 <?php
 
+if (!defined("OBJENABLED"))
+    exit(header('Location: /?error=OBJENABLED'));
 
 class PHPShopRulepartner extends PHPShopCore {
 

@@ -25,17 +25,26 @@ $PHPShopOrm = new PHPShopOrm($PHPShopModules->getParam("base.sale.sale_system"))
 
 // Функция обновления
 function actionUpdate() {
-    global $PHPShopOrm;
+    global $PHPShopOrm,$LoadItems;
 
     $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['products']);
     $price = ($price + (($price * $LoadItems['System']['percent']) / 100));
     $pr = $_POST['mod_sale_price'] / 100;
 
-    if (empty($_POST['mod_sale_old']))
-        $_POST['mod_sale_old'] = '0';
+    switch($_POST['mod_sale_old']){
+        case "null":
+            $price_n='price=0 ';
+            break;
+        case "price":
+            $price_n='price=price'.$_POST['mod_sale_opt'].'(price*'.$pr.') ';
+            break;
+        default:
+            $price_n=null;
+    }
+    
 
     $PHPShopOrm->sql = 'update ' . $GLOBALS['SysValue']['base']['products'] . ' set 
-    price_n=' . $_POST['mod_sale_old'] . ',
+    '.$price_n.'
     price=price' . $_POST['mod_sale_opt'] . '(price*' . $pr . ')'; 
     $action=$PHPShopOrm->update();
 
@@ -61,10 +70,11 @@ function actionStart() {
     $sel_value[] = array('+', '+', false);
     $sel_value[] = array('-', '-', 'selected');
     $sel = $PHPShopGUI->setSelect('mod_sale_opt', $sel_value, 40);
-    $Tab1 = $PHPShopGUI->setField('Новая цена', $PHPShopGUI->setInputText('Поменять цену у всех товаров на ' . $sel, 'mod_sale_price', "10", '30', '%'));
+    $Tab1 = $PHPShopGUI->setField('Новая цена', $PHPShopGUI->setInputText('Поменять цену у всех товаров на ' . $sel, 'mod_sale_price', "", '30', '%'));
 
-    $sel_value2[] = array('Обнулить', 0, false);
-    $sel_value2[] = array('Присвоить значение розничной цены до изменения', 'price', 'selected');
+    $sel_value2[]=array('Выбрать','none');
+    $sel_value2[]=array('Обнулить','null');
+    $sel_value2[]=array('Присвоить значение розничной цены до изменения','price');
 
     $Tab1.=$PHPShopGUI->setField('Старая цена', $PHPShopGUI->setSelect('mod_sale_old', $sel_value2, 300));
 
@@ -74,7 +84,7 @@ function actionStart() {
 ';
     $Tab1.= $PHPShopGUI->setInfo($Info,50,'95%');
     
-    $Tab2 = $PHPShopGUI->setPay($serial, false, $version, true);
+    $Tab2 = $PHPShopGUI->setPay($serial, false);
 
     // Вывод формы закладки
     $PHPShopGUI->setTab(array("Основное", $Tab1, 270), array("О Модуле", $Tab2, 270));

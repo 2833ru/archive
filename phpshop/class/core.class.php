@@ -5,7 +5,7 @@
  * Примеры использования размещены в папке phpshop/core/
  * @author PHPShop Software
  * @tutorial http://wiki.phpshop.ru/index.php/PHPShopCore
- * @version 1.6
+ * @version 1.7
  * @package PHPShopClass
  */
 class PHPShopCore {
@@ -27,6 +27,12 @@ class PHPShopCore {
      * @var bool 
      */
     var $debug = false;
+
+    /**
+     * вывод SQL ошибок
+     * @var bool 
+     */
+    var $mysql_error = false;
 
     /**
      * результат работы парсера
@@ -84,6 +90,12 @@ class PHPShopCore {
      * @var bool 
      */
     var $garbage_enabled = false;
+    
+    /**
+     * отключение защиты проверки пустого экшена
+     * @var bool
+     */
+    var $empty_index_action = true;
 
     /**
      * Конструктор
@@ -91,18 +103,18 @@ class PHPShopCore {
     function PHPShopCore() {
         global $PHPShopSystem, $PHPShopNav, $PHPShopModules;
 
-        if ($this->objBase)
+        if ($this->objBase) {
             $this->PHPShopOrm = new PHPShopOrm($this->objBase);
-
-        $this->PHPShopOrm->debug = $this->debug;
+            $this->PHPShopOrm->debug = $this->debug;
+            $this->PHPShopOrm->cache = $this->cache;
+        }
         $this->SysValue = &$GLOBALS['SysValue'];
         $this->PHPShopSystem = $PHPShopSystem;
-        $this->PHPShopOrm->cache = $this->cache;
         $this->num_row = $this->PHPShopSystem->getParam('num_row');
         $this->PHPShopNav = $PHPShopNav;
         $this->PHPShopModules = &$PHPShopModules;
         $this->page = $this->PHPShopNav->getId();
-        
+
         if (strlen($this->page) == 0)
             $this->page = 1;
 
@@ -280,7 +292,7 @@ class PHPShopCore {
     /**
      * Генерация пагинатора
      */
-    function setPaginator() {
+    function setPaginator($count = null, $sql = null) {
 
         $SQL = null;
         // Выборка по параметрам WHERE
@@ -360,16 +372,27 @@ class PHPShopCore {
      * Добавление данных в вывод парсера
      * @param string $template шаблон для парсинга
      * @param bool $mod работа в модуле
+     * @param array масив замены в шаблоне
      */
-    function addToTemplate($template, $mod = false) {
+    function addToTemplate($template, $mod = false, $replace = null) {
         if ($mod)
             $template_file = $template;
         else
             $template_file = $this->getValue('dir.templates') . chr(47) . $_SESSION['skin'] . chr(47) . $template;
         if (is_file($template_file)) {
-            $this->ListInfoItems.=ParseTemplateReturn($template, $mod);
+            $dis = ParseTemplateReturn($template, $mod);
+
+            // Замена в шаблоне
+            if (is_array($replace)) {
+                foreach ($replace as $key => $val)
+                    $dis = str_replace($key, $val, $dis);
+            }
+
+            $this->ListInfoItems.=$dis;
+
             $this->set('pageContent', $this->ListInfoItems);
-        }else
+        }
+        else
             $this->setError("addToTemplate", $template_file);
     }
 
@@ -389,10 +412,19 @@ class PHPShopCore {
      * Парсинг шаблона и добавление в общую переменную вывода
      * @param string $template имя шаблона
      * @param bool $mod работа в модуле
+     * @param array $replace масив замены в шаблоне
      */
-    function parseTemplate($template, $mod = false) {
+    function parseTemplate($template, $mod = false, $replace = null) {
         $this->set('productPageDis', $this->ListInfoItems);
-        $this->Disp = ParseTemplateReturn($template, $mod);
+        $dis = ParseTemplateReturn($template, $mod);
+
+        // Замена в шаблоне
+        if (is_array($replace)) {
+            foreach ($replace as $key => $val)
+                $dis = str_replace($key, $val, $dis);
+        }
+
+        $this->Disp = $dis;
     }
 
     /**
@@ -411,7 +443,6 @@ width="32" height="32" alt="PHPShopCore Debug On"/ ><strong>Ошибка обработчика с
      * Компиляция парсинга
      */
     function Compile() {
-        global $PHPShopDebug;
 
         // Переменная вывода
         $this->set('DispShop', $this->Disp, false, true);
@@ -425,10 +456,20 @@ width="32" height="32" alt="PHPShopCore Debug On"/ ><strong>Ошибка обработчика с
         // Запись файла локализации
         writeLangFile();
 
-        // Вывод в шаблон
-        ParseTemplate($this->getValue($this->template));
+        /**
+         * Перехват модуля 
+         * Если больше не получилось никуда внедриться, то можно перехватить буфер и поменять str_replace. 
+         * Буфер $obj->Disp или $obj->get('DispShop');
+         */
+        $hook = $this->setHook(__CLASS__, __FUNCTION__);
+        if ($hook) {
+            return $hook;
+        } else {
+            // Вывод в шаблон
+            ParseTemplate($this->getValue($this->template));
+        }
 
-        // Очистка временных переменных шаблонов
+        // Очистка временных переменных шаблонов [off]
         $this->garbage();
     }
 
@@ -467,6 +508,18 @@ width="32" height="32" alt="PHPShopCore Debug On"/ ><strong>Ошибка обработчика с
 
         if (!empty($this->SysValue[$param[0]][$param[1]]))
             return $this->SysValue[$param[0]][$param[1]];
+    }
+
+    /**
+     * Изменение системной переменной
+     * @param string $param раздел.имя переменной
+     * @param mixed $value значение параметра
+     */
+    function setValue($param, $value) {
+        $param = explode(".", $param);
+        if ($param[0] == "var")
+            $param[0] = "other";
+        $this->SysValue[$param[0]][$param[1]] = $value;
     }
 
     /**
@@ -539,8 +592,14 @@ width="32" height="32" alt="PHPShopCore Debug On"/ ><strong>Ошибка обработчика с
                                 }
                             }
                             if (empty($call_user_func)) {
-                                if ($this->isAction('index'))
-                                    call_user_func(array(&$this, $this->action_prefix . 'index'));
+                                if ($this->isAction('index')) {
+
+                                    // Защита от битых адресов /page/page/page/****
+                                    if ($this->PHPShopNav->getNav() and !$this->empty_index_action)
+                                        $this->setError404();
+                                    else
+                                        call_user_func(array(&$this, $this->action_prefix . 'index'));
+                                }
                                 else
                                     $this->setError($this->action_prefix . "index", "метод не существует");
                             }
@@ -548,8 +607,14 @@ width="32" height="32" alt="PHPShopCore Debug On"/ ><strong>Ошибка обработчика с
                             // Если один экшен
                             if ($this->PHPShopNav->getNav() == $v and $this->isAction($v))
                                 return call_user_func(array(&$this, $this->action_prefix . $v));
-                            elseif ($this->isAction('index'))
-                                call_user_func(array(&$this, $this->action_prefix . 'index'));
+                            elseif ($this->isAction('index')) {
+
+                                // Защита от битых адресов /page/page/page/****
+                                if ($this->PHPShopNav->getNav() and !$this->empty_index_action)
+                                    $this->setError404();
+                                else
+                                    call_user_func(array(&$this, $this->action_prefix . 'index'));
+                            }
                             else
                                 $this->setError($this->action_prefix . "phpshop" . $this->PHPShopNav->getPath() . "->index", "метод не существует");
                         }
@@ -557,7 +622,8 @@ width="32" height="32" alt="PHPShopCore Debug On"/ ><strong>Ошибка обработчика с
                         break;
                 }
             }
-        }else
+        }
+        else
             $this->setError("action", "экшены объявлена неверно");
     }
 
@@ -714,6 +780,13 @@ width="32" height="32" alt="PHPShopCore Debug On"/ ><strong>Ошибка обработчика с
             unset($this->SysValue['other']);
             timer('end', 'Garbage');
         }
+    }
+
+    /**
+     * Сообщение об неизвестном методе
+     */
+    function __call($m, $a) {
+        echo $this->message('Ошибка', '$' . __CLASS__ . '->' . $m . '() не определен в ' . __FILE__);
     }
 
 }

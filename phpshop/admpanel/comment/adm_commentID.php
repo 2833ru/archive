@@ -3,12 +3,7 @@ require("../connect.php");
 @mysql_connect("$host", "$user_db", "$pass_db") or @die("Невозможно подсоединиться к базе");
 mysql_select_db("$dbase") or @die("Невозможно подсоединиться к базе");
 require("../enter_to_admin.php");
-
-// Языки
-$GetSystems = GetSystems();
-$option = unserialize($GetSystems['admoption']);
-$Lang = $option['lang'];
-require("../language/" . $Lang . "/language.php");
+require("../language/russian/language.php");
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
@@ -21,32 +16,11 @@ require("../language/" . $Lang . "/language.php");
         <SCRIPT language=JavaScript src="../java/popup_lib.js"></SCRIPT>
         <SCRIPT language=JavaScript src="../java/dateselector.js"></SCRIPT>
         <script language="JavaScript1.2" src="../java/javaMG.js" type="text/javascript"></script>
-        <script type="text/javascript" language="JavaScript1.2" src="../language/<?= $Lang ?>/language_windows.js"></script>
-        <script type="text/javascript" language="JavaScript1.2" src="../language/<?= $Lang ?>/language_interface.js"></script>
-        <script>
-            DoResize(<? echo $GetSystems['width_icon'] ?>, 630, 580);
-        </script>
     </head>
-    <body bottommargin="0"  topmargin="0" leftmargin="0" rightmargin="0" onload="DoCheckLang(location.pathname,<?= $SysValue['lang']['lang_enabled'] ?>);
-                preloader(0)">
-        <table id="loader">
-            <tr>
-                <td valign="middle" align="center">
-                    <div id="loadmes" onclick="preloader(0)">
-                        <table width="100%" height="100%">
-                            <tr>
-                                <td id="loadimg"></td>
-                                <td ><b><?= $SysValue['Lang']['System']['loading'] ?></b><br><?= $SysValue['Lang']['System']['loading2'] ?></td>
-                            </tr>
-                        </table>
-                    </div>
-                </td>
-            </tr>
-        </table>
-        <SCRIPT language=JavaScript type=text/javascript>preloader(1);</SCRIPT>
+    <body bottommargin="0"  topmargin="0" leftmargin="0" rightmargin="0">
         <?
         // Редактирование записей книги
-        $sql = "select * from " . $SysValue['base']['table_name36'] . " where id=".intval($id);
+        $sql = "select * from " . $SysValue['base']['table_name36'] . " where id=" . intval($_GET['id']);
         $result = mysql_query($sql);
         $row = mysql_fetch_array($result);
         $id = $row['id'];
@@ -73,7 +47,6 @@ require("../language/" . $Lang . "/language.php");
                     </td>
                 </tr>
             </table>
-            <br>
             <table cellpadding="5" cellspacing="0" border="0" width="100%">
                 <tr valign="top">
                     <td width="130">
@@ -107,7 +80,7 @@ require("../language/" . $Lang . "/language.php");
                                 $result = mysql_query($sql);
                                 $row = mysql_fetch_array($result);
                                 echo '
-	  <img src="../img/icon-setup.gif"  border="0" align="absmiddle" hspace="5"><a href="http://' . $SERVER_NAME . '/shop/UID_' . $parent_id . '.html"  target="_blank" title="Переход">' . $row['name'] . '</a>
+	  <img src="../img/icon-setup.gif"  border="0" align="absmiddle" hspace="5"><a href="http://' . $_SERVER[SERVER_NAME] . '/shop/UID_' . $parent_id . '.html"  target="_blank" title="Переход">' . $row['name'] . '</a>
 	  ';
                                 ?>
                             </div>

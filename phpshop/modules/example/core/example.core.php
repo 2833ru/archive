@@ -1,4 +1,8 @@
 <?
+
+if (!defined("OBJENABLED"))
+    exit(header('Location: /?error=OBJENABLED'));
+
 // Example - проверка работы
 class PHPShopExample extends PHPShopCore {
 
@@ -23,7 +27,7 @@ class PHPShopExample extends PHPShopCore {
         $this->set('pageTitle','Example');
 
         // Добавляем справочную информацию
-        $info='<p>Информация сгенерировна файлом phpshop/modules/example/core/example.core.php<br>
+        $info='<p>Информация сгенерирована файлом phpshop/modules/example/core/example.core.php<br>
             Для получения информации по серверу PhpInfo() нажмите на <a href="?info=true">ссылку</a>.
             <p>
             <h4>Описание API PHPShopCore</h4>

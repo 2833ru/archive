@@ -16,7 +16,7 @@ PHPShopXmlManager1.id= 'shopItem';
 PHPShopXmlManager1.obj = 1;
 PHPShopXmlManager1.imgwidth = 100;
 PHPShopXmlManager1.currency = ' руб.';
-PHPShopXmlManager1.partner = @partnerId@;
+PHPShopXmlManager1.partner = '@partnerId@';
 PHPShopXmlManager1.limit = 5;
 PHPShopXmlManager1.load();
 </script></textarea>

@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * Обработчик оповещения о платеже Ligpay
+ */
+
 session_start();
 
 $_classPath = "../../../";
@@ -16,6 +20,7 @@ PHPShopObj::loadClass("system");
 $PHPShopBase = new PHPShopBase($_classPath . "inc/config.ini");
 
 $PHPShopModules = new PHPShopModules($_classPath . "modules/");
+$PHPShopModules->checkInstall('liqpay');
 
 class LiqPayment extends PHPShopPaymentResult {
 

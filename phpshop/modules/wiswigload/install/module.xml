@@ -2,9 +2,9 @@
 <module>
     <version>1.0</version>
     <name>WISWIG Load</name>
-    <description>Загрузчик визульных редакторов</description>
+    <description>Загрузчик визуальных редакторов</description>
     <icon>icon.png</icon>
-    <category>wiswig</category>
+    <category>develop</category>
     <adminmenu>
         <title>WISWIG Load</title>
         <podmenu>

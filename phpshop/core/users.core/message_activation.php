@@ -9,8 +9,8 @@
 function message_activation($obj) {
 
     $obj->set('user_key',$obj->user_status);
-    $obj->set('user_mail',$_POST['mail_new']);
-    $obj->set('user_name',$_POST['name_new']);
+    $obj->set('user_mail',PHPShopSecurity::TotalClean($_POST['mail_new'],3));
+    $obj->set('user_name',PHPShopSecurity::TotalClean($_POST['name_new'],4));
     $obj->set('user_login',$_POST['login_new']);
     $obj->set('user_password',$_POST['password_new']);
     
@@ -20,7 +20,7 @@ function message_activation($obj) {
     if($obj->PHPShopSystem->ifSerilizeParam('admoption.user_mail_activate')) {
 
         // Заголовок e-mail пользователю
-        $title=$obj->PHPShopSystem->getName()." - ".$obj->locale['activation_title']." ".$_POST['name_new'];
+        $title=$obj->PHPShopSystem->getName()." - ".$obj->locale['activation_title']." ".PHPShopSecurity::TotalClean($_POST['name_new']);
 
         // Содержание e-mail пользователю
         $content=ParseTemplateReturn('./phpshop/lib/templates/users/mail_user_activation.tpl',true);

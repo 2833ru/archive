@@ -3,12 +3,7 @@ require("../connect.php");
 @mysql_connect("$host", "$user_db", "$pass_db") or @die("Невозможно подсоединиться к базе");
 mysql_select_db("$dbase") or @die("Невозможно подсоединиться к базе");
 require("../enter_to_admin.php");
-
-// Языки
-$GetSystems = GetSystems();
-$option = unserialize($GetSystems['admoption']);
-$Lang = $option['lang'];
-require("../language/" . $Lang . "/language.php");
+require("../language/russian/language.php");
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
@@ -20,27 +15,8 @@ require("../language/" . $Lang . "/language.php");
         <SCRIPT language="JavaScript" src="/phpshop/lib/Subsys/JsHttpRequest/Js.js"></SCRIPT>
         <script language="JavaScript1.2" src="../java/javaMG.js" type="text/javascript"></script>
         <script type="text/javascript" src="../java/tabpane.js"></script>
-        <script type="text/javascript" language="JavaScript1.2" src="../language/<?= $Lang ?>/language_windows.js"></script>
-        <script type="text/javascript" language="JavaScript1.2" src="../language/<?= $Lang ?>/language_interface.js"></script>
     </head>
-    <body bottommargin="0"  topmargin="0" leftmargin="0" rightmargin="0" onload="DoCheckLang(location.pathname,<?= $SysValue['lang']['lang_enabled'] ?>);
-        preloader(0)">
-        <table id="loader">
-            <tr>
-                <td valign="middle" align="center">
-                    <div id="loadmes" onclick="preloader(0)">
-                        <table width="100%" height="100%">
-                            <tr>
-                                <td id="loadimg"></td>
-                                <td ><b><?= $SysValue['Lang']['System']['loading'] ?></b><br><?= $SysValue['Lang']['System']['loading2'] ?></td>
-                            </tr>
-                        </table>
-                    </div>
-                </td>
-            </tr>
-        </table>
-
-        <SCRIPT language=JavaScript type=text/javascript>preloader(1);</SCRIPT>
+    <body bottommargin="0"  topmargin="0" leftmargin="0" rightmargin="0">
         <?
 
 // Вывод ответов
@@ -53,7 +29,7 @@ require("../language/" . $Lang . "/language.php");
                 $name = $row['name'];
                 $num = $row['num'];
                 @$disp.='
-	<tr onclick="miniWin(\'adm_valueID.php?id=' . $id . '\',500,400)"  onmouseover="show_on(\'r' . $id . '\')" id="r' . $id . '" onmouseout="show_out(\'r' . $id . '\')" class=row>
+	<tr onclick="miniWin(\'adm_valueID.php?id=' . $id . '\',500,450)"  onmouseover="show_on(\'r' . $id . '\')" id="r' . $id . '" onmouseout="show_out(\'r' . $id . '\')" class=row>
 	<td class="forma">' . $name . '</td>
 	<td class="forma">' . $num . '</td>
 </tr>
@@ -88,7 +64,7 @@ $dis
         }
 
 // Редактирование записей книги
-        $sql = "select * from " . $SysValue['base']['table_name20'] . " where id=".intval($id);
+        $sql = "select * from " . $SysValue['base']['table_name20'] . " where id=" . intval($_GET['id']);
         $result = mysql_query($sql);
         $row = mysql_fetch_array($result);
         $id = $row['id'];
@@ -127,7 +103,7 @@ $dis
             <div class="tab-pane" id="article-tab" style="margin-top:5px;height:300px">
 
                 <script type="text/javascript">
-                    tabPane = new WebFXTabPane(document.getElementById("article-tab"), true);
+        tabPane = new WebFXTabPane(document.getElementById("article-tab"), true);
                 </script>
 
 
@@ -155,18 +131,18 @@ $dis
                         </tr>
                         <tr>
                             <td>
-                                <FIELDSET>
+                                <FIELDSET style="height:70px;">
                                     <LEGEND><span name=txtLang id=txtLang><u>О</u>пции</span> </LEGEND>
-                                    <div style="padding:10">
-                                        <input type="checkbox" value="1" name="flag_new" <?= $flag ?>> <span name=txtLang id=txtLang>Подкаталог 3-го уровня</span>&nbsp;&nbsp;&nbsp;
+                                    <div style="padding:10px">
+                                        
                                         <input type="checkbox" value="1" name="filtr_new" <?= $filtr ?>><span name=txtLang id=txtLang>Фильтр</span>
-                                        <input type="checkbox" value="1" name="goodoption_new" <?= $goodoption ?>><span name=txtLang id=txtLang>Товарная опция</span>
+                                        <input type="checkbox" value="1" name="goodoption_new" <?= $goodoption ?>><span name=txtLang id=txtLang>Товарная опция</span><br>
                                         <input type="checkbox" value="1" name="optionname_new" <?= $optionname ?>><span name=txtLang id=txtLang>Показывать описание опции в корзине</span>
                                     </div>
                                 </FIELDSET>
                             </td>
                             <td>
-                                <FIELDSET>
+                                <FIELDSET style="height:70px;">
                                     <LEGEND><span name=txtLang id=txtLang><u>П</u>озиция</span> </LEGEND>
                                     <div style="padding:10">
                                         <input type="text" name="num_new" class="full" value="<?= $num ?>">
@@ -176,17 +152,16 @@ $dis
                         </tr>
                         <tr>
                             <td colspan="2">
-                                <table width="100%"  cellpadding="0" cellspacing="0" style="border: 1px;
-                                       border-style:inset;" >
+                                <table width="100%"  cellpadding="0" cellspacing="0">
                                     <tr>
                                         <td valign="top">
                                             <div align="left" style="width:100%;height:150;overflow:auto"> 
-                                                <table cellpadding="0" cellspacing="1" width="100%" border="0" bgcolor="#808080">
+                                                <table cellpadding="0" cellspacing="1" width="100%" border="0">
                                                     <tr>
                                                         <td id=pane align=center><img src=../img/arrow_d.gif width=7 height=7 border=0 hspace=5><span name=txtLang id=txtLang>Характериcтика</span></td>
                                                         <td id=pane align=center><img src=../img/arrow_d.gif width=7 height=7 border=0 hspace=5><span name=txtLang id=txtLang>Сортировка</span></td>
                                                     </tr>
-                                        <?= dispValue($id); ?>
+                                                    <?= dispValue($_GET['id']); ?>
                                                 </table>
 
 
@@ -194,8 +169,8 @@ $dis
                                     </tr>
                                 </table>
                                 <div align="right" style="padding:10">
-                                    <BUTTON style="width: 15em; height: 2.2em; margin-left:5"  onclick="miniWin('adm_value_new.php?categoryID=<?= $id ?>', 500, 400);
-        return false;">
+                                    <BUTTON style="width: 15em; height: 2.2em; margin-left:5"  onclick="miniWin('adm_value_new.php?categoryID=<?= $id ?>', 500, 450);
+                            return false;">
                                         <img src="../icon/page_add.gif" width="16" height="16" border="0" align="absmiddle" hspace="5">
                                         <span name=txtLang id=txtLang>Новая позиция</span>
                                     </BUTTON>
@@ -229,7 +204,7 @@ $dis
                                 <FIELDSET>
                                     <LEGEND><span name=txtLang id=txtLang><u>С</u>ылка на описание</span></LEGEND>
                                     <div style="padding:10">
-<? echo dispPage($page) ?>
+                                        <? echo dispPage($page) ?>
                                         <p>* Используется при выводе имени характеристики в подробном описании товара в виде ссылки на указанную страницу (описание характеристики "мощность" становится доступной в подробной форме товара в таблице вывода характеристик).</p>
                                     </div>
                                 </FIELDSET>

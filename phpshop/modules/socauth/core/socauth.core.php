@@ -1,5 +1,8 @@
 <?php
 
+if (!defined("OBJENABLED"))
+    exit(header('Location: /?error=OBJENABLED'));
+
 class PHPShopSocauth extends PHPShopCore {
 
     // массив настроек для соцсетей. Формируем в конструкторе.
@@ -70,7 +73,7 @@ class PHPShopSocauth extends PHPShopCore {
             // Let's get the user's info
             $user_info = $twitteroauth->get('account/verify_credentials');
             // Print user's info
-            if (isset($user_info->error)) {
+            if (isset($user_info->errors)) {
                 // Something's wrong, go back to square 1  
                 //header('Location: login-twitter.php');
                 $this->error = ParseTemplateReturn($GLOBALS['SysValue']['templates']['socauth']['socauth_twitter_auth_fail'], true);
@@ -85,7 +88,7 @@ class PHPShopSocauth extends PHPShopCore {
 
             $twitteroauth = new TwitterOAuth($this->authConfig['twitter']['key'], $this->authConfig['twitter']['secretkey']);
             // Requesting authentication tokens, the parameter is the URL we will be redirected to
-            $getDataUrl = "http://" . $_SERVER['SERVER_NAME'] . "/socauth/twitter";
+            $getDataUrl = "http://" . $_SERVER['SERVER_NAME'] . "/socauth/twitter/";
             $request_token = $twitteroauth->getRequestToken($getDataUrl);
 
             // Saving them into the session
@@ -179,7 +182,7 @@ class PHPShopSocauth extends PHPShopCore {
         if ($user) {
             try {
                 // Proceed knowing you have a logged in user who's authenticated.
-                $user_profile = $facebook->api('/me');
+                $user_profile = $facebook->api('/me','GET');
             } catch (FacebookApiException $e) {
                 error_log($e);
                 $user = null;
@@ -191,7 +194,7 @@ class PHPShopSocauth extends PHPShopCore {
             if (!empty($user_profile)) { // если данные получены
                 // Если емейл не передан, отказываем в авторизации.
                 if (!isset($user_profile['email'])) {
-                    $this->set('link', $facebook->getLoginUrl(array('req_perms' => 'email')));
+                    $this->set('link', $facebook->getLoginUrl(array('scope' => 'email')));
                     $this->error = ParseTemplateReturn($GLOBALS['SysValue']['templates']['socauth']['socauth_facebook_email_fail'], true);
 
                     return false;
@@ -211,7 +214,7 @@ class PHPShopSocauth extends PHPShopCore {
             }
         } else {
             // переходим на авторизацию с запросом возможности передачи емейла.
-            $login_url = $facebook->getLoginUrl(array('req_perms' => 'email'));
+            $login_url = $facebook->getLoginUrl(array('scope' => 'email'));
             header("Location: " . $login_url);
         }
     }

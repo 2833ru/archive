@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="windows-1251"?>
 <module>
-    <version>1.1</version>
+    <version>1.2</version>
     <name>SocAuth</name>
     <description>Модуль авторизации через facebook, twitter.</description>
     <icon>icon.png</icon>
@@ -13,4 +13,10 @@
             <podmenu_action>javascript:miniWin('../modules/socauth/admpanel/adm_module.php',510,450);</podmenu_action>
         </podmenu>
     </adminmenu>
+    <history>
+        <update>
+            <date>11.09.2013</date>
+            <content>Обновлена логига работы модуля в связи с изменениями в API Facebook PHP SDK</content>
+        </update>
+    </history>
 </module>

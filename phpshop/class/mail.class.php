@@ -1,7 +1,7 @@
 <?php
 /**
  * Библиотека Отправление почты
- * @version 1.1
+ * @version 1.2
  * @package PHPShopClass
  * @tutorial http://doc.phpshop.ru/PHPShopClass/PHPShopMail.html
  * <code>
@@ -32,8 +32,13 @@ class PHPShopMail {
      * @param string $from от кого
      * @param string $zag заголовок письма
      * @param string $content содежание письма
+     * @param string $type тип содержания
      */
-    function PHPShopMail($to,$from,$zag,$content) {
+    function PHPShopMail($to,$from,$zag,$content,$type=false) {
+        
+        if(!empty($type))
+            $this->type = $type;
+        
         $this->from=$from;
         $this->zag="=?".$this->codepage."?B?".base64_encode($zag)."?=";
         $this->to=$to;
@@ -47,6 +52,7 @@ class PHPShopMail {
     function getHeader() {
         $header = "MIME-Version: ".$this->mime."\n";
         $header.= "From:   <".$this->from.">\n";
+        $header.= "Reply-To: $this->from\n";
         $header.= "Content-Type: ".$this->type."; charset=".$this->codepage."\n";
         $header.= "Content-Transfer-Encoding: 8bit\n";
         return $header;

@@ -3,12 +3,7 @@ require("../connect.php");
 @mysql_connect("$host", "$user_db", "$pass_db") or @die("Ќевозможно подсоединитьс€ к базе");
 mysql_select_db("$dbase") or @die("Ќевозможно подсоединитьс€ к базе");
 require("../enter_to_admin.php");
-
-// языки
-$GetSystems = GetSystems();
-$option = unserialize($GetSystems['admoption']);
-$Lang = $option['lang'];
-require("../language/" . $Lang . "/language.php");
+require("../language/russian/language.php");
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
@@ -18,33 +13,11 @@ require("../language/" . $Lang . "/language.php");
         <LINK href="../skins/<?= $_SESSION['theme'] ?>/texts.css" type=text/css rel=stylesheet>
         <SCRIPT language="JavaScript" src="/phpshop/lib/Subsys/JsHttpRequest/Js.js"></SCRIPT>
         <script language="JavaScript1.2" src="../java/javaMG.js" type="text/javascript"></script>
-        <script type="text/javascript" language="JavaScript1.2" src="../language/<?= $Lang ?>/language_windows.js"></script>
-        <script type="text/javascript" language="JavaScript1.2" src="../language/<?= $Lang ?>/language_interface.js"></script>
-        <script>
-            DoResize(<? echo $GetSystems['width_icon'] ?>, 400, 270);
-        </script>
     </head>
-    <body bottommargin="0"  topmargin="0" leftmargin="0" rightmargin="0" onload="DoCheckLang(location.pathname,<?= $SysValue['lang']['lang_enabled'] ?>);
-        preloader(0)">
-        <table id="loader">
-            <tr>
-                <td valign="middle" align="center">
-                    <div id="loadmes" onclick="preloader(0)">
-                        <table width="100%" height="100%">
-                            <tr>
-                                <td id="loadimg"></td>
-                                <td ><b><?= $SysValue['Lang']['System']['loading'] ?></b><br><?= $SysValue['Lang']['System']['loading2'] ?></td>
-                            </tr>
-                        </table>
-                    </div>
-                </td>
-            </tr>
-        </table>
-
-        <SCRIPT language=JavaScript type=text/javascript>preloader(1);</SCRIPT>
+    <body bottommargin="0"  topmargin="0" leftmargin="0" rightmargin="0">
         <?
         if (isset($id)) {
-            $sql = "select * from " . $SysValue['base']['table_name10'] . " where id=" . intval($id);
+            $sql = "select * from " . $SysValue['base']['table_name10'] . " where id=" . intval($_GET['id']);
             $result = mysql_query($sql);
             $row = mysql_fetch_array($result);
             $id = $row['id'];
@@ -66,7 +39,7 @@ require("../language/" . $Lang . "/language.php");
                 <table cellpadding="5" cellspacing="0" border="0" align="center" width="100%">
                     <tr>
                         <td colspan="2">
-                            <FIELDSET id=fldLayout style="width: 100%; height: 8em;">
+                            <FIELDSET id=fldLayout style="height: 8em;">
                                 <LEGEND id=lgdLayout><u>I</u>P </LEGEND>
                                 <div style="padding:10">
                                     <input type="text" name="ip_new" value="<?= $ip ?>" style="width: 100%;"><br><br>

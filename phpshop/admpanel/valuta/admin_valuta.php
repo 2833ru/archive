@@ -31,7 +31,7 @@ function Valuta() {// Вывод валют
         }
 
 
-        $display.='<tr class="row ' . $style_r . '" id="r' . $id . '" onmouseover="PHPShopJS.rowshow_on(this)" onmouseout="PHPShopJS.rowshow_out(this,\'' . $style_r . '\')" onclick="miniWin(\'valuta/adm_valutaID.php?id=' . $id . '\',400,360)">';
+        $display.='<tr class="row ' . $style_r . '" id="r' . $id . '" onmouseover="PHPShopJS.rowshow_on(this)" onmouseout="PHPShopJS.rowshow_out(this,\'' . $style_r . '\')" onclick="miniWin(\'valuta/adm_valutaID.php?id=' . $id . '\',450,360)">';
 
 
         $display.="
@@ -69,7 +69,7 @@ function Valuta() {// Вывод валют
     </table>
 </table>
 
-<div align=\"right\" style=\"width:50%;padding:10\"><BUTTON style=\"width: 15em; height: 2.2em; margin-left:5\"  onclick=\"miniWin('valuta/adm_valuta_new.php',400,360)\">
+<div align=\"right\" style=\"width:50%;padding:10\"><BUTTON style=\"width: 15em; height: 2.2em; margin-left:5\"  onclick=\"miniWin('valuta/adm_valuta_new.php',450,360)\">
 <img src=\"icon/page_add.gif\" width=\"16\" height=\"16\" border=\"0\" align=\"absmiddle\" hspace=\"5\">
 <span name=txtLang id=txtLang>Новая позиция</span>
 </BUTTON></div></div>

@@ -327,7 +327,7 @@ function Visitor($pole1, $pole2, $words, $list) {// вывод покупателей
 
 <table cellpadding="0" cellspacing="1" width="100%" border="0">
 <tr>
-	<td width="100" id="pane" align="center"><img  src="icon/blank.gif"  width="1" height="1" border="0" onLoad="starter(\'visiter\');" align="left"><img src=img/arrow_d.gif width=7 height=7 border=0 hspace=5><span name=txtLang id=txtLang>Месяц (Год)</span></td>
+	<td width="100" id="pane" align="center"><img  src="icon/blank.gif"  width="1" height="1" border="0" align="left"><img src=img/arrow_d.gif width=7 height=7 border=0 hspace=5><span name=txtLang id=txtLang>Месяц (Год)</span></td>
 	<td id="pane" width="130" align="center"><img src=img/arrow_d.gif width=7 height=7 border=0 hspace=5><span name=txtLang id=txtLang>Выручка</span></td>
 	<td id="pane" width="130" align="center"><img src=img/arrow_d.gif width=7 height=7 border=0 hspace=5><span name=txtLang id=txtLang>Количество единиц товара</span></td>
 	<td id="pane" width="130" align="center"><img src=img/arrow_d.gif width=7 height=7 border=0 hspace=5><span name=txtLang id=txtLang>Прибыль</span></td>

@@ -24,6 +24,9 @@ $PHPShopBase = new PHPShopBase($_classPath . "inc/config.ini");
 PHPShopObj::loadClass("modules");
 $PHPShopModules = new PHPShopModules($_classPath . "modules/");
 
+if(empty($GLOBALS['SysValue']['base']['chat']['chat_system']))
+    exit('Модуль Chat не установлен');
+
 $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['chat']['chat_system']);
 $PHPShopOrm->debug = false;
 $option = $PHPShopOrm->select();

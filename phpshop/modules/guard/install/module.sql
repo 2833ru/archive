@@ -39,9 +39,11 @@ CREATE TABLE IF NOT EXISTS `phpshop_modules_guard_signature` (
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
 
 
-INSERT INTO `phpshop_modules_guard_signature` VALUES (1, 'PHP Trojan Loader ¹1', 'eval\\\\s{0,5}\\\\(\\\\s{0,5}base64_decode');
+INSERT INTO `phpshop_modules_guard_signature` VALUES (1, 'PHP Trojan Loader ¹1', 'eval');
 INSERT INTO `phpshop_modules_guard_signature` VALUES (2, 'HTML Trojan Loader ¹1', 'iframe[^stwtag("iframe"]');
 INSERT INTO `phpshop_modules_guard_signature` VALUES (3, 'JavaScript Trojan Loader ¹1', 'unescape[^unescape\\\\(document.cookie]');
+INSERT INTO `phpshop_modules_guard_signature` VALUES (4, 'PHP Trojan Loader ¹2', '@include_once');
+INSERT INTO `phpshop_modules_guard_signature` VALUES (5, 'PHP Trojan Loader ¹3', 'preg_replace');
 
 
 DROP TABLE IF EXISTS `phpshop_modules_guard_system`;
@@ -59,4 +61,4 @@ CREATE TABLE IF NOT EXISTS `phpshop_modules_guard_system` (
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
 
-INSERT INTO `phpshop_modules_guard_system` VALUES (1, '1', '0', '0', 1, 1283848267, 1283862742, 1283848981, '1','0');
+INSERT INTO `phpshop_modules_guard_system` (`id`, `enabled`, `stop`, `used`, `chek_day_num`, `last_crc`, `last_chek`, `last_update`, `mail_enabled`, `mode`) VALUES (1, '1', '0', '0', 1, 0, 0, 0, '1', '1');

@@ -1,5 +1,8 @@
 <?php
 
+if (!defined("OBJENABLED"))
+    exit(header('Location: /?error=OBJENABLED'));
+
 /**
  * Элемент формы обратного звонка
  */
@@ -30,9 +33,11 @@ class AddToTemplateReturnCallElement extends PHPShopElements {
     function display() {
 
         // Защитная каптча
-        $captcha = parseTemplateReturn($GLOBALS['SysValue']['templates']['returncall']['returncall_captcha_forma'], true);
-        $this->set('returncall_captcha', $captcha);
-        
+        if ($this->option['captcha_enabled'] == 1) {
+            $captcha = parseTemplateReturn($GLOBALS['SysValue']['templates']['returncall']['returncall_captcha_forma'], true);
+            $this->set('returncall_captcha', $captcha);
+        }
+
         $forma = parseTemplateReturn($GLOBALS['SysValue']['templates']['returncall']['returncall_forma'], true);
         $this->set('leftMenuContent', $forma);
         $this->set('leftMenuName', $this->option['title']);

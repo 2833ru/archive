@@ -4,7 +4,7 @@
     <name>Error Log</name>
     <description>Модуль записи ошибок и отладок.</description>
     <icon>icon.png</icon>
-    <category>develop,system</category>
+    <category>develop</category>
     <adminmenu>
         <title>Отладка</title>
         <podmenu>

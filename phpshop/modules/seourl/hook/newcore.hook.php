@@ -26,7 +26,7 @@ function ID_seourl_hook($obj, $row, $rout) {
             $obj->setError404();
         }
         elseif($url == $url_pack){
-            header( 'Location: '.$url_true.'.html', true, 301 );
+            header('Location: ' . $obj->getValue('dir.dir') . $url_true. '.html', true, 301);
             return true;
         }
     }

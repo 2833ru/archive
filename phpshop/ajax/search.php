@@ -27,7 +27,7 @@ class PHPShopSortAjax extends PHPShopSort{
 
 }
 
-$PHPShopSortAjax = new PHPShopSortAjax($_REQUEST['category']);
+$PHPShopSortAjax = new PHPShopSortAjax(intval($_REQUEST['category']));
 
 $_RESULT = array(
         'sort' =>$PHPShopSortAjax->display()

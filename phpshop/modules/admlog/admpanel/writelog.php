@@ -17,7 +17,7 @@ function setLog($data=false,$nameHandler=false) {
     } else $PHPShopGUI->title = 'Журнал событий';
 
     // Заголовок
-    $titleSearch=array('name_new','title_new','login_new','link_new','info_new');
+    $titleSearch=array('name_new','title_new','login_new','link_new','info_new','order_num');
     foreach($_POST as $key=>$val) {
         if(in_array($key, $titleSearch)) {
             $titleName = $_POST[$key];

@@ -13,7 +13,7 @@ $PHPShopBase = new PHPShopBase($_classPath . "inc/config.ini");
 $PHPShopSystem = new PHPShopSystem();
 
 $PHPShopModules = new PHPShopModules('../');
-
+$PHPShopModules->checkInstall('guard');
 
 $Guard = new Guard("../../../");
 $Guard->backup_path = '../../../UserFiles/Files/';
@@ -41,7 +41,7 @@ switch ($_GET['do']) {
 * Ссылка для загрузки файлов из карантина: http://' . $_SERVER['SERVER_NAME'] . $SysValue['dir']['dir'] . $quarantine_name;
 
                 PHPShopObj::loadClass("mail");
-                $PHPShopMail = &new PHPShopMail('guard@phpshop.ru', $PHPShopSystem->getParam('adminmail2'), $zag, $content);
+                $PHPShopMail = new PHPShopMail('guard@phpshop.ru', $PHPShopSystem->getParam('adminmail2'), $zag, $content);
                 $Guard->message('Файлы переданы службе поддержки PHPShop Guard.');
             }
         }
@@ -86,7 +86,9 @@ switch ($_GET['do']) {
                 break;
 
             case 1:
-                $message = 'Обновление сигнатур успешно выполнено.';
+                $message = 'Обновление сигнатур успешно выполнено. 
+База содержит следующие сигнатуры вирусов: 
+'.$Guard->update_result_virus;
                 break;
 
             case 2:
@@ -139,6 +141,6 @@ switch ($_GET['do']) {
         break;
 }
 
-//header('Location: /error/');
-//exit();
+header('Location: /error/');
+exit();
 ?>

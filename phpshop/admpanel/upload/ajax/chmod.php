@@ -1,5 +1,4 @@
 <?php
-echo $SysValue['user_ftp']['host'];
 
 if (!$ftp_stream_user = ftp_connect($SysValue['user_ftp']['host'])) {
 	$GLOBALS['_RESULT']['stat'] = "Не удаётся соедиться с сервером фтп пользоыателя!";
@@ -19,6 +18,4 @@ function user_ftp_chmod($ftp, $dir){
 	}
 	
 }
-
-
 ?>

@@ -6,7 +6,7 @@ global $SysValue;
 $_Return='
 <!--Управляющий интерфейс-->
 	 <form method="post" name="search">
-	 <table width="100%" cellpadding="0" cellpadding="0">
+	 <table width="100%" cellpadding="0" cellpadding="0" class="iconpane border-bottom">
 <tr>
 <td>
 
@@ -20,7 +20,7 @@ $_Return='
     </td>
    <td width="5"></td>
 	<td width="1" bgcolor="#ffffff"></td>
-	<td width="1" bgcolor="#808080"></td>
+	<td width="1" bgcolor="#808080" class="separator"></td>
    <td width="5"></td>
     <td id="but33"  class="butoff"><img name="imgLang" src="icon/page_new.gif" alt="Новое сообщение" title="Новое сообщение" width="16" height="16" border="0" onmouseover="ButOn(33)" onmouseout="ButOff(33)" onclick="NewUMessage()">
     </td>

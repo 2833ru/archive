@@ -64,6 +64,10 @@ function actionStart() {
     // Тип вывода
     $w_value[]=array('форма',0,$windows);
     $w_value[]=array('всплывающее окно',1,$windows);
+    
+    // Captcha
+    $c_value[]=array('да',1,$captcha_enabled);
+    $c_value[]=array('нет',2,$captcha_enabled);
 
 
     // Графический заголовок окна
@@ -73,6 +77,7 @@ function actionStart() {
     $Tab1.=$PHPShopGUI->setField('Сообщение', $PHPShopGUI->setTextarea('title_end_new', $title_end));
     $Tab1.=$PHPShopGUI->setField('Место вывода',$PHPShopGUI->setSelect('enabled_new',$e_value,150),'left');
     $Tab1.=$PHPShopGUI->setField('Тип вывода',$PHPShopGUI->setSelect('windows_new',$w_value,150),'left');
+    $Tab1.=$PHPShopGUI->setField('Captcha',$PHPShopGUI->setSelect('captcha_enabled_new',$c_value,150),'left');
     
     $info='Для произвольной вставки элемента следует выбрать парамет вывода "Не выводить" и в ручном режиме вставить переменную
         <b>@returncall@</b> в свой шаблон.

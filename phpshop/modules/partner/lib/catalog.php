@@ -13,6 +13,7 @@ PHPShopObj::loadClass("modules");
 $PHPShopBase = new PHPShopBase($_classPath . "phpshop/inc/config.ini");
 
 $PHPShopModules = new PHPShopModules('../../');
+$PHPShopModules->checkInstall('partner');
 
 // Пример запроса
 $_POST['sql_test'] = '<?xml version="1.0" encoding="windows-1251"?>

@@ -3,7 +3,7 @@
 /**
  * Библиотека менеджера MySQL через XML
  * @author PHPShop Software
- * @version 1.3
+ * @version 1.4
  * @package PHPShopClass
  */
 class PHPShopBaseXml {
@@ -78,9 +78,9 @@ class PHPShopBaseXml {
 
         // Проверка на сложный запрос
         if (strstr($str, ' and '))
-            $num_where_delim = 'and';
+            $num_where_delim = ' and ';
         elseif (strstr($str, ' or '))
-            $num_where_delim = 'or';
+            $num_where_delim = ' or ';
         else
             $num_where_delim = false;
 
@@ -100,12 +100,18 @@ class PHPShopBaseXml {
                     $delim = '>';
                 elseif (strstr($value, '<'))
                     $delim = '<';
+                elseif (strstr($value, ' LIKE '))
+                    $delim = ' LIKE ';
+                elseif (strstr($value, ' REGEXP '))
+                    $delim = ' REGEXP ';
+                else $delim=' ';
 
                 if ($delim) {
                     $array = explode($delim, $value);
                     $where[$array[0]] = $delim . $array[1];
                 }
             }
+ 
         return $where;
     }
 
@@ -178,7 +184,7 @@ class PHPShopBaseXml {
     }
 
     function select() {
-        $PHPShopOrm = &new PHPShopOrm($this->PHPShopBase->getParam('base.' . $this->xml['from']));
+        $PHPShopOrm = new PHPShopOrm($this->PHPShopBase->getParam('base.' . $this->xml['from']));
         $PHPShopOrm->debug = $this->debug;
         $PHPShopOrm->Option['where'] = $this->where_delim;
         $this->data = $PHPShopOrm->select($this->xml['vars'], $this->xml['where'], $this->xml['order'], $this->xml['limit']);
@@ -188,14 +194,14 @@ class PHPShopBaseXml {
 
         // Массив данных для обновления
         $vars = readDatabase($this->sql, "vars", false);
-        $PHPShopOrm = &new PHPShopOrm($this->PHPShopBase->getParam('base.' . $this->xml['from']));
+        $PHPShopOrm = new PHPShopOrm($this->PHPShopBase->getParam('base.' . $this->xml['from']));
         $PHPShopOrm->debug = $this->debug;
         $PHPShopOrm->Option['where'] = $this->where_delim;
         $this->data = $PHPShopOrm->update($this->clean($vars[0]), $this->xml['where'], $prefix = '');
     }
 
     function delete() {
-        $PHPShopOrm = &new PHPShopOrm($this->PHPShopBase->getParam('base.' . $this->xml['from']));
+        $PHPShopOrm = new PHPShopOrm($this->PHPShopBase->getParam('base.' . $this->xml['from']));
         $PHPShopOrm->debug = $this->debug;
         $PHPShopOrm->Option['where'] = $this->where_delim;
         $this->data = $PHPShopOrm->delete($this->xml['where']);
@@ -206,7 +212,7 @@ class PHPShopBaseXml {
         // Массив данных для вставки
         $vars = readDatabase($this->sql, "vars", false);
 
-        $PHPShopOrm = &new PHPShopOrm($this->PHPShopBase->getParam('base.' . $this->xml['from']));
+        $PHPShopOrm = new PHPShopOrm($this->PHPShopBase->getParam('base.' . $this->xml['from']));
         $PHPShopOrm->debug = $this->debug;
         $this->data = $PHPShopOrm->insert($vars[0], $prefix = '');
     }

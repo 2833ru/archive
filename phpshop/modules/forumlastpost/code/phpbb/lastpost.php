@@ -25,7 +25,7 @@
 
         <?
 
-        include("../config.php");
+        if(!@include("../config.php")) exit('config.php не обнаружен');
         mysql_connect ($dbhost, $dbuser, $dbpasswd ) or die("Ќевозможно подсоединитьс€ к базе");
         mysql_select_db($dbname) or die("Ќевозможно подсоединитьс€ к базе");
         mysql_query("SET NAMES 'cp1251'");

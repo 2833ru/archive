@@ -1,6 +1,8 @@
 <?php
 
-// Sape
+if (!defined("OBJENABLED"))
+    exit(header('Location: /?error=OBJENABLED'));
+
 class PHPShopYandexMapElement extends PHPShopElements {
 
     function PHPShopYandexMapElement() {

@@ -110,10 +110,10 @@ $_content = str_replace ('#', " ", $_content);
 $_content = str_replace ('$', " ", $_content);
 $_content = str_replace ('¶', " ", $_content);
 $_content = str_replace ('©', " ", $_content);
-$_content = ereg_replace ('&quot;', " ", $_content);
-$_content = ereg_replace ('&copy;', " ", $_content);
-$_content = ereg_replace ('&gt;', " ", $_content);
-$_content = ereg_replace ('&lt;', " ", $_content);
+$_content = str_replace ('&quot;', " ", $_content);
+$_content = str_replace ('&copy;', " ", $_content);
+$_content = str_replace ('&gt;', " ", $_content);
+$_content = str_replace ('&lt;', " ", $_content);
 
 
 return $_content;
@@ -126,7 +126,7 @@ function parse_words()
 // this can be edited to suit your needs
 $common = array();
 //create an array out of the site contents
-$s = split(" ", $this->replace_chars($this->contents));
+$s = explode(" ", $this->replace_chars($this->contents));
 //initialize array
 $k = array();
 //iterate inside the array
@@ -155,7 +155,7 @@ return $i;
 function parse_2words()
 {
 //create an array out of the site contents
-$x = split(" ", $this->replace_chars($this->contents));
+$x = explode(" ", $this->replace_chars($this->contents));
 //initilize array
 $y = array();
 
@@ -186,7 +186,7 @@ return $z;
 function parse_3words()
 {
 //create an array out of the site contents
-$a = split(" ", $this->replace_chars($this->contents));
+$a = explode(" ", $this->replace_chars($this->contents));
 //initilize array
 $b = array();
 

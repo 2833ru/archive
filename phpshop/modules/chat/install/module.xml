@@ -4,7 +4,7 @@
     <name>Chat</name>
     <description>Модуль чата с менеджером</description>
     <icon>icon.png</icon>
-    <category>order,soc,form</category>
+    <category>user</category>
 	<capability>enterprise,start,cms</capability>
     <adminmenu>
         <title>Чат</title>

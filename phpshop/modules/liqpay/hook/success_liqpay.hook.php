@@ -9,6 +9,7 @@ function success_mod_liqpay_hook($obj, $value) {
         
         $return=array();
         $return['order_metod']='modules';
+        $return['order_metod_name'] = 'LiqPay';
         $return['success_function']=false;// Включаем функцию обновления статуса заказа
         $return['crc'] = null;
         $return['my_crc'] = null;

@@ -27,7 +27,6 @@ function delivery_hook($obj, $data) {
     $_RESULT=$data[0];
     $xid=$data[1];
 
-    //print_r($_RESULT);
     $option = pickpoin_option();
 
     // ИД доставки pickpoin

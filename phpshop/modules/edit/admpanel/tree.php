@@ -106,7 +106,7 @@ class FileCatalogTree extends CatalogTree {
         <div style="padding:10px">
             <?
             // Дерево каталогов
-            $CatalogTree = &new FileCatalogTree($GLOBALS['SysValue']['base']['table_name']);
+            $CatalogTree = new FileCatalogTree($GLOBALS['SysValue']['base']['table_name']);
             $CatalogTree->addcat(0,-1,'Мои шаблоны','');
             $CatalogTree->create();
             $CatalogTree->disp();

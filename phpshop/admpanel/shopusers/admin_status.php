@@ -1,32 +1,36 @@
 <?
-function ShopUsersStatus()// Вывод 
-{
-global $SysValue;
-$sql="select * from ".$SysValue['base']['table_name28']." order by id";
-$result=mysql_query($sql);
-while ($row = mysql_fetch_array($result))
-    {
-	$id=$row['id'];
-	$name=$row['name'];
-	$discount=$row['discount'];
-	if(($row['enabled'])=="1"){$checked="<img src=img/icon-activate.gif  width=\"16\" height=\"16\" alt=\"В наличии\">";}else{$checked="<img src=img/icon-deactivate.gif  width=\"16\" height=\"16\" alt=\"Отсутствует\">";};
-	@$display.="
-	<tr onmouseover=\"show_on('r".$id."')\" id=\"r".$id."\" onmouseout=\"show_out('r".$id."')\" class=row onclick=\"miniWin('shopusers/adm_statusID.php?id=$id',450,270,event)\">
+
+function ShopUsersStatus() {// Вывод 
+    global $SysValue;
+    $sql = "select * from " . $SysValue['base']['table_name28'] . " order by id";
+    $result = mysql_query($sql);
+    while ($row = mysql_fetch_array($result)) {
+        $id = $row['id'];
+        $name = $row['name'];
+        $discount = $row['discount'];
+        if (($row['enabled']) == "1") {
+            $checked = "<img src=img/icon-activate.gif  width=\"16\" height=\"16\" alt=\"В наличии\">";
+        } else {
+            $checked = "<img src=img/icon-deactivate.gif  width=\"16\" height=\"16\" alt=\"Отсутствует\">";
+        };
+        @$display.="
+	<tr onmouseover=\"show_on('r" . $id . "')\" id=\"r" . $id . "\" onmouseout=\"show_out('r" . $id . "')\" class=row onclick=\"miniWin('shopusers/adm_statusID.php?id=$id',450,270,event)\">
     <td align=center class=forma>$checked</td>
     <td class=forma>
-	".$name."
+	" . $name . "
 	</td>
 	<td class=forma>
-	".$discount."%
+	" . $discount . "%
 	</td>
     </tr>
 	";
-	@$i++;
-	}
-if($i>20)$razmer="height:600;";
-	return "
+        @$i++;
+    }
+    if ($i > 20)
+        $razmer = "height:600;";
+    return "
 	
-<div id=interfacesWin name=interfacesWin align=\"left\" style=\"width:100%;".@$razmer.";overflow:auto\"> 
+<div id=interfacesWin name=interfacesWin align=\"left\" style=\"width:100%;" . @$razmer . ";overflow:auto\"> 
 <table width=\"50%\"  cellpadding=\"0\" cellspacing=\"0\">
 <tr>
 	<td valign=\"top\">
@@ -37,7 +41,7 @@ if($i>20)$razmer="height:600;";
     <td width=\"100\" id=pane align=center><span name=txtLang id=txtLang>Скидка</span></td>
 </tr>
 
-	".$display."
+	" . $display . "
 
     </table>
 	</td>
@@ -51,4 +55,5 @@ if($i>20)$razmer="height:600;";
 </div>
 	";
 }
+
 ?>

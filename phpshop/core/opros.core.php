@@ -31,7 +31,7 @@ class PHPShopOpros extends PHPShopCore {
     function index() {
 
         // Выборка данных
-        $PHPShopOrm = &new PHPShopOrm($this->getValue('base.opros_categories'));
+        $PHPShopOrm = new PHPShopOrm($this->getValue('base.opros_categories'));
         $PHPShopOrm->debug=$this->debug;
         $dataArray=$PHPShopOrm->select(array('*'),array('flag'=>"='1'"),array('order'=>'id DESC'),array('limit'=>10));
         $content='';

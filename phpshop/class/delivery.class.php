@@ -27,7 +27,7 @@ class PHPShopDelivery extends PHPShopObj {
      * @param float $weight вес заказа
      * @return float
      */
-    function getPrice($sum,$weight=0) {
+     function getPrice($sum,$weight=0) {
         $row = $this->objRow;
         if($row['price_null_enabled'] == 1 and $sum>=$row['price_null']) {
             return 0;
@@ -54,7 +54,7 @@ class PHPShopDelivery extends PHPShopObj {
         return parent::getParam("city");
     }
 
-    function getPriceDefault() {
+    static function getPriceDefault() {
         $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['delivery']);
         $row=$PHPShopOrm->select(array('price'),array('flag'=>"='1'",'enabled'=>"='1'"),false,array('limit'=>1));
         return $row['price'];

@@ -25,11 +25,11 @@
                 <td>Сообщение:</td>
                 <td><textarea name="returncall_mod_message" cols="12" rows="3"></textarea></td>
             </tr>
-            <!--
+            
             <tr>
                 <td colspan="2">@returncall_captcha@</td>
             </tr>
-            -->
+            
             <tr>
                 <td></td>
                 <td><input type="submit" name="returncall_mod_send" value="Перезвоните мне" style="width:130px"></td>

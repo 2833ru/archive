@@ -14,7 +14,7 @@ class PHPShopGbook extends PHPShopCore {
     function PHPShopGbook() {
 
         // Имя Бд
-        $this->objBase=$GLOBALS['SysValue']['base']['table_name7'];
+        $this->objBase=$GLOBALS['SysValue']['base']['gbook'];
 
         // Путь для навигации
         $this->objPath="/gbook/gbook_";
@@ -190,13 +190,13 @@ class PHPShopGbook extends PHPShopCore {
         if(isset($_POST['send_gb'])) {
             if(!PHPShopSecurity::true_email($_POST['mail_new']))//проверка почты
             {
-                $_POST['mail_new']="";
+                $_POST['mail_new']=null;
             }
             if(PHPShopSecurity::true_param($_POST['name_new'],$_POST['otsiv_new'],$_POST['tema_new'])) {
                 $name_new=PHPShopSecurity::TotalClean($_POST['name_new'],2);
                 $otsiv_new=PHPShopSecurity::TotalClean($_POST['otsiv_new'],2);
                 $tema_new=PHPShopSecurity::TotalClean($_POST['tema_new'],2);
-                $mail_new=$_POST['mail_new'];
+                $mail_new=PHPShopSecurity::TotalClean($_POST['mail_new'],3);
                 $date = date("U");
                 $ip=$_SERVER['REMOTE_ADDR'];
 
@@ -216,7 +216,7 @@ class PHPShopGbook extends PHPShopCore {
                 // Шаблон сообщения администратору
                 $message=ParseTemplateReturn('phpshop/lib/templates/gbook/mail.tpl',true);
                 
-                $PHPShopMail = new PHPShopMail($this->PHPShopSystem->getValue('adminmail2'),$mail_new,$zag,$message);
+                new PHPShopMail($this->PHPShopSystem->getValue('adminmail2'),$mail_new,$zag,$message);
             }
         }
     }

@@ -84,13 +84,14 @@ class PHPShopValuta extends PHPShopObj {
 /**
  * Массив данных по валютам
  * @author PHPShop Software
- * @version 1.0
+ * @version 1.1
  * @package PHPShopArray
  */
 class PHPShopValutaArray extends PHPShopArray {
 
     function PHPShopValutaArray() {
         $this->objBase=$GLOBALS['SysValue']['base']['currency'];
+        $this->objSQL=array('enabled'=>"='1'");
         parent::PHPShopArray('id',"name",'code','iso','kurs');
     }
 }

@@ -40,23 +40,23 @@ function query_filter($obj) {
         $v = null;
 
     if (!empty($_REQUEST['set']))
-        $set = $_REQUEST['set'];
+        $set = intval($_REQUEST['set']);
     else
         $set = 2;
 
     if (!empty($_REQUEST['pole']))
-        $pole = $_REQUEST['pole'];
+        $pole = intval($_REQUEST['pole']);
     else
         $pole = 1;
 
     if (!empty($_REQUEST['p']))
-        $p = $_REQUEST['p'];
+        $p = intval($_REQUEST['p']);
     else
         $p = 1;
 
-    $cat = PHPShopSecurity::TotalClean(@$_REQUEST['cat'], 1);
+    $cat = intval(@$_REQUEST['cat']);
     $words = trim(PHPShopSecurity::true_search(@$_REQUEST['words']));
-    $num_row = $obj->PHPShopSystem->getValue('num_row');
+    $num_row = $obj->num_row;
     $num_ot = 0;
     $q = 0;
     $sortV = null;
@@ -170,9 +170,9 @@ function query_filter($obj) {
  */
 function search_base($obj, $words) {
     $string = null;
-
     $PHPShopOrm = new PHPShopOrm();
     $PHPShopOrm->debug = $obj->debug;
+    $PHPShopOrm->mysql_error=false;
     $result = $PHPShopOrm->query("select uid from " . $GLOBALS['SysValue']['base']['table_name26'] . " where name REGEXP 'i" . $words . "i'");
     while (@$row = mysql_fetch_array(@$result)) {
         $uid = $row['uid'];

@@ -3,12 +3,7 @@ require("../connect.php");
 @mysql_connect("$host", "$user_db", "$pass_db") or @die("Невозможно подсоединиться к базе");
 mysql_select_db("$dbase") or @die("Невозможно подсоединиться к базе");
 require("../enter_to_admin.php");
-
-// Языки
-$GetSystems = GetSystems();
-$option = unserialize($GetSystems['admoption']);
-$Lang = $option['lang'];
-require("../language/" . $Lang . "/language.php");
+require("../language/russian/language.php");
 
 function Zero($a) {
     if ($a != 1)
@@ -37,35 +32,12 @@ function CleachPassword($pas) {
         <SCRIPT language="JavaScript" src="/phpshop/lib/Subsys/JsHttpRequest/Js.js"></SCRIPT>
         <script language="JavaScript1.2" src="../java/javaMG.js" type="text/javascript"></script>
         <script type="text/javascript" src="../java/tabpane.js"></script>
-        <script type="text/javascript" language="JavaScript1.2" src="../language/<?= $Lang ?>/language_windows.js"></script>
-        <script type="text/javascript" language="JavaScript1.2" src="../language/<?= $Lang ?>/language_interface.js"></script>
-        <script>
-            DoResize(<? echo $GetSystems['width_icon'] ?>, 500, 500);
-        </script>
     </head>
-    <body bottommargin="0"  topmargin="0" leftmargin="0" rightmargin="0" onload="DoCheckLang(location.pathname,<?= $SysValue['lang']['lang_enabled'] ?>);
-        preloader(0)">
-
-        <table id="loader">
-            <tr>
-                <td valign="middle" align="center">
-                    <div id="loadmes" onclick="preloader(0)">
-                        <table width="100%" height="100%">
-                            <tr>
-                                <td id="loadimg"></td>
-                                <td ><b><?= $SysValue['Lang']['System']['loading'] ?></b><br><?= $SysValue['Lang']['System']['loading2'] ?></td>
-                            </tr>
-                        </table>
-                    </div>
-                </td>
-            </tr>
-        </table>
-
-        <SCRIPT language=JavaScript type=text/javascript>preloader(1);</SCRIPT>
+    <body bottommargin="0"  topmargin="0" leftmargin="0" rightmargin="0">
 
         <?
         if (isset($id)) {
-            $sql = "select * from $table_name19 where id=" . intval($id);
+            $sql = "select * from $table_name19 where id=" . intval($_GET['id']);
             $result = mysql_query($sql);
             $row = mysql_fetch_array($result);
             $id = $row['id'];
@@ -94,17 +66,6 @@ function CleachPassword($pas) {
                     return "checked";
             }
 
-// Выбор иконки шкуры
-            function GetSkinsIcon($skin) {
-                global $SysValue;
-                $dir = "../../templates";
-                $filename = $dir . '/' . $skin . '/icon/icon.gif';
-                if (file_exists($filename))
-                    $disp = '<img src="' . $filename . '" alt="' . $skin . '" width="150" height="120" border="1" id="icon">';
-                else
-                    $disp = '<img src="../img/icon_non.gif"  width="150" height="120" border="1" id="icon">';
-                return @$disp;
-            }
             ?>
 
             <table cellpadding="0" cellspacing="0" width="100%" height="50" id="title">
@@ -484,14 +445,14 @@ where id='$userID'";
                         $header .= "From:   <no_reply@phpshop.ru>\n";
                         $header .= "Content-Type: text/plain; charset=$codepage\n";
                         $header .= "X-Mailer: PHP/";
-                        $zag = "PHPShop: данные пользователя для сервера " . $SERVER_NAME;
+                        $zag = "PHPShop: данные пользователя для сервера " . $_SERVER['SERVER_NAME'];
                         $content = "
 Доброго времени!
 ---------------------------------------------------------
 
-Административная панель доступна по адресу:  http://$SERVER_NAME" . $SysValue['dir']['dir'] . "/phpshop/admpanel/
-или нажатием клавиши F12
-Логин: " . $_POST['login'] . "
+Административная панель доступна по адресу:  http://" .$_SERVER['SERVER_NAME']. $SysValue['dir']['dir'] . "/phpshop/admpanel/
+или нажатием клавиш Ctrl+F12
+Логин: " . $_POST['login_new'] . "
 Пароль: " . $_POST['password'] . "
 
 ---------------------------------------------------------

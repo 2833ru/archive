@@ -47,10 +47,10 @@ class PHPShopCart {
      * Добавление в корзину товара
      * @param int $objID ИД товара
      */
-    function add($objID, $num, $parentID = false) {
+    function add($objID, $num, $parentID = false, $var = false) {
 
         // Данные по товару
-        $objProduct = new PHPShopProduct($objID);
+        $objProduct = new PHPShopProduct($objID, $var);
 
         // Учет свойств товара
         if (!empty($_REQUEST['addname'])) {
@@ -67,7 +67,7 @@ class PHPShopCart {
 
             // Массив корзины
             $cart = array(
-                "id" => intval($objID),
+                "id" => $objProduct->getParam("id"),
                 "name" => $name,
                 "price" => PHPShopProductFunction::GetPriceValuta($objID, $objProduct->getParam("price"), $objProduct->getParam("baseinputvaluta"), true),
                 "uid" => $objProduct->getParam("uid"),
@@ -80,8 +80,8 @@ class PHPShopCart {
 
             // Проверка кол-ва товара на складе
             if ($this->store_check) {
-                if ($cart['num'] > PHPShopSecurity::TotalClean($objProduct->getParam("items"),1))
-                    $cart['num'] =PHPShopSecurity::TotalClean($objProduct->getParam("items"),1);
+                if ($cart['num'] > PHPShopSecurity::TotalClean($objProduct->getParam("items"), 1))
+                    $cart['num'] = PHPShopSecurity::TotalClean($objProduct->getParam("items"), 1);
             }
 
             // Учет свойств товара
@@ -90,6 +90,9 @@ class PHPShopCart {
 
             if (!empty($cart['num']))
                 $this->_CART[$xid] = $cart;
+
+            // Возвращаем значение успешного добавления в  корзину
+            return true;
         }
     }
 
@@ -172,6 +175,8 @@ class PHPShopCart {
             foreach ($this->_CART as $val)
                 $sum+=$val['num'] * $val['price'];
         $format = $PHPShopSystem->getSerilizeParam("admoption.price_znak");
+        if (empty($format))
+            $format = 0;
 
         // Если выбрана другая валюта
         if ($order and isset($_SESSION['valuta'])) {

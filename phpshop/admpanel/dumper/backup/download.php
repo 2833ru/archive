@@ -1,5 +1,5 @@
 <?php
-if(!empty($_GET['backup']) and !strstr($_GET['backup'], '/') and !strstr($_GET['backup'], '%')) {
+if(!empty($_GET['backup']) and !strstr((string)$_GET['backup'], '/') and !strstr((string)$_GET['backup'], '%')) {
     $_classPath="../../../";
     include($_classPath."class/obj.class.php");
     PHPShopObj::loadClass("base");

@@ -40,12 +40,13 @@ function actionStart() {
     // Выборка
     $data = $PHPShopOrm->select(array('*'), array('id' => '=' . intval($_GET['id'])));
     extract($data);
-    
+
     // ID окна для памяти закладок
     $PHPShopGUI->setID(__FILE__, $data['id']);
 
     if ($data['skin_enabled'] == 1)
-        $skin_enabled = "checked"; else
+        $skin_enabled = "checked";
+    else
         $skin_enabled = "";
 
     $PHPShopGUI->dir = "../";
@@ -53,12 +54,12 @@ function actionStart() {
     // Графический заголовок окна
     $PHPShopGUI->setHeader("Редактирование Страниц", "Укажите данные для записи в базу.", $PHPShopGUI->dir . "img/i_website_tab[1].gif");
 
-        // Нет данных
+    // Нет данных
     if (!is_array($data)) {
         $PHPShopGUI->setFooter($PHPShopGUI->setInput("button", "", "Закрыть", "center", 100, "return onCancel();", "but"));
         return true;
     }
-   
+
     // Редактор 1
     $PHPShopGUI->setEditor($PHPShopSystem->getSerilizeParam("admoption.editor"));
     $oFCKeditor = new Editor('content_new');
@@ -120,6 +121,9 @@ function actionStart() {
 function getCatPath($category) {
 
     $PHPShopCategoryArray = new PHPShopPageCategoryArray();
+    $PHPShopCategoryArray->objArray[1000] = array('id' => 1000, 'parent_to' => 3000, 'name' => 'Главное меню сайта');
+    $PHPShopCategoryArray->objArray[3000] = array('id' => 3000, 'parent_to' => 0, 'name' => 'Меню');
+    $PHPShopCategoryArray->objArray[2000] = array('id' => 2000, 'parent_to' => 3000, 'name' => 'Начальная страница');
     $i = 1;
     $str = __('Корень');
     while ($i < 10) {
@@ -177,7 +181,7 @@ function actionUpdate() {
     $_POST['date_new'] = date('U');
 
     $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['page']);
-    $PHPShopOrm->debug=false;
+    $PHPShopOrm->debug = false;
 
     $action = $PHPShopOrm->update($_POST, array('id' => '=' . $_POST['pageID']));
     $PHPShopOrm->clean();

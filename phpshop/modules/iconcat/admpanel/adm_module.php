@@ -60,6 +60,7 @@ function actionStart() {
     $Tab2=$PHPShopGUI->setInfo($info, 200, '96%');
     
     $Tab3=$PHPShopGUI->setPay($serial,false);
+    $Tab3.= $PHPShopGUI->setLine('<br>').$PHPShopGUI->setHistory();
     
     // Вывод формы закладки
     $PHPShopGUI->setTab(array("Описание",$Tab2,270),array("О Модуле",$Tab3,270));

@@ -7,9 +7,9 @@
   <table  cellpadding="5" cellspacing="0" width=100% >
     <tr>
       <td align="right"><b>Заказ №</b> </td>
-      <td><input type="text" name=ouid style="width:50px; height:18px; font-family:tahoma; font-size:11px ; color:#9e0b0e; background-color:#f2f2f2;" value="@orderNum@"  readonly="1">
+      <td><input type="text" name=ouid style="width:60px;" value="@orderNum@"  readonly="1">
         <b>/</b>
-        <input type="text" style="width:50px; height:18px; font-family:tahoma; font-size:11px ; color:#9e0b0e; background-color:#f2f2f2;" value="@orderDate@"  readonly="1">
+        <input type="text" style="width:60px;" value="@orderDate@"  readonly="1">
       </td>
     </tr>
     <tr>
@@ -18,50 +18,50 @@
     </tr>
     <tr valign="top">
       <td align="right"> E-mail: </td>
-      <td><input type="text" name="mail" style="width:300px; height:18px; font-family:tahoma; font-size:11px ; color:#4F4F4F " maxlength="30" value="@UserMail@" @formaLock@>
+      <td><input type="text" name="mail" style="width:300px;" maxlength="30" value="@UserMail@" @formaLock@>
         <img src="images/shop/flag_green.gif" alt="" width="16" height="16" border="0" hspace="5" align="absmiddle"> </td>
     </tr>
     <tr>
       <td align="right" class=tah12>Контактное лицо: </td>
-      <td><input type="text" name="name_person" style="width:300px; height:18px; font-family:tahoma; font-size:11px ; color:#4F4F4F " maxlength="30" value="@UserName@" @formaLock@>
+      <td><input type="text" name="name_person" style="width:300px;" maxlength="30" value="@UserName@" @formaLock@>
         <img src="images/shop/flag_green.gif" alt="" width="16" height="16" border="0" hspace="5" align="absmiddle"> </td>
     </tr>
     <tr>
       <td align="right" >Компания: </td>
-      <td><input type="text" name="org_name" style="width:300px; height:18px; font-family:tahoma; font-size:11px ; color:#4F4F4F " maxlength="100" value="@UserComp@" @formaLock@>
+      <td><input type="text" name="org_name" style="width:300px;" maxlength="100" value="@UserComp@" @formaLock@>
       </td>
     </tr>
     <tr>
       <td align="right" >ИНН: </td>
-      <td><input type="text" name="org_inn" style="width:150px; height:18px; font-family:tahoma; font-size:11px ; color:#4F4F4F " maxlength="50" value="@UserInn@" @formaLock@>
+      <td><input type="text" name="org_inn" style="width:150px;" maxlength="50" value="@UserInn@" @formaLock@>
       </td>
     </tr>
     <tr>
       <td align="right" >КПП: </td>
-      <td><input type="text" name="org_kpp" style="width:150px; height:18px; font-family:tahoma; font-size:11px ; color:#4F4F4F " maxlength="50" value="@UserKpp@" @formaLock@>
+      <td><input type="text" name="org_kpp" style="width:150px;" maxlength="50" value="@UserKpp@" @formaLock@>
       </td>
     </tr>
     <tr>
       <td align="right">Телефон: </td>
-      <td><input type="text" name="tel_code" style="width:50px; height:18px; font-family:tahoma; font-size:11px ; color:#4F4F4F " maxlength="5" value="@UserTelCode@">
+      <td><input type="text" name="tel_code" style="width:50px;" maxlength="5" value="@UserTelCode@">
         -
-        <input type="text" name="tel_name" style="width:150px; height:18px; font-family:tahoma; font-size:11px ; color:#4F4F4F " maxlength="30" value="@UserTel@">
+        <input type="text" name="tel_name" style="width:150px;" maxlength="30" value="@UserTel@">
         <img src="images/shop/flag_green.gif" alt="" width="16" height="16" border="0" hspace="5" align="absmiddle"> </td>
     </tr>
     <tr>
       <td align="right">Время доставки: </td>
       <td>от
-        <input type="text" name="dos_ot" style="width:50px; height:18px; font-family:tahoma; font-size:11px ; color:#4F4F4F " maxlength="5">
+        <input type="text" name="dos_ot" style="width:50px;" maxlength="5">
         ч.&nbsp;&nbsp;&nbsp;
         до
-        <input type="text" name="dos_do" style="width:50px; height:18px; font-family:tahoma; font-size:11px ; color:#4F4F4F " maxlength="5">
+        <input type="text" name="dos_do" style="width:50px;" maxlength="5">
         ч. </td>
     </tr>
     <tr>
       <td align="right" class=tah12>Адрес и <br>
         дополнительная<br>
         информация: </td>
-      <td><textarea style="width:300px; height:100px; font-family:tahoma; font-size:11px ; color:#4F4F4F " name="adr_name" >@UserAdres@</textarea>
+      <td><textarea style="width:300px; height:100px;" name="adr_name" >@UserAdres@</textarea>
         <img src="images/shop/flag_green.gif" alt="" width="16" height="16" border="0" hspace="5" align="absmiddle"> </td>
     </tr>
     <tr>

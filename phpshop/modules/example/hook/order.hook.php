@@ -9,7 +9,7 @@ function ordercartforma_hook($val,$option,$rout) {
 
 function delivery_hook($obj) {
     $obj->title='Hook';
-    $obj->set('orderDelivery','Hook -> '.__FUNCTION__.'() -> '.__FILE__);
+    $obj->set('orderDelivery',PHPShopText::message('Example Hook -> '.__FUNCTION__.'() -> '.__FILE__));
     return true;
 }
 

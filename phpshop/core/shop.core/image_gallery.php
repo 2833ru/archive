@@ -24,7 +24,8 @@ function image_gallery($obj, $row) {
                 $name = $row['name'];
                 $name_s = str_replace(".", "s.", $name);
                 $name_bigstr = str_replace(".", "_big.", $pic_big);
-                $name_big = "http://" . $_SERVER['HTTP_HOST'] . $name_bigstr;
+                //$name_big = "http://" . $_SERVER['HTTP_HOST'] . $name_bigstr;
+                $name_big = $name_bigstr;
 
                 // Подбор исходного изображения
                 if (@fopen($name_big, "r"))

@@ -1,4 +1,4 @@
-﻿<base target="_self">
+<base target="_self">
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">

@@ -1,5 +1,8 @@
 <?php
 
+if (!defined("OBJENABLED"))
+    exit(header('Location: /?error=OBJENABLED'));
+
 PHPShopObj::loadClass('string');
 
 class AddStockGallery extends PHPShopElements {

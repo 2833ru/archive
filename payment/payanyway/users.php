@@ -14,8 +14,9 @@ function payanyway_users_repay($obj, $PHPShopOrderFunction) {
     $mrh_ouid = explode("-", $PHPShopOrderFunction->objRow['uid']);
     $inv_id = $mrh_ouid[0] . "" . $mrh_ouid[1];     //номер счета
 
-
-    $out_summ = $PHPShopOrderFunction->getTotal(); //сумма покупки
+    // сумма покупки
+    $out_summ  = number_format($PHPShopOrderFunction->getTotal(), 2, '.', '');
+    
     // код валюты в заказе
     $mnt_currency = $GLOBALS['PHPShopSystem']->getDefaultValutaIso();
 

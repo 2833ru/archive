@@ -2,7 +2,7 @@
 require_once "../../../../phpshop/lib/Subsys/JsHttpRequest/Php.php";
 // Создаем главный объект библиотеки.
 // Указываем кодировку страницы (обязательно!).
-$JsHttpRequest =& new Subsys_JsHttpRequest_Php("windows-1251");
+$JsHttpRequest = new Subsys_JsHttpRequest_Php("windows-1251");
 
 
 require("../../connect.php");
@@ -65,7 +65,7 @@ if(mysql_num_rows($result) > 0){
 }
 else{
 	// делаем запись о бекапе
-	$sql = "INSERT INTO ".$SysValue['base']['table_name47']." SET folder='".mysql_escape_string($dir)."', date = ".time();
+	$sql = "INSERT INTO ".$SysValue['base']['table_name47']." SET folder='".mysql_real_escape_string($dir)."', date = ".time();
 	mysql_query($sql);
 	// копируем конфиг в папку бекапа
 	copy("../../../../backup/temp/upd_conf.txt","$dir/upd_conf.txt");

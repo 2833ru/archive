@@ -4,7 +4,7 @@
     <name>Product Last View</name>
     <description>Модуль просмотренные товары</description>
     <icon>icon.png</icon>
-    <category>text</category>
+    <category>form,text</category>
     <adminmenu>
         <title>Product View</title>
         <podmenu>

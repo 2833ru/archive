@@ -1,4 +1,6 @@
 <?
+if (!defined("OBJENABLED"))
+    exit(header('Location: /?error=OBJENABLED'));
 
 class PHPShopExampleElement extends PHPShopElements {
 

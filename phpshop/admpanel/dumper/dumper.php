@@ -46,14 +46,17 @@ define('SC', 0);
 // Для отключения установить значение 0
 define('GS', 0);
 
+// Подключаемся
+require("../connect.php");
+@mysql_connect ("$host", "$user_db", "$pass_db")or @die("Невозможно подсоединиться к базе");
+mysql_select_db("$dbase")or @die("Невозможно подсоединиться к базе");
+require("../enter_to_admin.php");
+
 // Временная зона
 if(function_exists('date_default_timezone_set'))
 date_default_timezone_set('Europe/Moscow');
 
 // Дальше ничего редактировать не нужно
-
-
-
 header("Expires: Tue, 1 Jul 2003 05:00:00 GMT");
 header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
 header("Cache-Control: no-store, no-cache, must-revalidate");
@@ -61,24 +64,13 @@ header("Pragma: no-cache");
 
 $timer = array_sum(explode(' ', microtime()));
 ob_implicit_flush();
-error_reporting(E_ALL);
+//error_reporting(E_ALL);
 
 $auth = 1;
 $error = '';
 
-// Подключаемся
-require("../connect.php");
-@mysql_connect ("$host", "$user_db", "$pass_db")or @die("Невозможно подсоединиться к базе");
-mysql_select_db("$dbase")or @die("Невозможно подсоединиться к базе");
-require("../enter_to_admin.php");
-
-
-
 // Языки
-$GetSystems=GetSystems();
-$option=unserialize($GetSystems['admoption']);
-$Lang=$option['lang'];
-require("../language/".$Lang."/language.php");
+require("../language/russian/language.php");
 
 
 if($SysValue['my']['time_limit_enabled']=="true"){
@@ -157,7 +149,7 @@ class dumper {
 		$this->SET['tables']          = isset($_POST['tables']) ? $_POST['tables'] : '';
 		$this->SET['comp_method']     = isset($_POST['comp_method']) ? intval($_POST['comp_method']) : 0;
 		$this->SET['comp_level']      = isset($_POST['comp_level']) ? intval($_POST['comp_level']) : 0;
-		$this->fn_save();
+		//$this->fn_save();
 
 		$this->SET['tables']          = explode(",", $this->SET['tables']);
 		if (!empty($_POST['tables'])) {
@@ -274,7 +266,7 @@ class dumper {
                     		if ($NumericColumn[$k])
                     		    $row[$k] = isset($row[$k]) ? $row[$k] : "NULL";
                     		else
-                    			$row[$k] = isset($row[$k]) ? "'" . mysql_escape_string($row[$k]) . "'" : "NULL";
+                    			$row[$k] = isset($row[$k]) ? "'" . mysql_real_escape_string($row[$k]) . "'" : "NULL";
                     	}
 
     					$this->fn_write($fp, ($i == 1 ? "" : ",") . "\n(" . implode(", ", $row) . ")");
@@ -318,7 +310,7 @@ class dumper {
 		$this->SET['last_action']     = 1;
 		$this->SET['last_db_restore'] = isset($_POST['db_restore']) ? $_POST['db_restore'] : '';
 		$file						  = isset($_POST['file']) ? $_POST['file'] : '';
-		$this->fn_save();
+		//$this->fn_save();
 		$db = $this->SET['last_db_restore'];
 
 		if (!$db) {
@@ -690,7 +682,7 @@ fieldset {
 }
 -->
 </STYLE>
-<script type="text/javascript" language="JavaScript1.2" src="../language/{$Lang}/language_windows.js"></script>
+<script type="text/javascript" language="JavaScript1.2" src="../language/russian/language_windows.js"></script>
 <script>
 function getInfo(){
 var str = new String();
@@ -701,7 +693,7 @@ confirm(str);
 
 </HEAD>
 
-<BODY bottommargin="0"  topmargin="0" leftmargin="0" rightmargin="0"  onload="DoCheckLang(location.pathname,1)">
+<BODY bottommargin="0"  topmargin="0" leftmargin="0" rightmargin="0">
 <table cellpadding="0" cellspacing="0" width="100%" height="50" id="title">
 <tr bgcolor="#ffffff">
 	<td style="padding:10">
@@ -713,7 +705,6 @@ confirm(str);
 	</td>
 </tr>
 </table>
-<br>
 <TABLE WIDTH=100% BORDER=0 CELLSPACING=0 CELLPADDING=0>
 <TR>
 <TD style=padding:10>
@@ -728,7 +719,7 @@ confirm(str);
 <TABLE WIDTH=100% BORDER=0 CELLSPACING=0 CELLPADDING=2>
 <TR>
 <TD STYLE='color: #CECECE' ID=timer></TD>
-<TD ALIGN=RIGHT>{$buttons}</TD>
+<TD ALIGN=RIGHT style='padding:5px'>{$buttons}</TD>
 </TR>
 </TABLE></TD>
 </FORM>

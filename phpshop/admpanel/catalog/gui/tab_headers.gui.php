@@ -77,7 +77,7 @@ function tab_headers($row) {
 <input type="radio" value="2" name="title_enabled_new" onclick="document.getElementById(\'titleShablon\').style.display=\'block\';document.getElementById(\'titleForma\').style.display=\'none\'" ' . $t3 . '> <span name=txtLang id=txtLang>Мой шаблон</span> &nbsp;&nbsp;&nbsp;
 <input type="radio" value="1" name="title_enabled_new"  onclick="document.getElementById(\'titleForma\').style.display=\'block\';document.getElementById(\'titleShablon\').style.display=\'none\'" ' . $t2 . '> <span name=txtLang id=txtLang>Ручная настройка</span><br>
 <div id="titleShablon" style="display:' . $t3_enabled . '">
-<textarea style="width: 100%; height: 5em;" name="title_shablon_new" id="Shablon">' . $title_shablon . '</textarea>
+<textarea style="width: 97%; height: 5em;" name="title_shablon_new" id="Shablon">' . $title_shablon . '</textarea>
 <input name="btnLang" type="button" value="Каталог" onclick="ShablonAdd(\'@Catalog@\',\'Shablon\')" class="buttonSh">
 <input name="btnLang" type="button" value="Подкаталог" onclick="ShablonAdd(\'@Podcatalog@\',\'Shablon\')" class="buttonSh">
 <input type="button" name="btnLang"  value="Общий" onclick="ShablonAdd(\'@System@\',\'Shablon\')" class="buttonSh">
@@ -89,7 +89,7 @@ function tab_headers($row) {
 <input type="button" name="btnLang" value="Сбросить" onclick="ShablonDell(\'Shablon\')" class="buttonSh">
 </div>
 <div id="titleForma" style="display:' . $t2_enabled . '">
-<textarea style="width: 100%; height: 5em;" name="title_new">' . $title . '</textarea>
+<textarea style="width: 97%; height: 5em;" name="title_new">' . $title . '</textarea>
 </div>
 </div>
 </FIELDSET>
@@ -104,7 +104,7 @@ function tab_headers($row) {
 <input type="radio" value="2" name="descrip_enabled_new" onclick="document.getElementById(\'titleShablonD\').style.display=\'block\';document.getElementById(\'titleFormaD\').style.display=\'none\'" ' . $d3 . '> <span name=txtLang id=txtLang>Мой шаблон</span>&nbsp;&nbsp;&nbsp;
 <input type="radio" value="1" name="descrip_enabled_new"  onclick="document.getElementById(\'titleFormaD\').style.display=\'block\';document.getElementById(\'titleShablonD\').style.display=\'none\'" ' . $d2 . '> <span name=txtLang id=txtLang>Ручная настройка</span><br>
 <div id="titleShablonD" style="display:' . $d3_enabled . '">
-<textarea style="width: 100%; height: 5em;" name="descrip_shablon_new" id="ShablonD">' . $descrip_shablon . '</textarea>
+<textarea style="width: 97%; height: 5em;" name="descrip_shablon_new" id="ShablonD">' . $descrip_shablon . '</textarea>
 <input type="button" name="btnLang" value="Каталог" onclick="ShablonAdd(\'@Catalog@\',\'ShablonD\')" class="buttonSh">
 <input type="button"  name="btnLang" value="Подкаталог" onclick="ShablonAdd(\'@Podcatalog@\',\'ShablonD\')" class="buttonSh">
 <input type="button" name="btnLang" value="Общий" onclick="ShablonAdd(\'@System@\',\'ShablonD\')" class="buttonSh">
@@ -116,7 +116,7 @@ function tab_headers($row) {
 <input type="button" name="btnLang" value="Сбросить" onclick="ShablonDell(\'ShablonD\')" class="buttonSh">
 </div>
 <div id="titleFormaD" style="display:' . $d2_enabled . '">
-<textarea style="width: 100%; height: 5em;" name="descrip_new">' . $descrip . '</textarea>
+<textarea style="width: 97%; height: 5em;" name="descrip_new">' . $descrip . '</textarea>
 </div>
 </div>
 </FIELDSET>
@@ -131,7 +131,7 @@ function tab_headers($row) {
 <input type="radio" value="2" name="keywords_enabled_new" onclick="document.getElementById(\'titleShablonK\').style.display=\'block\';document.getElementById(\'titleFormaK\').style.display=\'none\'" ' . $k3 . '> <span name=txtLang id=txtLang>Мой шаблон</span> &nbsp;&nbsp;&nbsp;
 <input type="radio" value="1" name="keywords_enabled_new"  onclick="document.getElementById(\'titleFormaK\').style.display=\'block\';document.getElementById(\'titleShablonK\').style.display=\'none\'" ' . $k2 . '> <span name=txtLang id=txtLang>Ручная настройка</span><br>
 <div id="titleShablonK" style="display:' . $k3_enabled . '">
-<textarea style="width: 100%; height: 5em;" name="keywords_shablon_new" id="ShablonK">' . $keywords_shablon . '</textarea>
+<textarea style="width: 97%; height: 5em;" name="keywords_shablon_new" id="ShablonK">' . $keywords_shablon . '</textarea>
 <input type="button" name="btnLang" value="Каталог" onclick="ShablonAdd(\'@Catalog@\',\'ShablonK\')" class="buttonSh">
 <input type="button" name="btnLang" value="Подкаталог" onclick="ShablonAdd(\'@Podcatalog@\',\'ShablonK\')" class="buttonSh">
 <input type="button" name="btnLang" value="Общий" onclick="ShablonAdd(\'@System@\',\'ShablonK\')" class="buttonSh">
@@ -144,7 +144,7 @@ function tab_headers($row) {
 <input type="button" name="btnLang" value="Сбросить" onclick="ShablonDell(\'ShablonK\')" class="buttonSh">
 </div>
 <div id="titleFormaK" style="display:' . $k2_enabled . '">
-<textarea style="width: 100%; height: 5em;" name="keywords_new">' . $keywords . '</textarea>
+<textarea style="width: 97%; height: 5em;" name="keywords_new">' . $keywords . '</textarea>
 </div>
 </div>
 </FIELDSET>

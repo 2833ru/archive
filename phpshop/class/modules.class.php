@@ -57,12 +57,12 @@ class PHPShopModules {
     }
 
     /**
-     * Обработка паметров конфига хуков шаблона /php/hook/
+     * Обработка параметров конфига хуков шаблона /php/hook/
      */
     function addTemplateHook() {
         $ini = 'phpshop/templates'. chr(47) . @$_SESSION['skin'] . "/php/inc/config.ini";
         if (file_exists($ini)) {
-            $SysValue = parse_ini_file($ini, 1);
+            $SysValue = @parse_ini_file($ini, 1);
 
             if (is_array($SysValue['autoload']))
                 foreach ($SysValue['autoload'] as $k => $v)
@@ -378,6 +378,8 @@ class PHPShopModules {
      * @param string параметр размещения хука [END|START|MIDDLE]
      */
     function setHookHandler($class_name, $function_name, $obj = false, $data = false, $rout = 'END') {
+        
+        $addHandler=null;
 
         // Поддержка PHP 5.4
         if(!empty($obj) and is_array($obj))
@@ -484,6 +486,15 @@ class PHPShopModules {
             unset($_SESSION['Memory'][__CLASS__]);
     }
 
+    /**
+     * Проверка установки модуля
+     * @param string $path размещение модуля
+     */
+    function checkInstall($path){
+        $install=$this->ModValue['base'][$path];
+        if(empty($install))
+            exit('PHPShop Report: Модуль "'.ucfirst($path).'" выключен.');
+    }
 }
 
 ?>

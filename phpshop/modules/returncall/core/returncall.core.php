@@ -1,5 +1,8 @@
 <?php
 
+if (!defined("OBJENABLED"))
+    exit(header('Location: /?error=OBJENABLED'));
+
 class PHPShopReturncall extends PHPShopCore {
 
     /**
@@ -60,8 +63,10 @@ class PHPShopReturncall extends PHPShopCore {
             $message = $this->system['title'];
 
         // Защитная каптча
+        if($this->system['captcha_enabled'] == 1){
         $captcha = parseTemplateReturn($GLOBALS['SysValue']['templates']['returncall']['returncall_captcha_forma'], true);
         $this->set('returncall_captcha', $captcha);
+        }
 
         // Подключаем шаблон
         $this->set('pageTitle', $message);
@@ -74,15 +79,16 @@ class PHPShopReturncall extends PHPShopCore {
      */
     function returncall_mod_send() {
 
-        $error = true;
+        $error = false;
 
         // Проверка каптчи
-        if (!empty($_SESSION['mod_returncall_captcha'])) {
-            if ($_SESSION['mod_returncall_captcha'] != $_POST['key'])
-                $error = false;
+        if($this->system['captcha_enabled'] == 1){
+
+            if (empty($_SESSION['mod_returncall_captcha']) or $_SESSION['mod_returncall_captcha'] != $_POST['key'])
+                $error = true;
         }
 
-        if (PHPShopSecurity::true_param($_POST['returncall_mod_name'], $_POST['returncall_mod_tel'], $error)) {
+        if (PHPShopSecurity::true_param($_POST['returncall_mod_name'], $_POST['returncall_mod_tel'], empty($error))) {
             $this->write();
             header('Location: ./done.html');
             exit();

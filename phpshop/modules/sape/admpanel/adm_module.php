@@ -92,7 +92,7 @@ $Info='Для работы модуля требуется загрузить в корневую директорию форума папку 
 вариант 2
 @php
 if (defined("_SAPE_USER")) {
-$PHPShopSapeElement = &new PHPShopSapeElement();
+$PHPShopSapeElement = new PHPShopSapeElement();
 $PHPShopSapeElement->links(4);
 } else echo "<b>Вывод ссылок не работает!</b><br>Модуль Sape не установлен!";
 php@

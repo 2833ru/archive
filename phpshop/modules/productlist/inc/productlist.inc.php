@@ -1,4 +1,8 @@
 <?php
+
+if (!defined("OBJENABLED"))
+    exit(header('Location: /?error=OBJENABLED'));
+
 /**
  * Версия для 3.1 - 3.5 
  */
@@ -11,25 +15,25 @@ $PHPShopNav = new PHPShopNav();
 class PHPShopProductListElement {
 
     function PHPShopProductListElement() {
-	global $PHPShopNav;
+        global $PHPShopNav;
         $this->debug = false;
         $this->objBase = $GLOBALS['SysValue']['base']['productlist']['productlist_system'];
-        $this->PHPShopNav=$PHPShopNav;
-	$this->option();
+        $this->PHPShopNav = $PHPShopNav;
+        $this->option();
         $this->element();
     }
 
     function option() {
-		$PHPShopOrm = new PHPShopOrm($this->objBase);
+        $PHPShopOrm = new PHPShopOrm($this->objBase);
         $this->data = $PHPShopOrm->select();
         if ($this->data['num'] < 1)
             $this->data['num'] = 1;
     }
-    
-    function getCategoryId(){
+
+    function getCategoryId() {
         $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['table_name2']);
         $PHPShopOrm->debug = $this->debug;
-        $data = $PHPShopOrm->select(array('category'),array('id'=>'='.$this->PHPShopNav->getId()));
+        $data = $PHPShopOrm->select(array('category'), array('id' => '=' . $this->PHPShopNav->getId()));
         return $data['category'];
     }
 
@@ -43,17 +47,17 @@ class PHPShopProductListElement {
             foreach ($data as $row) {
 
                 $dis.='<div>
-        <a href="/shop/UID_'.$row['id'].'.html" title="'.$row['name'].'">
-           '.$row['name'].'
+        <a href="/shop/UID_' . $row['id'] . '.html" title="' . $row['name'] . '">
+           ' . $row['name'] . '
         </a>
 </div>';
             }
 
-            $GLOBALS[SysValue][other][leftMenuName]=$this->data['title'];
-            $GLOBALS[SysValue][other][leftMenuContent]= $dis;
-            $menu=parseTemplateReturn("main/left_menu.tpl");
+            $GLOBALS[SysValue][other][leftMenuName] = $this->data['title'];
+            $GLOBALS[SysValue][other][leftMenuContent] = $dis;
+            $menu = parseTemplateReturn("main/left_menu.tpl");
 
-            $GLOBALS[SysValue][other][leftMenuProduct]= $menu;
+            $GLOBALS[SysValue][other][leftMenuProduct] = $menu;
         }
     }
 

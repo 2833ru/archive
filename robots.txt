@@ -4,6 +4,7 @@ Disallow: /newprice/
 Disallow: /newptip/
 Disallow: /spec/
 Disallow: /price/
+Disallow: /print/
 Disallow: /search/
 Disallow: /opros/
 Disallow: /install/
@@ -11,3 +12,4 @@ Disallow: /pda/
 Disallow: /compare/
 Disallow: /clients/
 Disallow: /users/
+Disallow: /pricemai/

@@ -35,7 +35,7 @@ class PHPShopIndex extends PHPShopCore {
 
         // Определяем переменные
         $this->set('mainContent', Parser($row['content']));
-        $this->set('mainContentTitle', $row['name']);
+        $this->set('mainContentTitle', Parser($row['name']));
 
         // Перехват модуля
         $this->setHook(__CLASS__, __FUNCTION__, $row, 'END');

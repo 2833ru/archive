@@ -88,6 +88,7 @@ function UsersJurnal($pole1, $pole2) {// Вывод журнала
     include("../geoip/geoip.inc");
     $gi = geoip_open("../geoip/GeoIP.dat", GEOIP_STANDARD);
     $sql = "select * from " . $SysValue['base']['table_name10'] . " where datas<'$pole2' and datas>'$pole1' order by id desc";
+
     $result = mysql_query($sql);
     while ($row = mysql_fetch_array($result)) {
         $id = $row['id'];
@@ -101,7 +102,8 @@ function UsersJurnal($pole1, $pole2) {// Вывод журнала
         };
         $black = ChekBlacklist($row['ip']);
         if ($black > 0)
-            $blackchecked = "<img src=img/i_spam_filter_med_small.gif  width=\"15\" height=\"15\" alt=\"Черный список\">"; else
+            $blackchecked = "<img src=img/i_spam_filter_med_small.gif  width=\"15\" height=\"15\" alt=\"Черный список\">";
+        else
             $blackchecked = "";
 
 
@@ -127,7 +129,7 @@ function UsersJurnal($pole1, $pole2) {// Вывод журнала
 	<td onclick=\"miniWin('users/adm_jurnalID.php?id=$id',400,270)\">
 	$ip
 	</td>
-	<td  onclick=\"miniWin('users/adm_jurnalID.php?id=$id',400,270)\">" . geoip_country_name_by_addr($gi, $ip) . " (" . geoip_country_code_by_addr($gi, $ip) . ")</td>
+	<td  onclick=\"miniWin('users/adm_jurnalID.php?id=$id',400,270)\">" . geoip_country_name_by_addr($gi, $ip) . " " . geoip_country_code_by_addr($gi, $ip) . "</td>
     </tr>
 	";
         @$i++;

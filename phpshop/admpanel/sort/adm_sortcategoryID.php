@@ -3,12 +3,7 @@ require("../connect.php");
 @mysql_connect("$host", "$user_db", "$pass_db") or @die("Невозможно подсоединиться к базе");
 mysql_select_db("$dbase") or @die("Невозможно подсоединиться к базе");
 require("../enter_to_admin.php");
-
-// Языки
-$GetSystems = GetSystems();
-$option = unserialize($GetSystems['admoption']);
-$Lang = $option['lang'];
-require("../language/" . $Lang . "/language.php");
+require("../language/russian/language.php");
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
@@ -18,28 +13,8 @@ require("../language/" . $Lang . "/language.php");
         <LINK href="../skins/<?= $_SESSION['theme'] ?>/texts.css" type=text/css rel=stylesheet>
         <SCRIPT language="JavaScript" src="/phpshop/lib/Subsys/JsHttpRequest/Js.js"></SCRIPT>
         <script language="JavaScript1.2" src="../java/javaMG.js" type="text/javascript"></script>
-        <script type="text/javascript" language="JavaScript1.2" src="../language/<?= $Lang ?>/language_windows.js"></script>
-        <script type="text/javascript" language="JavaScript1.2" src="../language/<?= $Lang ?>/language_interface.js"></script>
-
     </head>
-    <body bottommargin="0"  topmargin="0" leftmargin="0" rightmargin="0" onload="DoCheckLang(location.pathname,<?= $SysValue['lang']['lang_enabled'] ?>);
-            preloader(0)">
-        <table id="loader">
-            <tr>
-                <td valign="middle" align="center">
-                    <div id="loadmes" onclick="preloader(0)">
-                        <table width="100%" height="100%">
-                            <tr>
-                                <td id="loadimg"></td>
-                                <td ><b><?= $SysValue['Lang']['System']['loading'] ?></b><br><?= $SysValue['Lang']['System']['loading2'] ?></td>
-                            </tr>
-                        </table>
-                    </div>
-                </td>
-            </tr>
-        </table>
-
-        <SCRIPT language=JavaScript type=text/javascript>preloader(1);</SCRIPT>
+    <body bottommargin="0"  topmargin="0" leftmargin="0" rightmargin="0">
         <?
 
 // Вывод ответов
@@ -72,7 +47,7 @@ require("../language/" . $Lang . "/language.php");
         }
 
 // Редактирование записей книги
-        $sql = "select * from " . $SysValue['base']['table_name20'] . " where id=".intval($id);
+        $sql = "select * from " . $SysValue['base']['table_name20'] . " where id=" . intval($_GET['id']);
         $result = mysql_query($sql);
         $row = mysql_fetch_array($result);
         $id = $row['id'];
@@ -93,7 +68,6 @@ require("../language/" . $Lang . "/language.php");
                     </td>
                 </tr>
             </table>
-            <br>
             <table cellpadding="5" cellspacing="0" border="0" align="center" width="100%">
                 <tr>
                     <td colspan="2">
@@ -110,7 +84,7 @@ require("../language/" . $Lang . "/language.php");
                         <table width="100%">
                             <tr>
                                 <td>
-                                    <FIELDSET>
+                                    <FIELDSET style="height:70px;">
                                         <LEGEND><span name=txtLang id=txtLang><u>О</u>писание</span></LEGEND>
                                         <div style="padding:10">
                                             <textarea class=full name=description_new style="height:40px"><?= $description ?></textarea>
@@ -118,7 +92,7 @@ require("../language/" . $Lang . "/language.php");
                                     </FIELDSET>
                                 </td>
                                 <td width="100" valign="top">
-                                    <FIELDSET>
+                                    <FIELDSET style="height:70px;">
                                         <LEGEND><span name=txtLang id=txtLang><u>П</u>озиция</span> </LEGEND>
                                         <div style="padding:10">
                                             <input type="text" size="3" name="num_new" value="<?= $num ?>">
@@ -136,7 +110,7 @@ require("../language/" . $Lang . "/language.php");
                             <LEGEND><span name=txtLang id=txtLang><u>Х</u>арактеристики</span> </LEGEND>
                             <div style="padding:10">
                                 <div align="left" style="width:95%;overflow:true">
-<?= dispValue($id, $category_arr); ?>
+                                    <?= dispValue($id, $category_arr); ?>
                                 </div>
                             </div>
                         </FIELDSET>

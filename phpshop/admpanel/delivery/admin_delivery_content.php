@@ -3,12 +3,7 @@ require("../connect.php");
 @mysql_connect("$host", "$user_db", "$pass_db") or @die("Невозможно подсоединиться к базе");
 mysql_select_db("$dbase") or @die("Невозможно подсоединиться к базе");
 require("../enter_to_admin.php");
-
-// Языки
-$GetSystems = GetSystems();
-$option = unserialize($GetSystems['admoption']);
-$Lang = $option['lang'];
-require("../language/" . $Lang . "/language.php");
+require("../language/russian/language.php");
 
 function DelivList($PID = 0, $lvl = 0) {
     global $SysValue;
@@ -80,9 +75,7 @@ function DelivList($PID = 0, $lvl = 0) {
 
 //Конец DelivList
 
-
-
-$display = DelivList($id);
+$display = DelivList($_GET['id']);
 
 $sql = "select * from " . $SysValue['base']['table_name30'];
 $result = mysql_query($sql);
@@ -96,13 +89,12 @@ if ($i > 30)
 <html>
     <head>
         <META http-equiv=Content-Type content="text/html; charset=<?= $SysValue['Lang']['System']['charset'] ?>">
-        <LINK href="../css/texts.css" type=text/css rel=stylesheet>
+        <LINK href="../skins/<?= $_SESSION['theme'] ?>/texts.css" type=text/css rel=stylesheet>
         <script language="JavaScript1.2" src="../java/javaMG.js" type="text/javascript"></script>
         <script type="text/javascript" language="JavaScript1.2" src="../java/sorttable.js"></script>
     </head>
-    <body style="background: threedface; color: windowtext;" topmargin="0" rightmargin="3" leftmargin="3" >
-        <? if (isset($id)) { ?>
-
+    <body  topmargin="0" rightmargin="3" leftmargin="3" >
+        <? if (isset($_GET['id'])) { ?>
 
             <table cellpadding="0" cellspacing="1" width="100%" border="0"  class="sortable" id="sort">
                 <tr>
@@ -115,12 +107,12 @@ if ($i > 30)
                 <?= $display ?>
             </table>
 
-            <div align="right" style="padding:10"><BUTTON style="width: 15em; height: 2.2em; margin-left:5"  onclick="miniWin('adm_delivery_new.php?categoryID=<?= $id ?>', 600, 500);
+            <div align="right" style="padding:10"><BUTTON style="width: 15em; height: 2.2em; margin-left:5px"  onclick="miniWin('adm_delivery_new.php?categoryID=<?= $_GET['id'] ?>', 600, 500);
                         return false;">
                     <img src="../icon/page_add.gif" width="16" height="16" border="0" align="absmiddle" hspace="5">
                     <span name=txtLang id=txtLang>Новая позиция</span>
                 </BUTTON></div>
-            <input type="hidden" value="<?= $id ?>" id="catal" name="catal">
+            <input type="hidden" value="<?= $_GET['id'] ?>" id="catal" name="catal">
 
         <? } ?>
     </body>

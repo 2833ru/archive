@@ -23,6 +23,18 @@ $PHPShopGUI = new PHPShopGUI();
 // SQL
 $PHPShopOrm = new PHPShopOrm($PHPShopModules->getParam("base.seourl.seourl_system"));
 
+// Обновление версии модуля
+function actionBaseUpdate() {
+    global $PHPShopModules, $PHPShopOrm;
+    $PHPShopOrm->clean();
+    $option = $PHPShopOrm->select();
+    $new_version = $PHPShopModules->getUpdate($option['version']);
+    $PHPShopOrm->clean();
+    $action = $PHPShopOrm->update(array('version_new' => $new_version));
+    return $action;
+}
+
+
 // Функция обновления
 function actionUpdate() {
     global $PHPShopOrm;
@@ -103,11 +115,13 @@ function actionStart() {
    <li>main_news_forma.tpl
    <li>news_main_mini.tpl
    </ol>
+<p>При включеном режиме "SEO пагинация" следует добавить переменную <b>@seourl_canonical@</b> в шаблон phpshop/templates/имя шаблона/main/shop.tpl, в результате будет добавлена ссылка link rel="canonical" с точным адресом для отсеивания дублей страниц описания списка товаров.</p>
 ';
-    $Tab1 = $PHPShopGUI->setInfo($Info, 250, '95%');
+    $Tab1=$PHPShopGUI->setField('Настройка', $PHPShopGUI->setRadio('paginator_new', 2, 'SEO пагинация', $paginator));
+    $Tab1.= $PHPShopGUI->setLine('<br>').$PHPShopGUI->setInfo($Info, 190, '95%');
 
     // Форма регистрации
-    $Tab2 = $PHPShopGUI->setPay($serial, false);
+        $Tab2 = $PHPShopGUI->setPay($serial, false, $version, true);
 
     // История изменений
     if(method_exists($PHPShopGUI,'setLine'))

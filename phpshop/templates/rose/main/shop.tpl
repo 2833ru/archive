@@ -24,7 +24,7 @@
 <div id="mainblock">
   <div id="top">
     <div id="top2">
-      <div id="ico_basket"><a href="/order/" class="ordabs" ></a> В Вашей корзине <span> <span id="num">@num@</span> товар на <span id="sum">@sum@</span>@productValutaName@.</span> <span id="order" style="display:@orderEnabled@; "><a href="/order/" >Оформить заказ?</a></span> </div>
+      <div id="ico_basket"><a href="/order/" class="ordabs" ></a> В Вашей корзине <span> <span id="num">@num@</span> товар на <span id="sum">@sum@</span> @productValutaName@.</span> <span id="order" style="display:@orderEnabled@; "><a href="/order/" >Оформить заказ?</a></span> </div>
       <div id="ico_compare"><a href="/compare/" class="ordabs" ></a> <span><a href="/compare/" title="Сравнить товары">Сравнить товары (<span id="numcompare">@numcompare@</span> шт.)</a></span> </span> </div>
       @usersDisp@ </div>
     <div id="top3">
@@ -157,21 +157,10 @@
   </div>
 </div>
 <div style="clear:both"></div>
-<div id="cartwindow" style="position:absolute;left:0px;top:0px;bottom:0px;right:0px;visibility:hidden;">
-  <table width="100%" height="100%">
-    <tr>
-      <td width="40" vAlign=center><img src="images/shop/i_commercemanager_med.gif" alt="" width="32" height="32" border="0" align="absmiddle"> </td>
-      <td><b>Внимание...</b><br>
-        Товар добавлен в корзину</td>
-    </tr>
-  </table>
+<div style="clear:both"></div>
+<div id="cartwindow" class="message">
+    <div class="ico_add_to_card"><b>Внимание...</b><br>Товар добавлен в корзину</div>
 </div>
-<div id="comparewindow" style="position:absolute;left:0px;top:0px;bottom:0px;right:0px;visibility:hidden;">
-  <table width="100%" height="100%">
-    <tr>
-      <td width="40" vAlign=center><img src="images/shop/i_compare_med.gif" alt="" width="32" height="32" border="0" align="absmiddle"> </td>
-      <td><b>Внимание...</b><br>
-        Товар добавлен в сравнение</td>
-    </tr>
-  </table>
+<div id="comparewindow" class="message">
+    <div class="ico_add_to_compare"><b>Внимание...</b><br>Товар добавлен в сравнение</div>
 </div>

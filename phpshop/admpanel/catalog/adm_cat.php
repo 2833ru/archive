@@ -3,13 +3,7 @@ require("../connect.php");
 @mysql_connect("$host", "$user_db", "$pass_db") or @die("Невозможно подсоединиться к базе");
 mysql_select_db("$dbase") or @die("Невозможно подсоединиться к базе");
 require("../enter_to_admin.php");
-
-// Подключение языков
-$GetSystems = GetSystems();
-$Admoption = unserialize($GetSystems['admoption']);
-$Lang = $Admoption['lang'];
-
-require("../language/" . $Lang . "/language.php");
+require("../language/russian/language.php");
 
 function TestCat($n) {// есть ли еще подкаталоги
     global $SysValue;
@@ -26,7 +20,7 @@ function Vivod_rekurs($n) {// вывод подкаталогов рекурсом
     while ($row = mysql_fetch_array($result)) {
         $i = 0;
         $id = $row['id'];
-        $name = $row['name'];
+        $name = str_replace(array('"', "'"), " ", $row['name']);
         $parent_to = $row['parent_to'];
         $num = TestCat($id);
 
@@ -46,7 +40,7 @@ function DispName($n, $catalog) {
     $sql = "select name from " . $SysValue['base']['table_name'] . " where id='$n'";
     $result = mysql_query($sql);
     $row = mysql_fetch_array($result);
-    $name = $row['name'];
+    $name = str_replace(array('"', "'"), " ", $row['name']);
     return $name . " => " . $catalog;
 }
 
@@ -58,7 +52,7 @@ function Vivod_pot() {// вывод каталогов
     $j = 0;
     while ($row = mysql_fetch_array($result)) {
         $id = $row['id'];
-        $name = $row['name'];
+        $name = str_replace(array('"', "'"), " ", $row['name']);
         $num = TestCat($id);
         if ($num > 0)
             @$dis.="
@@ -111,43 +105,42 @@ function Vivod_cat_all_num($n) {// выбор кол-ва товаров из данного подкатолога
     <head>
         <title><?= $SysValue['Lang']['Category'][1] ?></title>
         <META http-equiv="Content-Type" content="text-html; charset=<?= $SysValue['Lang']['System']['charset'] ?>">
-        <meta http-equiv="MSThemeCompatible" content="Yes">
-        <LINK href="../css/texts.css" type=text/css rel=stylesheet>
-              <LINK href="../css/dtree.css" type=text/css rel=stylesheet>
+        <LINK href="../skins/<?= $_SESSION['theme'] ?>/texts.css" type=text/css rel=stylesheet>
+        <LINK href="../skins/<?= $_SESSION['theme'] ?>/dtree.css" type=text/css rel=stylesheet>
         <SCRIPT language=JavaScript src="../java/dtree4.js" type=text/javascript></SCRIPT>
         <script language="JavaScript">
             // Закрывает окно
-        function CloseWindow() {
-            window.close();
-        }
+            function CloseWindow() {
+                window.close();
+            }
 
-    // Дерево
-    function My(name,cat){
-        //alert(name+","+cat)
-        window.opener.document.getElementById('parent_name').value=name;
-                
-        if(window.opener.document.getElementById('category_new'))
-            window.opener.document.getElementById('category_new').value=cat;
-            
-        if(window.opener.document.getElementById('parent_to_new'))
-            window.opener.document.getElementById('parent_to_new').value=cat;
-            
-        window.close();
-    }
+            // Дерево
+            function My(name, cat) {
+
+                window.opener.document.getElementById('parent_name').value = name;
+
+                if (window.opener.document.getElementById('category_new'))
+                    window.opener.document.getElementById('category_new').value = cat;
+
+                if (window.opener.document.getElementById('parent_to_new'))
+                    window.opener.document.getElementById('parent_to_new').value = cat;
+
+                window.close();
+            }
 
         </script>
 
     </head>
 
-    <body bottommargin="0" leftmargin="5" topmargin="0" rightmargin="5"">
-          <div align="center" style="padding:5"><a href="javascript: window.d2.openAll();"><?= $SysValue['Lang']['Category'][5] ?></a> | <a href="javascript: window.d2.closeAll();"><?= $SysValue['Lang']['Category'][6] ?></a> | <a href="javascript: window.close()"><?= $SysValue['Lang']['Category'][7] ?></a></div>
-        <table cellpadding="0" cellspacing="0" bgcolor="ffffff" style="border: 2px;border-style: inset;" width="100%" height="350">
+    <body bottommargin="0" leftmargin="5" topmargin="0" rightmargin="5">
+        <div align="center" style="padding:5px"><a href="javascript: window.d2.openAll();"><?= $SysValue['Lang']['Category'][5] ?></a> | <a href="javascript: window.d2.closeAll();"><?= $SysValue['Lang']['Category'][6] ?></a> | <a href="javascript: window.close()"><?= $SysValue['Lang']['Category'][7] ?></a></div>
+        <table cellpadding="3" cellspacing="3" bgcolor="ffffff" style="border: 1px;border-style: inset;padding:3px" width="100%" height="85%">
             <tr>
                 <td valign="top">
                     <? echo Vivod_pot(); ?>
                 </td>
             </tr>
         </table>
-        <div align="center" style="padding:5"><a href="javascript: window.d2.openAll();"><?= $SysValue['Lang']['Category'][5] ?></a> | <a href="javascript: window.d2.closeAll();"><?= $SysValue['Lang']['Category'][6] ?></a> | <a href="javascript: window.close()"><?= $SysValue['Lang']['Category'][7] ?></a></div>
+        <div align="center" style="padding:5px"><a href="javascript: window.d2.openAll();"><?= $SysValue['Lang']['Category'][5] ?></a> | <a href="javascript: window.d2.closeAll();"><?= $SysValue['Lang']['Category'][6] ?></a> | <a href="javascript: window.close()"><?= $SysValue['Lang']['Category'][7] ?></a></div>
     </body>
 </html>

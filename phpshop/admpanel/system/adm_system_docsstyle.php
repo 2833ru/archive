@@ -3,13 +3,7 @@ require("../connect.php");
 @mysql_connect("$host", "$user_db", "$pass_db") or @die("Невозможно подсоединиться к базе");
 mysql_select_db("$dbase") or @die("Невозможно подсоединиться к базе");
 require("../enter_to_admin.php");
-
-// Языки
-$GetSystems = GetSystems();
-$systems = $GetSystems;
-$option = unserialize($GetSystems['admoption']);
-$Lang = $option['lang'];
-require("../language/" . $Lang . "/language.php");
+require("../language/russian/language.php");
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
@@ -21,31 +15,8 @@ require("../language/" . $Lang . "/language.php");
         <LINK href="../skins/<?= $_SESSION['theme'] ?>/tab.css" type=text/css rel=stylesheet>
         <script language="JavaScript1.2" src="../java/javaMG.js" type="text/javascript"></script>
         <script type="text/javascript" src="../java/tabpane.js"></script>
-        <script type="text/javascript" language="JavaScript1.2" src="../language/<?= $Lang ?>/language_windows.js"></script>
-
-        <script type="text/javascript">
-            DoResize(<? echo $GetSystems['width_icon'] ?>, 500, 400);
-        </script>
-
     </head>
-    <body bottommargin="0"  topmargin="0" leftmargin="0" rightmargin="0" onload="DoCheckLang(location.pathname,<?= $SysValue['lang']['lang_enabled'] ?>);
-                preloader(0)">
-        <table id="loader">
-            <tr>
-                <td valign="middle" align="center">
-                    <div id="loadmes" onclick="preloader(0)">
-                        <table width="100%" height="100%">
-                            <tr>
-                                <td id="loadimg"></td>
-                                <td ><b><?= $SysValue['Lang']['System']['loading'] ?></b><br><?= $SysValue['Lang']['System']['loading2'] ?></td>
-                            </tr>
-                        </table>
-                    </div>
-                </td>
-            </tr>
-        </table>
-
-        <SCRIPT language=JavaScript type=text/javascript>preloader(1);</SCRIPT>
+    <body bottommargin="0"  topmargin="0" leftmargin="0" rightmargin="0">
         <?
         $sql = "select * from $table_name3";
         $result = mysql_query($sql);
@@ -118,7 +89,7 @@ tabPane = new WebFXTabPane( document.getElementById( \"article-tab\" ), true );
 
 
 <!-- begin intro page -->
-<div class=\"tab-page\" id=\"intro-page\">
+<div class=\"tab-page\" id=\"intro-page\" style=\"height:200px\">
 <h2 class=\"tab\"><span name=txtLang id=txtLang>Основное</span></h2>
 
 <script type=\"text/javascript\">
@@ -143,7 +114,7 @@ tabPane.addTabPage( document.getElementById( \"intro-page\" ) );
 
 </div>
 
-         <div class=\"tab-page\" id=\"sklad\">
+         <div class=\"tab-page\" id=\"sklad\" style=\"height:200px\">
 <h2 class=\"tab\"><span name=txtLang id=txtLang>Склад</span></h2>
 
 <script type=\"text/javascript\">

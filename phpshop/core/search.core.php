@@ -4,7 +4,7 @@
  * Обработчик поиска товаров
  * @author PHPShop Software
  * @tutorial http://wiki.phpshop.ru/index.php/PHPShopSearch 
- * @version 1.3
+ * @version 1.4
  * @package PHPShopShopCore
  */
 class PHPShopSearch extends PHPShopShopCore {
@@ -48,7 +48,7 @@ class PHPShopSearch extends PHPShopShopCore {
      * Функция вынесена в отдельный файл query_filter.php
      * @return mixed
      */
-    function query_filter() {
+    function query_filter($where = false) {
 
         $hook = $this->setHook(__CLASS__, __FUNCTION__);
         if ($hook)
@@ -69,7 +69,7 @@ class PHPShopSearch extends PHPShopShopCore {
 
                 $name = $this->PHPShopCategoryArray->getParam($val . '.name');
                 $sup = $this->subcategory($val, $parent_name . ' / ' . $name);
-                if (empty($sup)) {
+                if (empty($sup) and $this->PHPShopCategoryArray->getParam($val . '.skin_enabled') != 1) {
 
                     // Запоминаем параметр каталога
                     if ($_REQUEST['cat'] == $val)
@@ -89,9 +89,9 @@ class PHPShopSearch extends PHPShopShopCore {
             else
                 $sel = false;
 
-            if(!$this->errorMultibase($cat))
-            $this->value[] = array($parent_name, $cat, $sel);
-            
+            if (!$this->errorMultibase($cat) and $this->PHPShopCategoryArray->getParam($cat . '.skin_enabled') != 1)
+                $this->value[] = array($parent_name, $cat, $sel);
+
             return true;
         }
     }
@@ -101,21 +101,21 @@ class PHPShopSearch extends PHPShopShopCore {
      */
     function category_select() {
 
-            $this->value[] = array(__('Все разделы'), 0, false);
-            $this->PHPShopCategoryArray = new PHPShopCategoryArray();
-            $this->ParentArray = $this->PHPShopCategoryArray->getKey('parent_to.id', true);
-            if (is_array($this->ParentArray[0])) {
-                foreach ($this->ParentArray[0] as $val) {
-                    if ($this->PHPShopCategoryArray->getParam($val . '.vid') != 1 and !$this->errorMultibase($val)) {
-                        $name = $this->PHPShopCategoryArray->getParam($val . '.name');
-                        $this->subcategory($val, $name);
-                    }
+        $this->value[] = array(__('Все разделы'), 0, false);
+        $this->PHPShopCategoryArray = new PHPShopCategoryArray();
+        $this->ParentArray = $this->PHPShopCategoryArray->getKey('parent_to.id', true);
+        if (is_array($this->ParentArray[0])) {
+            foreach ($this->ParentArray[0] as $val) {
+                if ($this->PHPShopCategoryArray->getParam($val . '.skin_enabled') != 1 and !$this->errorMultibase($val)) {
+                    $name = $this->PHPShopCategoryArray->getParam($val . '.name');
+                    $this->subcategory($val, $name);
                 }
             }
+        }
 
-            $disp = PHPShopText::select('cat', $this->value, '400', $float = "none", false, "proSearch(this.value)", false, 1, 'cat');
-            $this->set('searchPageCategory', $disp);
-        
+        $disp = PHPShopText::select('cat', $this->value, '400', $float = "none", false, "proSearch(this.value)", false, 1, 'cat');
+        $this->set('searchPageCategory', $disp);
+
 
         // Перехват модуля
         $this->setHook(__CLASS__, __FUNCTION__, $this->ParentArray);
@@ -164,10 +164,10 @@ class PHPShopSearch extends PHPShopShopCore {
 
             // Сложный запрос
             $this->PHPShopOrm->sql = $order;
+            $this->PHPShopOrm->mysql_error = false;
             $this->PHPShopOrm->comment = __CLASS__ . '.' . __FUNCTION__;
             $this->dataArray = $this->PHPShopOrm->select();
             $this->PHPShopOrm->clean();
-
 
             if (!empty($this->dataArray)) {
 
@@ -209,7 +209,7 @@ class PHPShopSearch extends PHPShopShopCore {
     /**
      * Генерация пагинатора
      */
-    function setPaginator($count) {
+    function setPaginator($count, $sql = null) {
 
         // Кол-во данных
         $this->count = $count;
@@ -217,7 +217,8 @@ class PHPShopSearch extends PHPShopShopCore {
         if (is_array($this->search_order)) {
             $SQL = " where enabled='1' and parent_enabled='0' and " . $this->search_order['string'] . " " . $this->search_order['sort'] . "
                  " . $this->search_order['prewords'] . " " . $this->search_order['sortV'];
-        }else
+        }
+        else
             $SQL = null;
 
 
@@ -288,7 +289,8 @@ class PHPShopSearch extends PHPShopShopCore {
             $hook = $this->setHook(__CLASS__, __FUNCTION__, $Arg);
             if ($hook) {
                 return $hook;
-            } else
+            }
+            else
                 $this->memory_set(__CLASS__ . '.' . __FUNCTION__, 0);
         }
 

@@ -26,7 +26,7 @@ function SortsGroup() {// Вывод сортировки
 
 
         $display.="
-	<td  style=\"padding-left: 20px\">
+	<td  style=\"padding-left: 10px\">
 	$name
 	</td>
     </tr>

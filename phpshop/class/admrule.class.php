@@ -14,7 +14,7 @@ class PHPShopAdminRule {
     /**
      * Конструктор
      */
-    function PHPShopAdminRule($Status) {
+    function PHPShopAdminRule($Status=false) {
         global $UserStatus;
 
         if (empty($Status))

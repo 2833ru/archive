@@ -2,7 +2,7 @@
 require("../../connect.php");
 @mysql_connect ("$host", "$user_db", "$pass_db")or @die("Невозможно подсоединиться к базе");
 mysql_select_db("$dbase")or @die("Невозможно подсоединиться к базе");
-//require("../../../enter_to_admin.php");
+require("../../enter_to_admin.php");
 
 function GetPageLink(){
 global $SysValue;

@@ -7,7 +7,7 @@ html, body {
 
 body
 {
-    background: ButtonFace;
+    background: #F0F0F0;
     font:		MessageBox;
     font:		Message-Box;
     height:100%;
@@ -15,25 +15,105 @@ body
     padding:0px
 }
 
-.gradient {/*-префикс-linear-gradient(стартовый цвет,финишный цвет);*/
-    background: -moz-linear-gradient(#FFF, ButtonFace);
-    background: -ms-linear-gradient(#FFF, ButtonFace);
-    background: -o-linear-gradient(#FFF, ButtonFace);
-    background: -webkit-linear-gradient(#FFF, ButtonFace);
+#footer{
+    padding-top:10px;
 }
 
-table.iconpane{
-    border:1px;
-    border-style:outset;
-    border-color:ButtonFace;
-    border-top-width:0px;
+fieldset{
+    border: solid 1px #CCC;
+    margin: 3px 3px;
+    cursor: pointer;
+}
+
+.separator{
+    background: #CCC;
+}
+
+hr{
+    display:none;
+}
+
+.display{
+    padding:3px;
+    font-size: 8pt;
+    border: solid 1px #CCC;
+
+    background: #FFF;
+    cursor:pointer;
+}
+
+
+.display:hover{
+    background: -moz-linear-gradient(#F2F6F9,#BFDBFF);
+    background: -ms-linear-gradient(#F2F6F9,#BFDBFF);
+    background: -o-linear-gradient(#F2F6F9,#BFDBFF);
+    background: -webkit-linear-gradient(#F2F6F9,#BFDBFF);
+    border: solid 1px #BFDBFF;
+}
+
+.display b {
+    color: rgb(91,172,255);
+}
+
+
+.login{
+    border: 1px;
+    border-style:outset; 
+    border-color:#F0F0F0;
+    width: 330px;
+    border-color:#F0F0F0;
+    box-shadow: 0.2em 0.2em 5px rgba(122,122,122,0.5);
+}
+
+input[type=file]{
+    border: solid 1px #CCC;
+    background: #FFF;
+    width: 400px;
+}
+
+
+
+.message{
+    border: solid 1px #4D88C8;
+    background: #C0D2EC;
+    position:absolute;
+    left:10px;
+    top:0; 
+    width: 250px; 
+    height: 75px;
+    padding:10px;
+    visibility:hidden;
+    box-shadow: 0.4em 0.4em 5px rgba(122,122,122,0.5);
+    cursor: pointer;
+}
+
+.iconpane{
     height:27px;
     width:100%;
-    background: -moz-linear-gradient(#FFF, ButtonFace);
-    background: -ms-linear-gradient(#FFF, ButtonFace);
-    background: -o-linear-gradient(#FFF, ButtonFace);
-    background: -webkit-linear-gradient(#FFF, ButtonFace);
+    background: #F0F0F0;
+    padding-left:5px;
 }
+
+.long{
+    width: 17em!important;
+    height: 1.9em!important;
+}
+
+.border-top{
+    border-bottom: solid 0px #CCC;
+    border-top: solid 1px #CCC;
+}
+
+.border-both{
+    border-bottom: solid 1px #CCC;
+    border-top: solid 1px #CCC;
+}
+
+.border-bottom{
+    border-bottom: solid 1px #CCC;
+    border-top: solid 0px #CCC;
+}
+
 
 .cMenu{
     display:none;
@@ -52,7 +132,7 @@ table.iconpane{
 }
 
 #loader{
-    background: ButtonFace;
+    background: #F0F0F0;
     DISPLAY: none;
     position: absolute;
     visibility: hidden;
@@ -63,7 +143,7 @@ table.iconpane{
 }
 
 #lock{
-    background: ButtonFace;
+    background: #F0F0F0;
     DISPLAY: none;
     position: absolute;
     visibility: hidden;
@@ -145,7 +225,7 @@ table.sortable span.sortarrow {
     width:17px;
     height:17px;
     border: solid;
-    border-color: ButtonFace;
+    border-color: #F0F0F0;
     border-width: 1px;
     cursor: pointer;
     padding: 2px;
@@ -190,18 +270,14 @@ table.sortable span.sortarrow {
     padding: 3px;
     border: outset;
     border-width: 1px;
-    background: ButtonFace;
+    background: #F0F0F0;
     height: 20px;
 }
 #pane{
-    border: 1px;
-    border-style: outset;
+    background: #F0F0F0;
     text-align: center;
     padding: 5px;
-    background: -moz-linear-gradient(#FFF, ButtonFace);
-    background: -ms-linear-gradient(#FFF, ButtonFace);
-    background: -o-linear-gradient(#FFF, ButtonFace);
-    background: -webkit-linear-gradient(#FFF, ButtonFace);
+    border: solid 1px #CCC;
 }
 .menu_line {
     background: #808080;
@@ -217,9 +293,6 @@ tr.row td {
     cursor: help;
 }
 
-tr.padding td:first-child{
-    padding-left:10px;
-}
 
 #rol td{
     padding: 3px;
@@ -275,21 +348,40 @@ div, input, button, select, fieldset, textarea, td, th{
     padding: 3px 20px; 
     margin-bottom: 10px;
     border-bottom: 1px solid black; 
-    letter-spacing: 2px;}
+    letter-spacing: 2px;
+}
+
+input,textarea,select{
+    border: solid 1px #CCC;
+    padding:2px;
+}
 
 
 input.but{
     width: 7em; 
     height: 2.2em;
-    font-family: MS Shell Dlg; 
     font-size: 8pt;
-    margin-top:5;
+    border:			1px solid;
+    border-color:	ThreeDHighlight ThreeDDarkShadow
+        ThreeDDarkShadow ThreeDHighlight;
+    background: ThreeDFace;
+    cursor: pointer;
 }
+
+.small{
+    height: 1.9em!important;
+}
+
 button{
     width: 8em; 
     height: 2.2em;
     font-size: 8pt;
     margin-top:0;
+    border:			1px solid;
+    border-color:	ThreeDHighlight ThreeDDarkShadow
+        ThreeDDarkShadow ThreeDHighlight;
+    background: ThreeDFace;
+    cursor: pointer;
 }
 
 button.option{
@@ -303,12 +395,7 @@ button.option{
     cursor: pointer;
 }
 button.help{
-    background-image: url(../icon/btn_help[1].gif);
-    background-repeat: no-repeat;
-    padding-left:15px;
-    margin-top:5;
-    border-color:ButtonFace;
-    cursor: pointer;
+    display:none;
 }
 .tip1{
     filter:alpha(opacity=50);
@@ -319,9 +406,14 @@ button.help{
     border-color: #4D88C8;
     background-color: #C0D2EC;
     border-width: 1px;
-    cursor: hand;
+    cursor: pointer;
 }
 form{
     margin:0; 
     padding:0;
+}
+sup{
+    color:#FFFFFF;
+    background-color: #2CAE00;
+    padding: 1px;
 }

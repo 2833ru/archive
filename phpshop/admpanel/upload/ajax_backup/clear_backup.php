@@ -2,7 +2,7 @@
 require_once "../../../../phpshop/lib/Subsys/JsHttpRequest/Php.php";
 // Создаем главный объект библиотеки.
 // Указываем кодировку страницы (обязательно!).
-$JsHttpRequest =& new Subsys_JsHttpRequest_Php("windows-1251");
+$JsHttpRequest = new Subsys_JsHttpRequest_Php("windows-1251");
 
 
 require("../../connect.php");

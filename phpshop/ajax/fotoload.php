@@ -31,7 +31,7 @@ function getFotoIconPodrobno($n, $f) {
     global $SysValue;
 
     $fRComSatrt = null;
-    $sql = "select * from " . $SysValue['base']['table_name35'] . " where parent=$n order by num";
+    $sql = "select * from " . $SysValue['base']['table_name35'] . " where parent='".intval($n)."' order by num";
     $result = mysql_query($sql);
     $num = mysql_num_rows($result);
     while (@$row = mysql_fetch_array(@$result)) {

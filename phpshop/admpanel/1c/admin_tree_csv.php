@@ -93,7 +93,7 @@ parent_to = '" . trim($CsvToArray[2]) . "'
 }
 
 require_once "../../lib/JsHttpRequest/JsHttpRequest.php";
-$JsHttpRequest = & new JsHttpRequest("windows-1251");
+$JsHttpRequest =  new JsHttpRequest("windows-1251");
 
 // Расширение
 $_FILES['file']['ext'] = PHPShopSecurity::getExt($_FILES['file']['name']);

@@ -4,7 +4,7 @@
     <name>Visual Cart</name>
     <description>Модуль управляемой мини-корзины, сохранение корзины в базе.</description>
     <icon>icon.png</icon>
-    <category>order</category>
+    <category>form</category>
     <adminmenu>
         <title>Visual Cart</title>
         <podmenu>

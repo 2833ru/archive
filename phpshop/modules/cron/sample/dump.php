@@ -1,4 +1,4 @@
-<?
+<?php
 /**
  * Дампер для запуска задач через PHPShop.Cron
  * Для включения поменяйте значение enabled на true
@@ -41,7 +41,7 @@ $output = false;
 //////////////////////////////////////////////////
 function mysqlbackup($host,$dbname, $uid, $pwd, $structure_only, $crlf) {
 
-    $con=@mysql_connect("localhost",$uid, $pwd) or die("Could not connect");
+    $con=@mysql_connect($host,$uid, $pwd) or die("Could not connect");
     $db=@mysql_select_db($dbname,$con) or die("Could not select db");
 
     // here we check MySQL Version
@@ -122,7 +122,7 @@ function mysqlbackup($host,$dbname, $uid, $pwd, $structure_only, $crlf) {
             }
 
             mysql_free_result($result);
-            $sql = ereg_replace(',' . $crlf . '$', '', $sql);
+            $sql = preg_replace(',' . $crlf . '$', '', $sql);
 
             $result = mysql_query("SHOW KEYS FROM $tablename");
             while ($row = mysql_fetch_array($result)) {
@@ -207,7 +207,7 @@ function mysqlbackup($host,$dbname, $uid, $pwd, $structure_only, $crlf) {
                         $sql .= "'', ";
                     } // end if
                 } // end for
-                $sql = ereg_replace(', $', '', $sql);
+                $sql = preg_replace(', $', '', $sql);
                 $sql .= ");".$crlf;
                 out(1,$sql);
 

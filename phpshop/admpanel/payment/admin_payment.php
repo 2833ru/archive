@@ -44,9 +44,9 @@ function OrderPayment() {// вывод платежей
         $razmer = "height:600;";
     $_Return = ('
 <div id=interfacesWin name=interfacesWin align="left" style="width:100%;' . @$razmer . ';overflow:auto"> 
-<table width="50%"  cellpadding="0" cellspacing="0">
+<table width="50%"  cellpadding="0" cellspacing="0" >
 <tr>
-	<td valign="top" style="padding-left:5px">
+	<td valign="top" >
 
 <table cellpadding="0" cellspacing="1" width="100%" border="0" class="sortable" id="sort">
 <tr>

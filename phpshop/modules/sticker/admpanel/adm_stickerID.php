@@ -64,7 +64,7 @@ function actionStart() {
 
     $Tab1 = $PHPShopGUI->setField('Название:', $PHPShopGUI->setInputText(false, 'name_new', $name, '98%'));
         $Tab1.=$PHPShopGUI->setField('Маркер:',$PHPShopGUI->setInputText('@sticker_','path_new',$path,100,'@'));
-    $Tab1.=$PHPShopGUI->setField('Опции:', $PHPShopGUI->setCheckbox('enabled_new', $enabled, 'Вывод на сайте', 1));
+    $Tab1.=$PHPShopGUI->setField('Опции:', $PHPShopGUI->setCheckbox('enabled_new', 1, 'Вывод на сайте', $enabled));
     $Tab1.=$PHPShopGUI->setField('Привязка к страницам:', $PHPShopGUI->setInputText(false, 'dir_new', $dir, '98%', ' * Пример: /page/about.html,/page/company.html'));
    
 

@@ -28,14 +28,18 @@ class DocSave {
     function autorization() {
         if (PHPShopSecurity::true_num($_GET['orderId']) and PHPShopSecurity::true_num($_GET['datas'])) {
             $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['orders']);
-            $where['id'] = '=' . $_GET['orderId'];
+            $PHPShopOrm->debug = false;
+            $where['id'] = '=' . intval($_GET['orderId']);
 
-            if (!empty($_SESSION['UsersId']))
-                $where['user'] = '=' . $_SESSION['UsersId'];
-            else
-                $where['user'] = '=0';
+            if (empty($_GET['check_file'])) {
+                if (!empty($_SESSION['UsersId']))
+                    $where['user'] = '=' . $_SESSION['UsersId'];
+                else
+                    $where['user'] = '=0';
+            }
 
             $data = $PHPShopOrm->select(array('id'), $where, false, array('limit' => 1));
+
 
             if (is_array($data))
                 return true;
@@ -102,12 +106,16 @@ class DocSave {
 
     function compile() {
         if (file_exists($this->file)) {
-            header("Content-Description: File Transfer");
-            header('Content-Type: application/force-download');
-            header('Content-Disposition: attachment; filename=' . $this->filename);
-            header("Content-Transfer-Encoding: binary");
-            header('Content-Length: ' . filesize($this->file));
-            readfile($this->file);
+            if (empty($_GET['check_file'])) {
+                header("Content-Description: File Transfer");
+                header('Content-Type: application/force-download');
+                header('Content-Disposition: attachment; filename=' . $this->filename);
+                header("Content-Transfer-Encoding: binary");
+                header('Content-Length: ' . filesize($this->file));
+                readfile($this->file);
+            }
+            else
+                exit("exist");
         } else {
             header("Location: /error/");
             exit;

@@ -202,7 +202,7 @@ $my_total=$PHPShopOrder->returnSumma($sum,$order['Person']['discount'])+$deliver
             $iw=new inwords;
 $s=$iw->get($PHPShopOrder->returnSumma($sum,$order['Person']['discount'])+$deliveryPrice); 
 $v=$PHPShopOrder->default_valuta_code;
-if (eregi("руб", $v)) echo $s;
+if (preg_match("/руб/i", $v)) echo $s;
 ?>
         </b></p><br>
 

@@ -8,12 +8,13 @@ CREATE TABLE IF NOT EXISTS `phpshop_modules_returncall_system` (
   `title_end` text NOT NULL,
   `serial` varchar(64) NOT NULL default '',
   `windows` enum('0','1') NOT NULL default '0',
-  `version` FLOAT(2) DEFAULT '1.0' NOT NULL,
+  `captcha_enabled` enum('1','2') NOT NULL default '1',
+  `version` FLOAT(2) DEFAULT '1.4' NOT NULL,
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=cp1251;
 
 
-INSERT INTO `phpshop_modules_returncall_system` VALUES (1,'1','Обратный звонок','Заявка на обратный звонок принята, ждите','','0','1.2');
+INSERT INTO `phpshop_modules_returncall_system` VALUES (1,'1','Обратный звонок','Заявка на обратный звонок принята, ждите','','0','1','1.4');
 
 DROP TABLE IF EXISTS `phpshop_modules_returncall_jurnal`;
 CREATE TABLE `phpshop_modules_returncall_jurnal` (

@@ -4,13 +4,13 @@
     <name>Facebookpage</name>
     <description>Модуль генерации шаблона для facebook.</description>
     <icon>icon.png</icon>
-    <category>template,soc</category>
+    <category>soc</category>
     <adminmenu>
         <title>Facebook</title>
         <podmenu>
             <podmenu_name>Настройка Facebook</podmenu_name>
             <podmenu_icon>icon.png</podmenu_icon>
-            <podmenu_action>javascript:miniWin('../modules/facebookpage/admpanel/adm_module.php',510,450);</podmenu_action>
+            <podmenu_action>javascript:miniWin('../modules/facebookpage/admpanel/adm_module.php',650,450);</podmenu_action>
         </podmenu>
     </adminmenu>
 </module>

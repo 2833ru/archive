@@ -8,8 +8,9 @@ PHPShopObj::loadClass("system");
 PHPShopObj::loadClass("basexml");
 
 // Подключаем БД
-$PHPShopBase=&new PHPShopBase("../../phpshop/inc/config.ini");
+$PHPShopBase=new PHPShopBase("../../phpshop/inc/config.ini");
 
+/*
 // Пример запроса
 $_POST['sql_test']='<?xml version="1.0" encoding="windows-1251"?>
 <phpshop><sql><from>table_name2</from>
@@ -18,7 +19,7 @@ $_POST['sql_test']='<?xml version="1.0" encoding="windows-1251"?>
 <where>category=55 and enabled="1"</where>
 <order>num</order><limit>1000</limit></sql></phpshop>';
 
-
+*/
 
 class PHPShopPrice extends PHPShopBaseXml {
     
@@ -57,6 +58,5 @@ class PHPShopPrice extends PHPShopBaseXml {
     }
 }
 
-$PHPShopPrice=&new PHPShopPrice();
-
+new PHPShopPrice();
 ?>

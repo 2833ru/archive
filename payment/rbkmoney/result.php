@@ -8,20 +8,19 @@
  */
 
 function WriteLog($MY_LMI_HASH) {
-    global $mrh_pass2, $REQUEST_URI, $REMOTE_ADDR, $_POST;
     $handle = fopen("../paymentlog.log", "a+");
+    $post = null;
 
     foreach ($_POST as $k => $v)
-        @$post.=$k . "=" . $v . "\r\n";
-
+        $post.=$k . "=" . $v . "\r\n";
 
     $str = "
   RBK Payment Start ------------------
   date=" . date("F j, Y, g:i a") . "
   $post
   MY_LMI_HASH=$MY_LMI_HASH
-  REQUEST_URI=$REQUEST_URI
-  IP=$REMOTE_ADDR
+  REQUEST_URI=" . $_SERVER['REQUEST_URI'] . "
+  IP=" . $_SERVER['REMOTE_ADDR'] . "
   RBK Payment End --------------------
   ";
     fwrite($handle, $str);
@@ -29,9 +28,10 @@ function WriteLog($MY_LMI_HASH) {
 }
 
 function UpdateNumOrder($uid) {
-    $last_num = substr($uid, -2);
+    $order_prefix_format = $GLOBALS['SysValue']['my']['order_prefix_format'];
+    $last_num = substr($uid, -$order_prefix_format);
     $total = strlen($uid);
-    $ferst_num = substr($uid, 0, ($total - 2));
+    $ferst_num = substr($uid, 0, ($total - $order_prefix_format));
     return $ferst_num . "-" . $last_num;
 }
 
@@ -43,7 +43,6 @@ while (list($section, $array) = each($SysValue))
 
 // as a part of ResultURL script
 // your registration data
-
 $LMI_SECRET_KEY = $SysValue['rbk']['secretKey'];
 
 
@@ -63,7 +62,7 @@ if ($MY_LMI_HASH != $_POST['hash']) {
     mysql_select_db($SysValue['connect']['dbase']) or
             @die("" . PHPSHOP_error(102, $SysValue['my']['error_tracer']) . "");
 
-    $new_uid = UpdateNumOrder($LMI_PAYMENT_NO);
+    $new_uid = UpdateNumOrder($_POST['LMI_PAYMENT_NO']);
 
 
     // Приверяем сущ. заказа
@@ -76,8 +75,8 @@ if ($MY_LMI_HASH != $_POST['hash']) {
     if ($_POST['secretKey'] == $LMI_SECRET_KEY) {
         if ($_POST['paymentStatus'] == 5) {
             if ($uid == $new_uid) {
-                
-                
+
+
                 // Записываем платеж в базу
                 $sql = "INSERT INTO " . $SysValue['base']['table_name33'] . " VALUES ('$new_uid','RBKMoney','$LMI_PAYMENT_AMOUNT','" . date("U") . "')";
                 $result = mysql_query($sql);
@@ -86,7 +85,7 @@ if ($MY_LMI_HASH != $_POST['hash']) {
                 $result = mysql_query($sql);
 
                 WriteLog($MY_LMI_HASH);
-                
+
                 // print OK signature
                 echo "OK";
             } else {

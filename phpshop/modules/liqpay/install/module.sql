@@ -15,3 +15,5 @@ CREATE TABLE IF NOT EXISTS `phpshop_modules_liqpay_system` (
 
 
 INSERT INTO `phpshop_modules_liqpay_system` VALUES (1,0,'Платежная система Liqpay','Оплатите пожалуйста свой заказ','','','','1.0');
+
+INSERT INTO `phpshop_payment_systems` VALUES (10001, 'LiqPay', 'modules', '0', 0, '', '');

@@ -13,7 +13,7 @@ function hook_message($fun,$row=false) {
         $content=PHPShopText::message(PHPShopText::h3('Var dump').$content);
     }
 
-    return PHPShopText::notice('Hook -> '.$fun.'() -> '.__FILE__.$content);
+    return PHPShopText::message('Example Hook -> '.$fun.'() -> '.__FILE__.$content);
 }
 
 

@@ -5,6 +5,7 @@
     <description>Модуль записи действий администратора.</description>
     <icon>icon.png</icon>
     <base>21</base>
+    <status></status>
     <adminmenu>
         <title>Adm Log</title>
         <podmenu>

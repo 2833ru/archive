@@ -1,68 +1,85 @@
-<?
+<?php
 error_reporting(0);
-$_classPath="../phpshop/";
-include($_classPath."class/obj.class.php");
+$_classPath = "../phpshop/";
+include($_classPath . "class/obj.class.php");
 PHPShopObj::loadClass("base");
-$PHPShopBase = new PHPShopBase($_classPath."inc/config.ini");
-$version=substr($GLOBALS['SysValue']['upload']['version'],1,1);
+$PHPShopBase = new PHPShopBase($_classPath . "inc/config.ini", false);
+$version = substr($GLOBALS['SysValue']['upload']['version'], 1, 2);
 
-
+// short_open_tag
+if(ini_get("short_open_tag") == 1)
+     $tag = "............<img src=\"rewritemodtest/icon-activate.gif\" border=0 align=absmiddle> <b class='ok'>Ok</b>";
+else
+    $tag = "............<img src=\"rewritemodtest/errormessage.gif\"  border=0 align=absmiddle> <b class='error'>Error</b>";
 
 // Апач
-if(eregi('Apache', $_SERVER['SERVER_SOFTWARE'])) $API="............<img src=\"rewritemodtest/icon-activate.gif\" border=0 align=absmiddle> <b class='ok'>Ok</b>";
-else $API="............<img src=\"rewritemodtest/errormessage.gif\"  border=0 align=absmiddle> <b class='error'>Error</b>";
+if (strstr($_SERVER['SERVER_SOFTWARE'], 'Apache'))
+    $API = "............<img src=\"rewritemodtest/icon-activate.gif\" border=0 align=absmiddle> <b class='ok'>Ok</b>";
+else
+    $API = "............<img src=\"rewritemodtest/errormessage.gif\"  border=0 align=absmiddle> <b class='error'>Error</b>";
 
 // Версия PHP
-$phpversion=substr(phpversion(),0,1);
-if($phpversion >= 4) $php="............<img src=\"rewritemodtest/icon-activate.gif\" border=0 align=absmiddle> <b class='ok'>Ok</b>";
-else $php="............<img src=\"rewritemodtest/errormessage.gif\"  border=0 align=absmiddle> <b class='error'>Error</b>";
+$phpversion = substr(phpversion(), 0, 1);
+if ($phpversion >= 5)
+    $php = "............<img src=\"rewritemodtest/icon-activate.gif\" border=0 align=absmiddle> <b class='ok'>Ok</b>";
+else
+    $php = "............<img src=\"rewritemodtest/errormessage.gif\"  border=0 align=absmiddle> <b class='error'>Error</b>";
 
 // Версия MySQL
-@mysql_connect ($SysValue['connect']['host'], $SysValue['connect']['user_db'],  $SysValue['connect']['pass_db']);
+@mysql_connect($SysValue['connect']['host'], $SysValue['connect']['user_db'], $SysValue['connect']['pass_db']);
 @mysql_select_db($SysValue['connect']['dbase']);
 @mysql_query("SET NAMES 'cp1251'");
 
-if(@mysql_get_server_info()) {
-    $mysqlversion=substr(@mysql_get_server_info(),0,1);
-    if($mysqlversion >= 4) $mysql="............<img src=\"rewritemodtest/icon-activate.gif\" border=0 align=absmiddle> <b class='ok'>Ok</b>";
-    else $mysql="............<img src=\"rewritemodtest/errormessage.gif\"  border=0 align=absmiddle> <b class='error'>Error</b>";
-}else $mysql="...............?";
+if (@mysql_get_server_info()) {
+    $mysqlversion = substr(@mysql_get_server_info(), 0, 1);
+    if ($mysqlversion >= 4)
+        $mysql = "............<img src=\"rewritemodtest/icon-activate.gif\" border=0 align=absmiddle> <b class='ok'>Ok</b>";
+    else
+        $mysql = "............<img src=\"rewritemodtest/errormessage.gif\"  border=0 align=absmiddle> <b class='error'>Error</b>";
+}
+else
+    $mysql = "...............?";
 
 // Rewrite
 $path_parts = pathinfo($_SERVER['PHP_SELF']);
-$filename =  "http://".$_SERVER['SERVER_NAME'].$path_parts['dirname']."/rewritemodtest/test.html";
-if (@fopen($filename,"r")) $rewrite="............<img src=\"rewritemodtest/icon-activate.gif\" border=0 align=absmiddle> <b class='ok'>Ok</b>";
-else $rewrite="............<img src=\"rewritemodtest/errormessage.gif\"  border=0 align=absmiddle> <b class='error'>Error</b>";
+$filename = "http://" . $_SERVER['SERVER_NAME'] . $path_parts['dirname'] . "/rewritemodtest/test.html";
+if (@fopen($filename, "r"))
+    $rewrite = "............<img src=\"rewritemodtest/icon-activate.gif\" border=0 align=absmiddle> <b class='ok'>Ok</b>";
+else
+    $rewrite = "............<img src=\"rewritemodtest/errormessage.gif\"  border=0 align=absmiddle> <b class='error'>Error</b>";
 
 //GD Support
-$GD=gd_info();
-if($GD['GD Version']!="")
-    $gd_support="............<img src=\"rewritemodtest/icon-activate.gif\" border=0 align=absmiddle> <b class='ok'>Ok</b>";
-else  $gd_support="............<img src=\"rewritemodtest/errormessage.gif\"  border=0 align=absmiddle> <b class='error'>Error</b>";
+$GD = gd_info();
+if ($GD['GD Version'] != "")
+    $gd_support = "............<img src=\"rewritemodtest/icon-activate.gif\" border=0 align=absmiddle> <b class='ok'>Ok</b>";
+else
+    $gd_support = "............<img src=\"rewritemodtest/errormessage.gif\"  border=0 align=absmiddle> <b class='error'>Error</b>";
 
 //FreeType Support
-if($GD['FreeType Support'] === true)
-    $gd_freetype_support="............<img src=\"rewritemodtest/icon-activate.gif\" border=0 align=absmiddle> <b class='ok'>Ok</b>";
-else  $gd_freetype_support="............<img src=\"rewritemodtest/errormessage.gif\"  border=0 align=absmiddle> <b class='error'>Error</b>";
+if ($GD['FreeType Support'] === true)
+    $gd_freetype_support = "............<img src=\"rewritemodtest/icon-activate.gif\" border=0 align=absmiddle> <b class='ok'>Ok</b>";
+else
+    $gd_freetype_support = "............<img src=\"rewritemodtest/errormessage.gif\"  border=0 align=absmiddle> <b class='error'>Error</b>";
 
 //FreeType Linkage
-if($GD['FreeType Linkage'] == "with freetype")
-    $gd_freetype_linkage="............<img src=\"rewritemodtest/icon-activate.gif\" border=0 align=absmiddle> <b class='ok'>Ok</b>";
-else  $gd_freetype_linkage="............<img src=\"rewritemodtest/errormessage.gif\"  border=0 align=absmiddle> <b class='error'>Error</b>";
+if ($GD['FreeType Linkage'] == "with freetype")
+    $gd_freetype_linkage = "............<img src=\"rewritemodtest/icon-activate.gif\" border=0 align=absmiddle> <b class='ok'>Ok</b>";
+else
+    $gd_freetype_linkage = "............<img src=\"rewritemodtest/errormessage.gif\"  border=0 align=absmiddle> <b class='error'>Error</b>";
 
 // XML Support
-if(function_exists("xml_parser_create"))
-    $xml_support="............<img src=\"rewritemodtest/icon-activate.gif\" border=0 align=absmiddle> <b class='ok'>Ok</b>";
-else  $xml_support="............<img src=\"rewritemodtest/errormessage.gif\"  border=0 align=absmiddle> <b class='error'>Error</b>";
-
+if (function_exists("xml_parser_create"))
+    $xml_support = "............<img src=\"rewritemodtest/icon-activate.gif\" border=0 align=absmiddle> <b class='ok'>Ok</b>";
+else
+    $xml_support = "............<img src=\"rewritemodtest/errormessage.gif\"  border=0 align=absmiddle> <b class='error'>Error</b>";
 ?>
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
-
 <html>
     <head>
-        <title>Установка <?= $SysValue['license']['product_name']." (сборка ". $SysValue['upload']['version'].")"?></title>
+        <title>Установка <?php echo $SysValue['license']['product_name'] . " (сборка " . $SysValue['upload']['version'] . ")" ?></title>
         <META http-equiv="Content-Type" content="text-html; charset=windows-1251">
+        <META name="ROBOTS" content="NONE">
         <style>
             body, pre, html, td
             {
@@ -166,21 +183,22 @@ else  $xml_support="............<img src=\"rewritemodtest/errormessage.gif\"  bo
             }
         </style>
         <script>
-            function miniWin(url,w,h)
+            function miniWin(url, w, h)
             {
-                window.open(url,"_blank","left=300,top=100,width="+w+",height="+h+",location=0,menubar=0,resizable=1,scrollbars=0,status=0,titlebar=0,toolbar=0");
+                window.open(url, "_blank", "left=300,top=100,width=" + w + ",height=" + h + ",location=0,menubar=0,resizable=1,scrollbars=0,status=0,titlebar=0,toolbar=0");
             }
         </script>
     <body>
         <div class="title">
             <div style="float:left;padding: 10px;padding-left: 15px" >
-                PHPShop&copy; Software -  PHPShop&copy; Enterprise
-                <h1>Установка PHPShop Software</h1>
-            </div><div style="float:right;padding: 10px; padding-right: 15px" >версия&nbsp;&nbsp;&nbsp;<span class="v" >3.<?=$version;?></span></div>
+                PHPShop Software -  PHPShop&#8482 Enterprise
+                <h1>Установка PHPShop&#8482 Software</h1>
+            </div><div style="float:right;padding: 10px; padding-right: 15px" >версия&nbsp;&nbsp;&nbsp;<span class="v" >3.<?php echo $version; ?></span></div>
         </div>
 
         <div align="right" class="menu">
-            <a href="/" target="_blank" title="Разработчик">Домой</a> | <a href="https://help.phpshop.ru/" target="_blank" title="Техническая поддержка">Техническая поддержка</a> | <a href="http://faq.phpshop.ru/" target="_blank" title="Учебник">Учебные материалы</a> | <a href="#" onclick="window.print();return false;" title="Печать">Печать страницы</a>
+            <a href="/" target="_blank" title="Разработчик">Домой</a> | <a href="https://help.phpshop.ru/" target="_blank" title="Техническая поддержка">Техническая поддержка</a> | <a href="http://faq.phpshop.ru/" target="_blank" title="Учебник">Учебные материалы</a> | <a href="#" onclick="window.print();
+                return false;" title="Печать">Печать страницы</a>
         </div><div style="clear: both"></div>
 
         <table>
@@ -188,10 +206,10 @@ else  $xml_support="............<img src=\"rewritemodtest/errormessage.gif\"  bo
                 <td><img src="rewritemodtest/box.gif" alt="PHPShop SoftWare Box" width="120" height="143" border="0" align="left" hspace="10"></td>
                 <td>
                     <p><strong>Установщик приветсвует Вас</strong>.<br>
-	На этой странице вы найдет всю необходимую информацию, которая поможет вам установить и настроить Интернет-магазин на своем сайте.</p> 
-	Ниже приведена инструкция для ручной установки PHPShop Software на виртуальный хостинг.<br> Перед установкой рекомендуем ознакомиться со
-        списком <a href="http://phpshop.ru/docs/hosting.html" target="_blank" title="Хостинги">протестированных хостингов</a> на соответствие с
-        системными требованиями PHPShop SoftWare.
+                        На этой странице вы найдет всю необходимую информацию, которая поможет вам установить и настроить Интернет-магазин на своем сайте.</p> 
+                    Ниже приведена инструкция для ручной установки PHPShop Software на виртуальный хостинг.<br> Перед установкой рекомендуем ознакомиться со
+                    списком <a href="http://phpshop.ru/page/hosting-list.html" target="_blank" title="Хостинги">протестированных хостингов</a> на соответствие с
+                    системными требованиями PHPShop SoftWare.
                 </td>
             </tr>
         </table>
@@ -201,19 +219,20 @@ else  $xml_support="............<img src=\"rewritemodtest/errormessage.gif\"  bo
         <h2>Системные требования</h2>
         <p>
         <ol>
-            <li> Apache <?=$API?>
-            <li> MySQL <?=$mysql?>
-            <li> PHP <?=$php?>
-            <li>GD Support для PHP <?=$gd_support?>
-            <li>FreeType Support для PHP <?=$gd_freetype_support?>
-            <li>FreeType Linkage для PHP <?=$gd_freetype_linkage?>
-            <li>XML Parser для PHP <?=$xml_support?>
+            <li>Apache <?php echo $API ?>
+            <li>MySQL <?php echo $mysql ?>
+            <li>PHP <?php echo $php ?>
+            <li>Short Open Tag для PHP<?php echo $tag ?>
+            <li>GD Support для PHP <?php echo $gd_support ?>
+            <li>FreeType Support для PHP <?php echo $gd_freetype_support ?>
+            <li>FreeType Linkage для PHP <?php echo $gd_freetype_linkage ?>
+            <li>XML Parser для PHP <?php echo $xml_support ?>
                 <p>
                     Расшифровка: <img src="rewritemodtest/icon-activate.gif" border=0 align=absmiddle> <b class='ok'>Ok</b> - тест пройден,
                     <img src="rewritemodtest/errormessage.gif"  border=0 align=absmiddle> <b class='error'>Error</b> - тест не пройден (возможны проблемы при работе скрипта, обратитесь к документации сервера или свяжитесь с администратором сервера)
 
                 <p><img src="rewritemodtest/php.png" border=0 align=absmiddle> <a href="rewritemodtest/rewritemodtest.php" target="_blank">Показать информацию о сервере</a><br>
-                    <img src="rewritemodtest/icon-activate.gif" border=0 align=absmiddle><a href="http://www.phpshop.ru/docs/hosting.html" target="_blank">Список протестированных хостингов </a></p>
+                    <img src="rewritemodtest/icon-activate.gif" border=0 align=absmiddle><a href="http://www.phpshop.ru/page/hosting-list.html" target="_blank">Список протестированных хостингов </a></p>
 
                 </p>
                 </p>
@@ -226,7 +245,7 @@ else  $xml_support="............<img src=\"rewritemodtest/errormessage.gif\"  bo
     <ol>
         <p>Если вы не хотите или по каким-то причинам не можете воспользоваться <strong>готовой программой для установки</strong> <a href="http://wiki.phpshop.ru/index.php/PHPShop_EasyControl#PHPShop_Installer" target="_blank">Windows Installer</a> или <a href="http://install.phpshop.ru" target="_blank">Web Installer</a>, то приведенная ниже информация поможет вам выполнить установку в ручном режиме (для опытных пользователей).</p>
         <li>Подключиться к своему серверу через FTP-клиент (CuteFTP, Total Commander и др.)
-        <li>Загрузить распакованный архив в <strong>бинарном/двоичном режиме</strong> (задается в настройках FTP клиента)</a>
+        <li>Загрузить распакованный архив на FTP
         <li>Создайте новую базу MySQL на своем сервере или узнайте пароли доступа к уже созданной базе у хост-провайдера.
         <li>
 
@@ -266,7 +285,7 @@ else  $xml_support="............<img src=\"rewritemodtest/errormessage.gif\"  bo
             Пользователь и пароль задается при установке скрипта.<br>
             При установке пользователь и пароль задается в ручном режиме. По желанию, регистрационные данные отсылаются на e-mail. После смены пароля требуется перезапуск браузера.<br><br>
 
-        <li>Реализована возможность <strong>размещение 2-х и более независимых интернет-магазинов</strong> в любых директориях домена. Данная особенность позволяет создавать многоязычные проекты и гиппермаркеты,&nbsp;используя одну <A href="http://phpshop.ru/docs/license.html" target="_blanlk">лицензию</A>.<BR><BR>Для задания папки размещения требуется выполнить всего несколько шагов:<BR><BR>
+        <li>Реализована возможность <strong>размещение 2-х и более независимых интернет-магазинов</strong> в любых директориях домена. Данная особенность позволяет создавать многоязычные проекты и гиппермаркеты,&nbsp;используя одну <A href="http://phpshop.ru/page/license.html" target="_blanlk">лицензию</A>.<BR><BR>Для задания папки размещения требуется выполнить всего несколько шагов:<BR><BR>
 
             <ol>
                 <li>Копируем скрипт в любую директорию, например /market/<br>
@@ -282,7 +301,7 @@ else  $xml_support="............<img src=\"rewritemodtest/errormessage.gif\"  bo
 
                 <li>Скрипт запуcкается и работает независимо от остальных&nbsp;из папки /market/<br><br>
             </ol>
-        <li>Таким образом, можно установить неограниченное кол-во интернет-магазинов на одном домене. Лицензионное соглашение <a href="http://phpshop.ru/docs/license.html" target="_blank">накладывает ограничение</a> на количество установленных магазинов на единую лицензию для технической поддержки.<br><br>
+        <li>Таким образом, можно установить неограниченное кол-во интернет-магазинов на одном домене. Лицензионное соглашение <a href="http://phpshop.ru/page/license.html" target="_blank">накладывает ограничение</a> на количество установленных магазинов на единую лицензию для технической поддержки.<br><br>
             Поддерживается возможность установки нескольких магазинов в единую базу, для этого служит опция <strong>префикс</strong> в названиях таблиц:
             <p>
             <ul>
@@ -307,7 +326,7 @@ else  $xml_support="............<img src=\"rewritemodtest/errormessage.gif\"  bo
 <ol >
     <li>Создайте копию текущей базы данных через утилиту "Резервные копи базы": База -> Резервные копи базы (Backup)
     <li>Создаем папку /old/ загружаем туда все файлы из корневой директории www
-    <li>Загружаем в очищенную директорию www новые файлы из архива новой версии в <strong>бинарном режиме</strong>
+    <li>Загружаем в очищенную директорию www новые файлы из архива новой версии
     <li>Из старого файла config.ini берем параметры подключения к базе данных (первые 5 строк) и вставляем в новый конфиг (/phpshop/inc/config.ini)
     <li>Запускаем <img src="rewritemodtest/icon-setup.gif" border=0 align=absmiddle>  <a href="javascript:miniWin('update/install.php',600,570)">апдейтер баз данных</a> (ваш_сайт/install/update/install.php), выбираем текущую версию, если ее там нет, то обновлять базу не нужно. Стираем папку /install/
     <li>Из папки /old/ копируем папку /UserFiles и /license со старыми картинками и лицензией в обновленный скрипт в тоже место
@@ -380,7 +399,7 @@ else  $xml_support="............<img src=\"rewritemodtest/errormessage.gif\"  bo
         </ul>
 </ol>
 
-<div class="footer">Copyright © PHPShop Software. Все права защищены © 2003-<? echo date("Y") ?>. СГРПЭ PHPShop №2006614274,2010611237.
+<div class="footer">Copyright © PHPShop&#8482 Software. Все права защищены © 2003-<? echo date("Y") ?>. СГРПЭ PHPShop №2006614274,2010611237.
 
 </div>
 </body>

@@ -19,7 +19,7 @@ $LoadItems['System']=$PHPShopSystem->getArray();
 function getfullname ($id=0) {
     global $SysValue;
     
-    $sql='select name,parent_to from '.$SysValue['base']['table_name'].' where id='.$id;
+    $sql='select name,parent_to from '.$SysValue['base']['table_name'].' where id='.intval($id);
     $result=mysql_query($sql);
     @$row = mysql_fetch_array(@$result);
     if ($row['parent_to']) {
@@ -170,13 +170,13 @@ if (($COMCID && (count($goods[$catid])>1) && (count($goods[$catid])<=$limit)) ||
     $disp.='<a name="list"></a><P><h5>Сравнение товаров в категории:<br> '.$comparing.'</h5></P>';
 
     if ($COMCID!="ALL") {
-        $sql='select sort from '.$SysValue['base']['table_name'].' where id='.$COMCID;
+        $sql='select sort from '.$SysValue['base']['table_name'].' where id='.intval($COMCID);
         $result=mysql_query($sql);
         @$row = mysql_fetch_array(@$result);
         $sorts=unserialize($row['sort']);
     } else {
         foreach ($cats as $catid => $name) {
-            $sql='select sort from '.$SysValue['base']['table_name'].' where id='.$catid;
+            $sql='select sort from '.$SysValue['base']['table_name'].' where id='.intval($catid);
             $result=mysql_query($sql);
             @$row = mysql_fetch_array(@$result);
             $tempsorts=unserialize($row['sort']);
@@ -193,7 +193,7 @@ if (($COMCID && (count($goods[$catid])>1) && (count($goods[$catid])<=$limit)) ||
     
     if(is_array($sorts))
         foreach ($sorts as $sort) {
-            $sql='select name from '.$SysValue['base']['table_name20'].' where id='.$sort.' AND goodoption=0';
+            $sql='select name from '.$SysValue['base']['table_name20'].' where id='.intval($sort).' AND goodoption=0';
             $result=mysql_query($sql);
             @$row = mysql_fetch_array(@$result);
             $sorts_name[$sort]=$row['name'];
@@ -247,7 +247,7 @@ if (($COMCID && (count($goods[$catid])>1) && (count($goods[$catid])<=$limit)) ||
         $TDR[$igood][]='<A href="/shop/UID_'.$val['id'].'.html" title="'.$val['name'].'">'.$val['name'].'</A>';
 
         //Выбираем товар из базы
-        $sql='select id,price,pic_small,vendor_array,content,baseinputvaluta from '.$SysValue['base']['table_name2'].' where id='.$val['id'];
+        $sql='select id,price,pic_small,vendor_array,content,baseinputvaluta from '.$SysValue['base']['table_name2'].' where id='.intval($val['id']);
         $result=mysql_query($sql);
         @$row = mysql_fetch_array(@$result);
         if (trim($row['pic_small'])) {
@@ -293,7 +293,7 @@ if (($COMCID && (count($goods[$catid])>1) && (count($goods[$catid])<=$limit)) ||
                     @$ca=$chars[$id];
                     if(is_array($ca))
                         foreach($ca as $charid) {
-                            $sql2='select name from '.$SysValue['base']['table_name21'].' where id='.$charid;
+                            $sql2='select name from '.$SysValue['base']['table_name21'].' where id='.intval($charid);
                             $result2=mysql_query($sql2);
                             @$row2 = mysql_fetch_array(@$result2);
                             $curchar.=' '.$row2['name'].'<BR>';

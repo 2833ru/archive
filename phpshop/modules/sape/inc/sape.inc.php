@@ -1,5 +1,8 @@
 <?php
 
+if (!defined("OBJENABLED"))
+    exit(header('Location: /?error=OBJENABLED'));
+
 // Sape
 class PHPShopSapeElement extends PHPShopElements {
     var $scrolling="no";

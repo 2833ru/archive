@@ -1,4 +1,9 @@
 <?php
+
+if (!defined("OBJENABLED"))
+    exit(header('Location: /?error=OBJENABLED'));
+
+
 class VisitorsWriter {
     var $userData = array();
     var $Visitors = null;

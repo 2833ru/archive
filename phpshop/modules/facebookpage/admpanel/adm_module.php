@@ -1,6 +1,8 @@
 <?
 
 $_classPath = "../../../";
+$_templPath = "http://www.mod.phpshop.ru/mod/facebookpage/facebook_templates.zip";
+
 include($_classPath . "class/obj.class.php");
 PHPShopObj::loadClass("base");
 PHPShopObj::loadClass("system");
@@ -47,10 +49,9 @@ function GetSkinsIcon($skin) {
     if (file_exists($filename))
         $disp = '<img src="' . $filename . '" alt="' . $skin . '" width="150" height="120" border="1" id="icon">';
     else
-        $disp='<img src="../../../admpanel/img/icon_non.gif" alt="Изображение не доступно" width="150" height="120" border="1" id="icon">';
+        $disp = '<img src="../../../admpanel/img/icon_non.gif" alt="Изображение не доступно" width="150" height="120" border="1" id="icon">';
     return @$disp;
 }
-
 
 // Функция обновления
 function actionUpdate() {
@@ -65,7 +66,7 @@ function actionUpdate() {
 
 // Начальная функция загрузки
 function actionStart() {
-    global $PHPShopGUI, $_classPath, $PHPShopOrm;
+    global $PHPShopGUI, $PHPShopSystem, $SysValue, $_classPath, $PHPShopOrm, $_templPath;
 
 
     $PHPShopGUI->dir = $_classPath . "admpanel/";
@@ -87,41 +88,70 @@ function actionStart() {
     // пробуем проставить права
     @chmod($tpl_dir, 0775);
     if (isset($_GET['zip']) and !count($skin_arr)) {
-        // пробуем распаковать архив с шаблона для фейсбука
-        $file = "../install/facebook_templates.zip";
-        if (is_file($file)) {
-            require '../../../lib/zip/pclzip.lib.php';
-            $archive = new PclZip($file);
-            if ($archive->extract(PCLZIP_OPT_PATH, $tpl_dir)) {
-                $zip_log = 1;
-                //unlink($file);
-            } else
-                $zip_log = 2;
+        //путь к архиву на внешнем ресурсе
+        $path = $_templPath;
+
+        // Включаем таймер
+        $time = explode(' ', microtime());
+        $start_time = $time[1] + $time[0];
+
+        $Content = file_get_contents($path);
+
+        if (!empty($Content)) {
+            $file = $_SERVER['DOCUMENT_ROOT'] . $SysValue['dir']['dir'] . "/UserFiles/Image/facebook_templates.zip";
+            $handle = fopen($file, "w+");
+            fwrite($handle, $Content);
+            fclose($handle);
+
+            // пробуем распаковать архив с шаблона для фейсбука
+            if (is_file($file)) {
+                require '../../../lib/zip/pclzip.lib.php';
+                $archive = new PclZip($file);
+                if ($archive->extract(PCLZIP_OPT_PATH, $tpl_dir)) {
+                    $zip_log = 1;
+                    unlink($file);
+
+                    // Выключаем таймер
+                    $time = explode(' ', microtime());
+                    $seconds = ($time[1] + $time[0] - $start_time);
+                    $seconds = substr($seconds, 0, 6);
+                }
+                else
+                    $zip_log = 2;
+            }
+            else
+                $zip_log = 4;
         }
+        else
+            $zip_log = 3;
     }
-    
+
     $skin_arr = GetSkins();
     if (!count($skin_arr))
-        $skinAlert = '<span style="color:red">Шаблоны для facebook отсутствуют в системе!<br>
-            <input type="button" value="Установить шаблоны" name="" id="" style="width:150px;" class="but" onclick="window.location.replace(\'?zip=true\')"></span>';
+        $skinAlert = 'Шаблоны для facebook отсутствуют в системе:<br>
+            <input type="button" value="Установить" name="" id="" style="width:80px;" class="but" onclick="window.location.replace(\'?zip=true\')">';
     if ($zip_log == 1)
-        $skinAlert = "Шаблоны для facebook успешно установлены!";
+        $skinAlert = "Шаблоны для facebook успешно установлены! Загружены за $seconds сек.";
     if ($zip_log == 2 OR ($zip_log == 1 and !count($skin_arr)))
         $skinAlert = 'Ошибка распаковки, необходимо установить права 775 на папку /phpshop/templates:<br>
             <input type="button" value="Повторить" name="" id="" style="width:80px;" class="but" onclick="window.location.replace(\'?zip=true\')">';
+    if ($zip_log == 3)
+        $skinAlert = "Ошибка чтения файла с внешнего ресурса!";
+    if ($zip_log == 4)
+        $skinAlert = "Ошибка записи файла, нет прав записи в папку /UserFiles/Image/";
 
     ////////////
 // Создаем объекты для формы
     //получаем массив скинов
     $skin_arr = GetSkins();
     $now_skin = $data[skin];
-    if(is_array($skin_arr))
-    foreach ($skin_arr as $value) {
-        if ($value == $now_skin)
-            $select_arr[] = array($value, $value, 'selected');
-        else
-            $select_arr[] = array($value, $value, false);
-    }
+    if (is_array($skin_arr))
+        foreach ($skin_arr as $value) {
+            if ($value == $now_skin)
+                $select_arr[] = array($value, $value, 'selected');
+            else
+                $select_arr[] = array($value, $value, false);
+        }
 
     $ContentField1 = '<script>
         // Вывод скриншота
@@ -130,8 +160,8 @@ function actionStart() {
             document.getElementById("icon").src=path;
         }
         </script>';
-    $ContentField1 .= $PHPShopGUI->setSelect('skin_new', $select_arr, 200, "left", '', 'GetSkinIcon_facebook(this.value)', false, 10);
-    $ContentField1.=$PHPShopGUI->setField('Скриншот',GetSkinsIcon($now_skin),$float="left",$margin_left=5);
+    $ContentField1 .= $PHPShopGUI->setSelect('skin_new', $select_arr, 200, "none", '', 'GetSkinIcon_facebook(this.value)', false, 10);
+    $ContentField1 .= GetSkinsIcon($now_skin);
 
     $Info = getInstruct();
     $ContentField2 = $PHPShopGUI->setInfo($Info, 200, '95%');
@@ -139,7 +169,7 @@ function actionStart() {
 
 // Содержание закладки 1
     $Tab1 = $PHPShopGUI->setField("Выберите дизайн для страницы в facebook", $ContentField1);
-    $Tab1 .= $PHPShopGUI->setLine($skinAlert,10);
+    $Tab1 .= $skinAlert;
     $Tab2 = $PHPShopGUI->setField("Настройка", $ContentField2);
 
     $Tab3 = $PHPShopGUI->setPay($serial, false);
@@ -164,7 +194,8 @@ if ($UserChek->statusPHPSHOP < 2) {
 
 // Обработка событий
     $PHPShopGUI->getAction();
-}else
+}
+else
     $UserChek->BadUserFormaWindow();
 
 function getInstruct() {
@@ -175,7 +206,7 @@ function getInstruct() {
 <p><strong>3.</strong> Выберите картинку профайла, нажмите "Далее".&nbsp;</p>
 <p><strong>4.</strong> Заполните информацию о магазине.</p>
 <p><strong>5.</strong> Теперь найдите с помощью поиска Facebook приложение&nbsp;<span>&nbsp;"<strong>Static iframe tab</strong>" и установите его. Затем выберите созданную Вами страницу.</span></p>
-<p><span><strong>6.</strong>&nbsp;<span>&nbsp; В настройках приложения нужно прописать url перехода на версию для Facebook http://'.$_SERVER['SERVER_NAME'].'/f/</p>
+<p><span><strong>6.</strong>&nbsp;<span>&nbsp; В настройках приложения нужно прописать url перехода на версию для Facebook http://' . $_SERVER['SERVER_NAME'] . '/f/</p>
 <p><span><strong>7.</strong> Теперь можно поменять изображения вкладки, со ссылкой на Ваш магазин. Зайдите в настройки аккаунта, Приложения, выберите Static Iframe Tab, измените картику и название магазина.</span></p>
 <p><span><strong>8.</strong> В настройках страницы магазина выберите изображения профиля страницы и заставку.&nbsp;</span></p>
 <p><span>Настройки готовы! Результат - Ваш магазин в адаптированном шаблоне для Facebook. Пользоваель может выбрать интересующий товар, и на сайте оформить заказ.</span></p>

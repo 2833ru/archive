@@ -12,7 +12,7 @@
   }
  * </code>
  * @author PHPShop Software
- * @version 1.0
+ * @version 1.1
  * @package PHPShopClass
  */
 class PHPShopArray {
@@ -27,6 +27,12 @@ class PHPShopArray {
      * @var array 
      */
     var $objSQL = false;
+    
+    /**
+     * Лимит 
+     * @var int 
+     */
+    var $limit = 1000;
 
     /**
      * @var bool режим отладки
@@ -68,7 +74,7 @@ class PHPShopArray {
         $PHPShopOrm = new PHPShopOrm($this->objBase);
         $PHPShopOrm->debug = $this->debug;
         $PHPShopOrm->cache = $this->cache;
-        $data = $PHPShopOrm->select($select, $this->objSQL, $this->order, array('limit' => 1000));
+        $data = $PHPShopOrm->select($select, $this->objSQL, $this->order, array('limit' => $this->limit));
 
         if (is_array($data))
             foreach ($data as $objRow) {
@@ -109,7 +115,8 @@ class PHPShopArray {
         if (strstr($param, '.')) {
             $param = explode(".", $param);
             $this->objArray[$param[0]][$param[1]] = $value;
-        }else
+        }
+        else
             $this->objArray[$param] = $value;
     }
 
@@ -123,7 +130,8 @@ class PHPShopArray {
             $param = explode(".", $param);
             if (isset($this->objArray[$param[0]][$param[1]]))
                 return $this->objArray[$param[0]][$param[1]];
-        }else
+        }
+        else
             return $this->objArray[$param];
     }
 

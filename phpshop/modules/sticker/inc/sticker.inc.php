@@ -1,5 +1,8 @@
 <?php
 
+if (!defined("OBJENABLED"))
+    exit(header('Location: /?error=OBJENABLED'));
+
 class PHPShopStickerElement {
 
     function PHPShopStickerElement() {
@@ -22,16 +25,16 @@ class PHPShopStickerElement {
                     $dirs = explode(",", $row['dir']);
                     foreach ($dirs as $dir)
                         if ($dir == $url) {
-                            $GLOBALS['SysValue']['other']['sticker_'.$row['path']]=$row['content'];
+                            $GLOBALS['SysValue']['other']['sticker_' . $row['path']] = Parser($row['content']);
                         }
                 }
                 // Если одна страница
                 elseif ($row['dir'] == $url) {
-                    $GLOBALS['SysValue']['other']['sticker_'.$row['path']]=$row['content'];
+                    $GLOBALS['SysValue']['other']['sticker_' . $row['path']] = Parser($row['content']);
                 }
                 // Если нет привязки
                 elseif (empty($row['dir'])) {
-                    $GLOBALS['SysValue']['other']['sticker_'.$row['path']]=$row['content'];
+                    $GLOBALS['SysValue']['other']['sticker_' . $row['path']] = Parser($row['content']);
                 }
             }
         }
@@ -44,7 +47,7 @@ class PHPShopStickerElement {
         $data = $PHPShopOrm->select(array('*'), array('path' => "='" . $path . "'", 'enabled' => "='1'"), false, array('limit' => 1));
 
         if (is_array($data)) {
-            return $data['content'];
+            return Parser($data['content']);
         }
         else
             return 'Стикер не найден в базе';
@@ -54,5 +57,4 @@ class PHPShopStickerElement {
 
 $PHPShopStickerElement = new PHPShopStickerElement();
 $PHPShopStickerElement->init();
-
 ?>

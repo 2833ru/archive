@@ -1,9 +1,35 @@
 <?php
 
+/*
+ * SEO коррекция пагинации по рекомендации BDBD
+ */
+
+function set_meta_seourl_hook($obj, $row) {
+    global $seourl_option;
+    
+    if ($seourl_option['paginator'] == 2)
+        if ($obj->PHPShopNav->getPage() > 1) {
+            $obj->doLoadFunction('PHPShopShop', 'set_meta', $row);
+            $obj->description.= ' Часть ' . $obj->PHPShopNav->getPage();
+            $obj->title.=' Страница ' . $obj->PHPShopNav->getPage();
+            return true;
+        }
+}
+
+/*
+ * SEO обработка ссылок в списке товаров /shop/
+ */
+
 function CID_Product_seourl_hook($obj, $row, $rout) {
+    global $seourl_option;
 
     $catalog_name = $obj->PHPShopCategory->getName();
     $seo_name = $GLOBALS['seourl_pref'] . PHPShopString::toLatin($catalog_name);
+
+    // Настройки модуля
+    include_once(dirname(__FILE__) . '/mod_option.hook.php');
+    $PHPShopSeourlOption= new PHPShopSeourlOption();
+    $seourl_option = $PHPShopSeourlOption->getArray();
 
     // Проверка уникальности SEO ссылки
     if ($rout == 'START') {
@@ -12,22 +38,35 @@ function CID_Product_seourl_hook($obj, $row, $rout) {
         $url_pack = '/shop/CID_' . $obj->PHPShopNav->getId();
         $url_nav = '/shop/CID_' . $obj->PHPShopNav->getId() . '_' . $obj->PHPShopNav->getPage();
         $url_true_nav = '/shop/CID_' . $obj->PHPShopNav->getId() . '_' . $obj->PHPShopNav->getPage() . $seo_name;
-        
+
 
         // Если ссылка не сходится
         if ($url != $url_true and $url != $url_pack and $url != $url_nav and $url != $url_true_nav) {
             $obj->ListInfoItems = parseTemplateReturn($obj->getValue('templates.error_page_forma'));
             $obj->setError404();
             return true;
-        }
-        elseif($url == $url_pack){
-            header( 'Location: '.$obj->getValue('dir.dir').$url_true_nav.'.html', true, 301 );
+        } elseif ($url == $url_pack) {
+            header('Location: ' . $obj->getValue('dir.dir') . $url_true_nav . '.html', true, 301);
             return true;
         }
     }
 
     if ($rout == 'END') {
         $obj->set('nameLat', $seo_name);
+
+        // Рекомендации BDBD
+        if ($seourl_option['paginator'] == 2)
+            if ($obj->PHPShopNav->getPage() > 1) {
+
+                // Отключение описания каталога в пагинаторе
+                $obj->set('catalogContent', null);
+
+                // Добавление номера страниц в имя каталога
+                $obj->set('catalogCategory', ' - страница ' . $obj->PHPShopNav->getPage(), true);
+
+                // Создание переменной точного адреса canonical для отсеивания дублей
+                $obj->set('seourl_canonical', '<link rel="canonical" href="http://' . $_SERVER['SERVER_NAME'] . $obj->get('ShopDir') . '/shop/CID_' . $obj->PHPShopNav->getId() . '_' . $obj->PHPShopNav->getPage() . $seo_name . '.html">');
+            }
 
         // SEO сортировка по характеристикам
         $vendorSelectDisp = '
@@ -42,7 +81,7 @@ function ReturnSortSeoUrl(v){
 }
 
 function GetSortAll(){
-    var url=ROOT_PATH+"/shop/CID_"+arguments[0]+"' . $seo_name . '.html?";
+    var url="/shop/CID_"+arguments[0]+"' . $seo_name . '.html?";
     var i=1;
     var c=arguments.length;
     for(i=1; i<c; i++)
@@ -79,9 +118,8 @@ function CID_Category_seourl_hook($obj, $dataArray, $rout) {
             $obj->ListInfoItems = parseTemplateReturn($obj->getValue('templates.error_page_forma'));
             $obj->setError404();
             return true;
-        }
-        elseif($url == $url_pack){
-            header( 'Location: '.$obj->getValue('dir.dir').$url_true.'.html', true, 301 );
+        } elseif ($url == $url_pack) {
+            header('Location: ' . $obj->getValue('dir.dir') . $url_true . '.html', true, 301);
             return true;
         }
     }
@@ -176,9 +214,8 @@ function UID_seourl_hook($obj, $row, $rout) {
             $obj->set('breadCrumbs', null);
             $obj->set('odnotipDisp', null);
             $obj->setError404();
-        }
-        elseif($url == $url_pack){
-            header( 'Location: '.$obj->getValue('dir.dir').$url_true.'.html', true, 301 );
+        } elseif ($url == $url_pack) {
+            header('Location: ' . $obj->getValue('dir.dir') . $url_true . '.html', true, 301);
             return true;
         }
 
@@ -191,6 +228,7 @@ $addHandler = array(
     'UID' => 'UID_seourl_hook',
     'other_cat_navigation' => 'other_cat_navigation_seourl_hook',
     'CID_Category' => 'CID_Category_seourl_hook',
-    'CID_Product' => 'CID_Product_seourl_hook'
+    'CID_Product' => 'CID_Product_seourl_hook',
+    'set_meta' => 'set_meta_seourl_hook'
 );
 ?>

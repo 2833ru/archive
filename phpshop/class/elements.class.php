@@ -62,12 +62,13 @@ class PHPShopElements {
     function PHPShopElements() {
         global $PHPShopSystem, $PHPShopNav, $PHPShopModules;
 
-        if ($this->objBase)
-            $this->PHPShopOrm = &new PHPShopOrm($this->objBase);
+        if ($this->objBase) {
+            $this->PHPShopOrm = new PHPShopOrm($this->objBase);
 
-        $this->PHPShopOrm->cache_format = $this->cache_format;
-        $this->PHPShopOrm->cache = $this->cache;
-        $this->PHPShopOrm->debug = $this->debug;
+            $this->PHPShopOrm->cache_format = $this->cache_format;
+            $this->PHPShopOrm->cache = $this->cache;
+            $this->PHPShopOrm->debug = $this->debug;
+        }
         $this->SysValue = &$GLOBALS['SysValue'];
         $this->PHPShopSystem = &$PHPShopSystem;
         $this->PHPShopNav = &$PHPShopNav;
@@ -97,8 +98,8 @@ class PHPShopElements {
      * @param bool $mod использование шаблона в модуле
      * @return string
      */
-    function parseTemplate($template,$mod=false) {
-        return ParseTemplateReturn($template,$mod);
+    function parseTemplate($template, $mod = false) {
+        return ParseTemplateReturn($template, $mod);
     }
 
     /**
@@ -132,6 +133,18 @@ class PHPShopElements {
         $param = explode(".", $param);
         if (@!empty($this->SysValue[$param[0]][$param[1]]))
             return $this->SysValue[$param[0]][$param[1]];
+    }
+
+    /**
+     * Изменение системной переменной
+     * @param string $param раздел.имя переменной
+     * @param mixed $value значение параметра
+     */
+    function setValue($param, $value) {
+        $param = explode(".", $param);
+        if ($param[0] == "var")
+            $param[0] = "other";
+        $this->SysValue[$param[0]][$param[1]] = $value;
     }
 
     /**

@@ -38,7 +38,7 @@ $PHPShopModules = new PHPShopModules($_classPath . "modules/");
  * Экшен загрузки форм редактирования
  */
 function actionStart() {
-    global $PHPShopGUI, $PHPShopModules, $PHPShopOrm, $PHPShopSystem, $PHPShopBase;
+    global $PHPShopGUI, $PHPShopModules, $PHPShopOrm, $PHPShopSystem;
 
     // Тип окна
     if ($_COOKIE['winOpenType'] == 'default')
@@ -104,7 +104,7 @@ function actionStart() {
     $Tab1.=$PHPShopGUI->setField(__("Цена ") . '(' . $PHPShopSystem->getDefaultValutaCode() . ')', "<div style=\"padding:5px\"><input type=\"text\" style=\"width: 70px;\" value=\"" . $PHPShopOrder->ReturnSumma($order['Cart']['cart'][$productID]['price'], 0) . "\" id=\"price\" onchange=\"DoUpdateOrderProductSum()\"> ", 'left');
 
     // Вывод формы закладки
-    $PHPShopGUI->setTab(array(__("Основное"), $Tab1, 200));
+    $PHPShopGUI->setTab(array(__("Основное"), $Tab1, 180));
 
     // Запрос модуля на закладку
     $PHPShopModules->setAdmHandler($_SERVER["SCRIPT_NAME"], __FUNCTION__, $data);

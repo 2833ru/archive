@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="windows-1251"?>
 <module>
-    <version>1.4</version>
+    <version>1.5</version>
     <name>Seo Url</name>
     <description>Модуль Seo ссылок</description>
     <icon>icon.png</icon>
     <category>seo</category>
+    <status></status>
     <adminmenu>
         <title>SEO Url</title>
         <podmenu>
@@ -14,6 +15,10 @@
         </podmenu>
     </adminmenu>
     <history>
+        <update>
+            <date>21.10.2013</date>
+            <content>Добавлен расчет seo пагинации для учета дублей по рекомендации bdbd.ru</content>
+        </update>
         <update>
             <date>22.04.2013</date>
             <content>Добавлен автоматический 301 редирект с коротких урлов</content>

@@ -28,8 +28,8 @@ include($_classPath . "admpanel/enter_to_admin.php");
 
 // Системные настройки
 $PHPShopSystem = new PHPShopSystem();
-
 $PHPShopValutaArray = new PHPShopValutaArray();
+$PHPShopDelivery = new PHPShopDelivery();
 
 // Load JsHttpRequest backend.
 require_once $_classPath . "lib/JsHttpRequest/JsHttpRequest.php";
@@ -87,26 +87,33 @@ switch ($_GET['do']) {
         break;
 
 
-    // Добавление товара по ID в корзину
+    // Добавление товара в корзину по коду или артикулу
     case 'add':
         if (CheckedRules($UserStatus["visitor"], 1) == 1) {
             $data = $PHPShopOrm->select(array('*'), array('id' => '=' . $orderID), false, array('limit' => 1));
             if (is_array($data)) {
                 $order = unserialize($data['orders']);
 
-                // Добавление товара
+                // Добавление товара по ID
                 if (!empty($productID)) {
 
                     // Библиотека корзины
                     $PHPShopCart = new PHPShopCart($order['Cart']['cart']);
 
-                    // Добавляем новый товар 1 шт
-                    $PHPShopCart->add($productID, 1);
+                    // Добавляем новый товар 1 шт по ID
+                    if ($PHPShopCart->add($productID, 1)) {
+                        
+                    } else {
+                        // Добавляем новый товар 1 шт по артикулу
+                        $PHPShopCart->add($productID, 1, false, 'uid');
+                    }
 
                     // Возвращаем массив измененной корзины
                     $order['Cart']['cart'] = $PHPShopCart->getArray();
                     $order['Cart']['num'] = $PHPShopCart->getNum();
                     $order['Cart']['sum'] = $PHPShopCart->getSum(false);
+                    $order['Cart']['weight'] = $PHPShopCart->getWeight();
+                    $order['Cart']['dostavka'] = $PHPShopDelivery->getPrice($PHPShopCart->getSum(false), $PHPShopCart->getWeight());
                 }
 
                 // Сериализация данных заказа
@@ -129,9 +136,11 @@ switch ($_GET['do']) {
 
                 // Библиотека корзины
                 $PHPShopCart = new PHPShopCart($order['Cart']['cart']);
-                
+
                 $order['Cart']['num'] = $PHPShopCart->getNum();
                 $order['Cart']['sum'] = $PHPShopCart->getSum(false);
+                $order['Cart']['weight'] = $PHPShopCart->getWeight();
+                $order['Cart']['dostavka'] = $PHPShopDelivery->getPrice($PHPShopCart->getSum(false), $PHPShopCart->getWeight());
 
                 // Сериализация данных заказа
                 $update['orders_new'] = serialize($order);
@@ -164,6 +173,8 @@ switch ($_GET['do']) {
                 $PHPShopCart = new PHPShopCart($order['Cart']['cart']);
 
                 $order['Cart']['sum'] = $PHPShopCart->getSum(true);
+                $order['Cart']['weight'] = $PHPShopCart->getWeight();
+                $order['Cart']['dostavka'] = $PHPShopDelivery->getPrice($PHPShopCart->getSum(false), $PHPShopCart->getWeight());
 
                 // Сериализация данных заказа
                 $update['orders_new'] = serialize($order);

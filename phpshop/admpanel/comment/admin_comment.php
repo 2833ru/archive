@@ -34,7 +34,7 @@ while ($row = mysql_fetch_array($result))
 	$fl
 	</td>
 	<td align=\"center\" id=Nws class=Nws onmouseover=\"show_on('r".$id."')\" onmouseout=\"show_out('r".$id."')\" onclick=\"miniWin('comment/adm_commentID.php?id=$id',650,580)\">
-	".dataV($data,"true")."
+	".dataV($data,false)."
 	</td>
 	<td id=Nws class=Nws onmouseover=\"show_on('r".$id."')\" onmouseout=\"show_out('r".$id."')\" onclick=\"miniWin('comment/adm_commentID.php?id=$id',650,580)\">
 	$name
@@ -60,7 +60,7 @@ while ($row = mysql_fetch_array($result))
 <table cellpadding=\"0\" cellspacing=\"1\" width=\"100%\" border=\"0\"  class=\"sortable\" id=\"sort\">
 <tr>
     <td width=\"5%\" id=pane align=center>+/-</td>
-	<td width=\"12%\" id=pane align=center><img  src=\"icon/blank.gif\"  width=\"1\" height=\"1\" border=\"0\" onLoad=\"starter('comment');\" align=left><span name=txtLang id=txtLang>Дата</span></td>
+	<td width=\"12%\" id=pane align=center><img  src=\"icon/blank.gif\"  width=\"1\" height=\"1\" border=\"0\"  align=left><span name=txtLang id=txtLang>Дата</span></td>
 	<td width=\"20%\" id=pane align=center><span name=txtLang id=txtLang>Автор</span></td>
 	<td width=\"65%\" id=pane align=center><span name=txtLang id=txtLang>Комментарий</span></td>
 	<td width=\"20\" id=pane align=center style=\"padding:0px\"><input type=checkbox value=1 name=DoAll onclick=\"SelectAllBox(this,form_flag)\"></td>

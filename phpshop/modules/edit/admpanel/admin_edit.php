@@ -1,4 +1,7 @@
-<?
+<?php
+
+if (!defined("OBJENABLED"))
+    exit(header('Location: /?error=OBJENABLED'));
 
 $TitlePage=__("Редактор шаблонов");
 

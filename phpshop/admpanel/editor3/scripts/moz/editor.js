@@ -20,7 +20,7 @@ function InnovaEditorUtil()
     {
     /*** Localization ***/
 	this.langDir="russian";
-	try{if(LanguageDirectory)this.langDir=LanguageDirectory;}catch(e){;}
+	//try{if(LanguageDirectory)this.langDir=LanguageDirectory;}catch(e){;}
     var oScripts=document.getElementsByTagName("script");
     for(var i=0;i<oScripts.length;i++)
         {
@@ -207,23 +207,62 @@ function InnovaEditor(oName)
     //diff: btnSearch, btnSpellCheck, btnCut, btnCopy, btnPaste, btnGuidelines, btnPasteWord,
     //      btnXHTMLFullSource, btnXHTMLSource
     
-    this.btnSave=false;this.btnPreview=true;this.btnFullScreen=true;this.btnPrint=false;this.btnSearch=true;
-    this.btnSpellCheck=false;this.btnTextFormatting=true;
-    this.btnListFormatting=true;this.btnBoxFormatting=true;this.btnParagraphFormatting=true;this.btnCssText=true;
-    this.btnStyles=false;this.btnParagraph=true;this.btnFontName=true;this.btnFontSize=true;
-    this.btnCut=true;this.btnCopy=true;this.btnPaste=true;this.btnUndo=true;this.btnRedo=true;
-    this.btnBold=true;this.btnItalic=true;this.btnUnderline=true;
-    this.btnStrikethrough=false;this.btnSuperscript=false;this.btnSubscript=false;
-    this.btnJustifyLeft=true;this.btnJustifyCenter=true;this.btnJustifyRight=true;this.btnJustifyFull=true;
-    this.btnNumbering=true;this.btnBullets=true;this.btnIndent=true;this.btnOutdent=true;
-    this.btnLTR=false;this.btnRTL=false;this.btnForeColor=true;this.btnBackColor=true;
-    this.btnHyperlink=true;this.btnBookmark=true;this.btnCharacters=true;this.btnCustomTag=false;
-    this.btnImage=true;this.btnFlash=true;this.btnMedia=false;
-    this.btnTable=true;this.btnGuidelines=true;
-    this.btnAbsolute=true;this.btnPasteWord=true;this.btnLine=true;
-    this.btnForm=true;this.btnClean=true;
-    this.btnHTMLFullSource=false;this.btnHTMLSource=false;
-    this.btnXHTMLFullSource=false;this.btnXHTMLSource=true;
+    this.btnSave=false;
+    this.btnPreview=true;
+    this.btnFullScreen=true;
+    this.btnPrint=false;
+    this.btnSearch=true;
+    this.btnSpellCheck=false;
+    this.btnTextFormatting=true;
+    this.btnListFormatting=true;
+    this.btnBoxFormatting=true;
+    this.btnParagraphFormatting=true;
+    this.btnCssText=true;
+    this.btnStyles=false;
+    this.btnParagraph=true;
+    this.btnFontName=true;
+    this.btnFontSize=true;
+    this.btnCut=true;
+    this.btnCopy=true;
+    this.btnPaste=true;
+    this.btnUndo=true;
+    this.btnRedo=true;
+    this.btnBold=true;
+    this.btnItalic=true;
+    this.btnUnderline=true;
+    this.btnStrikethrough=false;
+    this.btnSuperscript=false;
+    this.btnSubscript=false;
+    this.btnJustifyLeft=true;
+    this.btnJustifyCenter=true;
+    this.btnJustifyRight=true;
+    this.btnJustifyFull=true;
+    this.btnNumbering=true;
+    this.btnBullets=true;
+    this.btnIndent=true;
+    this.btnOutdent=true;
+    this.btnLTR=false;
+    this.btnRTL=false;
+    this.btnForeColor=true;
+    this.btnBackColor=true;
+    this.btnHyperlink=true;
+    this.btnBookmark=true;
+    this.btnCharacters=true;
+    this.btnCustomTag=false;
+    this.btnImage=true;
+    this.btnFlash=true;
+    this.btnMedia=false;
+    this.btnTable=true;
+    this.btnGuidelines=true;
+    this.btnAbsolute=true;
+    this.btnPasteWord=true;
+    this.btnLine=true;
+    this.btnForm=true;
+    this.btnClean=true;
+    this.btnHTMLFullSource=false;
+    this.btnHTMLSource=true;
+    this.btnXHTMLFullSource=false;
+    this.btnXHTMLSource=false;
     this.btnClearAll=false;
 
     //*** CMS FUNCTIONS ***
@@ -1505,6 +1544,10 @@ function ApplyExternalStyle(oName)
         sSelector=myStyle.document.styleSheets[0].cssRules[i].selectorText;
         sCssText=myStyle.document.styleSheets[0].cssRules[i].style.cssText.replace(/"/g,"&quot;");
         var itemCount = sSelector.split(".").length;
+        
+        
+        sSelector=sSelector.replace(/\[.*\]/gi," ");
+
         if(itemCount>1) sTmp+=",[\""+sSelector+"\",true,\""+sSelector+"\",\""+ sCssText + "\"]";
         else sTmp+=",[\""+sSelector+"\",false,\"\",\""+ sCssText + "\"]";
         }

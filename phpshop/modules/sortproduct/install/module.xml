@@ -4,7 +4,7 @@
     <name>Sort Product</name>
     <description>Элемент вывода товаров по характеристикам</description>
     <icon>icon.png</icon>
-    <category>sort</category>
+    <category>form</category>
     <adminmenu>
         <title>Sort Product</title>
         <podmenu>

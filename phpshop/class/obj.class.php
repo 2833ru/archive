@@ -6,7 +6,7 @@ if (!defined("OBJENABLED"))
 /**
  * Родительский класс Объекта
  * @author PHPShop Software
- * @version 1.5
+ * @version 1.6
  * @package PHPShopClass
  */
 class PHPShopObj {
@@ -134,7 +134,7 @@ class PHPShopObj {
      * Загрузка класса
      * @param string $class_name имя класса, согласно config.ini
      */
-    function loadClass($class_name) {
+    static function loadClass($class_name) {
         $class_path = OBJENABLED . "/" . $class_name . ".class.php";
         if (file_exists($class_path))
             require_once($class_path);
@@ -145,7 +145,7 @@ class PHPShopObj {
     /**
      * Выдача десериализованного значения
      * @param string $paramName имя параметра
-     * @return <type>
+     * @return string
      */
     function unserializeParam($paramName) {
         return unserialize($this->getParam($paramName));
@@ -164,6 +164,21 @@ class PHPShopObj {
             echo "Нет файла " . $class_path;
     }
 
+}
+
+/**
+ *  Автозагрузчик библиотек phpshop/class
+ */
+function PHPShopAutoLoadClass($class_name) {
+    global $_classPath;
+    if (preg_match("/^[a-zA-Z0-9_\.]{2,20}$/", $class_name)) {
+        $class_path = $_classPath . "class/" . strtolower(str_replace('PHPShop', '', $class_name)) . ".class.php";
+        if (file_exists($class_path))
+            require_once($class_path);
+    }
+}
+if (function_exists('spl_autoload_register')) {
+    spl_autoload_register('PHPShopAutoLoadClass');
 }
 
 ?>

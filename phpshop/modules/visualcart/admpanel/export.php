@@ -8,8 +8,8 @@ PHPShopObj::loadClass("file");
 PHPShopObj::loadClass("modules");
 PHPShopObj::loadClass("date");
 
-$PHPShopBase=&new PHPShopBase($_classPath."inc/config.ini");
-$PHPShopSystem=&new PHPShopSystem();
+$PHPShopBase=new PHPShopBase($_classPath."inc/config.ini");
+$PHPShopSystem=new PHPShopSystem();
 
 $PHPShopModules = new PHPShopModules('../../');
 

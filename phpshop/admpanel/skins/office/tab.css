@@ -10,17 +10,22 @@
     margin:			1px -2px 1px 2px;
     float:			left;
     padding:		2px 5px 3px 5px;
-    background: -moz-linear-gradient(#BFDBFF,#F2F6F9 );
-    background: -ms-linear-gradient(#BFDBFF,#F2F6F9);
-    background: -o-linear-gradient(#BFDBFF,#F2F6F9);
-    background: -webkit-linear-gradient(#BFDBFF,#F2F6F9);
+    background: -moz-linear-gradient(#FFF,#E8EEF4,#FFF);
+    background: -ms-linear-gradient(#FFF,#E8EEF4,#FFF);
+    background: -o-linear-gradient(#FFF,#E8EEF4,#FFF);
+    background: -webkit-linear-gradient(#FFF,#E8EEF4,#FFF);
     border:			1px solid;
-    border-color:	ThreeDHighlight ThreeDDarkShadow
-        ThreeDDarkShadow ThreeDHighlight;
+    border-color:	#BECCDC;
     border-bottom:	0;
     z-index:		1;
     position:		relative;
     top:			0;
+   -webkit-border-top-left-radius:5px;
+    -webkit-border-top-right-radius:5px;
+    -moz-border-radius-topleft:5px;
+    -moz-border-radius-topright:5px;
+    border-top-left-radius:5px;
+    border-top-right-radius:5px;
 }
 
 .dynamic-tab-pane-control .tab-row .tab.selected {
@@ -39,25 +44,31 @@
 }
 
 .dynamic-tab-pane-control .tab-row .hover a {
-    color:	blue;
+    color:	rgb(91,172,255);
+    cursor: pointer;
 }
 
 .dynamic-tab-pane-control .tab-page {
     clear:			both;
     border:			1px solid;
-    border-color:	ThreeDHighlight ThreeDDarkShadow
-        ThreeDDarkShadow ThreeDHighlight;
-
-    background: -moz-linear-gradient(#F2F6F9, #BFDBFF);
-    background: -ms-linear-gradient(#F2F6F9, #BFDBFF);
-    background: -o-linear-gradient(#F2F6F9, #BFDBFF);
-    background: -webkit-linear-gradient(#F2F6F9, #BFDBFF);
+    border-color:	#BECCDC;
+    background: -moz-linear-gradient(#FBFDFF,#E8EEF4,#FBFDFF);
+    background: -ms-linear-gradient(#FBFDFF,#E8EEF4,#FBFDFF);
+    background: -o-linear-gradient(#FBFDFF,#E8EEF4,#FBFDFF);
+    background: -webkit-linear-gradient(#FBFDFF,#E8EEF4,#FBFDFF);
     z-index:		2;
     position:		relative;
     top:			-2px;
     color:			WindowText;
     font:			Message-Box;
     padding:		10px;
+    margin: 5px 0px 5px 0px;
+    -webkit-border-radius:5px;
+    -webkit-border-top-left-radius:0;
+    -moz-border-radius:5px;
+    -moz-border-radius-topleft:0;
+    border-radius:5px;
+    border-top-left-radius:0;
 }
 
 .dynamic-tab-pane-control .tab-row {

@@ -28,7 +28,7 @@ class PHPShopOrderFunction extends PHPShopObj {
 
         if ($objID) {
             $this->objID = $objID;
-            $this->objBase = $GLOBALS['SysValue']['base']['table_name1'];
+            $this->objBase = $GLOBALS['SysValue']['base']['orders'];
             parent::PHPShopObj('id', $import_data);
 
             // Содержание корзины

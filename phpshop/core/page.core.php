@@ -20,6 +20,7 @@ class PHPShopPage extends PHPShopCore {
      * @var bool
      */
     var $debug = false;
+    
 
     /**
      * Конструктор
@@ -30,7 +31,9 @@ class PHPShopPage extends PHPShopCore {
         $this->objBase = $GLOBALS['SysValue']['base']['page'];
 
         // Список экшенов
-        $this->action = array("nav" => "CID");
+        $this->action = array('nav' => 'index',"nav" => "CID");
+        $this->empty_index_action=true;
+        
         parent::PHPShopCore();
     }
 

@@ -44,9 +44,10 @@ class PHPShopSuccess extends PHPShopCore {
      * @return string
      */
     function true_num($uid) {
-        $last_num = substr($uid, -2);
+        $order_prefix_format = $this->getValue('my.order_prefix_format');
+        $last_num = substr($uid, -$order_prefix_format);
         $total = strlen($uid);
-        $ferst_num = substr($uid, 0, ($total - 2));
+        $ferst_num = substr($uid, 0, ($total - $order_prefix_format));
 
         // Перехват модуля
         $hook = $this->setHook(__CLASS__, __FUNCTION__, $uid);
@@ -115,7 +116,12 @@ class PHPShopSuccess extends PHPShopCore {
         if ($this->out_summ > 0) {
             $PHPShopOrm = new PHPShopOrm($this->getValue('base.payment'));
             $PHPShopOrm->debug = $this->debug;
-            $PHPShopOrm->insert(array('uid_new' => $this->inv_id, 'name_new' => $this->order_metod, 'sum_new' => $this->out_summ, 'datas_new' => time()));
+            if ($this->order_metod_name)
+                $order_metod_name = $this->order_metod_name;
+            else
+                $order_metod_name = $this->order_metod;
+
+            $PHPShopOrm->insert(array('uid_new' => $this->inv_id, 'name_new' => $order_metod_name, 'sum_new' => $this->out_summ, 'datas_new' => time()));
         }
     }
 
@@ -168,7 +174,7 @@ class PHPShopSuccess extends PHPShopCore {
 
         // Перехват модуля
         $hook = $this->setHook(__CLASS__, __FUNCTION__, $_REQUEST);
-        if(is_array($hook)) {
+        if (is_array($hook)) {
             extract($hook);
         }
 
@@ -183,6 +189,11 @@ class PHPShopSuccess extends PHPShopCore {
             } else {
 
                 $this->order_metod = $order_metod;
+                
+                // Имя платежной системы для модулей
+                if (!empty($order_metod_name))
+                    $this->order_metod_name = $order_metod_name;
+                
                 $this->out_summ = $out_summ;
                 $orderId = $inv_id;
 

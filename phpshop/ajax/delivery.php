@@ -30,7 +30,8 @@ function GetDeliveryPrice($deliveryID,$sum,$weight=0) {
     global $SysValue;
     
     if(!empty($deliveryID)) {
-        $sql="select * from ".$SysValue['base']['table_name30']." where id='$deliveryID' and enabled='1'";
+        $sql="select * from ".$SysValue['base']['table_name30']." where id='".intval($deliveryID)."' and enabled='1'";
+        echo $sql;
         $result=mysql_query($sql);
         $num=mysql_numrows($result);
         $row = mysql_fetch_array($result);
@@ -68,9 +69,9 @@ function GetDeliveryPrice($deliveryID,$sum,$weight=0) {
     }
 }
 
-$GetDeliveryPrice=GetDeliveryPrice($_REQUEST['xid'],$_REQUEST['sum'],$_REQUEST['wsum']);
+$GetDeliveryPrice=GetDeliveryPrice(intval($_REQUEST['xid']),$_REQUEST['sum'],$_REQUEST['wsum']);
 $totalsumma=$PHPShopOrder->returnSumma($_REQUEST['sum'],$PHPShopOrder->ChekDiscount($_REQUEST['sum']))+$GetDeliveryPrice;
-$dellist=delivery(false,$_REQUEST['xid']);
+$dellist=delivery(false,intval($_REQUEST['xid']));
 
 // Результат
 $_RESULT = array(

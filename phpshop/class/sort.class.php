@@ -8,7 +8,7 @@ if (!defined("OBJENABLED")) {
 /**
  * Сортировки и фильтры товаров
  * @author PHPShop Software
- * @version 1.6
+ * @version 1.7
  * @package PHPShopClass
  */
 class PHPShopSort {
@@ -64,7 +64,7 @@ class PHPShopSort {
             $PHPShopOrm = new PHPShopOrm();
             $PHPShopOrm->debug = $this->debug;
             $PHPShopOrm->comment = __CLASS__ . '.' . __FUNCTION__;
-            $result = $PHPShopOrm->query("select * from " . $GLOBALS['SysValue']['base']['sort_categories'] . " where ($sortList) " . $sql_add . " order by num");
+            $result = $PHPShopOrm->query("select * from " . $GLOBALS['SysValue']['base']['sort_categories'] . " where ($sortList) " . $sql_add . " order by num, name");
             while (@$row = mysql_fetch_array($result)) {
                 $id = $row['id'];
                 $name = $row['name'];
@@ -159,12 +159,16 @@ class PHPShopSort {
                 $vendor = $_POST['v'];
         }
 
-
+        // Показать выбрать все
+        if (!empty($all) and empty($template)) {
+            $value[] = array('-- все ' . $title . ' --', '', $all_sel);
+        }
+        
         $all_sel = 'selected';
         $PHPShopOrm = new PHPShopOrm();
         $PHPShopOrm->debug = $this->debug;
         $PHPShopOrm->comment = __CLASS__ . '.' . __FUNCTION__;
-        $result = $PHPShopOrm->query("select * from " . $SysValue['base']['sort'] . " where category=$n order by num");
+        $result = $PHPShopOrm->query("select * from " . $SysValue['base']['sort'] . " where category=".intval($n)." order by name,num");
         while ($row = mysql_fetch_array($result)) {
             $id = $row['id'];
             $name = substr($row['name'], 0, 35);
@@ -183,12 +187,6 @@ class PHPShopSort {
 
 
         $SysValue['sort'][] = $n;
-
-        // Показать выбрать все
-        if (!empty($all) and empty($template)) {
-            $value[] = array('-- все ' . $title . ' --', '', $all_sel);
-        }
-
 
         if (empty($template)) {
             $size = (strlen($title) + 10) * 7;

@@ -1,6 +1,6 @@
 <?php
 
-function payanyway_users_repay($obj, $PHPShopOrderFunction) {
+function platron_users_repay($obj, $PHPShopOrderFunction) {
     global $PHPShopBase, $SysValue;
 
     // параметры магазина
@@ -10,7 +10,7 @@ function payanyway_users_repay($obj, $PHPShopOrderFunction) {
     $out_summ = $PHPShopOrderFunction->getTotal(); //сумма покупки
 
     $OrderId = $inv_id;
-    $Amount = $GLOBALS['SysValue']['other']['total'];
+    $Amount = $out_summ;
     $Currency = "RUB";
 
     // регистрационная информация

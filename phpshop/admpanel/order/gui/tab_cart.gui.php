@@ -37,6 +37,7 @@ function tab_cart($data, $option = false) {
 <tr class=row3 onmouseover=\"show_on('r" . $val['id'] . "')\" id=\"r" . $val['id'] . "\" onmouseout=\"show_out('r" . $val['id'] . "')\" onclick=\"miniWin('adm_order_productID.php?orderID=" . $data['id'] . "&productID=" . $val['id'] . "&option=".base64_encode($val['name'])."',400,300,event)\">
  <td style=\"padding:3\">$n</td> 
   <td style=\"padding:3\">" . $val['uid'] . "</td>
+  <td style=\"padding:3\">" . $val['id'] . "</td>
   <td style=\"padding:3\">" . $val['name'] . "</td>
   <td style=\"padding:3\">" . $val['num'] . "</td>
   <td style=\"padding:3\">" . $PHPShopOrder->ReturnSumma($val['price'] * $val['num'], 0) . "</td>
@@ -74,6 +75,7 @@ function tab_cart($data, $option = false) {
 <tr class=row3 onclick=\"miniWin('adm_order_deliveryID.php?deliveryID=" . $order['Person']['dostavka_metod'] . "&orderID=" . $data['id'] . "',400,270,event)\" onmouseover=\"show_on('r" . $n . "')\" id=\"r" . $n . "\" onmouseout=\"show_out('r" . $n . "')\">
   <td style=\"padding:3\">$n</td>
   <td style=\"padding:3\"></td>
+  <td style=\"padding:3\"></td>
   <td style=\"padding:3\">Доставка - " . $PHPShopDelivery->getCity() . "</td>
   <td style=\"padding:3\">1</td>
   <td style=\"padding:3\">" . $GetDeliveryPrice . "</td>
@@ -89,27 +91,29 @@ function tab_cart($data, $option = false) {
   <td style=\"padding:3\"></td>
   <td style=\"padding:3\"></td>
   <td style=\"padding:3\"></td>
+  <td style=\"padding:3\"></td>
 </tr>
                         ";
         $n++;
     }
     $disCart.="
 <tr bgcolor=\"#C0D2EC\">
-  <td style=\"padding:3\" colspan=\"3\" id=pane align=center><span name=txtLang id=txtLang>Итого с учетом скидки</span> " . $PERSON['discount'] . "%</td>
+  <td style=\"padding:3\" colspan=\"3\" align=center><span name=txtLang id=txtLang>Итого с учетом скидки</span> " . $PERSON['discount'] . "%</td>
   <td style=\"padding:3\"><b>" . ($num + 1) . "</b> <span name=txtLang id=txtLang>шт.</span></td>
   <td style=\"padding:3\" colspan=\"2\" align=\"center\"><b>" . ($PHPShopOrder->returnSumma($sum, $PERSON['discount']) + $GetDeliveryPrice) . "</b> " . $PHPShopOrder->default_valuta_code . "</td>
 </tr>
 ";
 
-    $disp = "<table width=\"100%\"  cellpadding=\"0\" cellspacing=\"0\" style=\"border: 0px;border-style:inset;\" >
+    $disp = "<table width=\"100%\"  cellpadding=\"0\" cellspacing=\"0\">
 	<tr>
 	<td valign=\"top\">
 		<div align=\"left\" style=\"width:100%;height:255;overflow:auto\"> 
 	<div id=interfaces>
-	<table cellpadding=\"0\" cellspacing=\"1\" width=\"100%\" border=\"0\" bgcolor=\"#808080\">
+	<table cellpadding=\"0\" cellspacing=\"1\" width=\"100%\" border=\"0\" class=\"table\">
 <tr>
 	<td id=pane align=center width=\"10\"><img src=../img/arrow_d.gif width=7 height=7 border=0 hspace=5></td>
 	<td id=pane align=center><img src=../img/arrow_d.gif width=7 height=7 border=0 hspace=5><span name=txtLang id=txtLang>Артикул</span></td>
+        <td id=pane align=center><img src=../img/arrow_d.gif width=7 height=7 border=0 hspace=5><span name=txtLang id=txtLang>ID</span></td>
 	<td id=pane align=center><img src=../img/arrow_d.gif width=7 height=7 border=0 hspace=5><span name=txtLang id=txtLang>Наименование</span></td>
 	<td id=pane align=center><img src=../img/arrow_d.gif width=7 height=7 border=0 hspace=5><span name=txtLang id=txtLang>Кол-во</span></td>
 	<td id=pane align=center><img src=../img/arrow_d.gif width=7 height=7 border=0 hspace=5><span name=txtLang id=txtLang>Сумма</span> " . $PHPShopOrder->default_valuta_code . "</td>
@@ -132,7 +136,7 @@ function tab_cart($data, $option = false) {
 	<LEGEND><span name=txtLang id=txtLang><u>Д</u>обавить в заказ</span></LEGEND>
 	<div style=\"padding:10px\">
 
-<span name=txtLang id=txtLang>ID товара</span>: <input type=\"text\" id=\"new_product_id\" name=\"new_product_id\"> <input type=\"button\" id=btnAdd class=but value=\"Добавить\" onClick=\"DoAddProductFromOrder(new_product_id.value," . $data['id'] . ")\">
+<span name=txtLang id=txtLang>ID/ART товара</span>: <input type=\"text\" id=\"new_product_id\" name=\"new_product_id\"> <input type=\"button\" id=btnAdd class=but value=\"Добавить\" onClick=\"DoAddProductFromOrder(new_product_id.value," . $data['id'] . ")\">
 </div>
 </FIELDSET >
 	</td>

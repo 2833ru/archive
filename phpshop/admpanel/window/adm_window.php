@@ -3,12 +3,10 @@ require("../connect.php");
 @mysql_connect("$host", "$user_db", "$pass_db") or @die("Невозможно подсоединиться к базе");
 mysql_select_db("$dbase") or @die("Невозможно подсоединиться к базе");
 require("../enter_to_admin.php");
-
 // Языки
 $GetSystems = GetSystems();
 $option = unserialize($GetSystems['admoption']);
-$Lang = $option['lang'];
-require("../language/" . $Lang . "/language.php");
+require("../language/russian/language.php");
 
 // Данные по валюте
 function GetValuta($id) {
@@ -128,35 +126,11 @@ function Ras_data_mail($content, &$num, $id = "") {// По мылу марш...
         <LINK href="../skins/<?= $_SESSION['theme'] ?>/texts.css" type=text/css rel=stylesheet>
         <SCRIPT language="JavaScript" src="/phpshop/lib/Subsys/JsHttpRequest/Js.js"></SCRIPT>
         <script language="JavaScript1.2" src="../java/javaMG.js" type="text/javascript"></script>
-        <script type="text/javascript" language="JavaScript1.2" src="../language/<?= $Lang ?>/language_windows.js"></script>
-        <script type="text/javascript" language="JavaScript1.2" src="../language/<?= $Lang ?>/language_interface.js"></script>
-
-
         <LINK href="../skins/<?= $_SESSION['theme'] ?>/dateselector.css" type=text/css rel=stylesheet>
         <SCRIPT language="JavaScript" src="../java/popup_lib.js"></SCRIPT>
         <SCRIPT language="JavaScript" src="../java/dateselector.js"></SCRIPT>
-
-        <script>
-            DoResize(<? echo $GetSystems['width_icon'] ?>, 300, 220);
-        </script>
     </head>
-    <body bottommargin="0"  topmargin="0" leftmargin="0" rightmargin="0" onload="DoCheckLang(location.pathname,<?= $SysValue['lang']['lang_enabled'] ?>);
-                preloader(0)">
-        <table id="loader">
-            <tr>
-                <td valign="middle" align="center">
-                    <div id="loadmes" onclick="preloader(0)">
-                        <table width="100%" height="100%">
-                            <tr>
-                                <td id="loadimg"></td>
-                                <td ><b><?= $SysValue['Lang']['System']['loading'] ?></b><br><?= $SysValue['Lang']['System']['loading2'] ?></td>
-                            </tr>
-                        </table>
-                    </div>
-                </td>
-            </tr>
-        </table>
-        <SCRIPT language=JavaScript type=text/javascript>preloader(1);</SCRIPT>
+    <body bottommargin="0"  topmargin="0" leftmargin="0" rightmargin="0">
         <?
         $Name = $SysValue['Lang']['Window'];
 
@@ -261,16 +235,17 @@ $dis
 </tr>
 </table>
 <br>
+<FIELDSET>
+<legend>Перенести в каталог</legend>
 <table cellpadding="0"  cellspacing="7">
 <tr>
   <td>
-  <span name=txtLang id=txtLang><u>П</u>еренести в каталог</span><br>
-  <input type=text id="myName"  style="width: 230" value="">
-<input type="hidden" name="category_new" id="myCat">
-<BUTTON style="width: 3em; height: 2.2em; margin-left:5"  onclick="miniWinFull(\'../product/adm_cat.php\',300,400,300,200)"><img src="../img/icon-move-banner.gif"  width="16" height="16" border="0"></BUTTON>
+  <input type=text id="parent_name" style="width:300px" value="">
+<input type="hidden" name="category_new" id="category_new">
+<BUTTON style="width: 3em; height: 2.2em; margin-left:5"  onclick="miniWinFull(\'../catalog/adm_cat.php\',300,400,300,200)"><img src="../img/icon-move-banner.gif"  width="16" height="16" border="0"></BUTTON>
   </td>
 </tr></table>
-
+ </FIELDSET>
 <hr>
 <table cellpadding="0" cellspacing="0" width="100%" height="40" >
 <tr>
@@ -440,9 +415,11 @@ DoResize(' . $GetSystems['width_icon'] . ',400,300);
 <table cellpadding="0"  cellspacing="7">
 <tr>
   <td>
-  <span name=txtLang id=txtLang><u>Т</u>овары для перехвата поиска</span><br>
+  <FIELDSET>
+  <legend><u>Т</u>овары для перехвата поиска</legend>
   <input type=text name="uid_new"  style="width: 280"><br>
   <span name=txtLang id=txtLang>* Введите идентификаторы (ID) товаров через запятую</span> (100,101). 
+  </FIELDSET>
   </td>
 </tr></table>
 

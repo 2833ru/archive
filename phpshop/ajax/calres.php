@@ -17,7 +17,7 @@ PHPShopObj::loadClass('parser');
 
 // Подключаем библиотеку поддержки.
 require_once $_classPath."lib/Subsys/JsHttpRequest/Php.php";
-$JsHttpRequest =& new Subsys_JsHttpRequest_Php("windows-1251");
+$JsHttpRequest =new Subsys_JsHttpRequest_Php("windows-1251");
 
 // Подключаем функцию
 include($_classPath.'core/news.core/calendar.php');

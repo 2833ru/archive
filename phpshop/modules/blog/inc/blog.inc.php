@@ -6,6 +6,10 @@
  * @version 1.0
  * @package PHPShopElements
  */
+
+if (!defined("OBJENABLED"))
+    exit(header('Location: /?error=OBJENABLED'));
+
 class PHPShopBlogElement extends PHPShopElements {
 
     /**

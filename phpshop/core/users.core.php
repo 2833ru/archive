@@ -372,14 +372,14 @@ class PHPShopUsers extends PHPShopCore {
 
             if (count($this->error) == 0) {
                 $this->PHPShopOrm->update(array(
-                    'mail_new' => $_POST['mail_new'],
-                    'name_new' => htmlspecialchars($_POST['name_new']),
-                    'company_new' => htmlspecialchars($_POST['company_new']),
-                    'inn_new' => htmlspecialchars($_POST['inn_new']),
-                    'tel_new' => htmlspecialchars($_POST['tel_new']),
-                    'adres_new' => htmlspecialchars($_POST['adres_new']),
-                    'kpp_new' => htmlspecialchars($_POST['kpp_new']),
-                    'tel_code_new' => htmlspecialchars($_POST['tel_code_new'])), array('id' => '=' . $_SESSION['UsersId']));
+                    'mail_new' => PHPShopSecurity::TotalClean($_POST['mail_new'],3),
+                    'name_new' => PHPShopSecurity::TotalClean($_POST['name_new']),
+                    'company_new' => PHPShopSecurity::TotalClean($_POST['company_new']),
+                    'inn_new' => PHPShopSecurity::TotalClean($_POST['inn_new']),
+                    'tel_new' => PHPShopSecurity::TotalClean($_POST['tel_new']),
+                    'adres_new' => PHPShopSecurity::TotalClean($_POST['adres_new']),
+                    'kpp_new' => PHPShopSecurity::TotalClean($_POST['kpp_new']),
+                    'tel_code_new' => PHPShopSecurity::TotalClean($_POST['tel_code_new'])), array('id' => '=' . intval($_SESSION['UsersId'])));
                 $this->error[] = $this->locale['done'];
 
                 // Перехват модуля
@@ -642,19 +642,19 @@ class PHPShopUsers extends PHPShopCore {
 
         // Массив данных нового пользователя
         $insert = array(
-            'login_new' => $_POST['login_new'],
+            'login_new' => PHPShopSecurity::TotalClean($_POST['login_new']),
             'password_new' => $this->encode($_POST['password_new']),
             'datas_new' => time(),
-            'mail_new' => $_POST['mail_new'],
-            'name_new' => htmlspecialchars($_POST['name_new']),
-            'company_new' => htmlspecialchars($_POST['company_new']),
-            'inn_new' => htmlspecialchars($_POST['inn_new']),
-            'tel_new' => htmlspecialchars($_POST['tel_new']),
-            'adres_new' => htmlspecialchars($_POST['adres_new']),
+            'mail_new' => PHPShopSecurity::TotalClean($_POST['mail_new'],3),
+            'name_new' => PHPShopSecurity::TotalClean($_POST['name_new']),
+            'company_new' => PHPShopSecurity::TotalClean($_POST['company_new']),
+            'inn_new' => PHPShopSecurity::TotalClean($_POST['inn_new']),
+            'tel_new' => PHPShopSecurity::TotalClean($_POST['tel_new']),
+            'adres_new' => PHPShopSecurity::TotalClean($_POST['adres_new']),
             'enabled_new' => $user_mail_activate,
             'status_new' => $this->user_status,
-            'kpp_new' => htmlspecialchars($_POST['kpp_new']),
-            'tel_code_new' => htmlspecialchars($_POST['tel_code_new'])
+            'kpp_new' => PHPShopSecurity::TotalClean($_POST['kpp_new']),
+            'tel_code_new' => PHPShopSecurity::TotalClean($_POST['tel_code_new'])
         );
 
         // Перехват модуля

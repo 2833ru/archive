@@ -31,11 +31,12 @@ var sBodyTag;
 function bodyOnLoad()
     {
     var oEditor=window.opener.oUtil.oEditor;
-    var sHTML="";
+
+    var sHTML="";
     sHTML = oEditor.document.body.innerHTML;
     sHTML = jsReplace(sHTML," designMode=on","");
     sHTML = sHTML.replace(/>\s+</gi, "><"); //replace space between tag
-    sHTML = sHTML.replace(/\r/gi, ""); //replace space between tag
+    //sHTML = sHTML.replace(/\r/gi, ""); //replace space between tag
     sHTML = sHTML.replace(/(<br>)\s+/gi, "$1"); //replace space between BR and text
     
     var idSource = document.getElementById("idSource").contentWindow;

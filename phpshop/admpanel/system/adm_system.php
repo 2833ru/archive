@@ -15,46 +15,31 @@ PHPShopObj::loadClass("admgui");
 $PHPShopGUI = new PHPShopGUI();
 
 // Временная поддержка API 2.X
-extract($_POST);
-extract($_GET);
+extract($_POST, EXTR_SKIP);
 $SysValue = $PHPShopBase->getSysValue();
 $GetSystems = $PHPShopSystem->getArray();
 
 
 $option = unserialize($GetSystems['admoption']);
+
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
     <head>
         <title>Системные Настройки</title>
         <META http-equiv=Content-Type content="text/html; charset=<?= $SysValue['Lang']['System']['charset'] ?>">
-        <LINK href="../skins/<?=$_SESSION['theme']?>/texts.css" type=text/css rel=stylesheet>
-        <LINK href="../skins/<?=$_SESSION['theme']?>/tab.css" type=text/css rel=stylesheet>
+        <LINK href="../skins/<?= $_SESSION['theme'] ?>/texts.css" type=text/css rel=stylesheet>
+        <LINK href="../skins/<?= $_SESSION['theme'] ?>/tab.css" type=text/css rel=stylesheet>
         <script language="JavaScript1.2" src="../java/javaMG.js" type="text/javascript"></script>
         <script type="text/javascript" src="../java/tabpane.js"></script>
 
     </head>
     <body bottommargin="0"  topmargin="0" leftmargin="0" rightmargin="0">
 
-        <table id="loader">
-            <tr>
-                <td valign="middle" align="center">
-                    <div id="loadmes" onclick="preloader(0)">
-                        <table width="100%" height="100%">
-                            <tr>
-                                <td id="loadimg"></td>
-                                <td ><b><?= $SysValue['Lang']['System']['loading'] ?></b><br><?= $SysValue['Lang']['System']['loading2'] ?></td>
-                            </tr>
-                        </table>
-                    </div>
-                </td>
-            </tr>
-        </table>
-
         <?
 
         function Editors($editor) {
-            global $SysValue, $PHPShopGUI;
+            global $PHPShopGUI;
             $dir = "../editors/";
             if (is_dir($dir)) {
                 if (@$dh = opendir($dir)) {
@@ -75,39 +60,13 @@ $option = unserialize($GetSystems['admoption']);
             return $PHPShopGUI->setSelect('editor_new', $value, 100);
         }
 
-// Выбор языка
-        function GetLang($skin) {
-            global $SysValue;
-            $dir = "../language";
-            if (is_dir($dir)) {
-                if ($dh = @opendir($dir)) {
-                    while (($file = readdir($dh)) !== false) {
 
-                        if ($skin == $file)
-                            $sel = "selected";
-                        else
-                            $sel = "";
-
-                        if ($file != "." and $file != ".." and $file != "index.html")
-                            @$name.= "<option value=\"$file\" $sel>$file</option>";
-                    }
-                    closedir($dh);
-                }
-            }
-            $disp = "
-<select name=\"lang_new\">
-" . @$name . "
-</select>
-";
-            return @$disp;
-        }
-        
-        
 // Выбор дизайна административной части
         function GetTheme($skin) {
-            
-            if(empty($skin)) $skin='default';
-            
+
+            if (empty($skin))
+                $skin = 'default';
+
             $dir = "../skins";
             if (is_dir($dir)) {
                 if ($dh = opendir($dir)) {
@@ -158,9 +117,8 @@ $option = unserialize($GetSystems['admoption']);
             return @$disp;
         }
 
-// Выбор иконки шкуры
+        // Выбор иконки шкурки
         function GetSkinsIcon($skin) {
-            global $SysValue;
             $dir = "../../templates";
             $filename = $dir . '/' . $skin . '/icon/icon.gif';
             if (file_exists($filename))
@@ -196,20 +154,21 @@ $option = unserialize($GetSystems['admoption']);
             global $SysValue;
             $sql = "select * from " . $SysValue['base']['table_name24'] . " where enabled='1' order by num";
             $result = mysql_query($sql);
+            $dis=null;
             while ($row = mysql_fetch_array($result)) {
                 $id = $row['id'];
                 $name = $row['name'];
                 $sel = "";
                 if ($id == $n)
                     $sel = "selected";
-                @$dis.="<option value=" . $id . " " . $sel . " >" . $name . "</option>\n";
+                $dis.="<option value=" . $id . " " . $sel . " >" . $name . "</option>\n";
             }
-            @$disp = "
+            $disp = "
 <select name='$tip' size=1>
                     $dis
 </select>
                     ";
-            return @$disp;
+            return $disp;
         }
 
         function GetUsersStatus($n) {
@@ -240,14 +199,11 @@ $option = unserialize($GetSystems['admoption']);
         $num_row = $row['num_row'];
         $dengi = $row['dengi'];
         $percent = $row['percent'];
-        $title = $row['title'];
-        $keywords = $row['keywords'];
         $skin = $row['skin'];
         $kurs = $row['kurs'];
         $kurs_beznal = $row['kurs_beznal'];
         $spec_num = $row['spec_num'];
         $new_num = $row['new_num'];
-        $dostavka = $row['dostavka'];
         $nds = $row['nds'];
         $logo = $row['logo'];
         if ($row['nds_enabled'] == 1)
@@ -274,11 +230,6 @@ $option = unserialize($GetSystems['admoption']);
             case(4): $cow4 = "selected";
                 break;
         }
-
-
-
-        $width_icon = $row['width_icon'];
-        $option = unserialize($row['admoption']);
 
         switch ($option['sklad_status']) {
             case(1): $sklad_statusl = "selected";
@@ -324,6 +275,11 @@ $option = unserialize($GetSystems['admoption']);
         else
             $sms_enabled = "";
 
+        if ($option['sms_status_order_enabled'] == 1)
+            $sms_status_order_enabled = "checked";
+        else
+            $sms_status_order_enabled = "";
+
         if ($option['notice_enabled'] == 1)
             $notice_enabled = "checked";
         else
@@ -334,9 +290,6 @@ $option = unserialize($GetSystems['admoption']);
         else
             $update_enabled = "";
 
-
-        if ($option['seller_enabled'] == 1)
-            $seller_enabled = "checked";
         if ($option['user_mail_activate'] == 1)
             $user_mail_activate = "checked";
         if ($option['user_skin'] == 1)
@@ -351,16 +304,13 @@ $option = unserialize($GetSystems['admoption']);
             $user_calendar = "checked";
         if ($option['digital_product_enabled'] == 1)
             $digital_product_enabled = "checked";
-        if ($option['helper_enabled'] == 1)
-            $helper_enabled = "checked";
         if ($option['cloud_enabled'] == 1)
             $cloud_enabled = "checked";
         if ($option['image_save_source'] == 1)
             $image_save_source = "checked";
         if ($option['prevpanel_enabled'] == 1)
             $prevpanel_enabled = "checked";
-        if ($option['calibrated'] == 1)
-            $calibrated = "checked";
+
 
         echo"
 <table cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" height=\"50\" id=\"title\">
@@ -405,7 +355,7 @@ tabPane.addTabPage( document.getElementById( \"intro-page\" ) );
         
 	  </FIELDSET>
         <p><img src=\"../img/icon-filetype-jpg.gif\" width=\"16\" height=\"16\" border=\"0\" align=\"absmiddle\" hspace=\"5\" >
-        <a href=\"http://wiki.phpshop.ru/index.php/Modules#Template Edit\" target=\"_blank\" title=\"База  шаблонов\">База дополнительных шаблонов</a>
+        <a href=\"http://wiki.phpshop.ru/index.php/Template_Edit_Manual\" target=\"_blank\" title=\"База  шаблонов\">База дополнительных шаблонов</a>
 </p>
 	  </td>
 	</tr>
@@ -631,7 +581,7 @@ tabPane.addTabPage( document.getElementById( \"message\" ) );
 	  </td>
 	  <td align=left>
 	  <input type=\"checkbox\" value=\"1\" name=\"message_enabled_new\" $message_enabled>
-	  <span name=txtLang id=txtLang style=\"border: 1px;border-style: inset; padding: 3px\">Может приводить к замедлению работы администрирования</span>
+	  <span class='display'>Может приводить к замедлению работы администрирования</span>
 	  </td>
 	</tr>
 	<tr class=adm2>
@@ -643,30 +593,20 @@ tabPane.addTabPage( document.getElementById( \"message\" ) );
 	  <input type=text name=message_time_new size=3 value=\"" . $option['message_time'] . "\"> сек.
 	  </td>
 	</tr>
-	<!-- <tr class=adm2>
-	  <td align=right>
-<span name=txtLang id=txtLang>Контроль заказов на<br>
-	рабочем столе</span>
-	  </td>
-	  <td align=left>
-	  <input type=\"checkbox\" value=\"1\" name=\"desktop_enabled_new\" $desktop_enabled>
-	  </td>
-	</tr>
 	<tr class=adm2>
 	  <td align=right>
-	<span name=txtLang id=txtLang>Время обновления<br>
-	контроля заказов</span>
-	  </td>
-	  <td align=left>
-	  <input type=text name=desktop_time_new size=3 value=\"" . $option['desktop_time'] . "\"> сек.
-	  </td>
-	</tr> -->
-	<tr class=adm2>
-	  <td align=right>
-	<span name=txtLang id=txtLang>SMS уведомление о заказе</span>
+	<span name=txtLang id=txtLang>SMS уведомление<br> о заказе администратору</span>
 	  </td>
 	  <td align=left>
 	  <input type=\"checkbox\" value=\"1\" name=\"sms_enabled_new\" $sms_enabled>
+	  </td>
+	</tr>
+        <tr class=adm2>
+	  <td align=right>
+	<span name=txtLang id=txtLang>SMS уведомление<br> о статусе заказа пользователю</span>
+	  </td>
+	  <td align=left>
+	  <input type=\"checkbox\" value=\"1\" name=\"sms_status_order_enabled_new\" $sms_status_order_enabled>
 	  </td>
 	</tr>
 	<tr class=adm2>
@@ -676,7 +616,7 @@ tabPane.addTabPage( document.getElementById( \"message\" ) );
 	  </td>
 	  <td align=left>
 	  <input type=\"checkbox\" value=\"1\" name=\"notice_enabled_new\" $notice_enabled>
-	   <span name=txtLang id=txtLang style=\"border: 1px;border-style: inset; padding: 3px\">Только для авторизованных пользователей</span>
+	   <span class='display'>Только для авторизованных пользователей</span>
 	  </td>
 	</tr> 
 	<tr class=adm2>
@@ -714,6 +654,7 @@ tabPane.addTabPage( document.getElementById( \"regim\" ) );
 	<span name=txtLang id=txtLang>Цветовая тема</span>:
 	  </td>
 	  <td align=left>" . GetTheme($option['theme']) . "
+          <input type=\"hidden\" value=\"" . $option['theme'] . "\" name=\"theme\"> 
  <span name=txtLang id=txtLang>* Внешний вид панели управления</span>
 	  </td>
 	</tr>
@@ -760,20 +701,7 @@ tabPane.addTabPage( document.getElementById( \"regim\" ) );
 	 <input type=\"checkbox\" value=\"1\" name=\"rss_graber_enabled_new\" $rss_graber_enabled>
 	 * Копирование RSS каналов в новости
 	  </td>
-	</tr>
-		
-
-		<tr>
-	  <td align=right>
-	Интерактивная справка:
-	  </td>
-	  <td align=left>
-	 <input type=\"checkbox\" value=\"1\" name=\"helper_enabled_new\" $helper_enabled>
-	 * Интерактивная справка в панели админстратора
-	  </td>
-	</tr>
-
-
+	</tr>		
 	<tr>
 	<td align=right>Календарь новостей:</td>
 	<td><input type=\"checkbox\" value=\"1\" name=\"user_calendar_new\" $user_calendar> * Опция сортировки новостей по датам</td>
@@ -950,20 +878,17 @@ tabPane.addTabPage( document.getElementById( \"img\" ) );
 
 
         if (isset($_POST['optionsSAVE'])) {
-            
+
             if (CheckedRules($UserStatus["option"], 1) == 1) {
 
-                if ($_SESSION['skin'] != $skin_new) {
-                    $skin = $skin_new;
-                    $_SESSION['skin']=$skin;
+                if ($_SESSION['skin'] != $_POST['skin_new']) {
+                    $skin = $_POST['skin_new'];
+                    $_SESSION['skin'] = $skin;
                 }
 
                 $option = unserialize($GetSystems['admoption']);
 
-
-                $option["prevpanel_enabled"] = $prevpanel_enabled_new;
                 $option["sklad_status"] = $sklad_status_new;
-                $option["helper_enabled"] = $helper_enabled_new;
                 $option["cloud_enabled"] = $cloud_enabled_new;
                 $option["digital_product_enabled"] = $digital_product_enabled_new;
                 $option["user_calendar"] = $user_calendar_new;
@@ -980,16 +905,13 @@ tabPane.addTabPage( document.getElementById( \"img\" ) );
                 $option["width_kratko"] = $width_kratko;
                 $option["message_enabled"] = $message_enabled_new;
                 $option["message_time"] = $message_time_new;
-                $option["desktop_enabled"] = $desktop_enabled_new;
-                $option["desktop_time"] = $desktop_time_new;
-                $option["seller_enabled"] = $seller_enabled_new;
                 $option["base_enabled"] = $base_enabled_new;
                 $option["sms_enabled"] = $sms_enabled_new;
+                $option["sms_status_order_enabled"] = $sms_status_order_enabled_new;
                 $option["notice_enabled"] = $notice_enabled_new;
                 $option["update_enabled"] = $update_enabled_new;
                 $option["base_id"] = $base_id_new;
                 $option["base_host"] = $base_host_new;
-                $option["lang"] = $lang_new;
                 $option["sklad_enabled"] = $sklad_enabled_new;
                 $option["price_znak"] = $price_znak_new;
                 $option["user_mail_activate"] = $user_mail_activate_new;
@@ -997,13 +919,12 @@ tabPane.addTabPage( document.getElementById( \"img\" ) );
                 $option["user_skin"] = $user_skin_new;
                 $option["cart_minimum"] = $cart_minimum_new;
                 $option["editor"] = $editor_new;
-                $option["calibrated"] = $calibrated_new;
                 $option["nowbuy_enabled"] = $nowbuy_enabled_new;
                 $option["xmlencode"] = $xmlencode_new;
                 $option["theme"] = $theme_new;
                 $option_new = serialize($option);
 
-                $sql = "UPDATE ".$PHPShopBase->getParam('base.system')."
+                $sql = "UPDATE " . $PHPShopBase->getParam('base.system') . "
 SET
 num_row='$num_row_new',
 num_row_adm='$num_cow_new',
@@ -1022,12 +943,20 @@ logo='$logo_new',
 kurs_beznal='$kurs_beznal_new' ";
                 $result = mysql_query($sql) or @die("Невозможно изменить запись" . $sql . mysql_error());
 
-                echo"
+                if ($_POST['theme'] != $_POST['theme_new'])
+                    echo "
+    <script>
+        window.opener.location.replace('../admin.php?skinload=true');
+        window.close();
+</script>
+";
+                else
+                    echo"
 	 <script>
 	 CL();
 	 </script>
 	   ";
-            }else{
+            } else {
                 $UserChek->BadUserFormaWindow();
             }
         }

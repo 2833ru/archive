@@ -1,5 +1,7 @@
 <?php
 
+if (!defined("OBJENABLED"))
+    exit(header('Location: /?error=OBJENABLED'));
 
 class PHPShopFacebookpageElement extends PHPShopElements {
 
@@ -20,7 +22,6 @@ class PHPShopFacebookpageElement extends PHPShopElements {
         else 
             $location = "/";
         header("Location: $location");
-        die();
     }
 
 }

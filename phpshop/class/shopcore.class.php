@@ -219,7 +219,8 @@ class PHPShopShopCore extends PHPShopCore {
         if (is_array($from)) {
             $base = @$from['base'];
             $cache = @$from['cache'];
-            $cache_format = @$from['cache_format'];
+            if (!empty($from['cache_format']))
+                $cache_format = $from['cache_format'];
         } else {
             $base = $this->objBase;
             $cache = $this->cache;
@@ -249,15 +250,18 @@ class PHPShopShopCore extends PHPShopCore {
             $hook = $this->setHook(__CLASS__, __FUNCTION__, $row, $newprice);
             if ($hook) {
                 return $hook;
-            } else
+            }
+            else
                 $this->memory_set(__CLASS__ . '.' . __FUNCTION__, 0);
         }
 
         // Если есть новая цена
-        if (empty($newprice))
+        if (empty($newprice)) {
             $price = $row['price'];
-        else
+        } else {
             $price = $row['price_n'];
+            $row['price2'] = $row['price3'] = $row['price4'] = $row['price5'] = null;
+        }
 
         return PHPShopProductFunction::GetPriceValuta($row['id'], array($price, $row['price2'], $row['price3'], $row['price4'], $row['price5']), $row['baseinputvaluta']);
     }
@@ -448,15 +452,14 @@ class PHPShopShopCore extends PHPShopCore {
         else
             $this->set('productSklad', '');
 
-
         // Если товар на складе
         if (empty($row['sklad'])) {
 
             $this->set('Notice', '');
             $this->set('ComStartCart', '');
             $this->set('ComEndCart', '');
-            $this->set('ComStartNotice', '<!--');
-            $this->set('ComEndNotice', '-->');
+            $this->set('ComStartNotice', PHPShopText::comment('<'));
+            $this->set('ComEndNotice', PHPShopText::comment('>'));
 
             // Если нет новой цены
             if (empty($row['price_n'])) {
@@ -498,7 +501,8 @@ class PHPShopShopCore extends PHPShopCore {
             $hook = $this->setHook(__CLASS__, __FUNCTION__, $row);
             if ($hook) {
                 return $hook;
-            } else
+            }
+            else
                 $this->memory_set(__CLASS__ . '.' . __FUNCTION__, 0);
         }
     }
@@ -507,7 +511,7 @@ class PHPShopShopCore extends PHPShopCore {
      * Форма ячеек с товарами
      * @return string
      */
-    function setCell() {
+    function setCell($d1, $d2 = null, $d3 = null, $d4 = null, $d5 = null, $d6 = null, $d7 = null) {
 
         // Оформление разделителя ячеек
         if ($this->grid)
@@ -595,7 +599,10 @@ class PHPShopShopCore extends PHPShopCore {
         $this->set('productInfo', $this->lang('product_info'));
         $this->set('productPriceMoney', $this->dengi);
         $this->set('catalog', $this->lang('catalog'));
-        $this->set('productPageThis', $this->PHPShopNav->getPage());
+        if ($this->PHPShopNav->getPage()>0)
+            $this->set('productPageThis', $this->PHPShopNav->getPage());
+        else
+            $this->set('productPageThis', 1);
 
         $d1 = $d2 = $d3 = $d4 = $d5 = $d6 = $d7 = null;
         if (is_array($dataArray)) {
@@ -609,7 +616,7 @@ class PHPShopShopCore extends PHPShopCore {
                 $this->set('productArt', $row['uid']);
 
                 // Краткое описание
-                $this->set('productDes', $row['description']);
+                $this->set('productDes', Parser($row['description']));
 
                 // Вес
                 $this->set('productWeight', $row['weight']);
@@ -665,6 +672,13 @@ class PHPShopShopCore extends PHPShopCore {
 
         $this->lastmodified = $lastmodified;
         return $table;
+    }
+
+    /**
+     * Сообщение об неизвестном методе
+     */
+    function __call($m, $a) {
+        echo $this->message('Ошибка', '$' . __CLASS__ . '->' . $m . '() не определен в ' . __FILE__);
     }
 
 }

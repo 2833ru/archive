@@ -1,4 +1,5 @@
-<?
+<?php
+
 $_classPath="../../";
 include($_classPath."class/obj.class.php");
 PHPShopObj::loadClass("base");
@@ -27,21 +28,21 @@ class MainCatalogTree extends CatalogTree {
         $this->dis.="d.add($n,$id,'$name','$link','','','','$icon');";
     }
 
-    function create() {
-        $result=$this->sql("select * from ".$this->table." where parent_to=0 order by num");
+    function create($parent_to) {
+        $result=$this->sql("select * from ".$this->table." where parent_to=".intval($parent_to)." order by num");
         $i=0;
         while($row = mysql_fetch_array($result)) {
             $id=$row['id'];
-            $name=$row['name'];
+            $name = addslashes($row['name']);
             $num=$this->chek($id);
             $link='./admin_page_content.php?pid='.$id;
             if($num>0)
                 $this->dis.="
-  d.add($id,0,'$name',\"javascript:miniWin('".$this->dot."adm_catalogID.php?id=$id',650,630)\");
+  d.add($id,".intval($parent_to).",'$name',\"javascript:miniWin('".$this->dot."adm_catalogID.php?id=$id',650,630)\");
                         ".$this->add($id)."
   ";
             else $this->dis.="
-  d.add($id,0,'$name','$link');
+  d.add($id,".intval($parent_to).",'$name','$link');
                         ".$this->add($id)."
   ";
             $i++;
@@ -61,7 +62,7 @@ class MainCatalogTree extends CatalogTree {
         while($row = mysql_fetch_array($result)) {
             $i=0;
             $id=$row['id'];
-            $name=$row['name'];
+            $name = addslashes($row['name']);
             $num=$this->chek($id);
             $link='./admin_page_content.php?pid='.$id;
 
@@ -87,19 +88,21 @@ class MainCatalogTree extends CatalogTree {
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=<?=$GLOBALS['PHPShopLangCharset']?>">
-        <LINK href="../css/dtree.css" type=text/css rel=stylesheet>
+        <LINK href="../skins/<?= $_SESSION['theme'] ?>/dtree.css" type=text/css rel=stylesheet>
         <SCRIPT language=JavaScript1.2 src="../java/dtree.js" type=text/javascript></SCRIPT>
         <script language="JavaScript1.2" src="../java/phpshop.js" type="text/javascript"></script>
     </head>
-    <body bottommargin="0" rightmargin="0" topmargin="0" leftmargin="0" bgcolor="#ffffff">
-        <div style="padding:10px">
+    <body bottommargin="0" rightmargin="0" topmargin="10" leftmargin="10" bgcolor="#ffffff">
+        <div style="padding:0px">
             <?
             // Дерево каталогов
-            $CatalogTree = &new MainCatalogTree($GLOBALS['SysValue']['base']['page_categories']);
+            $CatalogTree = new MainCatalogTree($GLOBALS['SysValue']['base']['page_categories']);
             $CatalogTree->addcat(0,-1,'Каталог страниц','');
-            $CatalogTree->addcat(3000,0,'Меню','','../img/imgfolder.gif');
+            $CatalogTree->addcat(3000,0,'Меню','');
             $CatalogTree->addcat(1000,3000,'Главное меню сайта','admin_page_content.php?pid=1000');
             $CatalogTree->addcat(2000,3000,'Начальная страница','admin_page_content.php?pid=2000');
+            $CatalogTree->addcat(100000,0,'!!! Временная папка !!!','','../img/imgfolder.gif');
+            $CatalogTree->create(100000);
             $CatalogTree->create();
             $CatalogTree->disp();
             ?>

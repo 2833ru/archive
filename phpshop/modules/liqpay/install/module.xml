@@ -4,7 +4,7 @@
     <name>Liqpay</name>
     <description>Прием оплат через Liqpay</description>
     <icon>icon.png</icon>
-    <category>pay</category>
+    <category>sale</category>
     <adminmenu>
         <title>Прием оплат через Liqpay</title>
         <podmenu>

@@ -16,7 +16,7 @@ class PHPShopCron {
 
     // Настройка
     function job() {
-        $PHPShopOrm= &new PHPShopOrm($this->SysValue['base']['cron']['cron_job']);
+        $PHPShopOrm= new PHPShopOrm($this->SysValue['base']['cron']['cron_job']);
         $PHPShopOrm->debug=$this->debug;
         $this->job=$PHPShopOrm->select(array('*'),false,array('order'=>'id'),array('limit'=>100));
     }
@@ -63,12 +63,12 @@ class PHPShopCron {
             case "start":
 
                 // Блокируем загрузки
-                $PHPShopOrm= &new PHPShopOrm($this->SysValue['base']['cron']['cron_job']);
+                $PHPShopOrm= new PHPShopOrm($this->SysValue['base']['cron']['cron_job']);
                 $PHPShopOrm->debug=$this->debug;
                 $PHPShopOrm->update(array('used_new'=>'1'),array('id'=>'='.$job['id']));
 
                 // Пишем лог
-                $PHPShopOrm= &new PHPShopOrm($this->SysValue['base']['cron']['cron_log']);
+                $PHPShopOrm= new PHPShopOrm($this->SysValue['base']['cron']['cron_log']);
                 $PHPShopOrm->debug=$this->debug;
                 $PHPShopOrm->insert(array('date_new'=>$this->date,'name_new'=>$job['name'],'path_new'=>$job['path'],
                     'job_id_new'=>$job['id']));
@@ -77,12 +77,12 @@ class PHPShopCron {
 
             case "end":
 
-                $PHPShopOrm= &new PHPShopOrm($this->SysValue['base']['cron']['cron_log']);
+                $PHPShopOrm= new PHPShopOrm($this->SysValue['base']['cron']['cron_log']);
                 $PHPShopOrm->debug=$this->debug;
                 $PHPShopOrm->update(array('status_new'=>$job['status']),array('id'=>'='.$this->log_id));
 
                 // Снимаем блокировку загрузки
-                $PHPShopOrm= &new PHPShopOrm($this->SysValue['base']['cron']['cron_job']);
+                $PHPShopOrm= new PHPShopOrm($this->SysValue['base']['cron']['cron_job']);
                 $PHPShopOrm->debug=$this->debug;
                 $PHPShopOrm->update(array('used_new'=>'0','last_execute_new'=>$this->date),array('id'=>'='.$job['id']));
 

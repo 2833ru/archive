@@ -156,6 +156,8 @@ class ReadCsv1C {
     var $TotalCreate = 0;
     var $fp;
     var $CsvToArray;
+    var $error = null;
+    var $error_count = 0;
 
     function CsvToArray() {
         $fstat = fstat($this->fp);
@@ -284,8 +286,15 @@ class ReadCsv1C {
             $sql.=" datas ='" . date("U") . "' ";
 
             $sql.=" where id='" . $CsvToArray[0] . "'";
-            $result = mysql_query($sql); //Обработка товара!!
-            $this->TotalUpdate++;
+
+            if (mysql_query($sql))
+                $this->TotalUpdate++;
+            else {
+                $this->error_count++;
+                $this->error.=$this->error_count.'. '.mysql_error() . '
+
+';
+            }
 
 // $testValue2='start';
             if ($_REQUEST['tip'][15] == 1) {// 16 характеристики 2.0
@@ -376,7 +385,8 @@ class ReadCsv1C {
                     $parent_id = $CsvToArray[14];
                 else
                     $parent_id = "1000002";
-            }else
+            }
+            else
                 $parent_id = "1000002";
 
             if ($_REQUEST['tip'][15] == 1) {// 16 характеристики 2.0
@@ -403,8 +413,8 @@ class ReadCsv1C {
             $sql = "INSERT INTO " . $this->TableName . " SET 
             category='" . $parent_id . "',
             name='" . trim($CsvToArray[1]) . "',
-            description='" . $CsvToArray[2] . "',
-            content='" . $CsvToArray[4] . "',
+            description='" . addslashes($CsvToArray[2]) . "',
+            content='" . addslashes($CsvToArray[4]) . "',
             price='" . PHPShopString::toFloat($CsvToArray[7], true) . "',
             sklad='" . $sklad . "',
             p_enabled='" . $this->Zero($CsvToArray[9]) . "',
@@ -425,8 +435,14 @@ class ReadCsv1C {
             baseinputvaluta='" . $_REQUEST['tip'][16] . "',
             dop_cat='" . $CsvToArray[15] . "'";
 
-            $result = mysql_query($sql);
-            $this->TotalCreate++;
+            if (mysql_query($sql))
+                $this->TotalCreate++;
+            else {
+                $this->error_count++;
+                $this->error.=$this->error_count.'. '.mysql_error() . '
+
+';
+            }
         }
     }
 
@@ -504,7 +520,7 @@ if ($_REQUEST['page'] == "predload" and $_FILES['file']['ext'] == "csv") {
             $ReadCsv = new ReadCsv1C($CsvContent, $PHPShopBase->getParam('base.products'), $option['sklad_status']);
             fclose($CsvContent);
             $interface.='
-<div id=interfacesWin name=interfacesWin align="left" style="width:100%;height:580;overflow:auto"> 
+<div id=interfacesWin name=interfacesWin align="left" style="width:100%;height:80%;overflow:auto"> 
 <TABLE  cellSpacing=0 cellPadding=0 width="100%"><TBODY>
 <TR>
 <TD vAlign=top>
@@ -566,42 +582,53 @@ if ($_REQUEST['page'] == "predload" and $_FILES['file']['ext'] == "csv") {
 <TR>
 
 <TD vAlign=top style="padding-top:25">
+
 <div align="center"><h4><span name=txtLang2 id=txtLang2>Загрузка товарной базы Excel выполнена!</span></h4></div>
 <FIELDSET id=fldLayout style="width: 60em;">
-<table style="border: 1px;border-style: inset;background-color: White;" cellpadding="10" width="100%">
-<tr>
-	<td width="50%" ><h4><span name=txtLang2 id=txtLang2>Ход операции</span></h4>
+<legend>Инструкция</legend>
 <ol>
-	<li><span name=txtLang2 id=txtLang2><strong>Шаг 1</strong> - перейти в раздел <a href="javascript:DoReload(\'cat_prod\')"><img src="img/i_eraser[1].gif" alt="" width="16" height="16" border="0" hspace="3" align="absmiddle">"Каталог</a> - Выгруженные товары - Excel  База"</span>
-    <li><span name=txtLang2 id=txtLang2><strong>Шаг 2</strong> - выделите флажком товары и выберите папку для переноса опцией "С отмеченными - Перенести в каталог". Если требуется,  составьте соответствующие каталоги.</span></span>
-</ol></td>
-</tr>
-<tr>
-	<td width="50%" ><h4><span name=txtLang2 id=txtLang2>Отчет:</span></h4>
+	<li>Перейти в раздел <a href="javascript:DoReload(\'cat_prod\')"><img src="img/i_eraser[1].gif" alt="" width="16" height="16" border="0" hspace="3" align="absmiddle">"Каталог</a> - Загруженные товары - Excel  База"
+    <li>Выделите флажком товары и выберите папку для переноса опцией "С отмеченными - Перенести в каталог". Если требуется,  составьте соответствующие каталоги. Шаг 2 имеет место, если в файле не отмечена колонка с категорией товара, иначе товар сразу прописывается в указанную категорию.
+</ol>
+</FIELDSET>
+';
+        if ($ReadCsv->error)
+            $interface.='
+                <FIELDSET id=fldLayout style="width: 60em;"><legend>Ошибки</legend>:<textarea style="width:100%;height:200px">' . $ReadCsv->error . '</textarea>
+                    </FIELDSET>';
+
+        $interface.='
+
+<FIELDSET id=fldLayout style="width: 60em;">
+<legend>Отчет</legend>
 <ol>
 	<li>Создано новых позиций: ' . $ReadCsv->TotalCreate . '
 	<li>Обновлено позиций: ' . $ReadCsv->TotalUpdate . '
-</ol></td>
-</tr>
-</table>
+        <li>Ошибок: ' . $ReadCsv->error_count . '
+</ol>';
+ if ($ReadCsv->error)
+            $interface.='<h4>Ошибки:</h4><textarea style="width:100%;height:200px">' . $ReadCsv->error . '</textarea>';
+
+        $interface.='
 </FIELDSET>
+
 </TD></TR></TABLE>
     ';
     }
 }
 else
     @$interface.=$disp = '
-	  <table width="100%" height="100%" style="Z-INDEX:2;">
+	  <table width="100%" height="80%" style="Z-INDEX:2;">
 <tr>
 	<td valign="middle" align="center">
-		<div style="width:400px;height:100px;BACKGROUND: #C0D2EC;padding:10px;border: solid;border-width: 1px; border-color:#4D88C8;FILTER: alpha(opacity=80);" align="left">
+		<div class="alert" align="left">
 <table width="100%" height="100%">
 <tr>
 	<td width="35" vAlign=center ><IMG 
             hspace=0 src="img/i_support_med[1].gif" align="absmiddle" 
             border=0 ></td>
-	<td ><b>Внимание, выберите файл с расширением *.csv.
-	Повторите  <a href="javascript:DoReload(\'csv1c\')" style="color:red">загрузку файла</a>.</b></td>
+	<td >Внимание, выберите файл с расширением *.csv.
+	Повторите  <a href="javascript:DoReload(\'csv_base\')" style="color:red">загрузку файла</a>.</td>
 </tr>
 </table>
 

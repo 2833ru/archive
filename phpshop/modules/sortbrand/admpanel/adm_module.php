@@ -100,7 +100,7 @@ function actionStart() {
     $Tab1.=$PHPShopGUI->setField('Место вывода',$PHPShopGUI->setSelect('enabled_new',$e_value,150));
     $Tab1.=$PHPShopGUI->setField('Шаблон вывода',$PHPShopGUI->setSelect('flag_new',$f_value,150));
 
-    $info='Для произвольной вставки элемента следует выбрать парамет вывода "Не выводить" и в ручном режиме вставить перменную
+    $info='Для произвольной вставки элемента следует выбрать параметр вывода "Не выводить" и в ручном режиме вставить переменную
         <b>@brand@</b> в свой шаблон.
         <p>Для персонализации формы вывода отредактируйте шаблоны phpshop/modules/sortbrand/templates/</p>
 ';

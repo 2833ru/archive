@@ -1,4 +1,9 @@
 <?
+session_start();
+if(empty($_SESSION['idPHPSHOP']))
+    die;
+
+
 $sMsg = "";
 
 if(isset($_POST["inpNewFolderName"]))

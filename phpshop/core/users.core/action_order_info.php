@@ -53,7 +53,7 @@ function action_order_info($obj, $tip) {
 
             // Цифровой контент
             if ($PHPShopOrderStatusArray->getParam($row['statusi'] . '.sklad_action') == 1 and $obj->PHPShopSystem->getSerilizeParam('admoption.digital_product_enabled') == 1) {
-                $files = $obj->tr('<b>'.__('Файлы').'</b>',$PHPShopOrderFunction->cart('userfiles', array('obj' => $obj)),'-');
+                $files = $obj->tr('<b>' . __('Файлы') . '</b>', $PHPShopOrderFunction->cart('userfiles', array('obj' => $obj)), '-');
             }
 
 
@@ -87,7 +87,7 @@ function action_order_info($obj, $tip) {
 
             // Таблица
             $slide = PHPShopText::slide('Order');
-            $table = $slide . $title . PHPShopText::p(PHPShopText::table($caption . $cart . $delivery . $total . $time . $payment . $docs.$files, 3, 1, 'center', '99%', false, 0, 'allspecwhite'));
+            $table = $slide . $title . PHPShopText::p(PHPShopText::table($caption . $cart . $delivery . $total . $time . $payment . $docs . $files, 3, 1, 'center', '99%', false, 0, 'allspecwhite'));
 
             $obj->set('formaContent', $table, true);
         }
@@ -101,8 +101,8 @@ function action_order_info($obj, $tip) {
  */
 function userfiles($val, $option) {
     global $PHPShopModules;
-    
-    $dis=null;
+
+    $dis = null;
 
     // Перехват модуля в начале функции
     $hook = $PHPShopModules->setHookHandler(__FUNCTION__, __FUNCTION__, $val, $option, 'START');
@@ -111,14 +111,14 @@ function userfiles($val, $option) {
 
 
     $PHPShopOrm = new PHPShopOrm($option['obj']->getValue('base.products'));
-    $row= $PHPShopOrm->select(array('files'), array('id' => '=' . $val['id']), false, array('limit' => 1));
+    $row = $PHPShopOrm->select(array('files'), array('id' => '=' . $val['id']), false, array('limit' => 1));
     if (is_array($row)) {
         $files = unserialize($row['files']);
         if (is_array($files)) {
             foreach ($files as $cfile) {
                 $dis.=PHPShopText::img('images/shop/action_save.gif', 3, 'absmiddle');
-                $F=$option['obj']->link_encode($cfile);
-                $link='../files/filesSave.php?F='.$F;
+                $F = $option['obj']->link_encode($cfile);
+                $link = '../files/filesSave.php?F=' . $F;
                 $dis.=PHPShopText::a($link, basename($cfile), basename($cfile), false, false, '_blank');
                 $dis.=PHPShopText::br();
             }
@@ -180,28 +180,61 @@ function userorderdoclink($val, $obj) {
         // Описание столбцов
         $dis = $obj->caption(__('Документооборот'), __('Дата'), __('Загрузка'));
         $n = $val['id'];
+        $doc = null;
         foreach ($data as $row) {
 
             // Счета
             if ($obj->PHPShopSystem->ifValue('1c_load_accounts')) {
-                $link_def = '../files/docsSave.php?orderId=' . $n . '&list=accounts&datas=' . $row['datas'];
-                $link_html = '../files/docsSave.php?orderId=' . $n . '&list=accounts&tip=html&datas=' . $row['datas'];
-                $link_doc = '../files/docsSave.php?orderId=' . $n . '&list=accounts&tip=doc&datas=' . $row['datas'];
-                $link_xls = '../files/docsSave.php?orderId=' . $n . '&list=accounts&tip=xls&datas=' . $row['datas'];
-                $dis.=$obj->tr(PHPShopText::a($link_def, __('Счет на оплату'), false, false, false, '_blank', 'b'), PHPShopDate::dataV($row['datas']), PHPShopText::a($link_html, __('HTML'), __('Формат Web'), false, false, '_blank', 'b') . ' ' .
-                        PHPShopText::a($link_doc, __('DOC'), __('Формат Word'), false, false, '_blank', 'b') . ' ' .
-                        PHPShopText::a($link_xls, __('XLS'), __('Формат Excel'), false, false, '_blank', 'b'));
+
+                $link_html = 'http://' . $_SERVER['SERVER_NAME'] . $obj->getValue('dir.dir') . '/files/docsSave.php?orderId=' . $n . '&list=accounts&tip=html&datas=' . $row['datas'];
+                $link_doc = 'http://' . $_SERVER['SERVER_NAME'] . $obj->getValue('dir.dir') . '/files/docsSave.php?orderId=' . $n . '&list=accounts&tip=doc&datas=' . $row['datas'];
+                $link_xls = 'http://' . $_SERVER['SERVER_NAME'] . $obj->getValue('dir.dir') . '/files/docsSave.php?orderId=' . $n . '&list=accounts&tip=xls&datas=' . $row['datas'];
+
+                if (file_get_contents($link_doc . '&check_file=true')) {
+                    $doc.=PHPShopText::a($link_doc, __('HTML'), __('Формат Web'), false, false, '_blank', 'b') . ' ';
+                    $link_def = $link_doc;
+                }
+
+                if (file_get_contents($link_html . '&check_file=true')) {
+                    $doc.=PHPShopText::a($link_html, __('DOC'), __('Формат Word'), false, false, '_blank', 'b') . ' ';
+                    $link_def = $link_html;
+                }
+
+                if (file_get_contents($link_xls . '&check_file=true')) {
+                    $doc.=PHPShopText::a($link_xls, __('XLS'), __('Формат Excel'), false, false, '_blank', 'b');
+                    $link_def = $link_xls;
+                }
+
+                if(!empty($link_def))
+                $dis.=$obj->tr(PHPShopText::a($link_def, __('Счет на оплату'), false, false, false, '_blank', 'b'), PHPShopDate::dataV($row['datas']), $doc);
             }
 
             // Счета-фактуры
             if (!empty($row['datas_f']) and $obj->PHPShopSystem->ifValue('1c_load_invoice')) {
-                $link_def = '../files/docsSave.php?orderId=' . $n . '&list=invoice&datas=' . $row['datas'];
-                $link_html = '../files/docsSave.php?orderId=' . $n . '&list=invoice&tip=html&datas=' . $row['datas'];
-                $link_doc = '../files/docsSave.php?orderId=' . $n . '&list=invoice&tip=doc&datas=' . $row['datas'];
-                $link_xls = '../files/docsSave.php?orderId=' . $n . '&list=invoice&tip=xls&datas=' . $row['datas'];
-                $dis.=$obj->tr(PHPShopText::a($link_def, __('Счет-фактура'), false, false, false, '_blank', 'b'), PHPShopDate::dataV($row['datas_f']), PHPShopText::a($link_html, __('HTML'), __('Формат Web'), false, false, '_blank', 'b') . ' ' .
-                        PHPShopText::a($link_doc, __('DOC'), __('Формат Word'), false, false, '_blank', 'b') . ' ' .
-                        PHPShopText::a($link_xls, __('XLS'), __('Формат Excel'), false, false, '_blank', 'b'));
+                $link_def=null;
+                
+                
+                $link_def = 'http://' . $_SERVER['SERVER_NAME'] . $obj->getValue('dir.dir') . '/files/docsSave.php?orderId=' . $n . '&list=invoice&datas=' . $row['datas'];
+                $link_html = 'http://' . $_SERVER['SERVER_NAME'] . $obj->getValue('dir.dir') . '/files/docsSave.php?orderId=' . $n . '&list=invoice&tip=html&datas=' . $row['datas'];
+                $link_doc = 'http://' . $_SERVER['SERVER_NAME'] . $obj->getValue('dir.dir') . '/files/docsSave.php?orderId=' . $n . '&list=invoice&tip=doc&datas=' . $row['datas'];
+                $link_xls = 'http://' . $_SERVER['SERVER_NAME'] . $obj->getValue('dir.dir') . '/files/docsSave.php?orderId=' . $n . '&list=invoice&tip=xls&datas=' . $row['datas'];
+
+                if (file_get_contents($link_doc . '&check_file=true')) {
+                    $doc.=PHPShopText::a($link_doc, __('HTML'), __('Формат Web'), false, false, '_blank', 'b') . ' ';
+                    $link_def = $link_doc;
+                }
+
+                if (file_get_contents($link_html . '&check_file=true')) {
+                    $doc.=PHPShopText::a($link_html, __('DOC'), __('Формат Word'), false, false, '_blank', 'b') . ' ';
+                    $link_def = $link_html;
+                }
+
+                if (file_get_contents($link_xls . '&check_file=true')) {
+                    $doc.=PHPShopText::a($link_xls, __('XLS'), __('Формат Excel'), false, false, '_blank', 'b');
+                    $link_def = $link_xls;
+                }
+
+                $dis.=$obj->tr(PHPShopText::a($link_def, __('Счет-фактура'), false, false, false, '_blank', 'b'), PHPShopDate::dataV($row['datas']), $doc);
             }
         }
 

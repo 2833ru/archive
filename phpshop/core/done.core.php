@@ -12,6 +12,12 @@ $PHPShopOrder = new PHPShopOrderFunction();
  * @package PHPShopCore
  */
 class PHPShopDone extends PHPShopCore {
+    
+    /**
+     * Очистка корзины после оплаты
+     * @var bool 
+     */
+    public $cart_clean_enabled=true;
 
     /**
      * Конструктор
@@ -262,20 +268,20 @@ class PHPShopDone extends PHPShopCore {
             "ouid" => $this->ouid,
             "data" => date("U"),
             "time" => date("H:s a"),
-            "mail" => $_POST['mail'],
-            "name_person" => PHPShopSecurity::CleanStr(@$_POST['name_person']),
-            "org_name" => PHPShopSecurity::CleanStr(@$_POST['org_name']),
-            "org_inn" => PHPShopSecurity::CleanStr(@$_POST['org_inn']),
-            "org_kpp" => PHPShopSecurity::CleanStr(@$_POST['org_kpp']),
-            "tel_code" => PHPShopSecurity::CleanStr(@$_POST['tel_code']),
-            "tel_name" => PHPShopSecurity::CleanStr(@$_POST['tel_name']),
-            "adr_name" => PHPShopSecurity::CleanStr(@$_POST['adr_name']),
-            "dostavka_metod" => @$_POST['dostavka_metod'],
+            "mail" => PHPShopSecurity::TotalClean($_POST['mail'],3),
+            "name_person" => PHPShopSecurity::TotalClean(@$_POST['name_person']),
+            "org_name" => PHPShopSecurity::TotalClean(@$_POST['org_name']),
+            "org_inn" => PHPShopSecurity::TotalClean(@$_POST['org_inn']),
+            "org_kpp" => PHPShopSecurity::TotalClean(@$_POST['org_kpp']),
+            "tel_code" => PHPShopSecurity::TotalClean(@$_POST['tel_code']),
+            "tel_name" => PHPShopSecurity::TotalClean(@$_POST['tel_name']),
+            "adr_name" => PHPShopSecurity::TotalClean(@$_POST['adr_name']),
+            "dostavka_metod" => intval(@$_POST['dostavka_metod']),
             "discount" => $this->discount,
-            "user_id" => $_SESSION['UsersId'],
-            "dos_ot" => PHPShopSecurity::CleanStr(@$_POST['dos_ot']),
-            "dos_do" => PHPShopSecurity::CleanStr(@$_POST['dos_do']),
-            "order_metod" => @$_POST['order_metod']);
+            "user_id" => intval($_SESSION['UsersId']),
+            "dos_ot" => PHPShopSecurity::TotalClean(@$_POST['dos_ot']),
+            "dos_do" => PHPShopSecurity::TotalClean(@$_POST['dos_do']),
+            "order_metod" =>intval(@$_POST['order_metod']));
 
         // Данные по корзине
         $cart = array(
@@ -303,16 +309,17 @@ class PHPShopDone extends PHPShopCore {
         $insert['uid_new'] = $this->ouid;
         $insert['orders_new'] = $this->order;
         $insert['status_new'] = serialize($this->status);
-        $insert['user_new'] = $_SESSION['UsersId'];
+        $insert['user_new'] = intval($_SESSION['UsersId']);
 
         // Запись заказа в БД
         $result = $this->PHPShopOrm->insert($insert);
 
         // Проверка ошибок при записи заказа
         $this->error_report($result, array("Cart" => $cart, "Person" => $person, 'insert' => $insert));
-        
+
         // Принудительная очистка корзины
-        $this->PHPShopCart->clean();
+        if ($this->cart_clean_enabled)
+           $this->PHPShopCart->clean();
     }
 
     /**
@@ -328,7 +335,7 @@ class PHPShopDone extends PHPShopCore {
             // Заголовок письма администратору
             $title = 'Ошибка записи заказа №' . $_POST['ouid'] . ' на ' . $this->PHPShopSystem->getName() . "/" . date("d-m-y");
 
-            $content='Причина отказа записи: '.$result.'
+            $content = 'Причина отказа записи: ' . $result . '
 Дамп:
 ';
             ob_start();

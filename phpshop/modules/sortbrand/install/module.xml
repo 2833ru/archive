@@ -4,7 +4,7 @@
     <name>Sort Brand</name>
     <description>Подбор по параметрам, вывод производителей</description>
     <icon>icon.png</icon>
-    <category>sort</category>
+    <category>form</category>
     <adminmenu>
         <title>Sort Brand</title>
         <podmenu>

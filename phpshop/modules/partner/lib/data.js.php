@@ -16,7 +16,7 @@ PHPShopObj::loadClass("basexml");
 PHPShopObj::loadClass("string");
 
 // Подключаем БД
-$PHPShopBase=&new PHPShopBase($_classPath."phpshop/inc/config.ini");
+$PHPShopBase=new PHPShopBase($_classPath."phpshop/inc/config.ini");
 
 // Пример запроса
 $_POST['sql_test']='<?xml version="1.0" encoding="windows-1251"?>
@@ -106,5 +106,5 @@ if(window.PHPShopXmlManager'.$_GET['obj'].'){
     }
 }
 
-$PHPShopHtmlCatalog = &new PHPShopHtmlCatalog();
+$PHPShopHtmlCatalog = new PHPShopHtmlCatalog();
 ?>

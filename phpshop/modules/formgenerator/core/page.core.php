@@ -1,5 +1,7 @@
 <?php
 
+if (!defined("OBJENABLED"))
+    exit(header('Location: /?error=OBJENABLED'));
 
 function index_formgenerator_hook($obj,$row_page) {
     $dis=null;

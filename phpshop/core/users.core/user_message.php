@@ -97,7 +97,7 @@ function Nav_messages($UID=0) {
     $p=$SysValue['nav']['id'];
     if(empty($p)) $p=1;
     $num_row=10;
-    $num_page=NumFrom("table_name37"," where (UID=".$UID.")");
+    $num_page=NumFrom("table_name37"," where (UID=".intval($UID).")");
     $i=1;
     $num=$num_page/$num_row;
     while ($i<$num+1) {
@@ -146,7 +146,7 @@ function user_message($obj) {
     global $SysValue;
 
     $statusMail=null;
-    $sql="select * from ".$SysValue['base']['table_name27']." where id=$obj->UsersId LIMIT 0, 1";
+    $sql="select * from ".$SysValue['base']['table_name27']." where id=".intval($obj->UsersId)." LIMIT 0, 1";
     $result=mysql_query($sql);
     $row = mysql_fetch_array($result);
     $id=$row['id'];
@@ -173,7 +173,7 @@ function user_message($obj) {
 IP:".$_SERVER['REMOTE_ADDR'];
 
         // Отправка e-mail администратору
-        $PHPShopMail= new PHPShopMail($obj->PHPShopSystem->getValue('adminmail2'),$mail,$zag_adm,$content_adm);
+        new PHPShopMail($obj->PHPShopSystem->getValue('adminmail2'),$mail,$zag_adm,$content_adm);
 
         $sql='select * from '.$SysValue['base']['table_name37'].' where (UID='.$id.') order by DateTime DESC';
         $result=mysql_query($sql);
@@ -203,7 +203,7 @@ IP:".$_SERVER['REMOTE_ADDR'];
     $display= MessageList($id);
 
     // Дописать сообщение
-    $sql='select * from '.$SysValue['base']['table_name37'].' where (UID='.$id.') order by DateTime DESC';
+    $sql='select * from '.$SysValue['base']['table_name37'].' where (UID='.intval($id).') order by DateTime DESC';
     $result=mysql_query($sql);
     $i=mysql_num_rows($result);
     $row = mysql_fetch_array($result);

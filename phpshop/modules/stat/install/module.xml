@@ -3,7 +3,7 @@
     <version>1.2</version>
     <name>Stat</name>
     <description>Модуль статистики посещений.</description>
-    <category>stat</category>
+    <category>seo</category>
     <icon>icon.gif</icon>
     <adminmenu>
         <title>Статистика</title>

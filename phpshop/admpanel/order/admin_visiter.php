@@ -50,8 +50,8 @@ function Visitor($pole1, $pole2, $words, $list) {// вывод покупателей
     else
         $pole2 = GetUnicTime($pole2) + 86400;
 
-    $disp=null;
-    $numRows=0;
+    $disp = null;
+    $numRows = 0;
 
     if ($list == "all" or !$list)
         $sort = "";
@@ -114,7 +114,7 @@ function Visitor($pole1, $pole2, $words, $list) {// вывод покупателей
         }
 
         $disp.='
-<tr class="row '.$style_r.'" id="r' . $id . '">
+<tr class="row ' . $style_r . '" id="r' . $id . '">
 	 
 	
     <td valign="middle" align="center" onmouseover="show_on(\'r' . $id . '\')" onmouseout="show_out(\'r' . $id . '\')" onclick="miniWin(\'order/adm_visitorID.php?visitorID=' . $id . '&pole1=' . $pole1 . '&pole2=' . $pole2 . '\',650,550)">' . $uid . '</td>

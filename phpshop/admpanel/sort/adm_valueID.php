@@ -3,27 +3,17 @@ require("../connect.php");
 @mysql_connect("$host", "$user_db", "$pass_db") or @die("Невозможно подсоединиться к базе");
 mysql_select_db("$dbase") or @die("Невозможно подсоединиться к базе");
 require("../enter_to_admin.php");
-
-// Языки
-$GetSystems = GetSystems();
-$option = unserialize($GetSystems['admoption']);
-$Lang = $option['lang'];
-require("../language/" . $Lang . "/language.php");
+require("../language/russian/language.php");
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
     <head>
         <title>Редактирование Характеристики</title>
         <META http-equiv=Content-Type content="text/html; charset=windows-1251">
-        <LINK href=".../skins/<?= $_SESSION['theme'] ?>/texts.css" type=text/css rel=stylesheet>
-        <LINK href="../skins/<?= $_SESSION['theme'] ?>/tab.css" type=text/css rel=stylesheet>
+        <LINK href="../skins/<?=$_SESSION['theme']?>/texts.css" type=text/css rel=stylesheet>
+        <LINK href="../skins/<?=$_SESSION['theme']?>/tab.css" type=text/css rel=stylesheet>
         <script language="JavaScript1.2" src="../java/javaMG.js" type="text/javascript"></script>
         <script type="text/javascript" src="../java/tabpane.js"></script>
-        <script type="text/javascript" language="JavaScript1.2" src="../language/<?= $Lang ?>/language_windows.js"></script>
-        <script type="text/javascript" language="JavaScript1.2" src="../language/<?= $Lang ?>/language_interface.js"></script>
-        <script>
-            DoResize(<? echo $GetSystems['width_icon'] ?>, 500, 400);
-        </script>
     </head>
     <body bottommargin="0"  topmargin="0" leftmargin="0" rightmargin="0">
         <?
@@ -76,7 +66,7 @@ $dis
         }
 
 // Редактирование записей
-        $sql = "select * from " . $SysValue['base']['table_name21'] . " where id=" . intval($id);
+        $sql = "select * from " . $SysValue['base']['table_name21'] . " where id=" . intval($_GET['id']);
         $result = mysql_query($sql);
         $row = mysql_fetch_array($result);
         $id = $row['id'];
@@ -107,7 +97,7 @@ $dis
 
 
                 <!-- begin intro page -->
-                <div class="tab-page" id="intro-page" style="height:220px">
+                <div class="tab-page" id="intro-page" style="height:250px">
                     <h2 class="tab"><span name=txtLang id=txtLang>Основное</span></h2>
 
                     <script type="text/javascript">
@@ -147,7 +137,7 @@ $dis
                         </tr>
                     </table>
                 </div>
-                <div class="tab-page" id="content-page" style="height:220px">
+                <div class="tab-page" id="content-page" style="height:250px">
                     <h2 class="tab"><span name=txtLang id=txtLang>Описание</span></h2>
 
                     <script type="text/javascript">

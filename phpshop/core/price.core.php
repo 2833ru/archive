@@ -4,7 +4,7 @@
  * Обработчик прайс-листов
  * @author PHPShop Software
  * @tutorial http://wiki.phpshop.ru/index.php/PHPShopPrice
- * @version 1.2
+ * @version 1.4
  * @package PHPShopShopCore
  */
 class PHPShopPrice extends PHPShopShopCore {
@@ -53,15 +53,16 @@ class PHPShopPrice extends PHPShopShopCore {
      * @return bool
      */
     function subcategory($cat, $parent_name = false) {
+        
         if (!empty($this->ParentArray[$cat]) and is_array($this->ParentArray[$cat]) ) {
             foreach ($this->ParentArray[$cat] as $val) {
 
                 $name = $this->PHPShopCategoryArray->getParam($val . '.name');
                 $sup = $this->subcategory($val, $parent_name . ' / ' . $name);
-                if (empty($sup)) {
+                if (empty($sup) and $this->PHPShopCategoryArray->getParam($val . '.skin_enabled') != 1) {
 
                     // Запоминаем параметр каталога
-                    if ($_REQUEST['cat'] == $val)
+                    if ($this->category == $val)
                         $sel = 'selected';
                     else
                         $sel = false;
@@ -76,12 +77,13 @@ class PHPShopPrice extends PHPShopShopCore {
         }
         else {
             //Запоминаем параметр каталога
-            if (!empty($_REQUEST['cat']) and $_REQUEST['cat'] == $cat)
+            if ( $this->category == $cat)
                 $sel = 'selected';
             else
                 $sel = false;
+            
 
-            if(!$this->errorMultibase($cat))
+            if(!$this->errorMultibase($cat) and $this->PHPShopCategoryArray->getParam($cat . '.skin_enabled') != 1)
             $this->value[] = array($parent_name, $cat, $sel);
 
             // Массив для вывода всех товаров
@@ -105,7 +107,7 @@ class PHPShopPrice extends PHPShopShopCore {
             $this->ParentArray = $this->PHPShopCategoryArray->getKey('parent_to.id', true);
             if (is_array($this->ParentArray[0])) {
                 foreach ($this->ParentArray[0] as $val) {
-                    if ($this->PHPShopCategoryArray->getParam($val . '.vid') != 1 and !$this->errorMultibase($val)) {
+                    if ($this->PHPShopCategoryArray->getParam($val . '.skin_enabled') != 1 and !$this->errorMultibase($val)) {
                         $name = $this->PHPShopCategoryArray->getParam($val . '.name');
                         $this->subcategory($val, $name);
                     }

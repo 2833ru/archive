@@ -20,18 +20,10 @@ class PHPShopCoretest extends PHPShopCore {
     function index() {
 
         $disp='
-<div align="right">
-<strong>См. также:</strong><br>
-<a href="/doc/license.html">&raquo; Лицензионное соглашение</a><br>
-<a href="/doc/test.html">&raquo; Подключение HTML файлов</a><br>
-<a href="/phptest/">&raquo; Подключение PHP логики</a><br>
-<a href="/coretest/">&raquo; Подключение PHP логики через API</a><br>
-</div>
 <h1>Подключение PHP логики через PHPShop Core</h1>
 <p>
 Исходник этого файла расположен по адресу: phpshop/core/coretest.php<br>
-Возможно использование логики php.<br>
-Для подключения  HTML файлов используйте файлы в папке <a href="/doc/test.html">/doc/test.html</a>
+Для подключения  HTML файлов используйте файлы в папке /pageHTML/
 </p>
 
 <h1>Имя вашего сайта: "'.$this->PHPShopSystem->getValue('name').'"</h1>

@@ -1,5 +1,8 @@
 <?php
 
+if (!defined("OBJENABLED"))
+    exit(header('Location: /?error=OBJENABLED'));
+
 /**
  * Элемент корзины
  */
@@ -74,7 +77,7 @@ class ProductLastView extends PHPShopElements {
 
         // Массив корзины
         $array = array(
-            "id" => intval($objID),
+            "id" => $objProduct->getParam("id"),
             "name" => PHPShopSecurity::CleanStr($objProduct->getParam("name")),
             "price" => PHPShopProductFunction::GetPriceValuta($objID, $objProduct->getParam("price"), $objProduct->getParam("baseinputvaluta"), true),
             "uid" => $objProduct->getParam("uid"),
@@ -86,7 +89,7 @@ class ProductLastView extends PHPShopElements {
         if (count($this->_PRODUCT) >= $this->option['num'])
             array_shift($this->_PRODUCT);
 
-        $this->_PRODUCT[$objID] = $array;
+        $this->_PRODUCT[$array["id"]] = $array;
     }
 
     /**
@@ -123,6 +126,7 @@ class ProductLastView extends PHPShopElements {
             $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['productlastview']['productlastview_memory']);
             $data = $PHPShopOrm->select(array('product'), array('memory' => "='" . $this->memory . "'"), false, array('limit' => 1));
             if (is_array($data)) {
+                
                 $this->_PRODUCT = unserialize($data['product']);
             }
         }

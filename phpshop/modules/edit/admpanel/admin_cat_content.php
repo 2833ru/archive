@@ -22,13 +22,13 @@ PHPShopObj::loadClass("modules");
 $PHPShopModules = new PHPShopModules($_classPath."modules/");
 
 // Расширения для редактирования
-$AllowedTypes = "tpl|js|css";
+$AllowedTypes = "/tpl|js|css/";
 
 // Проверка расширения файла
 function isTypeAllowed($sFileName) {
     global $AllowedTypes;
     $pathinfo=pathinfo($sFileName);
-    if(ereg($AllowedTypes,$pathinfo['extension']) ) return $pathinfo['extension'];
+    if(preg_match($AllowedTypes,$pathinfo['extension']) ) return $pathinfo['extension'];
     else return false;
 }
 
@@ -90,7 +90,7 @@ function actionUpdate() {
         @chmod($tpl_file, 0775);
 
 
-        if(fwrite(fopen($tpl_file,"w+"), stripslashes($_POST['code']))) $return='Файл ['.str_replace('../../..','',$tpl_file).'] сохранен.';
+        if(fwrite(fopen($tpl_file,"r+"), stripslashes($_POST['code']))) $return='Файл ['.str_replace('../../..','',$tpl_file).'] сохранен.';
         else $return='Не могу произвести запись в файл '.str_replace('../../..','',$tpl_file).'\n\nДля редактирования файла необходимо поставить права\nна его запись CHMOD 775';
 
         echo '<script>alert("'.$return.'")</script>';

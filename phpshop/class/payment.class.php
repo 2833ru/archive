@@ -3,7 +3,7 @@
 /**
  * Библиотека данных по методам оплаты
  * @author PHPShop Software
- * @version 1.0
+ * @version 1.1
  * @package PHPShopObj
  */
 class PHPShopPayment extends PHPShopObj {
@@ -161,7 +161,7 @@ class PHPShopPaymentResult {
 
             // Приверяем сущ. заказа
             $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['orders']);
-            $PHPShopOrm->debug = true;
+            $PHPShopOrm->debug = $this->debug;
             $row = $PHPShopOrm->select(array('uid'), array('uid' => "='" . $this->inv_id . "'"), false, array('limit' => 1));
             if (!empty($row['uid'])) {
 
@@ -173,7 +173,7 @@ class PHPShopPaymentResult {
                 // Изменение статуса платежа
                 $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['orders']);
                 $PHPShopOrm->debug = $this->debug;
-                $PHPShopOrm->update(array('statusi_new' => $this->set_order_status_101()), array('uid' => '="' . $this->true_num($this->inv_id) . '"'));
+                $PHPShopOrm->update(array('statusi_new' => $this->set_order_status_101()), array('uid' => '="' . $this->inv_id . '"'));
 
                 // Сообщение ОК
                 $this->done();

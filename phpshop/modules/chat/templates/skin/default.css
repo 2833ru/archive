@@ -1,3 +1,28 @@
+input,textarea,button,#chat_mod_content{
+    border: solid 1px #CCC;
+    -webkit-border-radius:5px;
+    -moz-border-radius:5px;
+    border-radius:5px;
+    padding:3px;
+
+}
+textarea:hover {
+    border: solid 1px #BFDBFF;
+}
+button{
+    background: -moz-linear-gradient(#FFF, #F0F0F0);
+    background: -ms-linear-gradient(#FFF, #F0F0F0);
+    background: -o-linear-gradient(#FFF, #F0F0F0);
+    background: -webkit-linear-gradient(#FFF, #F0F0F0);
+}
+button:hover{
+    border: solid 1px #7FAAFF;
+    background: -moz-linear-gradient(#FFF, #D9EBF9);
+    background: -ms-linear-gradient(#FFF, #D9EBF9);
+    background: -o-linear-gradient(#FFF, #D9EBF9);
+    background: -webkit-linear-gradient(#FFF, #D9EBF9);
+    cursor:pointer;
+}
 td, th {
     font-family: Tahoma, Helvetica, sans-serif;
     font-size: 13px;
@@ -9,20 +34,15 @@ body {
     background: #A3E1EC url(bg.jpg) no-repeat left top;
 }
 #chat_mod_content{
-    border: 1px;
-    border-width: 1px;
-    border-style: inset;
-    width: 97%;
-    height: 350px;
-    overflow: scroll;
+    width: 99%;
+    height: 320px;
+    overflow: auto;
     background-color: White;
-    border-color: Silver;
     padding:3px;
     font-size: 12px;
-    color: Black;
 }
 textarea#chat_mod_user_text{
-    width:99%;
+    width:100%;
     font-size: 12px;
     color: Black;
     height: 100px;
@@ -51,8 +71,8 @@ div#help{
 }
 
 button{
-    width:150px;
-    height: 30px;
+    width:120px;
+    height: 25px;
 
 }
 

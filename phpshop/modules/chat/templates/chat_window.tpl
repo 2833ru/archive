@@ -75,12 +75,14 @@
     <BODY onLoad="PHPShopChat_ping();PHPShopChat_email();PHPShop_upload();">
         <table width="100%" height="100%">
             <tr valign="top" >
-                <td height="70%"> <div name="chat_mod_content" id="chat_mod_content">@chat_mod_content@</div>
+                <td height="330"> <div name="chat_mod_content" id="chat_mod_content">@chat_mod_content@</div>
                 </td>
             <tr>
             <tr valign="top" >
-                <td height="10%">
+                <td >
+   
                     <textarea name="chat_mod_user_text" id="chat_mod_user_text" @chat_mod_disable@></textarea>
+                    
                     <div style="float:left">
                         <form id="form1"  method="post" enctype="multipart/form-data">
 
@@ -96,7 +98,8 @@
                         </form>
                     </div>
                     <div style="float:left;padding-left:5px"> 
-                        <IMG onmouseover="this.style.cursor = 'pointer';" title=Смеется onclick="emoticon(':-D');" alt=Смеется src="templates/smiley/grin.gif" border=0> 
+                                               <!--<IMG onmouseover="this.style.cursor = 'pointer';" title=Умничает onclick="emoticon(':smart:');" alt=Умничает src="templates/smiley/umnik2.gif" border=0> 
+<IMG onmouseover="this.style.cursor = 'pointer';" title=Смеется onclick="emoticon(':-D');" alt=Смеется src="templates/smiley/grin.gif" border=0> 
                         <IMG onmouseover="this.style.cursor = 'pointer';" title=Улыбается onclick="emoticon(':)');" alt=Улыбается src="templates/smiley/smile3.gif" border=0> 
                         <IMG onmouseover="this.style.cursor = 'pointer';" title=Грустный onclick="emoticon(':(');" alt=Грустный src="templates/smiley/sad.gif" border=0> 
                         <IMG onmouseover="this.style.cursor = 'pointer';" title="В шоке" onclick="emoticon(':shock:');" alt="В шоке" src="templates/smiley/shok.gif" border=0> 
@@ -109,7 +112,6 @@
                         <IMG onmouseover="this.style.cursor = 'pointer';" title=Загадочный onclick="emoticon(':rolly:');" alt=Загадочный src="templates/smiley/rolleyes.gif" border=0> 
                         <IMG onmouseover="this.style.cursor = 'pointer';" title=Злой onclick="emoticon(':thuf:');" alt=Злой src="templates/smiley/threaten.gif" border=0> 
                         <IMG onmouseover="this.style.cursor = 'pointer';" title="Показывает язык" onclick="emoticon(':tongue:');" alt="Показывает язык" src="templates/smiley/tongue.gif" border=0> 
-                       <!-- <IMG onmouseover="this.style.cursor = 'pointer';" title=Умничает onclick="emoticon(':smart:');" alt=Умничает src="templates/smiley/umnik2.gif" border=0> 
                         <IMG onmouseover="this.style.cursor = 'pointer';" title=Запутался onclick="emoticon(':wacko:');" alt=Запутался src="templates/smiley/wacko.gif" border=0> 
                         <IMG onmouseover="this.style.cursor = 'pointer';" title=Сожалеет onclick="emoticon(':sorry:');" alt=Сожалеет src="templates/smiley/sorry.gif" border=0>
                         <IMG onmouseover="this.style.cursor = 'pointer';" title="Нет Нет" onclick="emoticon(':nono:');" alt="Нет Нет" src="templates/smiley/nono.gif" border=0> 
@@ -118,9 +120,8 @@
                        </div>
                 </td>
             </tr>
-            <tr valign="top">
+            <tr valign="center">
                 <td height="100">
-                    <div id="help"><img src="./templates/help.png" align="absmiddle" hspace="3">Используйте сочетание клавиш <b>CTRL + Enter</b> для быстрого ответа</div>
                     <div id="exit">
                         <button onclick="PHPShopChat_exit();">
                             <img src="./templates/exit.gif" align="absmiddle" hspace="5">Выход

@@ -35,7 +35,8 @@ class PHPShopMap extends PHPShopCore {
             $hook = $this->setHook(__CLASS__, __FUNCTION__, array('val' => $val, 'dir' => $dir, 'name' => $name));
             if ($hook) {
                 return $hook;
-            } else
+            }
+            else
                 $this->memory_set(__CLASS__ . '.' . __FUNCTION__, 0);
         }
 
@@ -63,12 +64,15 @@ class PHPShopMap extends PHPShopCore {
             foreach ($this->ParentArray[$cat] as $val) {
                 $sup = $this->subcategory($val);
                 $name = $this->PHPShopCategoryArray->getParam($val . '.name');
-                if (empty($sup)) {
+                $vid = $this->PHPShopCategoryArray->getParam($val . '.skin_enabled');
+                if (empty($vid)) {
+                    if (empty($sup)) {
 
-                    $dis.=PHPShopText::li($name, $this->seourl($val, 'category', $name));
-                } else {
-                    $dis.=PHPShopText::li(PHPShopText::b($name));
-                    $dis.=$sup;
+                        $dis.=PHPShopText::li($name, $this->seourl($val, 'category', $name));
+                    } else {
+                        $dis.=PHPShopText::li(PHPShopText::b($name));
+                        $dis.=$sup;
+                    }
                 }
             }
             return PHPShopText::ul($dis);
@@ -84,7 +88,8 @@ class PHPShopMap extends PHPShopCore {
         if ($this->PHPShopSystem->ifSerilizeParam('admoption.base_enabled')) {
             $where['servers'] = " REGEXP 'i" . $this->PHPShopSystem->getSerilizeParam('admoption.base_id') . "i'";
         }
-        else $where=null;
+        else
+            $where = null;
 
         $this->PHPShopCategoryArray = new PHPShopCategoryArray($where);
         $this->ParentArray = $this->PHPShopCategoryArray->getKey('parent_to.id', true);

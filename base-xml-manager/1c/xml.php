@@ -7,28 +7,55 @@ PHPShopObj::loadClass("xml");
 PHPShopObj::loadClass("system");
 PHPShopObj::loadClass("basexml");
 PHPShopObj::loadClass("modules");
+PHPShopObj::loadClass("array");
+PHPShopObj::loadClass("product");
+PHPShopObj::loadClass("security");
+PHPShopObj::loadClass("valuta");
 
+/*
+$_POST['log']='root';
+$_POST['pas']='I4OI1OI1OI6OI4OI1OI1OI6OI10O';
 
-$_POST['log_test']='root';
-$_POST['pas_test']='I4OI1OI1OI6OI4OI1OI1OI6OI10O';
-
-$_POST['sql_test']='<?xml version="1.0" encoding="windows-1251"?>
+$_POST['sql']='<?xml version="1.0" encoding="windows-1251"?>
 <phpshop>
 <sql>
 <from>table_name1</from>
-<method>update</method>
+<method>order</method>
 <vars>
-<statusi>2</statusi>
+<art>87</art>
+<item>1</item>
+<price>4271.59</price>
+<currency>RUR</currency>
 </vars>
-<where>id=121</where>
+<where>id=4</where>
 </sql>
 </phpshop>';
+
+$_POST['_sql']='<?xml version="1.0" encoding="windows-1251"?>
+<phpshop>
+<sql>
+<method>select</method>
+<from>table_name2</from>
+<vars>id,name</vars>
+<where>(name REGEXP "mp3" or description REGEXP "mp3" or id=0) and (category=1 and items>10)</where>
+<order>id</order>
+<limit>2</limit>
+</sql>
+</phpshop>';
+*/
 
 // Подключаем БД
 $PHPShopBase=new PHPShopBase($_classPath.'phpshop/inc/config.ini');
 
 // Настройки модулей
 $PHPShopModules = new PHPShopModules($_classPath."phpshop/modules/");
+
+// Валюты
+$PHPShopValutaArray = new PHPShopValutaArray();
+
+// Системные настройки
+$PHPShopSystem = new PHPShopSystem();
+
 
 class PHPShop1C extends PHPShopBaseXml {
 
@@ -53,7 +80,6 @@ class PHPShop1C extends PHPShopBaseXml {
         $order_data=$PHPShopOrm->select(array('orders'),$this->xml['where'],$this->xml['order'],$this->xml['limit']);
         $orders=unserialize($order_data["orders"]);
 
-
         if(is_array($orders['Cart']['cart']))
             foreach($orders['Cart']['cart'] as $key=>$product)
                 if($product['uid'] == $vars[0]['art']) {
@@ -71,7 +97,13 @@ class PHPShop1C extends PHPShopBaseXml {
             $PHPShopOrm = new PHPShopOrm($this->PHPShopBase->getParam('base.table_name2'));
             $PHPShopOrm->debug=$this->debug;
             $data=$PHPShopOrm->select(array('*'),array('uid'=>'="'.$vars[0]['art'].'"'),false,array('limit'=>1));
+
             if(is_array($data)) {
+
+                // Если цена товара пришла из 1С
+                if(PHPShopSecurity::true_param($vars[0]['price'],$vars[0]['currency'])){
+                    $data['price']=PHPShopProductFunction::GetPriceValuta($data['id'],$vars[0]['price'],$vars[0]['currency']);
+                }
                 $orders['Cart']['cart'][$data['id']]=array(
                         'id'=>$data['id'],
                         'name'=>$data['name'],
@@ -218,5 +250,5 @@ class PHPShop1C extends PHPShopBaseXml {
 
 }
 
-$PHPShop1C = new PHPShop1C();
+new PHPShop1C();
 ?>

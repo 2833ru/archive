@@ -1,17 +1,27 @@
 <?php
+/**
+ * Обработчик оплаты заказа через Robox
+ * @author PHPShop Software
+ * @version 1.0
+ * @package PHPShopPayment
+ */
 
 function robox_users_repay($obj, $PHPShopOrderFunction) {
-    global $PHPShopBase;
+    global $PHPShopBase, $SysValue;
 
     // Регистрационная информация
-    $mrh_login = $PHPShopBase->getParam('roboxchange.mrh_login');    //логин
+    $mrh_login = $SysValue['roboxchange']['mrh_login'];    //логин
     $mrh_pass1 = $SysValue['roboxchange']['mrh_pass1'];    // пароль1
+    
     //параметры магазина
     $mrh_ouid = explode("-", $PHPShopOrderFunction->objRow['uid']);
     $inv_id = $mrh_ouid[0] . "" . $mrh_ouid[1];     //номер счета
+    
     //описание покупки
     $inv_desc = 'PHPShopPaymentService';
     $out_summ = $PHPShopOrderFunction->getTotal(); //сумма покупки
+    $out_summ = number_format($out_summ, 2, '.', '');
+
     // формирование подписи
     $crc = md5("$mrh_login:$out_summ:$inv_id:$mrh_pass1");
 

@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="windows-1251"?>
 <module>
     <version>1.1</version>
-    <name>SkinPage</name>
+    <name>Skin Page</name>
     <description>Модуль смены дизайна для товаров и каталогов.</description>
     <icon>icon.png</icon>
     <category>template,decorate</category>
     <adminmenu>
-        <title>SkinPage</title>
+        <title>Skin Page</title>
         <podmenu>
-            <podmenu_name>Настройка SkinPage</podmenu_name>
+            <podmenu_name>Настройка Skin Page</podmenu_name>
             <podmenu_icon>icon.png</podmenu_icon>
             <podmenu_action>javascript:miniWin('../modules/skinpage/admpanel/adm_module.php',510,450);</podmenu_action>
         </podmenu>

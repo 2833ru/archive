@@ -105,7 +105,7 @@ $LMI_PAYER_WM = $_REQUEST['LMI_PAYER_WM'];
 $HASH = $LMI_PAYEE_PURSE . $LMI_PAYMENT_AMOUNT . $LMI_PAYMENT_NO . $LMI_MODE . $LMI_SYS_INVS_NO . $LMI_SYS_TRANS_NO . $LMI_SYS_TRANS_DATE . $LMI_SECRET_KEY . $LMI_PAYER_PURSE . $LMI_PAYER_WM;
 $MY_LMI_HASH = strtoupper(md5($HASH));
 
-if (strtoupper($MY_LMI_HASH) == strtoupper($LMI_HASH)) {
+if (strtoupper($MY_LMI_HASH) == strtoupper((string)$LMI_HASH)) {
 
     $new_uid = UpdateNumOrder($LMI_PAYMENT_NO);
 

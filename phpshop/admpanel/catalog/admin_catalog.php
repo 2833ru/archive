@@ -1,7 +1,7 @@
 <?php
 
 function Catalog() {
-    global $table_name, $categoryID, $systems, $pid;
+    global $systems;
 
     $GetSystems = GetSystems();
     $systems = $GetSystems;
@@ -15,44 +15,38 @@ function Catalog() {
 
     return "
 
-<table cellpadding=\"0\" cellspacing=\"1\" width=\"100%\" border=\"0\">
-<tr>
-	<td id=pane align=center width=\"295\"><img src=img/arrow_d.gif width=7 height=7 border=0 hspace=5 ><span name=txtLang id=txtLang>Каталоги</span></td>
-    <td rowspan=2 valign=top width=\"100%\">
-<iframe src=\"catalog/admin_cat_content.php\" width=\"100%\" height=\"400\"  name=\"frame2\" id=\"frame2\" frameborder=\"0\" scrolling=\"Auto\"></iframe>
-
-<div style=\"padding:5px\">
-<input type=\"hidden\" value=\"\" id=\"prevpanel_mem\">
-<FIELDSET>
-	  <LEGEND><input type=\"checkbox\" id=\"prevpanel_act\" value=\"1\" onclick=\"ClosePanelProductDisp()\" $prevpanel_enabled> Отображать иконку, описание и характеристики товара</LEGEND>
-<div id='prevpanel' style=\"padding:5px;width:100%\">
-
-</div>
-	 </FIELDSET>
-	</td>
-</tr>
-</div>
-
-
-<tr valign=\"top\">
-	<td ><iframe src=\"catalog/tree.php\" width=\"300\"  height=\"520\" frameborder=\"0\" scrolling=\"Auto\" name=\"frame1\" id=\"frame1\"></iframe>
-
-<div align=\"center\" style=\"padding:5\">
-<table cellpadding=\"0\" cellspacing=\"0\">
-  <tr>
-  <td id=\"but381\" class=\"butoff\" onmouseover=\"PHPShopJS.button_on(this)\" onmouseout=\"PHPShopJS.button_off(this)\"><img name=imgLang src=\"icon/chart_organisation_add.gif\" alt=\"Открыть все\" width=\"16\" height=\"16\" border=\"0\"  onclick=\"window.frame1.d.openAll()\">
-    </td>
-   	<td width=\"10\"></td>
-	<td width=\"1\" bgcolor=\"#ffffff\"></td>
-	<td width=\"1\" bgcolor=\"#808080\"></td>
-   <td width=\"5\"></td>
-	<td  id=\"but382\" class=\"butoff\" onmouseover=\"PHPShopJS.button_on(this)\" onmouseout=\"PHPShopJS.button_off(this)\"><img name=imgLang src=\"icon/chart_organisation_delete.gif\" alt=\"Закрыть все\" width=\"16\" height=\"16\" border=\"0\"  onclick=\"window.frame1.d.closeAll()\"></td>
-  </tr>
-</table>
-</div>
-
+<table cellpadding=\"0\" cellspacing=\"1\" width=\"100%\" border=\"0\" height=\"85%\">
+    <tr>
+        <td align=center valign=top width=\"300\" height=\"80%\">
+         <div id=\"pane\"><img src=\"img/arrow_d.gif\" width=\"7\" height=\"7\" border=\"0\" hspace=\"5\">Каталоги</div>
+            <iframe src=\"catalog/tree.php\" width=\"300\"  height=\"80%\" frameborder=\"0\" scrolling=\"Auto\" name=\"frame1\" id=\"frame1\"></iframe>
+             <div align=\"center\" style=\"padding:5\">
+                <table cellpadding=\"0\" cellspacing=\"0\">
+                    <tr>
+                        <td id=\"but381\" class=\"butoff\" onmouseover=\"PHPShopJS.button_on(this)\" onmouseout=\"PHPShopJS.button_off(this)\"><img name=imgLang src=\"icon/chart_organisation_add.gif\" alt=\"Открыть все\" width=\"16\" height=\"16\" border=\"0\"  onclick=\"window.frame1.d.openAll()\">
+                        </td>
+                        <td width=\"5\"></td>
+                        <td width=\"1\" bgcolor=\"#ffffff\"></td>
+                        <td width=\"1\" bgcolor=\"#808080\"></td>
+                        <td width=\"5\"></td>
+                        <td  id=\"but382\" class=\"butoff\" onmouseover=\"PHPShopJS.button_on(this)\" onmouseout=\"PHPShopJS.button_off(this)\"><img name=imgLang src=\"icon/chart_organisation_delete.gif\" alt=\"Закрыть все\" width=\"16\" height=\"16\" border=\"0\"  onclick=\"window.frame1.d.closeAll()\"></td>
+                    </tr>
+                </table>
+            </div>
 </td>
-</tr>
+        <td valign=top  width=\"100%\" height=\"90%\">
+            <iframe src=\"catalog/admin_cat_content.php\" width=\"100%\" height=\"85%\"  name=\"frame2\" id=\"frame2\" frameborder=\"0\" scrolling=\"Auto\"></iframe>
+
+            <div style=\"padding:5px\">
+                <input type=\"hidden\" value=\"\" id=\"prevpanel_mem\">
+                <FIELDSET>
+                    <LEGEND class=titlelegend><input type=\"checkbox\" id=\"prevpanel_act\" value=\"1\" onclick=\"ClosePanelProductDisp()\" $prevpanel_enabled>Отображать иконку, описание и характеристики товара</LEGEND>
+                    <div id='prevpanel' style=\"padding:5px;width:100%\">
+
+                    </div>
+                </FIELDSET>
+        </td>
+    </tr>
 </table>
             ";
 }
@@ -334,10 +328,10 @@ function CategorySearch($words) { //поиск
 
 
     $disp = "
-<form name=\"form_flag\">
+<form name=\"form_flag\" id=>
 <table cellpadding=0 cellspacing=1 width=100% class=\"sortable\" id=\"sort\">
 <tr valign=\"top\">
-	<td width=\"100\" id=pane align=center><img  src=\"../icon/blank.gif\"  width=\"1\" height=\"1\" border=\"0\" onLoad=\"starter('product');\"><span name=txtLang  id=txtLang>Вывод</span></td>
+	<td width=\"100\" id=pane align=center><img  src=\"../icon/blank.gif\"  width=\"1\" height=\"1\" border=\"0\"><span name=txtLang  id=txtLang>Вывод</span></td>
     <td width=\"55\" id=pane align=center><img src=../img/arrow_d.gif width=7 height=7 border=0 hspace=5>ID</td>
 	<td width=\"540\" id=pane align=center><img src=../img/arrow_d.gif width=7 height=7 border=0 hspace=5>Наименование</td>
    <td width=\"100\" id=pane align=center><img src=../img/arrow_d.gif width=7 height=7 border=0 hspace=5>Склад</td>

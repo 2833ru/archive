@@ -30,6 +30,7 @@ global $PHPShopOrm;
 
 
 if(empty($_POST['enabled_new'])) $_POST['enabled_new']=0;
+if(empty($_POST['connect_new'])) $_POST['connect_new']=0;
 
 $PHPShopOrm->debug=false;
 $action = $PHPShopOrm->update($_POST);
@@ -60,6 +61,13 @@ if($flag==1) $s2="selected";
 $Select[]=array("Слева",0,$s1);
 $Select[]=array("Справа",1,$s2);
 
+if($connect==1) $c2="selected";
+  else $c1="selected";
+
+
+$Select_connect[]=array("Socket",0,$c1);
+$Select_connect[]=array("IFRAME",1,$c2);
+
 // Графический заголовок окна
 $PHPShopGUI->setHeader("Настройка модуля 'Forum Last Post'","Настройки подключения",$PHPShopGUI->dir."img/i_display_settings_med[1].gif");
 
@@ -67,15 +75,15 @@ $PHPShopGUI->setHeader("Настройка модуля 'Forum Last Post'","Настройки подключен
 $ContentField2=$PHPShopGUI->setText("Форум: ").$PHPShopGUI->setInput("text","path_new",$path,$float="left",$size=300);
 $ContentField2.=$PHPShopGUI->setText("/lastpost.php");
 $ContentField2.=$PHPShopGUI->setLine() ;
-$ContentField2.=$PHPShopGUI->setText("Ширина: ").$PHPShopGUI->setInput("text","width_new",$width,$float="none",$size=50);
-$ContentField2.=$PHPShopGUI->setText("Высота: ").$PHPShopGUI->setInput("text","height_new",$height,$float="none",$size=50);
+$ContentField2.=$PHPShopGUI->setText("Ширина: ").$PHPShopGUI->setInput("text","width_new",$width,$float="none",$size=50,false,false,false,false,'* для режима IFRAME');
+$ContentField2.=$PHPShopGUI->setText("Высота: ").$PHPShopGUI->setInput("text","height_new",$height,$float="none",$size=50,false,false,false,false,'* для режима IFRAME');
 $ContentField2.=$PHPShopGUI->setText("Заголовок: ").$PHPShopGUI->setInput("text","title_new",$title,$float="none",$size=300);
 $ContentField3=$PHPShopGUI->setField("Расположение:",$PHPShopGUI->setSelect("flag_new",$Select,100,1),"left",5);
 $ContentField4=$PHPShopGUI->setField("Сообщений из топиков:",$PHPShopGUI->setInput("text","num_new",$num,$float="left",$size=50),"left",5);
-
+$ContentField5=$PHPShopGUI->setField("Подключение:",$PHPShopGUI->setSelect("connect_new",$Select_connect,100,1),"left",5);
 // Содержание закладки 1
 $Tab1=$PHPShopGUI->setField($PHPShopGUI->setCheckbox("enabled_new",1,"Вывод блока на сайте",$enabled),$ContentField2).
-        $ContentField3.$ContentField4;
+        $ContentField3.$ContentField4.$ContentField5;
 
 
 
@@ -85,17 +93,17 @@ $Info='Для работы модуля требуется загрузить в корневую директорию форума файл l
     
 Файлы доступен по ссылке: http://'.$_SERVER['SERVER_NAME'].'/phpshop/modules/forumlastpost/code/
     
-При включении опции "Вывод блока на сайте" информаци о последних сообщений с форума бужет автомаически добавлена в левый или правый
+При включении опции "Вывод блока на сайте" информация о последних сообщений с форума будет автоматически добавлена в левый или правый
 текстовый блок автоматически в конец списка.
 
-Для произвольного включения формы вывода сообщений нужно снять галочку "Вывод блока на сайте" и в вставить перемнную @forumlastpost@
+Для произвольного включения формы вывода сообщений нужно снять галочку "Вывод блока на сайте" и в вставить переменную @forumlastpost@
 в нужное место шаблонов index.tpl и shop.tpl.
 ';
 $Load=$PHPShopGUI->setInput("button","","Скачать файлы для форума","left",300,"return window.open('/phpshop/modules/forumlastpost/code/');","but");
 $Tab2=$PHPShopGUI->setTextarea("",$Info,"left",450,200).$Load;
 
 // Форма регистрации
-$Tab3=$PHPShopGUI->setPay($serial,false);
+$Tab3=$PHPShopGUI->setPay($serial);
 
 // Вывод формы закладки
 $PHPShopGUI->setTab(array("Основное",$Tab1,270),array("Описание",$Tab2,270),array("О Модуле",$Tab3,270));

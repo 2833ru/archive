@@ -32,6 +32,7 @@ $PHPShopGUI->ajax = "'orders','" . PHPShopDate::dataV($_REQUEST['pole1'], false)
 $PHPShopGUI->debug_close_window = false;
 $PHPShopGUI->debug = false;
 $PHPShopGUI->addJSFiles('/phpshop/lib/Subsys/JsHttpRequest/Js.js', '/phpshop/lib/JsHttpRequest/JsHttpRequest.js');
+$PHPShopGUI->addJSFiles('../java/sorttable.js');
 $PHPShopGUI->dir = $_classPath . "admpanel/";
 
 // SQL
@@ -46,11 +47,27 @@ $PHPShopModules = new PHPShopModules($_classPath . "modules/");
  * Списывание со склада
  */
 function updateStore($data) {
-    global $PHPShopSystem;
+    global $PHPShopSystem,$PHPShopBase,$_classPath;
 
     // Статусы заказов
     $PHPShopOrderStatusArray = new PHPShopOrderStatusArray();
     $GetOrderStatusArray = $PHPShopOrderStatusArray->getArray();
+
+    // SMS оповещение пользователю о смене статуса заказа
+    if ($data['statusi'] != $_POST['statusi_new'] and $PHPShopSystem->ifSerilizeParam('admoption.sms_status_order_enabled')) {
+       
+        $phone=$_POST['person']['tel_code'].$_POST['person']['tel_name'];
+        $msg = strtoupper($_SERVER['SERVER_NAME']).': '.$PHPShopBase->getParam('lang.sms_user') . $data['uid'] . " - " .$GetOrderStatusArray[$_POST['statusi_new']]['name'];
+         
+        // Проверка на первую 7 или 8
+        $first_d=substr($phone,0,1);
+        if($first_d != 8)
+            $phone='7'.$phone;
+     
+        $lib=str_replace('./phpshop/',$_classPath,$PHPShopBase->getParam('file.sms'));
+        include_once $lib;
+        SendSMS($msg, $phone);
+    }
 
     // Если новый статус Аннулирован, а был статус не Новый заказ, то мы не списываем, а добавляем обратно
     if ($data['statusi'] != 0 && $_POST['statusi_new'] == 1) {
@@ -159,6 +176,9 @@ function actionStart() {
         $PHPShopGUI->setFooter($PHPShopGUI->setInput("button", "", "Закрыть", "center", 100, "return onCancel();", "but"));
         return true;
     }
+    
+        // ID окна для памяти закладок
+    $PHPShopGUI->setID(__FILE__, $data['id']);
 
     $order = unserialize($data['orders']);
     $status = unserialize($data['status']);
@@ -177,25 +197,25 @@ function actionStart() {
 
 
     // Компания
-    $Tab1 = $PHPShopGUI->setField(__("Компания"), $PHPShopGUI->setTextarea('person[org_name]', $order['Person']['org_name'], 'none', 200), 'left');
+    $Tab1 = $PHPShopGUI->setField(__("Компания"), $PHPShopGUI->setTextarea('person[org_name]', PHPShopSecurity::TotalClean($order['Person']['org_name']), 'none', 200), 'left');
 
     // Дополнительная информация по заказу
-    $Tab1.=$PHPShopGUI->setField(__("Дополнительная информация"), $PHPShopGUI->setTextarea('status[maneger]', $status['maneger'], 'none', '370px'), 'left') . $PHPShopGUI->setLine();
+    $Tab1.=$PHPShopGUI->setField(__("Дополнительная информация"), $PHPShopGUI->setTextarea('status[maneger]', PHPShopSecurity::TotalClean($status['maneger']), 'none', '370px'), 'left') . $PHPShopGUI->setLine();
 
     // Адрес доставки
-    $Tab1.=$PHPShopGUI->setField(__("Адрес доставки"), $PHPShopGUI->setTextarea('person[adr_name]', $order['Person']['adr_name'], 'none', 200, 60), 'left');
+    $Tab1.=$PHPShopGUI->setField(__("Адрес доставки"), $PHPShopGUI->setTextarea('person[adr_name]', PHPShopSecurity::TotalClean($order['Person']['adr_name']), 'none', 200, 60), 'left');
 
     // ФИО покупателя
-    $Tab1.=$PHPShopGUI->setField(__("Покупатель"), $PHPShopGUI->setTextarea('person[name_person]', $order['Person']['name_person'], 'none', '370px', '30px') . $PHPShopGUI->setLine() .
-                    $PHPShopGUI->setInputText(__("Время доставки от"), 'person[dos_ot]', $order['Person']['dos_ot'], 50, false, 'left') .
-                    $PHPShopGUI->setInputText(__("до"), 'person[dos_do]', $order['Person']['dos_do'], 50, false, 'left'), 'left') . $PHPShopGUI->setLine();
+    $Tab1.=$PHPShopGUI->setField(__("Покупатель"), $PHPShopGUI->setTextarea('person[name_person]', PHPShopSecurity::TotalClean($order['Person']['name_person']), 'none', '370px', '30px') . $PHPShopGUI->setLine() .
+                    $PHPShopGUI->setInputText(__("Время доставки от"), 'person[dos_ot]', PHPShopSecurity::TotalClean($order['Person']['dos_ot']), 50, false, 'left') .
+                    $PHPShopGUI->setInputText(__("до"), 'person[dos_do]', PHPShopSecurity::TotalClean($order['Person']['dos_do']), 50, false, 'left'), 'left') . $PHPShopGUI->setLine();
 
     // Статус заказа
     $Tab1.= $PHPShopGUI->setField(__("Состояние заказа"), $PHPShopGUI->setSelect('statusi_new', $order_status_value, 170), 'left');
 
     // Телефон
-    $Tab1.= $PHPShopGUI->setField(__("Телефон"), $PHPShopGUI->setInputText(false, 'person[tel_code]', $order['Person']['tel_code'], 50, false, 'left') .
-            $PHPShopGUI->setInputText('-', 'person[tel_name]', $order['Person']['tel_name'], 100, false, 'left'), 'left');
+    $Tab1.= $PHPShopGUI->setField(__("Телефон"), $PHPShopGUI->setInputText(false, 'person[tel_code]', PHPShopSecurity::TotalClean($order['Person']['tel_code']), 50, false, 'left') .
+            $PHPShopGUI->setInputText('-', 'person[tel_name]', PHPShopSecurity::TotalClean($order['Person']['tel_name']), 100, false, 'left'), 'left');
 
     // Доступые типы оплат
     $PHPShopPaymentArray = new PHPShopPaymentArray();
@@ -216,7 +236,7 @@ function actionStart() {
     // Платежные документы
     $PHPShopInterface = new PHPShopInterface('_pretab2_');
     $PHPShopInterface->setTab(array(__("Печатные бланки"), $Tab1_1, 70), array(__("Дополнительно"), $Tab1_2, 70));
-    $Tab1.=$PHPShopGUI->setDiv('left', $PHPShopInterface->getContent(), 'float:left;padding-left:5px');
+    $Tab1.=$PHPShopGUI->setDiv('left', $PHPShopInterface->getContent(), 'float:left;padding-left:0px');
 
     // Корзина
     $Tab2 = $PHPShopGUI->loadLib('tab_cart', $data);
@@ -229,6 +249,7 @@ function actionStart() {
 
     // Вывод кнопок сохранить и выход в футер
     $ContentFooter =
+            $PHPShopGUI->setInput("hidden", "order_num", $data['uid'], "right", 70, "", "but") .
             $PHPShopGUI->setInput("hidden", "visitorID", $data['id'], "right", 70, "", "but") .
             $PHPShopGUI->setInput("hidden", "pole1", $_GET['pole1'], "right", 70, "", "but") .
             $PHPShopGUI->setInput("hidden", "pole2", $_GET['pole2'], "right", 70, "", "but") .

@@ -68,6 +68,8 @@ class PHPShopCoreElement extends PHPShopElements {
         $this->set('date', date("d-m-y H:i a"));
         $this->set('user_ip', $_SERVER['REMOTE_ADDR']);
         $this->set('NavActive', $this->PHPShopNav->getPath());
+        $v=$this->getValue('upload.version');
+        $this->set('version',substr($v, 0, 1).'.'.substr($v, 1, 1).'.'.substr($v, 2, 1));
 
         // Логотип
         $this->set('logo', $this->PHPShopSystem->getLogo());
@@ -147,6 +149,9 @@ class PHPShopUserElement extends PHPShopElements {
 
                     // Дата входа
                     $this->log();
+
+                    // Перехват модуля
+                    $this->setHook(__CLASS__, __FUNCTION__,$data);
 
                     return true;
                 }
@@ -764,22 +769,19 @@ class PHPShopBannerElement extends PHPShopElements {
         if (is_array($data))
             foreach ($data as $row) {
                 if (empty($row['dir'])) {
-                    
+
                     // Определяем переменные
                     $this->set('banerContent', $row['content']);
                     $this->set('banerTitle', $row['name']);
 
                     // Сообщение администратору о конце показов
                     //if ($row['count_all'] > $row['limit_all'])
-                       // $this->mail();
-
+                    // $this->mail();
                     // Обновляем данные показа
                     //$this->update();
-
                     // Подключаем шаблон
                     return $this->parseTemplate($this->getValue('templates.baner_list_forma'));
-                }
-                else {
+                } else {
                     $dirs = explode(",", $row['dir']);
                     foreach ($dirs as $dir)
                         if (!empty($dir))
@@ -791,11 +793,9 @@ class PHPShopBannerElement extends PHPShopElements {
 
                                 // Сообщение администратору о конце показов
                                 //if ($this->row['count_all'] > $row['limit_all'])
-                                   // $this->mail();
-
+                                // $this->mail();
                                 // Обновляем данные показа
                                 //$this->update();
-
                                 // Подключаем шаблон
                                 return $this->parseTemplate($this->getValue('templates.baner_list_forma'));
                             }
@@ -832,8 +832,7 @@ class PHPShopBannerElement extends PHPShopElements {
         // Текст сообщения
         $message = ParseTemplateReturn('./phpshop/lib/templates/banner/mail_notice.tpl', true);
 
-        $PHPShopMail = new PHPShopMail($this->PHPShopSystem->getParam('adminmail2'),
-                        "robot@" . str_replace("www", '', $_SERVER['SERVER_NAME']), $zag, $message);
+        $PHPShopMail = new PHPShopMail($this->PHPShopSystem->getParam('adminmail2'), "robot@" . str_replace("www", '', $_SERVER['SERVER_NAME']), $zag, $message);
     }
 
 }

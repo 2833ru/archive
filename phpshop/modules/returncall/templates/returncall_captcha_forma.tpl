@@ -1,3 +1,4 @@
+
 <p id="returncall_captcha">
 <div>
     <img src="phpshop/modules/returncall/inc/captcha.php" alt="" border="0">
@@ -7,3 +8,4 @@
     <input type="text" name="key" style="width:100px;">
 </div>
 </p>
+

@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="windows-1251"?>
 <module>
-    <version>1.2</version>
-    <name>Обратный звонок</name>
+    <version>1.4</version>
+    <name>Return Call</name>
     <description>Модуль обратного звонка</description>
     <icon>telephone.png</icon>
-    <category>order,soc,form</category>
+    <category>users</category>
     <adminmenu>
         <title>Обратный звонок</title>
         <podmenu>

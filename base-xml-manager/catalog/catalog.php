@@ -8,9 +8,10 @@ PHPShopObj::loadClass("system");
 PHPShopObj::loadClass("basexml");
 
 // Подключаем БД
-$PHPShopBase=&new PHPShopBase("../../phpshop/inc/config.ini");
+$PHPShopBase=new PHPShopBase("../../phpshop/inc/config.ini");
 
 // Пример запроса
+/*
 $_POST['sql_test']='<?xml version="1.0" encoding="windows-1251"?>
 <phpshop><sql><from>table_name2</from>
 <method>select</method>
@@ -19,6 +20,7 @@ $_POST['sql_test']='<?xml version="1.0" encoding="windows-1251"?>
 <order>num</order><limit>1000</limit></sql></phpshop>';
 $_POST['log_test']="root";
 $_POST['pas_test']="cm9vdHJvb3Q=";
+*/
 
 class PHPShopHtmlCatalog extends PHPShopBaseXml {
 
@@ -32,7 +34,7 @@ class PHPShopHtmlCatalog extends PHPShopBaseXml {
     }
 
     function admin() {
-        $PHPShopOrm=&new PHPShopOrm($this->PHPShopBase->getParam('base.table_name19'));
+        $PHPShopOrm=new PHPShopOrm($this->PHPShopBase->getParam('base.table_name19'));
         $PHPShopOrm->debug = $this->debug;
         $data=$PHPShopOrm->select(array('login,password'),array('enabled'=>"='1'"),false,10);
         $OkFlag=false;
@@ -45,5 +47,5 @@ class PHPShopHtmlCatalog extends PHPShopBaseXml {
     }
 }
 
-$PHPShopHtmlCatalog = &new PHPShopHtmlCatalog();
+new PHPShopHtmlCatalog();
 ?>

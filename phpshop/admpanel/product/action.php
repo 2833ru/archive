@@ -1,9 +1,14 @@
-<?
+<?php
 
+$_classPath = "../../";
 require("../connect.php");
-@mysql_connect("$host", "$user_db", "$pass_db") or @die("Невозможно подсоединиться к базе");
-mysql_select_db("$dbase") or @die("Невозможно подсоединиться к базе");
-require("../enter_to_admin.php");
+include($_classPath . "class/obj.class.php");
+PHPShopObj::loadClass("base");
+PHPShopObj::loadClass("system");
+
+// Подключение к БД
+$PHPShopBase = new PHPShopBase($_classPath . "inc/config.ini");
+$PHPShopBase->chekAdmin();
 
 // Подключаем библиотеку поддержки.
 require_once "../../lib/Subsys/JsHttpRequest/Php.php";
@@ -61,26 +66,26 @@ function CatalogSorts() {
 
 function SortDisp($vendor_array) {
 
-    $dis=null;
+    $dis = null;
     $numRows = 0;
-    
+
     $Sort = Sorts();
     $CatalogSort = CatalogSorts();
     $vendor_array = unserialize($vendor_array);
     foreach ($vendor_array as $key => $val)
-        foreach ($val as $v){
-        
-                // Выделение четных строк
-        $numRows++;
-        if ($numRows % 2 == 0) {
-            $style_r = ' line2';
-        } else {
-            $style_r = null;
-        }
-        
-                $dis.='<tr class="row ' . $style_r . '" id="r' . $numRows . '" onmouseover="PHPShopJS.rowshow_on(this)" onmouseout="PHPShopJS.rowshow_out(this,\'' . $style_r . '\')" onclick="miniWin(\'./sort/adm_sortID.php?id=' . $key . '\',500,600)">';
+        foreach ($val as $v) {
 
-        
+            // Выделение четных строк
+            $numRows++;
+            if ($numRows % 2 == 0) {
+                $style_r = ' line2';
+            } else {
+                $style_r = null;
+            }
+
+            $dis.='<tr class="row ' . $style_r . '" id="r' . $numRows . '" onmouseover="PHPShopJS.rowshow_on(this)" onmouseout="PHPShopJS.rowshow_out(this,\'' . $style_r . '\')" onclick="miniWin(\'./sort/adm_sortID.php?id=' . $key . '\',500,600)">';
+
+
             $dis.='
 	      <td>' . $CatalogSort[$key]['name'] . '</td>
 		  <td>' . $Sort[$v]['name'] . '</td>
@@ -99,7 +104,7 @@ $dis
     return $disp;
 }
 
-switch ($do) {
+switch ($_REQUEST['do']) {
 
     case("info"):
         $sql = "select * from  " . $SysValue['base']['table_name2'] . " where id=" . intval($_REQUEST['xid']);
@@ -107,10 +112,6 @@ switch ($do) {
         $num = mysql_numrows($result);
         @$row = @mysql_fetch_array(@$result);
         $id = $row['id'];
-        $uid = $row['uid'];
-        $spec = $row['spec'];
-        $newtip = $row['newtip'];
-        $parent = $row['parent'];
         $parent_enabled = $row['parent_enabled'];
         if (($row['enabled']) == "1") {
             $checked = "<td width=100 align=center><img src=./img/icon-activate.gif name=imgLang  alt=\"В наличии\" align=\"absmiddle\"> В наличии</td><td width=1></td>";
@@ -149,8 +150,8 @@ switch ($do) {
 
 
         $interfaces = '
-	  <table width="100%"  cellpadding="0" cellspacing="1">
-    <tr class=row3>
+	  <table width="100%"  cellpadding="0" cellspacing="0">
+    <tr class=row>
 	' . $checked . '
 	   </tr>
       </table>
@@ -158,13 +159,14 @@ switch ($do) {
         break;
 
     case("prev"):
-        $pic_small = "";
+        $pic_small = "img/icon_non.gif";
         $sql = "select * from  " . $SysValue['base']['table_name2'] . " where id=" . intval($_REQUEST['xid']);
         $result = mysql_query(@$sql);
         $num = mysql_numrows($result);
         @$row = @mysql_fetch_array(@$result);
         $id = $row['id'];
-        $pic_small = $row['pic_small'];
+        if (!empty($row['pic_small']))
+            $pic_small = $row['pic_small'];
         $vendor_array = $row['vendor_array'];
         $description = stripslashes($row['description']);
 
@@ -198,7 +200,7 @@ switch ($do) {
 	   </tr>
       <tr class=row3>
 	      <td class=Nws>
-		  <div style="height:120;overflow:auto">
+		  <div style="height:120;overflow:auto;padding:5px">
 		  ' . $description . '
 		  </div>
 		  </td>
@@ -208,7 +210,8 @@ switch ($do) {
       </tr>
      </table>
 	 ';
-        }else
+        }
+        else
             $interfaces = "";
         break;
 
@@ -222,14 +225,14 @@ switch ($do) {
         unlink($_SERVER['DOCUMENT_ROOT'] . $name);
         unlink($_SERVER['DOCUMENT_ROOT'] . $s_name);
 
-        $sql = "select * from " . $SysValue['base']['table_name35'] . " where parent=" . intval($_REQUEST['uid']) . " order by num desc";
+        $sql = "select * from " . $SysValue['base']['table_name35'] . " where parent=" . intval($_GET['uid']). " order by num desc";
         $result = mysql_query($sql);
 
-        $i = 1;
+        $i = 1; $dis=null;
         while ($row = mysql_fetch_array($result)) {
             $name = $row['name'];
             $id = $row['id'];
-            @$dis.="
+            $dis.="
 	<tr onmouseover=\"show_on('r" . $id . "')\" id=\"r" . $id . "\" onmouseout=\"show_out('r" . $id . "')\" class=row onclick=\"miniWin('adm_galeryID.php?id=$id',650,500)\">
 	  <td align=center>$i</td>
 	   <td>$name</td>

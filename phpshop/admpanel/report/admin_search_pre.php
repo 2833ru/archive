@@ -54,7 +54,7 @@ function SearchPre() {// Вывод
 	<td valign=\"top\">
 <table cellpadding=\"0\" cellspacing=\"1\" width=\"100%\" border=\"0\" class=\"sortable\" id=\"sort\">
 <tr>
-    <td width=\"25\" id=pane align=center><img  src=\"icon/blank.gif\"  width=\"1\" height=\"1\" border=\"0\" onLoad=\"starter('search_pre');\" align=left>&plusmn;</td>
+    <td width=\"25\" id=pane align=center><img  src=\"icon/blank.gif\"  width=\"1\" height=\"1\" border=\"0\" align=left>&plusmn;</td>
 	<td width=\"40%\" id=pane align=center><span name=txtLang id=txtLang>Запрос</span></td>
 	<td width=\"50%\" id=pane align=center><span name=txtLang id=txtLang>ID товаров</span></td>
     <td width=\"25\" id=pane align=center style=\"padding:1px\"><input type=checkbox value=1 name=DoAll onclick=\"SelectAllBox(this,form_flag)\"></td>

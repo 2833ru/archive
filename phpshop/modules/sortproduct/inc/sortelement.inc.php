@@ -1,8 +1,11 @@
 <?php
+
+if (!defined("OBJENABLED"))
+    exit(header('Location: /?error=OBJENABLED'));
+
 /**
  * Ёлемент побора по параметрам
  */
-
 class AddToTemplateSortProductElement extends PHPShopElements {
     var $debug=false;
 

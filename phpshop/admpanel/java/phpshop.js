@@ -19,8 +19,12 @@ function PHPShopJS(){
         this.classStyle(a.id,'row_show_on');
     }
 
-    this.rowshow_out = function(a){
-        this.classStyle(a.id,'row_show_off');
+    this.rowshow_out = function(a, line) {
+        if (line != ' line2')
+            this.classStyle(a.id, 'row_show_off');
+        else
+            this.classStyle(a.id, 'row line2');
+
     }
 
     this.classStyle = function(a, name){

@@ -3,7 +3,7 @@
 /**
  * Библиотека подключения к БД
  * @author PHPShop Software
- * @version 1.2
+ * @version 1.4
  * @package PHPShopClass
  * @param string $iniPath путь до конфигурационного файла config.ini
  */
@@ -59,6 +59,16 @@ class PHPShopBase {
 
         $this->iniPath = $iniPath;
         $this->SysValue = parse_ini_file($this->iniPath, 1);
+
+        // Использование php функций в парсере. Отключена для тестирования на Windows
+        if (getenv('SERVER_ADDR') == "127.0.0.1" and getenv("COMSPEC")) {
+            define('parser_function_guard', 'false');
+        } else {
+            define('parser_function_allowed', $this->SysValue['function']['allowed']);
+            define('parser_function_deny', $this->SysValue['function']['deny']);
+            define('parser_function_guard', $this->SysValue['function']['guard']);
+        }
+
         $GLOBALS['SysValue'] = &$this->SysValue;
 
         if (!empty($connectdb))
@@ -118,7 +128,7 @@ class PHPShopBase {
         echo "<em>Ошибка: " . $error . mysql_error() . "</em>";
 
         if (is_dir('./install/'))
-            echo '<script>window.open("./install/");</script>';
+            echo '<script>window.open("' . $this->getParam("dir.dir") . '/install/");</script>';
         else
             echo '<script>window.open("http://www.phpshop.ru/help/Content/install/phpshop.html#6");</script>';
         exit();
@@ -130,7 +140,7 @@ class PHPShopBase {
     function connect() {
         $SysValue = $this->SysValue;
         @mysql_connect($this->getParam("connect.host"), $this->getParam("connect.user_db"), $this->getParam("connect.pass_db")) or die($this->errorConnect(101));
-        mysql_select_db($SysValue['connect']['dbase']) or die($this->errorConnect(102));
+        mysql_select_db($SysValue['connect']['dbase']) or die($this->errorConnect(101));
         mysql_query("SET NAMES '" . $this->codBase . "'");
     }
 
@@ -141,7 +151,7 @@ class PHPShopBase {
     function chekAdmin($require = true) {
         global $UserChek, $UserStatus;
         $adminPath = explode("../", $this->iniPath);
-        $aPath=null;
+        $aPath = null;
         $i = 2;
         while (count($adminPath) > $i) {
             $aPath.="../";
@@ -193,23 +203,19 @@ class PHPShopBase {
      */
     function setPHPCoreReporting() {
         if (function_exists('error_reporting')) {
-            if ($this->phpversion('5.0')){
-                error_reporting('E_ALL & ~E_NOTICE & ~E_DEPRECATED');
-                if ($this->phpversion() and function_exists('ini_set')){
-                ini_set('allow_call_time_pass_reference',1);
-                }
+            error_reporting('E_ALL & ~E_NOTICE & ~E_DEPRECATED');
+            if ($this->phpversion() and function_exists('ini_set')) {
+                ini_set('allow_call_time_pass_reference', 1);
             }
-            else
-                error_reporting('E_ALL & ~E_NOTICE');
         }
     }
-    
+
     /**
      * Определение версии PHP для поддержки PHP 5.4
      * @param float $version версия
      * @return boolean 
      */
-    function phpversion($version='5.3'){
+    function phpversion($version = '5.3') {
         if ((phpversion() * 1) >= $version)
             return true;
     }

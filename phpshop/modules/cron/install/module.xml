@@ -5,7 +5,7 @@
     <description>Модуль запуска задач по времени.</description>
     <icon>icon.png</icon>
     <base>18</base>
-    <category>system</category>
+    <category>develop</category>
     <adminmenu>
         <title>Задачи</title>
         <podmenu>

@@ -3,12 +3,7 @@ require("../connect.php");
 @mysql_connect("$host", "$user_db", "$pass_db") or @die("Невозможно подсоединиться к базе");
 mysql_select_db("$dbase") or @die("Невозможно подсоединиться к базе");
 require("../enter_to_admin.php");
-
-// Языки
-$GetSystems = GetSystems();
-$option = unserialize($GetSystems['admoption']);
-$Lang = $option['lang'];
-require("../language/" . $Lang . "/language.php");
+require("../language/russian/language.php");
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
@@ -18,35 +13,13 @@ require("../language/" . $Lang . "/language.php");
         <LINK href="../skins/<?= $_SESSION['theme'] ?>/texts.css" type=text/css rel=stylesheet>
         <SCRIPT language="JavaScript" src="/phpshop/lib/Subsys/JsHttpRequest/Js.js"></SCRIPT>
         <script language="JavaScript1.2" src="../java/javaMG.js" type="text/javascript"></script>
-        <script type="text/javascript" language="JavaScript1.2" src="../language/<?= $Lang ?>/language_windows.js"></script>
-        <script type="text/javascript" language="JavaScript1.2" src="../language/<?= $Lang ?>/language_interface.js"></script>
-        <script>
-            DoResize(<? echo $GetSystems['width_icon'] ?>, 630, 530);
-        </script>
     </head>
-    <body bottommargin="0"  topmargin="0" leftmargin="0" rightmargin="0" onload="DoCheckLang(location.pathname,<?= $SysValue['lang']['lang_enabled'] ?>);
-        preloader(0)">
-        <table id="loader">
-            <tr>
-                <td valign="middle" align="center">
-                    <div id="loadmes" onclick="preloader(0)">
-                        <table width="100%" height="100%">
-                            <tr>
-                                <td id="loadimg"></td>
-                                <td ><b><?= $SysValue['Lang']['System']['loading'] ?></b><br><?= $SysValue['Lang']['System']['loading2'] ?></td>
-                            </tr>
-                        </table>
-                    </div>
-                </td>
-            </tr>
-        </table>
-
-        <SCRIPT language=JavaScript type=text/javascript>preloader(1);</SCRIPT>
+    <body bottommargin="0"  topmargin="0" leftmargin="0" rightmargin="0">
         <?
 
 // Вывод ответов
         function dispFaq($n) {
-            global $table_name5, $systems;
+            global $table_name5;
             $sql = "select SUM(total) as sum from $table_name5 where category='" . intval($n) . "'";
             $result = mysql_query($sql);
             $row = mysql_fetch_array($result);
@@ -60,9 +33,9 @@ require("../language/" . $Lang . "/language.php");
                 $num = $row['num'];
                 @$disp.='
 	<tr onclick="miniWin(\'adm_valueID.php?id=' . $id . '\',500,370)"  onmouseover="show_on(\'r' . $id . '\')" id="r' . $id . '" onmouseout="show_out(\'r' . $id . '\')" class=row>
-	<td class="forma">' . $name . '</td>
-	<td class="forma">' . $total . '</td>
-	<td class="forma">' . number_format(($total * 100) / $sum, "1", ".", "") . '%</td>
+	<td>' . $name . '</td>
+	<td>' . $total . '</td>
+	<td>' . number_format(($total * 100) / $sum, "1", ".", "") . '%</td>
 </tr>
 	';
             }
@@ -70,7 +43,7 @@ require("../language/" . $Lang . "/language.php");
         }
 
         // Редактирование записей книги
-        $sql = "select * from $table_name6 where id='".intval($id)."'";
+        $sql = "select * from $table_name6 where id=".intval($_GET['id']);
         $result = mysql_query($sql);
         $row = mysql_fetch_array($result);
         $id = $row['id'];
@@ -93,7 +66,6 @@ require("../language/" . $Lang . "/language.php");
                     </td>
                 </tr>
             </table>
-            <br>
             <table class=mainpage4 cellpadding="5" cellspacing="0" border="0" align="center" width="100%">
                 <tr>
                     <td colspan="2">
@@ -128,12 +100,11 @@ require("../language/" . $Lang . "/language.php");
                 </tr>
                 <tr>
                     <td colspan="2">
-                        <table width="100%"  cellpadding="0" cellspacing="0" style="border: 1px;
-                               border-style:inset;" >
+                        <table width="100%"  cellpadding="0" cellspacing="0">
                             <tr>
                                 <td valign="top">
                                     <div align="left" style="width:100%;height:150;overflow:auto"> 
-                                        <table cellpadding="0" cellspacing="1" width="100%" border="0" bgcolor="#808080">
+                                        <table cellpadding="0" cellspacing="1" width="100%" border="0">
                                             <tr>
                                                 <td id=pane align=center><img src=../img/arrow_d.gif width=7 height=7 border=0 hspace=5><span name=txtLang id=txtLang>Вариант ответа</span></td>
                                                 <td id=pane align=center ><img src=../img/arrow_d.gif width=7 height=7 border=0 hspace=5><span name=txtLang id=txtLang>Голоса</span></td>

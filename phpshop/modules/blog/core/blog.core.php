@@ -90,7 +90,7 @@ class PHPShopBlog extends PHPShopCore {
         $nextId = $curId+1;
 
         // Проверка записей
-        $PHPShopOrm = &new PHPShopOrm($this->objBase);
+        $PHPShopOrm = new PHPShopOrm($this->objBase);
         $PHPShopOrm->Option['where'] = ' or ';
         $PHPShopOrm->debug = $this->debug;
         $PHPShopOrm->sql = 'select id from '.$this->objBase.' where id='.$prevId.' or id='.$nextId;
@@ -200,7 +200,7 @@ class PHPShopBlog extends PHPShopCore {
         if(!empty($mail)) {
 
             if($this->chek($mail)) {
-                $PHPShopOrm = &new PHPShopOrm($this->getValue('base.table_name9'));
+                $PHPShopOrm = new PHPShopOrm($this->getValue('base.table_name9'));
                 $PHPShopOrm->debug=$this->debug;
                 $PHPShopOrm->insert(array('date'=>date("d-m-y"),'mail'=>$mail),$prefix='');
 
@@ -229,7 +229,7 @@ class PHPShopBlog extends PHPShopCore {
     function del($mail) {
 
         if(!$this->chek($mail)) {
-            $PHPShopOrm = &new PHPShopOrm($this->getValue('base.table_name9'));
+            $PHPShopOrm = new PHPShopOrm($this->getValue('base.table_name9'));
             $PHPShopOrm->debug=$this->debug;
             $PHPShopOrm->delete(array('mail'=>"='$mail'"));
             $mes="<FONT style=\"font-size:14px;color:red\">

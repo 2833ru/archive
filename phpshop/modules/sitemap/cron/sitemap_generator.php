@@ -31,7 +31,7 @@ $title.= '<urlset xmlns="http://www.google.com/schemas/sitemap/0.84">' . "\n";
 
 // Страницы
 $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['table_name11']);
-$data = $PHPShopOrm->select(array('id,datas,link'), array('enabled' => "!='0'"), array('order' => 'datas DESC'),array('limit'=>10000));
+$data = $PHPShopOrm->select(array('id,datas,link'), array('enabled' => "!='0'",'category'=>'!=2000'), array('order' => 'datas DESC'),array('limit'=>10000));
 
 if (is_array($data))
     foreach ($data as $row) {

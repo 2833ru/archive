@@ -3,7 +3,7 @@
 /**
  * Библиотека запросов к БД на основе объектов типа доступа
  * @author PHPShop Software
- * @version 1.7
+ * @version 1.8
  * @package PHPShopClass
  */
 class PHPShopOrm {
@@ -19,6 +19,12 @@ class PHPShopOrm {
      * @var bool
      */
     var $debug = false;
+    
+    /**
+     * вывод ошибок mysql
+     * @var bool 
+     */
+    var $mysql_error = true;
 
     /**
      * комментарий для отладчика
@@ -73,7 +79,10 @@ class PHPShopOrm {
         $param = explode(".", str_replace('"', '', $params));
         if ($this->cache_check($param)) {
             if (is_array($orm_array)) {
-                $this->comment = 'Кэширование - ' . $param[0] . '.' . @$param[1] . '.' . $this->cache_sort . '.' . $orm_array['class_name'] . '.' . $orm_array['function_name'];
+                
+                if(empty($param[1])) $param[1]='?';
+                
+                $this->comment = 'Кэширование - ' . $param[0] . '.' . $param[1] . '.' . $this->cache_sort . '.' . $orm_array['class_name'] . '.' . $orm_array['function_name'];
                 $result = $this->select_native($orm_array['select'], $orm_array['where'], $orm_array['order'], $orm_array['option']);
 
                 if (is_array($result)) {
@@ -103,6 +112,7 @@ class PHPShopOrm {
      * Проверка на наличие записи
      */
     function cache_check($param) {
+        
         if (!is_array(@$this->Items[$param[0]][$param[1]])) {
             return true;
         }
@@ -147,6 +157,21 @@ class PHPShopOrm {
         return $result;
     }
 
+    /**
+     * Выборка из БД SELECT по заданный параметрам
+     * <code>
+     * // example:
+     * $PHPShopOrm= new PHPShopOrm('phpshop_categories');
+     * $PHPShopOrm->select(array('id','name'),array('id'=>'=10'),array('order'=>'id DESC'),array('limit'=>1));
+     * </code>
+     * @param array $select массив ячеек для выборки
+     * @param array $where массив параметра whree
+     * @param array $order массив параметра order by
+     * @param array $option массив параметра дополнительных опций [limit]
+     * @param string $class_name имя класс для отладки
+     * @param string $function_name имя метода для отладки
+     * @return array
+     */
     function select($select = array('*'), $where = false, $order = false, $option = false, $class_name = false, $function_name = false) {
 
         if ($this->cache) {
@@ -162,11 +187,6 @@ class PHPShopOrm {
 
     /**
      * Выборка из БД SELECT по заданный параметрам
-     * <code>
-     * // example:
-     * $PHPShopOrm= new PHPShopOrm('phpshop_categories');
-     * $PHPShopOrm->select(array('id','name'),array('id'=>'=10'),array('order'=>'id DESC'),array('limit'=>1));
-     * </code>
      * @param array $select массив ячеек для выборки
      * @param array $where массив параметра whree
      * @param array $order массив параметра order by
@@ -226,8 +246,11 @@ class PHPShopOrm {
         }
 
         // Возвращаем данные в виде массива
-        if ($this->install)
+        if ($this->install){
+            if($this->mysql_error)
             $result = mysql_query($this->_SQL) or die($this->setError("SQL Ошибка для [" . $this->_SQL . "] ", mysql_error() . ""));
+            else  $result = mysql_query($this->_SQL);
+        }
         else
             $result = mysql_query($this->_SQL) or die(PHPShopBase::errorConnect(102));
 
@@ -320,7 +343,7 @@ width="32" height="32" alt="PHPShopOrm Debug On"/ ><strong>' . $name . '</strong
             $this->setError("SQL Запрос: ", $this->_SQL);
 
         // Выполнение
-        if (mysql_query($this->_SQL)){
+        if (mysql_query($this->_SQL)) {
             $this->clean();
             return true;
         }
@@ -403,7 +426,9 @@ width="32" height="32" alt="PHPShopOrm Debug On"/ ><strong>' . $name . '</strong
         if ($this->debug)
             $this->setError("SQL Запрос: ", $this->_SQL);
 
+        if($this->mysql_error)
         $result = mysql_query($this->_SQL) or die($this->setError("SQL Ошибка для [" . $this->_SQL . "] ", mysql_error() . ""));
+        else $result = mysql_query($this->_SQL);
 
         // Счетчик запросов
         $GLOBALS['SysValue']['sql']['num']++;

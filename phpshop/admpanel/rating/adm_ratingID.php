@@ -3,12 +3,7 @@ require("../connect.php");
 @mysql_connect("$host", "$user_db", "$pass_db") or @die("Невозможно подсоединиться к базе");
 mysql_select_db("$dbase") or @die("Невозможно подсоединиться к базе");
 require("../enter_to_admin.php");
-
-// Языки
-$GetSystems = GetSystems();
-$option = unserialize($GetSystems['admoption']);
-$Lang = $option['lang'];
-require("../language/" . $Lang . "/language.php");
+require("../language/russian/language.php");
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
@@ -18,83 +13,61 @@ require("../language/" . $Lang . "/language.php");
         <LINK href="../skins/<?= $_SESSION['theme'] ?>/texts.css" type=text/css rel=stylesheet>
         <SCRIPT language="JavaScript" src="/phpshop/lib/Subsys/JsHttpRequest/Js.js"></SCRIPT>
         <script language="JavaScript1.2" src="../java/javaMG.js" type="text/javascript"></script>
-        <script type="text/javascript" language="JavaScript1.2" src="../language/<? echo $Lang; ?>/language_windows.js"></script>
-        <script type="text/javascript" language="JavaScript1.2" src="../language/<? echo $Lang; ?>/language_interface.js"></script>
-        <script>
-            DoResize(<? echo $GetSystems['width_icon'] ?>, 630, 640);
-        </script>
     </head>
-    <body bottommargin="0"  topmargin="0" leftmargin="0" rightmargin="0" onload="DoCheckLang(location.pathname,<?= $SysValue['lang']['lang_enabled'] ?>);
-        preloader(0)">
-        <table id="loader">
-            <tr>
-                <td valign="middle" align="center">
-                    <div id="loadmes" onclick="preloader(0)">
-                        <table width="100%" height="100%">
-                            <tr>
-                                <td id="loadimg"></td>
-                                <td ><b><?= $SysValue['Lang']['System']['loading'] ?></b><br><?= $SysValue['Lang']['System']['loading2'] ?></td>
-                            </tr>
-                        </table>
-                    </div>
-                </td>
-            </tr>
-        </table>
-
-        <SCRIPT language=JavaScript type=text/javascript>preloader(1);</SCRIPT>
-<?
+    <body bottommargin="0"  topmargin="0" leftmargin="0" rightmargin="0">
+        <?
 
 // Вывод ответов
-function dispFaq($n) {
-    global $SysValue, $systems;
+        function dispFaq($n) {
+            global $SysValue;
 
-    /*
-      $sql="select SUM(total) as sum from $table_name52 where category='$n'";
-      $result=mysql_query($sql);
-      $row = mysql_fetch_array($result);
-      $sum=$row['sum'];
-     */
+            /*
+              $sql="select SUM(total) as sum from $table_name52 where category='$n'";
+              $result=mysql_query($sql);
+              $row = mysql_fetch_array($result);
+              $sum=$row['sum'];
+             */
 
-    $sql = "select * from " . $SysValue['base']['table_name51'] . " where id_category='" . intval($n) . "' order by num";
-    $result = mysql_query($sql);
-    while ($row = mysql_fetch_array($result)) {
-        $id_charact = $row['id_charact'];
-        $name = $row['name'];
-        $num = $row['num'];
-        $enabled = $row['enabled'];
-        if (@$enabled != 0) {
-            $imgchek = "<img src=\"../img/icon-activate.gif\" width=\"16\" height=\"16\" border=\"0\">";
-        } else {
-            $imgchek = "<img src=\"../img/icon-deactivate.gif\" width=\"16\" height=\"16\" border=\"0\">";
-        }
+            $sql = "select * from " . $SysValue['base']['table_name51'] . " where id_category='" . intval($n) . "' order by num";
+            $result = mysql_query($sql);
+            while ($row = mysql_fetch_array($result)) {
+                $id_charact = $row['id_charact'];
+                $name = $row['name'];
+                $num = $row['num'];
+                $enabled = $row['enabled'];
+                if (@$enabled != 0) {
+                    $imgchek = "<img src=\"../img/icon-activate.gif\" width=\"16\" height=\"16\" border=\"0\">";
+                } else {
+                    $imgchek = "<img src=\"../img/icon-deactivate.gif\" width=\"16\" height=\"16\" border=\"0\">";
+                }
 
-        @$disp.='
+                @$disp.='
 	<tr onclick="miniWin(\'adm_valueID.php?id=' . $id_charact . '\',500,370)"  onmouseover="show_on(\'r' . $id_charact . '\')" id="r' . $id_charact . '" onmouseout="show_out(\'r' . $id_charact . '\')" class=row>
 	<td class="forma">' . $imgchek . '</td>
 	<td class="forma">' . $name . '</td>
 	<td class="forma">' . $num . '</td>
 </tr>
 	';
-    }
-    return @$disp;
-}
+            }
+            return @$disp;
+        }
 
 // Редактирование записей книги
-$sql = "select * from " . $SysValue['base']['table_name50'] . " where id_category=".intval($id);
-$result = mysql_query($sql);
-$row = mysql_fetch_array($result);
-$id_category = $row['id_category'];
-$name = $row['name'];
-$ids_dir = $row['ids_dir'];
-if ($row['enabled'] == 1)
-    $sel1 = "checked";
-else
-    $sel2 = "checked";
-if ($row['revoting'] == 1)
-    $sel3 = "checked";
-else
-    $sel4 = "checked";
-?>
+        $sql = "select * from " . $SysValue['base']['table_name50'] . " where id_category=" . intval($_GET['id']);
+        $result = mysql_query($sql);
+        $row = mysql_fetch_array($result);
+        $id_category = $row['id_category'];
+        $name = $row['name'];
+        $ids_dir = $row['ids_dir'];
+        if ($row['enabled'] == 1)
+            $sel1 = "checked";
+        else
+            $sel2 = "checked";
+        if ($row['revoting'] == 1)
+            $sel3 = "checked";
+        else
+            $sel4 = "checked";
+        ?>
         <form name="product_edit"  method=post>
             <table cellpadding="0" cellspacing="0" width="100%" height="50" id="title">
                 <tr bgcolor="#ffffff">
@@ -107,7 +80,6 @@ else
                     </td>
                 </tr>
             </table>
-            <br>
             <table class=mainpage4 cellpadding="5" cellspacing="0" border="0" align="center" width="100%">
                 <tr>
                     <td colspan="2">
@@ -161,7 +133,7 @@ else
 //Конец функции
                                 ?>
                                 <select size=1 name=idsdir_new[] style="height:135;width:100%;" multiple>
-<? echo dispcats(); ?>
+                                    <? echo dispcats(); ?>
                                 </select>
 
                             </DIV>
@@ -195,25 +167,24 @@ else
 
                 <tr>
                     <td colspan="2">
-                        <table width="100%"  cellpadding="0" cellspacing="0" style="border: 1px;
-                               border-style:inset;" >
+                        <table width="100%"  cellpadding="0" cellspacing="0">
                             <tr>
                                 <td valign="top">
-                                    <div align="left" style="width:100%;height:150;overflow:auto"> 
-                                        <table cellpadding="0" cellspacing="1" width="100%" border="0" bgcolor="#808080">
+                                    <div align="left" style="width:100%;height:100px;overflow:auto"> 
+                                        <table cellpadding="0" cellspacing="1" width="100%" border="0" class="table">
                                             <tr>
                                                 <td id=pane align=center><img src=../img/arrow_d.gif width=7 height=7 border=0 hspace=5>+/-</td>
                                                 <td id=pane align=center ><img src=../img/arrow_d.gif width=7 height=7 border=0 hspace=5><span name=txtLang id=txtLang>Вариант ответа</span></td>
                                                 <td id=pane align=center><img src=../img/arrow_d.gif width=7 height=7 border=0 hspace=5><span name=txtLang id=txtLang>Порядок вывода</span></td>
                                             </tr>
-<?= dispFaq($id_category); ?>
+                                            <?= dispFaq($id_category); ?>
                                         </table>
 
 
                                 </td>
                             </tr>
                         </table>
-                        <div align="right" style="padding:10">
+                        <div align="right" style="padding:5px">
                             <BUTTON style="width: 15em; height: 2.2em; margin-left:5"  onclick="miniWin('../window/adm_window.php?do=122&ids=<?= $id ?>', 300, 220)">
                                 <img src="../img/i_delete[1].gif" width="16" height="16" border="0" align="absmiddle">
                                 <span name=txtLang id=txtLang>Обнулить данные</span>

@@ -3,7 +3,7 @@
 /**
  * Обработчик жалобы на цену
  * @author PHPShop Software
- * @version 1.1
+ * @version 1.2
  * @package PHPShopCore
  */
 class PHPShopPricemail extends PHPShopCore {
@@ -64,7 +64,7 @@ class PHPShopPricemail extends PHPShopCore {
 
             // Заголовок e-mail пользователю
             $title = $this->PHPShopSystem->getName() . " - " . __('Сообщение о меньшей цене');
-
+        
             $this->set('user_name', $_POST['name_person']);
             $this->set('user_org_name', $_POST['org_name']);
             $this->set('user_tel_code', $_POST['tel_code']);
@@ -73,7 +73,7 @@ class PHPShopPricemail extends PHPShopCore {
             $this->set('user_mail', $_POST['mail']);
             $this->set('link_to_page', $_POST['link_to_page']);
 
-            // Даннеы по товару
+            // Данные по товару
             $PHPShopProduct = new PHPShopProduct($this->PHPShopNav->getId());
             $this->set('product_name', $PHPShopProduct->getName());
             $this->set('product_art', $PHPShopProduct->getParam('uid'));
@@ -148,6 +148,11 @@ class PHPShopPricemail extends PHPShopCore {
 
         // Перехват модуля
         $this->setHook(__CLASS__, __FUNCTION__, $PHPShopProduct, 'END');
+        
+        // Заголовок
+        $this->title=$PHPShopProduct->getName().' - '.  __('Пожаловаться на цену'). " - " .$this->PHPShopSystem->getName();
+        $this->description=__('Пожаловаться на цену').': '.$PHPShopProduct->getName();
+        $this->keywords=$PHPShopProduct->getName();
         
         // Вставка данных в шаблон
         $this->ParseTemplate($this->getValue('templates.pricemail_forma'));
