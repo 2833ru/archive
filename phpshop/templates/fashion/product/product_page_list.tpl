@@ -33,6 +33,7 @@
 
                     <!-- Nav -->
                     <ul class="nav nav-segment float-right" id="filter-well">
+                        @warehouse_sort@
                         <li class="list-inline-item d-none d-md-block">
                             <a class="nav-link filter-item @gridSetAactive@" href="#" data-toggle="tooltip" data-placement="top" title="" name="gridChange" value="1">
                                 <i class="fas fa-list"></i>

@@ -14,7 +14,7 @@
             <br><span style="color: #6f6f6f; font-size: 12px;" title="јртикул" class="@php __hide('product_mail_uid'); php@">јрт: @product_mail_uid@</span> </p>
     </td>
     <td style="font-size: 14px; color: #6f6f6f; font-family:Helvetica,sans-serif; vertical-align: middle;" class="erase" width="125" valign="center" align="right">
-        <p style="margin: 0; "><del style="color: #6f6f6f;" class="@php __hide('product_mail_price_n'); php@">@product_mail_price_n@ @product_mail_currency@</del><br>@product_mail_price@ @product_mail_currency@ <br>х @product_mail_num@ @product_mail_ed_izm@</p>
+        <p style="margin: 0; "><del style="color: #6f6f6f;" class="@php __hide('product_mail_price_n','zero'); php@">@product_mail_price_n@ @product_mail_currency@</del><br>@product_mail_price@ @product_mail_currency@ <br>х @product_mail_num@ @product_mail_ed_izm@</p>
     </td>
     <td style="font-size: 14px; color: #262626;font-family:Helvetica,sans-serif;vertical-align: middle; " class="" width="125" valign="center" align="right">
         <p style="margin: 0; ">@product_mail_sum@ @product_mail_currency@</p>

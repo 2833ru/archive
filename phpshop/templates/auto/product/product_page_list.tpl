@@ -31,8 +31,13 @@
                         <option value="1" data-url="/shop/CID_@pcatalogId@.html?s=1" @flowNameActive@>{Наименование}</option>
                     </select>
 
+
+
+
                     <!-- Nav -->
                     <ul class="nav nav-segment float-right" id="filter-well">
+
+                        @warehouse_sort@
                         <li class="list-inline-item d-none d-md-block">
                             <a class="nav-link filter-item @gridSetAactive@" href="#" data-toggle="tooltip" data-placement="top" title="" name="gridChange" value="1">
                                 <i class="fas fa-list"></i>
@@ -87,13 +92,13 @@
             <!-- Filters Modal -->
 
             <a name="sort"></a>
-            <form method="post" action="/shop/CID_@productId@@nameLat@.html" name="sort" id="sorttable" class="d-none">
+            <form method="post" action="/shop/CID_@productId@.html" name="sort" id="sorttable" class="d-none">
                 <table><tr>@vendorDisp@ <td>&nbsp;</td><td>@vendorSelectDisp@</td></tr></table>
             </form>
 
             <div class="template-product-list row"> 
                 @productPageDis@
-			</div>
+            </div>
             <div id="ajaxInProgress"></div>
             <div class="product-scroll-init"></div>
             <div id="pagination-block">@productPageNav@</div>

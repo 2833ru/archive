@@ -7,7 +7,7 @@
 <style type="text/css">.sidebar-right{display:none}.middle-content-fix{width:100%}</style>
 <div class="product-filter" id="filter-well">
     <div class="row">
-        <div class="col-md-6  col-xs-12">
+        <div class="col-md-2  col-xs-12">
             <div class="display" data-toggle="buttons">
                 <label class="btn btn-sm glyphicon glyphicon-th-list btn-sort @gridSetAactive@" data-toggle="tooltip" data-placement="top" title="{Товары списком}">
                     <input type="radio" name="gridChange" value="1">
@@ -18,7 +18,14 @@
                 <label class="control-label"></label>
             </div>
         </div>
-        <div class="col-md-6 hidden-xs">
+
+        <div class="col-md-5">
+            <div class="btn-group" role="group" aria-label="...">
+                @warehouse_sort@
+            </div>
+        </div> 
+
+        <div class="col-md-5 hidden-xs">
             <div class="display filter-well-right-block">
                 <label class="control-label"></label>
                 <div class="btn-group" data-toggle="buttons">
@@ -111,7 +118,7 @@
                     ajax: true,
                     json: true
                 },
-                success: function(data)
+                success: function (data)
                 {
                     // Анимация загрузки
                     $('#ajaxInProgress').removeClass('progress-scroll');
@@ -125,7 +132,7 @@
                     setEqualHeight($(".products-list .description"));
 
                     // lazyLoad
-                    setTimeout(function() {
+                    setTimeout(function () {
                         $(window).lazyLoadXT();
                     }, 50);
 
@@ -133,7 +140,7 @@
 
                     Waypoint.refreshAll();
                 },
-                error: function() {
+                error: function () {
                     $('#ajaxInProgress').removeClass('progress-scroll');
                 }
             });
@@ -148,11 +155,11 @@
     var price_min = new Number('@price_min@');
     var price_max = new Number('@price_max@');
 
-    $(document).ready(function() {
+    $(document).ready(function () {
 
         var inview = new Waypoint.Inview({
             element: $('.product-scroll-init'),
-            enter: function(direction) {
+            enter: function (direction) {
                 if (AJAX_SCROLL)
                     scroll_loader();
             }
@@ -165,7 +172,7 @@
             min: new Number('@price_min@'),
             max: new Number('@price_max@'),
             values: [price_min, price_max],
-            slide: function(event, ui) {
+            slide: function (event, ui) {
                 $("input[name=min]").val(ui.values[ 0 ]);
                 $("input[name=max]").val(ui.values[ 1 ]);
             }

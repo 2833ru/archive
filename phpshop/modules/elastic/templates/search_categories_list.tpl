@@ -1,1 +1,0 @@
-<li><a href="@elastic_category_url@">@elastic_category_title@ (@elastic_category_count@)</a></li>

@@ -18,7 +18,7 @@ function actionUpdate() {
         $_POST['flag_new'] = 0;
 
     $action = $PHPShopOrm->update($_POST);
-    header('Location: ?path=modules&install=check');
+    header('Location: ?path=modules&id=' . $_GET['id']);
     return $action;
 }
 

@@ -5,6 +5,7 @@
     <faqlink>https://docs.phpshop.ru/moduli/dostavka/kalkulyator-dostavki</faqlink>
     <description>Виджет калькулятор доставки Alliance-catalog.ru</description>
     <category>delivery</category>
+    <site>true</site>
     <adminmenu>
         <title>Калькулятор доставки</title>
         <capability>true</capability>

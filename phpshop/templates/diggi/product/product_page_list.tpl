@@ -8,7 +8,7 @@
 <!-- Product Filter Starts -->
 <div class="product-filter" id="filter-well">
     <div class="row">
-        <div class="col-md-6 hidden-xs">
+        <div class="col-md-4 hidden-xs">
             <div class="display" data-toggle="buttons">
                 <label class="control-label">{Вывод товаров}:</label>
                 <label class="btn btn-sm glyphicon glyphicon-th-list btn-sort @gridSetAactive@" data-toggle="tooltip" data-placement="top" title="{Товары списком}">
@@ -19,7 +19,14 @@
                 </label>
             </div>
         </div>
-        <div class="col-md-6 filter-well-right-block col-xs-12">
+
+        <div class="col-md-4">
+            <div class="btn-group" role="group" aria-label="...">
+                @warehouse_sort@
+            </div>
+        </div> 
+
+        <div class="col-md-4 filter-well-right-block col-xs-12">
             <div class="display">
                 <label class="control-label">{Сортировка}: </label>
                 <div class="btn-group" data-toggle="buttons">
@@ -45,7 +52,7 @@
         </div>
     </div> 
     <a name="sort"></a>
-    <form method="post" action="/shop/CID_@productId@@nameLat@.html" name="sort" id="sorttable" class="hide">
+    <form method="post" action="/shop/CID_@productId@.html" name="sort" id="sorttable" class="hide">
         <table><tr>@vendorDisp@<td>@vendorSelectDisp@</td></tr></table>
     </form>                      
 </div>
@@ -84,7 +91,7 @@
                     ajax: true,
                     json: true
                 },
-                success: function(data)
+                success: function (data)
                 {
                     // Анимация загрузки
                     $('#ajaxInProgress').removeClass('progress-scroll');
@@ -98,7 +105,7 @@
                     setEqualHeight($(".products-list .description"));
 
                     // lazyLoad
-                    setTimeout(function() {
+                    setTimeout(function () {
                         $(window).lazyLoadXT();
                     }, 50);
 
@@ -106,7 +113,7 @@
 
                     Waypoint.refreshAll();
                 },
-                error: function() {
+                error: function () {
                     $('#ajaxInProgress').removeClass('progress-scroll');
                 }
             });
@@ -121,11 +128,11 @@
     var price_min = new Number('@price_min@');
     var price_max = new Number('@price_max@');
 
-    $(document).ready(function() {
+    $(document).ready(function () {
 
         var inview = new Waypoint.Inview({
             element: $('.product-scroll-init'),
-            enter: function(direction) {
+            enter: function (direction) {
                 if (AJAX_SCROLL)
                     scroll_loader();
             }
@@ -138,7 +145,7 @@
             min: new Number('@price_min@'),
             max: new Number('@price_max@'),
             values: [price_min, price_max],
-            slide: function(event, ui) {
+            slide: function (event, ui) {
                 $("input[name=min]").val(ui.values[ 0 ]);
                 $("input[name=max]").val(ui.values[ 1 ]);
             }

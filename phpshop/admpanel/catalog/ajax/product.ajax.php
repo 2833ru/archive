@@ -103,14 +103,14 @@ if (isset($_GET['cat']) or isset($_GET['sub'])) {
         case(2):
             $order = array('order' => 'price' . $order_direction);
             break;
-        case(3): $order = array('order' => 'num' . $order_direction . ", datas desc");
+        case(3): $order = array('order' => 'num' . $order_direction . ', items' . $order_direction . ', enabled' . $order_direction . ', datas desc');
             break;
-        default: $order = array('order' => 'num' . $order_direction . ", datas desc");
+        default: $order = array('order' => 'num' . $order_direction . ', items' . $order_direction . ', enabled' . $order_direction . ', datas desc');
             break;
     }
 } else {
 
-    $order = array('order' => 'datas DESC');
+    $order = array('order' => 'enabled desc, datas desc');
 }
 
 // Расширенная сортировка из JSON
@@ -246,6 +246,18 @@ if (is_array($memory['catalog.option']))
 
 if ($count_view > 8)
     unset($memory['catalog.option']['menu']);
+
+// Режим каталога
+if($PHPShopSystem->getParam("shop_type") == 1){
+    $memory['catalog.option']['price']=0;
+    $memory['catalog.option']['price2']=0;
+    $memory['catalog.option']['price3']=0;
+    $memory['catalog.option']['price4']=0;
+    $memory['catalog.option']['price5']=0;
+    $memory['catalog.option']['price_n']=0;
+    $memory['catalog.option']['price_purch']=0;
+    $memory['catalog.option']['item']=0;
+}
 
 $PHPShopOrm->mysql_error = false;
 $sklad_enabled = $PHPShopSystem->getSerilizeParam('admoption.sklad_enabled');

@@ -18,7 +18,7 @@ function addMarketplacesTab($data) {
         }
 
     $Tab .= $PHPShopGUI->setField('<a href="/rss/google.php" target="_blank" title="Открыть файл">Google Merchant</a>', $PHPShopGUI->setCheckbox('google_merchant_new', 1, 'Вывод в Google Merchant', $data['google_merchant']));
-    $Tab .= $PHPShopGUI->setField('<a href="/yml/?marketplace=' . Marketplaces::CDEK . '" target="_blank" title="Открыть файл">СДЭК.МАРКЕТ</a>', $PHPShopGUI->setCheckbox('cdek_new', 1, 'Вывод в Яндекс.Маркет', $data['cdek']));
+    $Tab .= $PHPShopGUI->setField('<a href="/yml/?marketplace=' . Marketplaces::CDEK . '" target="_blank" title="Открыть файл">Яндекс.Маркет</a>', $PHPShopGUI->setCheckbox('cdek_new', 1, 'Вывод в Яндекс.Маркет', $data['cdek']));
     $Tab .= $PHPShopGUI->setField('<a href="/yml/?marketplace=' . Marketplaces::ALIEXPRESS . '" target="_blank" title="Открыть файл">AliExpress</a>', $PHPShopGUI->setCheckbox('aliexpress_new', 1, 'Вывод в AliExpress', $data['aliexpress']));
     $Tab .= $PHPShopGUI->setField('<a href="/yml/?marketplace=' . Marketplaces::SBERMARKET . '" target="_blank" title="Открыть файл">СберМегаМаркет</a>', $PHPShopGUI->setCheckbox('sbermarket_new', 1, 'Вывод в СберМегаМаркет', $data['sbermarket']));
 

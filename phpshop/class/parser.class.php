@@ -3,7 +3,7 @@
 /**
  * Библиотека парсинга данных
  * @author PHPShop Software
- * @version 1.9
+ * @version 2.0
  * @package PHPShopParser
  */
 class PHPShopParser {
@@ -480,6 +480,8 @@ function __hide($name, $type = 'parser', $class = 'hide d-none') {
     else if ($type == 'empty' and ! empty($GLOBALS['SysValue']['other'][$name]))
         echo $class;
     else if ($type == 'class' and isset($GLOBALS['SysValue']['other'][$name]))
+        echo $class;
+    else if ($type == 'zero' and empty((int)$GLOBALS['SysValue']['other'][$name]))
         echo $class;
 }
 

@@ -427,6 +427,8 @@ class PHPShopShopCore extends PHPShopCore {
         // Всего страниц
         $this->PHPShopOrm->comment = __CLASS__ . '.' . __FUNCTION__;
         $result = $this->PHPShopOrm->query("select COUNT('id') as count, (price_n - price) as discount from " . $this->objBase . ' where ' . $SQL);
+        
+        if($result)
         $row = mysqli_fetch_array($result);
         $this->num_page = $row['count'];
 

@@ -155,7 +155,7 @@ function downloadFile($url, $path) {
 }
 
 // Проверка изображения
-function checkImage($img, $id) {
+function checkImage($img, $id, $uniq) {
     global $PHPShopSystem;
 
     // Перевод в латиницу
@@ -185,7 +185,7 @@ function checkImage($img, $id) {
     if (!is_array($check)) {
 
         // Проверка имени файла
-        if (file_exists($_SERVER['DOCUMENT_ROOT'] . $img_check)) {
+        if (empty($uniq) and file_exists($_SERVER['DOCUMENT_ROOT'] . $img_check)) {
 
             // Соль
             $rand = '_' . substr(abs(crc32($img)), 0, 5);
@@ -619,9 +619,9 @@ function csv_update($data) {
                         // Полный путь к изображениям
                         if (!empty($_POST['export_imgpath']))
                             $img = '/UserFiles/Image/' . $img;
-
+                        
                         // Проверка изображния
-                        $checkImage = checkImage($img, $row['id']);
+                        $checkImage = checkImage($img, $row['id'], $row['parent_enabled']);
                         $img_save = $checkImage['img'];
 
                         // Создаем новую

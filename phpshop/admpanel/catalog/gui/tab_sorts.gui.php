@@ -44,6 +44,9 @@ function tab_sorts_val($n, $sort) {
             
         if(!empty($row['filtr']))
             $row['description'].= __(' Фильтр');
+        
+        if(!empty($row['virtual']))
+            $row['description'].= __(' Каталог');
             
         $dis.="<option value=" . $id . " " . $sel . " data-subtext=\"".$row['description']."\">" . $name . "</option>\n";
     }

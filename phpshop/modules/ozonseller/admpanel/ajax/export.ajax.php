@@ -76,6 +76,7 @@ if (is_array($data)) {
             }
             // В ожидании
             elseif ($info['status'] == 'pending') {
+                PHPShopObj::loadClass("lang");
                 $error = __('Товар поставлен в очередь на запись, сервис OZON временно занят. Требуется повторное отправление данных для завершения выгрузки.');
                 $PHPShopOrm->update(['export_ozon_task_status_new' => $info['status'], 'export_ozon_task_id_new' => $task_id], ['id' => '=' . (int) $data['id']]);
             }

@@ -89,7 +89,7 @@ function actionValueEdit() {
 
     $Tab1 .= $PHPShopGUI->setField("Категория", $PHPShopGUI->setSelect('category_value', $sort_value, '100%', false, false, false, false, false, false, false, 'form-control'));
 
-    if ($_GET['brand'] == 'true') {
+    if ($_GET['brand'] == 'true' or $_GET['virtual'] == 'true') {
 
         // Редактор 
         $PHPShopGUI->setEditor($PHPShopSystem->getSerilizeParam("admoption.editor"));
@@ -123,7 +123,7 @@ function actionValueEdit() {
 
     $PHPShopGUI->tab_key = 100;
 
-    if ($_GET['brand'] == 'true')
+    if ($_GET['brand'] == 'true' or $_GET['virtual'] == 'true')
         $PHPShopGUI->setTab(["Основное", $Tab1, true], ["Дополнительно", $Tab2, true]);
     else
         $PHPShopGUI->setTab(["Основное", $Tab1, true]);

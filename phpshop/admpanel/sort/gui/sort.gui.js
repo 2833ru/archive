@@ -138,6 +138,7 @@ $().ready(function () {
         data.push({name: 'ajax', value: 1});
         data.push({name: 'actionList[selectID]', value: 'actionValueEdit.sort.view'});
         data.push({name: 'brand', value: $('#brand_new').prop('checked')});
+        data.push({name: 'virtual', value: $('#virtual_new').prop('checked')});
 
         $.ajax({
             mimeType: 'text/html; charset=' + locale.charset,

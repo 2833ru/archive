@@ -61,7 +61,7 @@ class PHPShopShop extends PHPShopShopCore {
      */
     function __construct() {
         global $PHPShopAnalitica;
-        
+
         // Размещение
         $this->path = '/' . $GLOBALS['SysValue']['nav']['path'];
 
@@ -79,7 +79,6 @@ class PHPShopShop extends PHPShopShopCore {
         $this->multi_currency_search = $this->PHPShopSystem->getSerilizeParam('admoption.multi_currency_search');
 
         $this->PHPShopAnalitica = $PHPShopAnalitica;
-
     }
 
     /**
@@ -918,6 +917,30 @@ function CID_Product($category = null, $mode = false) {
     $this->set('price_max', intval($this->price_max));
     $this->set('price_min', intval($this->price_min));
 
+    // Фильтр сортировки по складам
+    if ($this->PHPShopSystem->ifSerilizeParam('admoption.sklad_sort_enabled')) {
+        if (is_array($this->warehouse)) {
+            
+            
+            $this->warehouse[0]=__('Все склады');
+            
+            $warehouse_sort=null;
+            foreach ($this->warehouse as $warehouse_id => $warehouse_name) {
+                $this->set('warehouse_id', $warehouse_id);
+                $this->set('warehouse_name', $warehouse_name);
+                
+                if($_GET['w'] == $warehouse_id)
+                     $this->set('warehouse_active', 'active');
+                else  $this->set('warehouse_active', '');
+                    
+                
+                $warehouse_sort .= parseTemplateReturn('filter/warehouse.tpl');
+            }
+            
+            $this->set('warehouse_sort', $warehouse_sort);
+        }
+    }
+
     // Перехват модуля в конце функции
     $this->setHook(__CLASS__, __FUNCTION__, $this->dataArray, 'END');
 
@@ -1064,7 +1087,7 @@ function CID_Category($mode = false) {
     // Скрытый каталог
     if ($this->PHPShopCategory->getParam('skin_enabled') == 1 or $this->errorMultibase($this->category) or $this->PHPShopSystem->getParam("shop_type") == 2)
         return $this->setError404();
-    
+
     // Название категории
     $this->category_name = $this->PHPShopCategory->getName();
 

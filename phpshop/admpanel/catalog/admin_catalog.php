@@ -57,7 +57,7 @@ function actionStart() {
         'action' => 'edit-select',
         'class' => 'disabled'
     );
-    
+
     $PHPShopInterface->action_select['Скопировать ID выбранных'] = array(
         'name' => 'Скопировать ID выбранных',
         'action' => 'copy-id-select',
@@ -92,12 +92,12 @@ function actionStart() {
         'icon' => 'glyphicon glyphicon-plus',
         'tooltip' => 'data-toggle="tooltip" data-placement="left" title="' . __('Добавить товар') . '" data-cat="' . $_GET['cat'] . '"'
     );
-    
-    // Отключение бытсрого просмотра
-    if($PHPShopSystem->getSerilizeParam('admoption.fast_view') == 1)
-        $PHPShopInterface->action_button['Добавить товар']['action']='addNew';
 
-    $PHPShopInterface->setActionPanel($TitlePage . $catname, array('Поиск', '|', 'Предпросмотр', 'Настройка', 'Редактировать каталог', 'Редактировать выбранные', 'Скопировать ID выбранных','CSV', '|', 'Удалить выбранные'), array('Добавить товар'));
+    // Отключение бытсрого просмотра
+    if ($PHPShopSystem->getSerilizeParam('admoption.fast_view') == 1)
+        $PHPShopInterface->action_button['Добавить товар']['action'] = 'addNew';
+
+    $PHPShopInterface->setActionPanel($TitlePage . $catname, array('Поиск', '|', 'Предпросмотр', 'Настройка', 'Редактировать каталог', 'Редактировать выбранные', 'Скопировать ID выбранных', 'CSV', '|', 'Удалить выбранные'), array('Добавить товар'));
 
     $PHPShopInterface->setCaption(
             ...getTableCaption()
@@ -130,7 +130,7 @@ function actionStart() {
 }
 
 function getTableCaption() {
-    global $PHPShopInterface, $PHPShopModules;
+    global $PHPShopInterface, $PHPShopModules, $PHPShopSystem;
 
     $memory = $PHPShopInterface->getProductTableFields();
 
@@ -144,15 +144,27 @@ function getTableCaption() {
     $dataWarehouse = $PHPShopOrmWarehouse->select(array('*'), array('enabled' => "='1'"), array('order' => 'num DESC'), array('limit' => 100));
 
     // Убираем меню если много полей
-    $count_view=0;
-    if(is_array($memory['catalog.option']))
-        foreach($memory['catalog.option'] as $view)
-            if(!empty($view))
+    $count_view = 0;
+    if (is_array($memory['catalog.option']))
+        foreach ($memory['catalog.option'] as $view)
+            if (!empty($view))
                 $count_view++;
-    
-    if($count_view>8)
+
+    if ($count_view > 8)
         unset($memory['catalog.option']['menu']);
-     
+
+    // Режим каталога
+    if ($PHPShopSystem->getParam("shop_type") == 1) {
+        $memory['catalog.option']['price'] = 0;
+        $memory['catalog.option']['price2'] = 0;
+        $memory['catalog.option']['price3'] = 0;
+        $memory['catalog.option']['price4'] = 0;
+        $memory['catalog.option']['price5'] = 0;
+        $memory['catalog.option']['price_n'] = 0;
+        $memory['catalog.option']['price_purch'] = 0;
+        $memory['catalog.option']['item'] = 0;
+    }
+
     $PHPShopInterface->productTableCaption = [
         [null, "2%"],
         ["Иконка", "5%", ['sort' => 'none', 'view' => (int) $memory['catalog.option']['icon']]],

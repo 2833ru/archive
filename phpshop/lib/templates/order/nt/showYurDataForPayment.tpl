@@ -1,5 +1,5 @@
 <div class="@showYurDataForPaymentClass@ col-md-12" style="display:none">
-    <h3>{Юридические данные}</h3>
+    <h4>{Юридические данные}</h4>
     <div class="row">
         <div class="left col-md-6 col-xs-12">
             <p><input type="text" placeholder="{Наименование организации}" class="form-control req" value="" name="org_name_new"></p>

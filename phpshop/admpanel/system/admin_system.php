@@ -289,7 +289,7 @@ function actionStart() {
             );
     else 
         $disp =  
-            $PHPShopGUI->setField('Тип работы', $PHPShopGUI->setSelect('shop_type_new', $shop_type_value)).
+            $PHPShopGUI->setField('Конфигурация', $PHPShopGUI->setSelect('shop_type_new', $shop_type_value)).
             $PHPShopGUI->setField("Общая пагинация", $PHPShopGUI->setInputText(false, 'num_row_new', $data['num_row'], 50), 1, 'Количество позиций на одной странице') .
             $PHPShopGUI->setField('Временная зона', $PHPShopGUI->setSelect('option[timezone]', $timezone_value))
             ;
@@ -306,8 +306,11 @@ function actionStart() {
             $PHPShopGUI->setField("Контроль склада", $PHPShopGUI->setSelect('option[sklad_status]', $sklad_status_value, null, true), 1, 'Активируется при сохранении товара') .
             $PHPShopGUI->setField("Склад", $PHPShopGUI->setCheckbox('option[sklad_enabled]', 1, 'Показывать значение склада у товара', $option['sklad_enabled']));
 
-    if ($warehouse_enabled)
+    if ($warehouse_enabled){
         $price .= $PHPShopGUI->setField("Общий склад", $PHPShopGUI->setCheckbox('option[sklad_sum_enabled]', 1, 'Суммировать остатки по складам', $option['sklad_sum_enabled']), 1, 'Суммирует количество товара в дочерних складах в Общий склад. Срабатывает по нажатию кнопки Сохранить в карточке товара');
+        $price .= $PHPShopGUI->setField("Сортировка по складам", $PHPShopGUI->setCheckbox('option[sklad_sort_enabled]', 1, 'Показывать фильтр отбора по складам', $option['sklad_sort_enabled']));
+        
+    }
 
     $price .= $PHPShopGUI->setField("Округление цен", $PHPShopGUI->setInputText(false, 'option[price_znak]', intval($option['price_znak']), 50), 1, 'Количество знаков после запятой в цене') .
             $PHPShopGUI->setField("Минимальная сумма заказа", $PHPShopGUI->setInputText(false, 'option[cart_minimum]', intval($option['cart_minimum']), 100)) .
@@ -447,7 +450,7 @@ function actionUpdate() {
     unset($option['support_notice']);
 
     // Корректировка пустых значений
-    $PHPShopOrm->updateZeroVars('option.user_calendar', 'option.cloud_enabled', 'option.digital_product_enabled', 'option.parent_price_enabled', 'option.user_skin', 'option.user_mail_activate', 'option.user_mail_activate_pre', 'option.user_price_activate', 'option.mail_smtp_enabled', 'option.mail_smtp_debug', 'option.multi_currency_search', 'option.mail_smtp_auth', 'option.sklad_enabled', 'option.rule_enabled', 'option.catlist_enabled', 'option.filter_cache_enabled', 'option.filter_products_count', 'option.chat_enabled', 'option.new_enabled', 'option.sklad_sum_enabled', 'option.user_servers_control', 'option.user_phone_mask_enabled', 'option.user_items_activate', 'option.ajax_scroll', 'option.ajax_scroll_paginator', 'option.fast_view', 'option.auto_discount_disabled', 'option.chat_support', 'option.user_captcha_enabled', 'option.user_cookie_enabled','option.user_cookie_mobile_enabled','option.odnotip');
+    $PHPShopOrm->updateZeroVars('option.user_calendar', 'option.cloud_enabled', 'option.digital_product_enabled', 'option.parent_price_enabled', 'option.user_skin', 'option.user_mail_activate', 'option.user_mail_activate_pre', 'option.user_price_activate', 'option.mail_smtp_enabled', 'option.mail_smtp_debug', 'option.multi_currency_search', 'option.mail_smtp_auth', 'option.sklad_enabled', 'option.rule_enabled', 'option.catlist_enabled', 'option.filter_cache_enabled', 'option.filter_products_count', 'option.chat_enabled', 'option.new_enabled', 'option.sklad_sum_enabled', 'option.user_servers_control', 'option.user_phone_mask_enabled', 'option.user_items_activate', 'option.ajax_scroll', 'option.ajax_scroll_paginator', 'option.fast_view', 'option.auto_discount_disabled', 'option.chat_support', 'option.user_captcha_enabled', 'option.user_cookie_enabled','option.user_cookie_mobile_enabled','option.odnotip','option.sklad_sort_enabled');
 
     if (is_array($_POST['option']))
         foreach ($_POST['option'] as $key => $val)

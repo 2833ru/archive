@@ -458,8 +458,9 @@ switch ($_SERVER["PATH_INFO"]) {
             if ($option['type'] == 2) {
                 
                 foreach ($data['skus'] as $k => $val){
-                    $val = str_replace(['-','_'], [' ','-'], PHPShopString::utf8_win1251($val));
-                    $data['skus'][$k] = '"' . PHPShopString::utf8_win1251($val) . '"';
+                    //$val = PHPShopString::utf8_win1251($val);
+                    $val = str_replace(['-','_'], [' ','-'], $val);
+                    $data['skus'][$k] = '"' . $val . '"';
                 }
 
                 $where = ['uid' => sprintf(' IN(%s)', implode(',', $data['skus']))];

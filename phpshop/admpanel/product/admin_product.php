@@ -1,6 +1,6 @@
 <?php
 
-$TitlePage = __("Проверка уникальности товаров");
+$TitlePage = __("Проверка уникальности артикулов товаров");
 
 // Стартовый вид
 function actionStart() {
@@ -72,8 +72,8 @@ function actionStart() {
     // Запрос модуля на закладку
     $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, false);
 
-    //$sidebarleft[] = array('title' => 'Категории', 'content' => $PHPShopInterface->loadLib('tab_menu_service', false, './exchange/'));
-    //$PHPShopInterface->setSidebarLeft($sidebarleft, 2);
+    $sidebarleft[] = array('title' => 'Категории', 'content' => $PHPShopInterface->loadLib('tab_menu_service', false, './exchange/'));
+    $PHPShopInterface->setSidebarLeft($sidebarleft, 2);
 
     // Футер
     $PHPShopInterface->Compile(2);

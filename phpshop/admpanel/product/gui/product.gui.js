@@ -331,7 +331,11 @@ $().ready(function () {
 
         $('.search-list input:checkbox:checked').each(function () {
             var id = $(this).attr('data-id');
-            $(selectTarget).addTag(id);
+
+            if ($(selectTarget).attr('data-tagsinput-init') == 'true')
+                $(selectTarget).addTag(id);
+            else
+                $(selectTarget).val(id);
         });
 
         $('#selectModal').modal('hide');

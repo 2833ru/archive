@@ -1547,12 +1547,12 @@ class PHPShopGUI {
      * $PHPShopGUI->setSelect('my',$value,100);
      * </code>
      * @param string $name имя
-     * @param array $value значенение в виде массива
+     * @param array $value значение в виде массива
      * @param int $width ширина
      * @param bool $locale локализация
      * @param string $caption текст перед элементом
      * @param string $search режим поиска
-     * @param int $height высота
+     * @param int $disabled блокировка
      * @param int $size размер
      * @param bool $multiple мультивыбор
      * @param string $id id

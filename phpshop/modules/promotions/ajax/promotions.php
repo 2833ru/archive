@@ -87,12 +87,13 @@ if (!empty($data_code['code']))
 //Если промо код уникальный
 if ($_REQUEST['promocode'] != '*') {
 
-    //Если код сходится
+    // Если код сходится
     if ($data['code'] != ''):
+        
         //есть ли скидка
-
         if ($data['discount_check'] == 1):
             $data['products'] = getProductsInPromo($data['products']);
+        
             //Проверяем схождения типа оплаты
             if ($_REQUEST['tipoplcheck'] != $data['delivery_method'] and $data['delivery_method_check'] == 1) {
 
@@ -122,7 +123,28 @@ if ($_REQUEST['promocode'] != '*') {
                         //категории массив
                         $products_ar = explode(',', $data['products']);
                     endif;
-
+                    
+                    
+                    // Перевод скидки суммы в процент
+                    if($data['discount_tip'] == 0){
+                        
+                       // Сумма товаров
+                       foreach ($_SESSION['cart'] as $valuecart) {
+                           $sum += $valuecart['num'] * $valuecart['price'];
+                       }
+                       
+                       if($sum < 0)
+                           $sum=0;
+                       
+                       $data['discount']=round($data['discount']*100/$sum,2);
+                       
+                       if($data['discount'] > 100)
+                           $data['discount']=100;
+                       
+                       if($data['discount'] > 0)
+                           $data['discount_tip']=1;
+                    }
+                    
                     foreach ($_SESSION['cart'] as $rs => $valuecart) {
 
                         $PHPShopOrm = new PHPShopOrm($GLOBALS['SysValue']['base']['products']);
@@ -162,7 +184,8 @@ if ($_REQUEST['promocode'] != '*') {
 
                         if (($sumche == 1 or $sumchep == 1)):
                             $sumnew += $valuecart['price'] * $valuecart['num'];
-
+                        
+                          
                             //если процент
                             if ($data['discount_tip'] == 1) {
                                 // скидка и тип
@@ -176,7 +199,9 @@ if ($_REQUEST['promocode'] != '*') {
                                     $_SESSION['cart'][$rs]['test'] = 1;
                                     $_SESSION['cart'][$rs]['promo_price'] = $valuecart['price'];
                                 }
-                            } else { //если сумма
+                            } 
+                            // Больше не используется, все переводится в процент на все товары
+                            else { //если сумма
                                 //скидка и тип
                                 $discount_sum = $data['discount'];
                                 $tip_disc = $currency;
@@ -216,10 +241,13 @@ if ($_REQUEST['promocode'] != '*') {
                         $_SESSION['discpromo'] = $data['discount'];
                         $_SESSION['tip_disc'] = 1;
                     } else { //если сумма
+                    
                         //сумма скидки
                         $discount_sum = $data['discount'];
+                        
                         //сумма на которую производим скидку
                         $sumtot_new = $sumnew - $discount_sum;
+                        
                         //если вдруг сумма ушла в минус, то ставим нуль
                         if ($sumtot_new < 0) {
                             $sumtot_new = 0;
@@ -234,8 +262,10 @@ if ($_REQUEST['promocode'] != '*') {
                         $_SESSION['tip_disc'] = 0;
                     }
 
+                    
                     //если не применена скидка
-                    if ($sumtot_new != ''):
+                    if (isset($sumtot_new)):
+     
                         //общая сумма
                         $totalsumma_t = $sumtot_new + $sumtot_old;
                         //проверяем сумму от

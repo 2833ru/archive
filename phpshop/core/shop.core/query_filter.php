@@ -43,6 +43,11 @@ function query_filter($obj) {
         $l = $_REQUEST['l'];
     else
         $l = null;
+    
+    if (!empty($_REQUEST['w']))
+        $w = intval($_REQUEST['w']);
+    else
+        $w = null;
 
     // Логика поиска
     $filter_logic = (int) $obj->PHPShopSystem->getSerilizeParam('admoption.filter_logic');
@@ -168,7 +173,12 @@ function query_filter($obj) {
             default: $order = array('order' => 'num, name' . $order_direction);
         }
     }
-
+    
+    // Определенный склад
+    if($w){
+        $sort.= ' and items'.$w.' > 0 ';
+    }
+       
     // Преобзазуем массив уловия сортировки в строку
     foreach ($order as $key => $val)
         $string = $key . ' by ' . $val;
@@ -230,7 +240,6 @@ function query_filter($obj) {
         else
             $sort .= " and (" . $obj->PHPShopSystem->getPriceColumn() . " BETWEEN " . ($priceOT / (100 + $percent) * 100) . " AND " . ($priceDO / (100 + $percent) * 100) . ") ";
     }
-
     return array('sql' => $catt . " and enabled='1' and parent_enabled='0' " . $sort . " ".$string);
 }
 

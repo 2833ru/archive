@@ -49,6 +49,10 @@ class PHPShopReturncall extends PHPShopCore {
      * Сообщение об удачной заявке
      */
     function done() {
+        
+        // Мета
+        $this->title = $this->description = $this->system['title'] . __(' - Отправлено'). " - " . $this->PHPShopSystem->getValue("name");
+        
         $message = $this->system['title_end'];
         if (empty($message))
             $message = $GLOBALS['SysValue']['lang']['returncall_done'];

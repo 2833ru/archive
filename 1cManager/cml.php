@@ -4,7 +4,7 @@
  * Обмен по CommerceML
  * @package PHPShopExchange
  * @author PHPShop Software
- * @version 2.0
+ * @version 2.2
  */
 class CommerceMLLoader {
 
@@ -95,6 +95,11 @@ class CommerceMLLoader {
             $crc = $data;
 
         return $crc;
+    }
+    
+    private function crc32($str){
+        $data = trim($str);
+        return crc32($data);
     }
 
     public function exchange($type, $mode) {
@@ -411,16 +416,36 @@ class CommerceMLLoader {
                       $sort_array['1']= $sort_array['1#62'];
                       } */
 
-                    // Краткое описание
+                    // Краткое описание и габариты
                     if (isset($item->ЗначенияРеквизитов[0])) {
-                        foreach ($item->ЗначенияРеквизитов[0] as $req) {
+                        foreach ($item->ЗначенияРеквизитов[0]->ЗначениеРеквизита as $req) {
 
-                            if ($req->Наименование[0] == 'Полное наименование') {
-                                $description = (string) $req->Значение[0];
+                            if ($req->Наименование == 'Полное наименование') {
+                                $description = (string) $req->Значение;
+                            }
+
+                            if ($req->Наименование == 'Вес') {
+
+                                $weight = (string) $req->Значение * 1000;
+                            }
+
+                            if ($req->Наименование == 'Длина') {
+                                $length = '#' . (string) round($req->Значение);
+                            }
+
+                            if ($req->Наименование == 'Ширина') {
+                                $width = '#' . (string) round($req->Значение);
+                            }
+
+                            if ($req->Наименование == 'Высота') {
+                                $height = '#' . (string) round($req->Значение);
                             }
                         }
+
+                        $weight .= $length . $width . $height;
                     } else
-                        $description = null;
+                        $description = $weight = $length = $width = $height = null;
+
 
                     // Подробное описание
                     if (isset($item->Описание)) {
@@ -461,9 +486,9 @@ class CommerceMLLoader {
 
                         foreach ((array) $item->Картинка as $i => $img) {
 
-                            $new_name = 'img' . $this->crc16((string) $item->Ид[0]) . '_' . ($i + 1) . '.jpg';
-                            $new_name_s = 'img' . $this->crc16((string) $item->Ид[0]) . '_' . ($i + 1) . 's.jpg';
-                            $new_name_big = 'img' . $this->crc16((string) $item->Ид[0]) . '_' . ($i + 1) . '_big.jpg';
+                            $new_name = 'img' . $this->crc32((string) $item->Ид[0]) . '_' . ($i + 1) . '.jpg';
+                            $new_name_s = 'img' . $this->crc32((string) $item->Ид[0]) . '_' . ($i + 1) . 's.jpg';
+                            $new_name_big = 'img' . $this->crc32((string) $item->Ид[0]) . '_' . ($i + 1) . '_big.jpg';
 
                             // Тубнейл
                             $thumb = new PHPThumb(dirname(__FILE__) . $this->exchange_path . '/' . self::$upload1c . $img);
@@ -481,7 +506,7 @@ class CommerceMLLoader {
                             if (!empty($this->image_save_source))
                                 copy(dirname(__FILE__) . $this->exchange_path . '/' . self::$upload1c . $img, $this->exchange_image_path . $this->image_result_path . $new_name_big);
 
-                            $image = $this->image_result_path . 'img' . $this->crc16((string) $item->Ид[0]);
+                            $image = $this->image_result_path . 'img' . $this->crc32((string) $item->Ид[0]);
                             $image_count++;
                         }
                     }
@@ -507,7 +532,7 @@ class CommerceMLLoader {
                       $warehouse = $parent_list['warehouse'];
                       } */
 
-                    $this->product_array[(string) $item->Ид[0]] = array($uid, (string) $item->Наименование[0], $description, $image, $content, $image_count, "", "", "", "", "", "", "", "", "", $category, "", (string) $item->Ид[0], 0);
+                    $this->product_array[(string) $item->Ид[0]] = array($uid, (string) $item->Наименование[0], $description, $image, $content, $image_count, "", "", "", "", "", "", $weight, "", "", $category, "", (string) $item->Ид[0], 0);
 
                     // Свойства
                     if (is_array($properties))
@@ -605,9 +630,9 @@ class CommerceMLLoader {
 
                             foreach ((array) $item->Картинка as $i => $img) {
 
-                                $new_name = 'img' . $this->crc16((string) $item->Ид[0]) . '_' . ($i + 1) . '.jpg';
-                                $new_name_s = 'img' . $this->crc16((string) $item->Ид[0]) . '_' . ($i + 1) . 's.jpg';
-                                $new_name_big = 'img' . $this->crc16((string) $item->Ид[0]) . '_' . ($i + 1) . '_big.jpg';
+                                $new_name = 'img' . $this->crc32((string) $item->Ид[0]) . '_' . ($i + 1) . '.jpg';
+                                $new_name_s = 'img' . $this->crc32((string) $item->Ид[0]) . '_' . ($i + 1) . 's.jpg';
+                                $new_name_big = 'img' . $this->crc32((string) $item->Ид[0]) . '_' . ($i + 1) . '_big.jpg';
 
                                 // Тубнейл
                                 $thumb = new PHPThumb(dirname(__FILE__) . $this->exchange_path . '/' . self::$upload1c . $img);
@@ -625,7 +650,7 @@ class CommerceMLLoader {
                                 if (!empty($this->image_save_source))
                                     copy(dirname(__FILE__) . $this->exchange_path . '/' . self::$upload1c . $img, $this->exchange_image_path . $this->image_result_path . $new_name_big);
 
-                                $image = $this->image_result_path . 'img' . $this->crc16((string) $item->Ид[0]);
+                                $image = $this->image_result_path . 'img' . $this->crc32((string) $item->Ид[0]);
                                 $image_count++;
                             }
                         }

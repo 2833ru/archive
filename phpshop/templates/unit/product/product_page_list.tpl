@@ -25,7 +25,7 @@
 
 <div class="product-filter @hideSort@" id="filter-well">
     <div class="row d-flex align-items-center">
-        <div class="col-md-6 col-sm-6  col-xs-12 ">
+        <div class="col-md-3 col-sm-3  col-xs-12 ">
             <div class="display d-flex @hideCatalog@">
                 {Сначала}: <div class="filter-menu-wrapper">
                     <div class="btn-group filter-menu" data-toggle="buttons">
@@ -43,7 +43,15 @@
                     </div>
                 </div>
             </div>
-        </div>  <div class="col-md-6 col-sm-4 hidden-xs text-right">
+        </div>  
+
+        <div class="col-md-7">
+            <div class="btn-group" role="group" aria-label="...">
+                @warehouse_sort@
+            </div>
+        </div> 
+
+        <div class="col-md-2 col-sm-4 hidden-xs text-right">
             <div class="display" data-toggle="buttons">
                 <label class="btn btn-sm fal fa-bars btn-sort @gridSetAactive@" data-toggle="tooltip" data-placement="top" title="{Товары списком}">
                     <input type="radio" name="gridChange" value="1">

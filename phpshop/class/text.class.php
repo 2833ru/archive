@@ -174,6 +174,16 @@ class PHPShopText {
     static function h4($string, $class = false) {
         return '<h4 class="' . $class . '">' . $string . '</h4>';
     }
+    
+    /**
+     * Заголовок H5
+     * @param string $string текст
+     * @param string $class class
+     * @return string
+     */
+    static function h5($string, $class = false) {
+        return '<h5 class="' . $class . '">' . $string . '</h5>';
+    }
 
     /**
      * Список

@@ -3,7 +3,7 @@
 /**
  * Файл выгрузки для Яндекс Маркет
  * @author PHPShop Software
- * @version 3.9
+ * @version 4.0
  * @package PHPShopXML
  * @example ?retailcrm [bool] Выгрузка для RetailCRM
  * @example ?marketplace=cdek [bool] Выгрузка для СДЭК (упрощенный тип YML с использованием count)
@@ -384,13 +384,12 @@ class PHPShopYml {
             if (empty($_GET['striptag'])) {
                 $description = '<![CDATA[' . trim(strip_tags($row['description'], '<p><h3><ul><li><br>')) . ']]>';
                 $content = '<![CDATA[' . $row['content'] . ']]>';
-            }
-            else {
+            } else {
                 $description = strip_tags($row['description']);
                 $content = strip_tags($row['content']);
             }
-            
-            
+
+
             $baseinputvaluta = $row['baseinputvaluta'];
 
             //Если валюта отличается от базовой
@@ -550,6 +549,10 @@ class PHPShopYml {
             "name" => str_replace(array('&#43;', '&#43'), '+', $name),
             "picture" => htmlspecialchars($row['pic_big']),
             "price" => $price,
+            "price2" => round($row['price2'], (int) $this->format),
+            "price3" => round($row['price3'], (int) $this->format),
+            "price4" => round($row['price4'], (int) $this->format),
+            "price5" => round($row['price5'], (int) $this->format),
             "oldprice" => $oldprice,
             "weight" => $row['weight'],
             "length" => $row['length'],

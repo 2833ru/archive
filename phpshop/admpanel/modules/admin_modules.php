@@ -356,10 +356,10 @@ function actionStart() {
     // Кол-во модулей
     $count_mod=[
         0=>[
-            'pro'=>14,
+            'pro'=>13,
             'template'=>8,
             'seo'=>5,
-            'delivery'=>11,
+            'delivery'=>12,
             'chat'=>7,
             'crm'=>6,
             'marketplaces'=>6,
@@ -368,23 +368,24 @@ function actionStart() {
             'yandex'=>2,
             'sale'=>18,
             'develop'=>14,
-            'minus'=>-16
+            'minus'=>-15
         ] ,  
         1=>[
             'pro'=>3,
             'template'=>8,
             'seo'=>5,
-            'delivery'=>11,
+            'delivery'=>2,
             'chat'=>7,
             'crm'=>2,
             'yandex'=>1,
             'sale'=>7,
             'develop'=>13,
-            'minus'=>-4
+            'minus'=>-3
         ],
         2=>[
             'template'=>5,
             'seo'=>4,
+            'delivery'=>2,
             'chat'=>7,
             'crm'=>1,
             'yandex'=>1,
@@ -412,7 +413,7 @@ function actionStart() {
         <tr class="treegrid-seo">
            <td><a href="?path=modules&cat=seo" class="treegrid-parent" data-parent="treegrid-seo">SEO</a> <span class="label label-primary pull-right">'.$count_mod[$shop_type]['seo'].'</span></td>
 	</tr>
-        <tr class="treegrid-delivery '.$hideCatalog.'">
+        <tr class="treegrid-delivery">
            <td><a href="?path=modules&cat=delivery" class="treegrid-parent" data-parent="treegrid-delivery">' . __('Доставка') . '</a> <span  class="label label-primary pull-right">'.$count_mod[$shop_type]['delivery'].'</span></td>
 	</tr>
         <tr class="treegrid-chat">

@@ -172,6 +172,7 @@ class PHPShopBase {
             exit($error);
         } elseif (class_exists('PHPShopObj')) {
             PHPShopObj::loadClass('parser');
+            PHPShopObj::loadClass('lang');
             PHPShopParser::set('message', $message);
             PHPShopParser::set('title', $e);
             $error = PHPShopParser::file($_SERVER['DOCUMENT_ROOT'] . '/phpshop/lib/templates/error/error.tpl');

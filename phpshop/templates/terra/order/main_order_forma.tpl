@@ -67,11 +67,17 @@
                             </div>
                         </div>
                     </div>
+                    
+                    <div class="panel-body">
+                    <div class="form-group">
+                        <div class="col-sm-12">
+                           <div id="showYurDataForPaymentLoad"></div>
+                        </div>
+                    </div>
+                </div>
+                    
                     <div class="panel-body">
                         <div class="form-group">
-                            <div class="col-xs-12 col-sm-6">
-                                <div id="showYurDataForPaymentLoad"></div>
-                            </div>
                             <div class="col-sm-12">
                                         
                                         <div class="text-uppercase text-center clearfix" style="margin-top: 10px;">

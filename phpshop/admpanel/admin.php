@@ -23,7 +23,7 @@ $_SESSION['lang'] = $PHPShopSystem->getSerilizeParam("admoption.lang_adm");
 $PHPShopLang = new PHPShopLang(array('locale' => $_SESSION['lang'], 'path' => 'admin'));
 mb_internal_encoding($GLOBALS['PHPShopBase']->codBase);
 
-// Тип работы
+// Конфигурация
 $shop_type = (int)$PHPShopSystem->getParam("shop_type");
 
 // Режим сайта
@@ -315,9 +315,9 @@ if (!empty($_COOKIE['fullscreen'])) {
                                     <li class="<?php echo $hideSite; ?>"><a href="?path=system.currency"><?php _e('Валюты'); ?></a></li>
                                     <li><a href="?path=system.image"><?php _e('Изображения'); ?></a></li>
                                     <li><a href="?path=system.servers"><?php _e('Витрины'); ?></a></li>
-                                    <li class="<?php echo $hideSite; ?>"><a href="?path=system.warehouse"><?php _e('Склады'); ?></a></li>
+                                    <li class="<?php echo $hideCatalog; ?>"><a href="?path=system.warehouse"><?php _e('Склады'); ?></a></li>
                                     <li><a href="?path=system.dialog"><?php _e('Диалоги'); ?></a></li>
-                                    <li class="<?php echo $hideSite; ?>"><a href="?path=system.integration"><?php _e('Интеграция'); ?></a></li>
+                                    <li><a href="?path=system.integration"><?php _e('Интеграция'); ?></a></li>
                                     <li><a href="?path=system.locale"><?php _e('Локализация'); ?></a></li>
                                     <li class="divider"></li>
                                     <li><a href="?path=tpleditor"><span class="glyphicon glyphicon-picture"></span> <?php _e('Шаблоны дизайна'); ?></a></li>
@@ -335,7 +335,8 @@ if (!empty($_COOKIE['fullscreen'])) {
                                         <ul class="dropdown-menu <?php echo $hideSite; ?>">
                                             <li><a href="?path=exchange.service"><?php _e('Очистка базы данных'); ?></a></li>
                                             <li><a href="?path=exchange.file"><?php _e('Проверка изображений'); ?></a></li>
-                                            <li><a href="?path=product"><?php _e('Проверка товаров'); ?></a></li>
+                                            <li><a href="?path=product"><?php _e('Проверка артикулов'); ?></a></li>
+                                            <li><a href="?path=product.uniqname"><?php _e('Проверка названий'); ?></a></li>
                                         </ul>
                                     </li>
 
@@ -449,7 +450,7 @@ if (!empty($_COOKIE['fullscreen'])) {
                                             <li><a href="?path=promotions"><span><?php _e('Промоакции'); ?></span><span class="dropdown-header"><?php _e('Промоакции и скидки'); ?></span></a></li>
                                         </ul>
                                     </li>
-                                    <li class="<?php echo $hideSite; ?>"><a href="?path=shopusers.notice"><?php _e('Уведомления'); ?><span class="dropdown-header"><?php _e('Запросы от покупателей о поступлении товара на склад'); ?></span></a></li>
+                                    <li class="<?php echo $hideCatalog; ?>"><a href="?path=shopusers.notice"><?php _e('Уведомления'); ?><span class="dropdown-header"><?php _e('Запросы от покупателей о поступлении товара на склад'); ?></span></a></li>
                                     <li class="<?php echo $hideSite; ?>"><a href="?path=shopusers.comment"><?php _e('Отзывы о товарах'); ?><span class="dropdown-header"><?php _e('Список отзывов для товаров, оставленные пользователями'); ?></span></a></li>
                                     <li class="divider <?php echo $hideSite; ?>"></li>
                                     <li class="<?php echo $hideSite; ?>"><a href="?path=dialog"><span class="glyphicon glyphicon-comment"></span> <?php _e('Диалоги с пользователями'); ?></a></li>

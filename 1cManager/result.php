@@ -1,11 +1,11 @@
 <?php
-
 /**
  * Автономная синхронизация номенклатуры из 1С и CML
  * @package PHPShopExchange
  * @author PHPShop Software
- * @version 3.7
+ * @version 3.9
  */
+
 // Авторизация
 include_once("login.php");
 PHPShopObj::loadClass(array("readcsv", "product", "orm", "string"));
@@ -680,9 +680,18 @@ class ReadCsv1C extends PHPShopReadCsvNative {
                 $sql .= "prod_seo_name='" . str_replace("_", "-", PHPShopString::toLatin($CsvToArray[1])) . "', ";
             }
 
-            // вес
-            if (!empty($CsvToArray[12]))
-                $sql .= "weight='" . $CsvToArray[12] . "', ";
+            // Вес
+            if (!empty($CsvToArray[12])) {
+
+                // Габариты
+                if (strstr($CsvToArray[12], "#")) {
+                    $dimensions = explode("#", $CsvToArray[12]);
+                    if (is_array($dimensions)) {
+                        $sql .= "weight='" . $dimensions[0] . "', length='" . $dimensions[1] . "', width='" . $dimensions[2] . "', height='" . $dimensions[3] . "', ";
+                    }
+                } else
+                    $sql .= "weight='" . $CsvToArray[12] . "', ";
+            }
 
             // Валюта
             if (!empty($CsvToArray[14]))
@@ -927,9 +936,21 @@ class ReadCsv1C extends PHPShopReadCsvNative {
                 $sql .= "prod_seo_name='" . str_replace("_", "-", PHPShopString::toLatin($CsvToArray[1])) . "', ";
             }
 
+            // Вес
+            if (!empty($CsvToArray[12])) {
+
+                // Габариты
+                if (strstr($CsvToArray[12], "#")) {
+                    $dimensions = explode("#", $CsvToArray[12]);
+                    if (is_array($dimensions)) {
+                        $sql .= "weight='" . $dimensions[0] . "', length='" . $dimensions[1] . "', width='" . $dimensions[2] . "', height='" . $dimensions[3] . "', ";
+                    }
+                } else
+                    $sql .= "weight='" . $CsvToArray[12] . "', ";
+            }
+
             if ($this->ObjSystem->getSerilizeParam("1c_option.update_price") == 1) {
-                $sql .= "weight='" . $CsvToArray[12] . "',
-            price2='" . $CsvToArray[8] . "',
+                $sql .= "price2='" . $CsvToArray[8] . "',
             price3='" . $CsvToArray[9] . "',
             price4='" . $CsvToArray[10] . "',
             price5='" . $CsvToArray[11] . "',";

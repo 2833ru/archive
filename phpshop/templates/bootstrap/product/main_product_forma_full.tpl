@@ -30,6 +30,7 @@
                 <div class="outStock @hideCatalog@">@productOutStock@</div>
                 @ComEndNotice@
                 <div class="pull-right">@oneclick@</div>
+               
                 <p><br></p>
                 <div>
                     <div class="small">@productArt@</div>
@@ -42,6 +43,8 @@
                 </div>
                 <br>
                 @promotionInfo@
+                
+                 @productsproperty@
 
                 @saferouteCart@
                 @productservices_list@

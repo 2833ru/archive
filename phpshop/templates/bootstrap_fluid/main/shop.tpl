@@ -275,8 +275,8 @@
                 </div>
                 @rightMenu@
 
-                <div class="page-header @hideSite@">
-                    <h3>@specMainTitle@</h3>
+                <div class="page-header @hideSite@" style="margin-top:0px">
+                    <h3 style="margin-top:0px">@specMainTitle@</h3>
                 </div>
                 <div class="@hideSite@">@specMainIcon@</div>
             </div>

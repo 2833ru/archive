@@ -98,6 +98,7 @@ $key_name = array(
     'color' => 'Цвет',
     'length' => 'Длина',
     'price_purch' => 'Закупочная цена',
+    'hit' => 'Хит'
 );
 
 $key_placeholder = array(
@@ -227,7 +228,7 @@ function sortParse($current_sort) {
  * Экшен сохранения
  */
 function actionSave() {
-    global $PHPShopOrm, $PHPShopSystem;
+    global $PHPShopOrm, $PHPShopSystem, $PHPShopModules;
 
     if (is_array($_SESSION['select']['product'])) {
         $val = array_values($_SESSION['select']['product']);
@@ -397,12 +398,27 @@ function actionSave() {
 
     // Доп каталоги
     if (is_array($_POST['dop_cat']) and $_POST['dop_cat'][0] != 'null') {
+
         $_POST['dop_cat_new'] = "#";
         foreach ($_POST['dop_cat'] as $v)
             if ($v != 'null' and ! strstr($v, ','))
                 $_POST['dop_cat_new'] .= $v . "#";
-    }
-    else if (isset($_POST['dop_cat']))
+
+        // Дополнить
+        if ($_POST['action'] == 1) {
+
+            $val = array_values($_SESSION['select']['product']);
+
+            if (is_array($val)) {
+                foreach ($val as $id) {
+                    $dop_cat = $PHPShopOrm->select(['dop_cat'], ['id' => '=' . $id])['dop_cat'];
+                    $PHPShopOrm->update(['dop_cat_new' => $dop_cat . $_POST['dop_cat_new']],['id'=>'='.$id]);
+                }
+            }
+
+            unset($_POST['dop_cat_new']);
+        }
+    } else if (isset($_POST['dop_cat']))
         $_POST['dop_cat_new'] = '';
 
     // Файлы
@@ -415,6 +431,9 @@ function actionSave() {
 
     // Дата обновления
     $_POST['datas_new'] = time();
+
+    // Перехват модуля
+    $PHPShopModules->setAdmHandler(__FILE__, __FUNCTION__, $where);
 
     if (is_array($where) and $PHPShopOrm->update($_POST, $where)) {
         if (!empty($_GET['cat']))
@@ -538,7 +557,10 @@ function actionStart() {
                 }
                 // Каталоги
                 elseif ($val['Field'] == 'dop_cat') {
-                    $PHPShopGUI->_CODE .= $PHPShopGUI->setField("Дополнительные каталоги", viewCatalog('dop_cat[]', 'multiple'));
+                    $PHPShopGUI->_CODE .= $PHPShopGUI->setField("Дополнительные каталоги", viewCatalog('dop_cat[]', 'multiple') .
+                            $PHPShopGUI->setRadio('action', 0, 'Заменить', 1) .
+                            $PHPShopGUI->setRadio('action', 1, 'Добавить', 1)
+                    );
                 }
                 // Характеристики
                 elseif ($val['Field'] == 'vendor_array') {
@@ -635,7 +657,7 @@ function sorttemplate($value, $n, $title, $vendor) {
  * Настройка полей - 1 шаг
  */
 function actionOption() {
-    global $PHPShopInterface, $PHPShopModules;
+    global $PHPShopInterface, $PHPShopModules, $PHPShopSystem;
 
     // Память выбранных полей
     if (!empty($_COOKIE['check_memory'])) {
@@ -654,6 +676,19 @@ function actionOption() {
         $memory['catalog.option']['price_purch'] = 0;
     }
 
+    // Режим каталога
+    $shop_type = (int) $PHPShopSystem->getParam("shop_type");
+    if ($shop_type == 1) {
+        $memory['catalog.option']['price'] = 0;
+        $memory['catalog.option']['price2'] = 0;
+        $memory['catalog.option']['price3'] = 0;
+        $memory['catalog.option']['price4'] = 0;
+        $memory['catalog.option']['price5'] = 0;
+        $memory['catalog.option']['price_n'] = 0;
+        $memory['catalog.option']['price_purch'] = 0;
+        $memory['catalog.option']['item'] = 0;
+    }
+
     $message = '<p class="text-muted">' . __('Вы можете изменить перечень полей в таблице отображения товаров в категориях') . '.</p>';
 
     $searchforma = $message .
@@ -661,17 +696,17 @@ function actionOption() {
             $PHPShopInterface->setCheckbox('name', 1, 'Название', $memory['catalog.option']['name']) .
             $PHPShopInterface->setCheckbox('uid', 1, 'Артикул', $memory['catalog.option']['uid']) .
             $PHPShopInterface->setCheckbox('id', 1, 'ID', $memory['catalog.option']['id']) .
-            $PHPShopInterface->setCheckbox('price', 1, 'Цена', $memory['catalog.option']['price']) .
-            $PHPShopInterface->setCheckbox('price2', 1, 'Цена 2', $memory['catalog.option']['price2']) .
-            $PHPShopInterface->setCheckbox('price3', 1, 'Цена 3', $memory['catalog.option']['price3']) . '<br>' .
-            $PHPShopInterface->setCheckbox('price4', 1, 'Цена 4', $memory['catalog.option']['price4']) .
-            $PHPShopInterface->setCheckbox('price5', 1, 'Цена 5', $memory['catalog.option']['price5']) .
-            $PHPShopInterface->setCheckbox('price_n', 1, 'Старая цена', $memory['catalog.option']['price_n']) .
-            $PHPShopInterface->setCheckbox('price_purch', 1, 'Закупочная цена', $memory['catalog.option']['price_purch']) .
+            $PHPShopInterface->setCheckbox('price', 1, 'Цена', $memory['catalog.option']['price'], $shop_type) .
+            $PHPShopInterface->setCheckbox('price2', 1, 'Цена 2', $memory['catalog.option']['price2'], $shop_type) .
+            $PHPShopInterface->setCheckbox('price3', 1, 'Цена 3', $memory['catalog.option']['price3'], $shop_type) . '<br>' .
+            $PHPShopInterface->setCheckbox('price4', 1, 'Цена 4', $memory['catalog.option']['price4'], $shop_type) .
+            $PHPShopInterface->setCheckbox('price5', 1, 'Цена 5', $memory['catalog.option']['price5'], $shop_type) .
+            $PHPShopInterface->setCheckbox('price_n', 1, 'Старая цена', $memory['catalog.option']['price_n'], $shop_type) .
+            $PHPShopInterface->setCheckbox('price_purch', 1, 'Закупочная цена', $memory['catalog.option']['price_purch'], $shop_type) .
             $PHPShopInterface->setCheckbox('status', 1, 'Статус', $memory['catalog.option']['status']) .
-            $PHPShopInterface->setCheckbox('item', 1, 'Кол-во', $memory['catalog.option']['item']) .'<br>' .
+            $PHPShopInterface->setCheckbox('item', 1, 'Кол-во', $memory['catalog.option']['item'], $shop_type) . '<br>' .
             $PHPShopInterface->setCheckbox('menu', 1, 'Экшен меню', $memory['catalog.option']['menu']) .
-            $PHPShopInterface->setCheckbox('num', 1, 'Сортировка', $memory['catalog.option']['num']) . 
+            $PHPShopInterface->setCheckbox('num', 1, 'Сортировка', $memory['catalog.option']['num']) .
             $PHPShopInterface->setCheckbox('label', 1, 'Лейблы статусов', $memory['catalog.option']['label']) .
             $PHPShopInterface->setCheckbox('sort', 1, 'Характеристики', $memory['catalog.option']['sort']);
 
@@ -742,7 +777,7 @@ function actionCleanSort() {
     $count = 0;
 
     // Проверка значений характеристик
-    $data = $PHPShopSort->getList(['id', 'category', 'name'], false, ['order' => 'id'],['limit'=>300000]);
+    $data = $PHPShopSort->getList(['id', 'category', 'name'], false, ['order' => 'id'], ['limit' => 300000]);
     if (is_array($data))
         foreach ($data as $row) {
             $value = $row['category'] . '-' . $row['id'];
@@ -758,7 +793,7 @@ function actionCleanSort() {
 
 
     // Проверка характеристик
-    $data = $PHPShopSortCat->getList(['id', 'category', 'name'], ['category' => '!=0'], ['order' => 'id'],['limit'=>300000]);
+    $data = $PHPShopSortCat->getList(['id', 'category', 'name'], ['category' => '!=0'], ['order' => 'id'], ['limit' => 300000]);
     if (is_array($data))
         foreach ($data as $row) {
             $check = $PHPShopSort->getOne(['id'], ['category' => '=' . $row['id']]);
@@ -771,7 +806,7 @@ function actionCleanSort() {
             }
         }
 
-    return array('success' => true,'count'=>$count);
+    return array('success' => true, 'count' => $count);
 }
 
 // Обработка событий

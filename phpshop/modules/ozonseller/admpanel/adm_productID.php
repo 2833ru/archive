@@ -52,8 +52,8 @@ function OzonsellerUpdate($post) {
         $_POST['export_ozon_task_status_new'] = '';
     }
     
-    if(empty($_POST['export_ozon_id_new']))
-        unset($_POST['export_ozon_id_new']);
+    //if(empty($_POST['export_ozon_id_new']))
+       // unset($_POST['export_ozon_id_new']);
 
     // Изменение склада
     if (isset($_POST['enabled_new'])) {
